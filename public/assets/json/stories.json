@@ -1,0 +1,75 @@
+{
+    "data":[
+        {
+            "name": "Aaryian Jose",
+            "phoneNumber": "514-245-98315",
+            "emailAddress": "aaryian@example.com",
+            "storiesDate": "02 Sep 2024, 10:00 AM",
+            "img": "assets/admin/img/users/user-01.jpg"
+        },
+        {
+            "name": "Sarika Jain",
+            "phoneNumber": "156-348-85496",
+            "emailAddress": "sarika@example.com",
+            "storiesDate": "14 Sep 2024, 11:30 AM",
+            "img": "assets/admin/img/users/user-02.jpg"
+        },
+        {
+            "name": "Clyde Smith",
+            "phoneNumber": "315-975-31849",
+            "emailAddress": "clyde@example.com",
+            "storiesDate": "28 Sep 2024, 08:15 AM",
+            "img": "assets/admin/img/users/user-03.jpg"
+        },
+        {
+            "name": "Carla Jenkins",
+            "phoneNumber": "325-859-20194",
+            "emailAddress": "carla@example.com",
+            "storiesDate": "12 Oct 2024, 06:40 PM",
+            "img": "assets/admin/img/users/user-04.jpg"
+        },
+        {
+            "name": "Federico Wells",
+            "phoneNumber": "314-829-30175",
+            "emailAddress": "federico@example.com",
+            "storiesDate": "20 Oct 2024, 04:18 PM",
+            "img": "assets/admin/img/users/user-05.jpg"
+        },
+        {
+            "name": "Edward Lietz",
+            "phoneNumber": "219-831-49521",
+            "emailAddress": "edward@example.com",
+            "storiesDate": "30 Oct 2024, 07:25 AM",
+            "img": "assets/admin/img/users/user-06.jpg"
+        },
+        {
+            "name": "Sharon Ford",
+            "phoneNumber": "198-301-75341",
+            "emailAddress": "sharon@example.com",
+            "storiesDate": "01 Nov 2024, 08:50 AM",
+            "img": "assets/admin/img/users/user-07.jpg"
+        },
+        {
+            "name": "Thomas Rethman",
+            "phoneNumber": "301-978-30986",
+            "emailAddress": "thomas@example.com",
+            "storiesDate": "10 Nov 2024, 11:20 AM",
+            "img": "assets/admin/img/users/user-08.jpg"
+        },
+        {
+            "name": "Wilbur Martinez",
+            "phoneNumber": "383-248-34968",
+            "emailAddress": "wilbur@example.com",
+            "storiesDate": "17 Nov 2024, 04:50 PM",
+            "img": "assets/admin/img/users/user-09.jpg"
+        },
+        {
+            "name": "Danielle Baker",
+            "phoneNumber": "736-795-34895",
+            "emailAddress": "danielle@example.com",
+            "storiesDate": "12 Dec 2024, 09:30 AM",
+            "img": "assets/admin/img/users/user-10.jpg"
+        }
+    ]
+    
+}

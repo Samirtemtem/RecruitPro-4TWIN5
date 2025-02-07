@@ -1,0 +1,353 @@
+.account-page {
+    background: $white;
+}
+.login-wrapper {
+    width: 100%;
+    overflow: hidden;
+    height: 100vh;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    &.basic-type {
+        overflow: auto;
+        height: 100%;
+        justify-content: center;
+        &::before {
+            display: none;
+        }
+        .login-content {
+            overflow: unset;
+            height: 100%;
+        }
+    }
+    &.account-bg {
+        @include respond-below(lg) {
+            background-image: none;
+        }
+        .login-content {
+            background: linear-gradient(180deg, #FF7B3D 0%, #5C260C 100%);
+            backdrop-filter: blur(10px);
+            margin-left: auto;
+        }
+    }
+    .btn-outline-light  {
+        &:hover {
+            background-color: $white !important;
+        }
+    }   
+}
+.login-background {
+    position: relative;
+    &::before {
+        content: "";
+        background: linear-gradient(180deg, #FF7B3D 0%, #5C260C 100%);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        backdrop-filter: blur( 6px );
+        @include respond-below(lg) {
+            display: none;
+        }
+        
+    }
+}
+.hover-a {
+    position: relative;
+    color: $primary;
+    &:after {
+        content:"";
+        height: 2px;
+        width: 100%;
+        background: $primary;
+        @include transform(scale(0));
+        @include transition(all 0.3s ease);
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+    }
+    &:hover:after {
+        @include transform(scale(1));
+    }
+    &:hover {
+        color: $primary;
+    }
+}
+.login-wrapper.login-new {
+    overflow: auto;
+    height: 100vh;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    position: relative;
+    .login-shapes {
+        position: relative;
+        @include respond-below(lg) {
+            display: none;
+        }
+        .login-right-shape {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .login-left-shape {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+        }
+    }
+    .login-content.user-login {
+        position: relative;
+        .login-userset {
+            form .otp-box { 
+                margin-bottom: 34px;
+                input { 
+                    width: 74px; 
+                    height: 74px; 
+                    background: $white ; 
+                    border: 1px solid $light-900; 
+                    border-radius: 8px; 
+                    text-align: center; 
+                    margin-right: 15px; 
+                    font-weight: $font-weight-bold; 
+                    font-size: $font-size-26; 
+                    color: $black; 
+                    outline: none;
+                    @include respond-below(sm) {
+                        width: 40px; 
+                        height: 40px; 
+                    }
+                }
+            }
+        }
+    }
+    .copyright-text  {
+        margin: 40px 0;
+        text-align: center;
+        @include respond-below(md) {
+            margin: 0 0 30px;
+        }
+        p {
+            font-weight: $font-weight-medium;
+            color: $gray-900;
+            margin-bottom: 0;
+        }
+    }
+    .lock-screen-list {
+        text-align: center;
+        .nav {
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            justify-content: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            li {
+                margin-right: 20px;
+                &:last-child {
+                    margin-right: 0;   
+                }
+                a {
+                    font-weight: $font-weight-medium;
+                }
+            }
+        }
+        .copyright-text {
+            margin: 20px 0 40px;
+            @include respond-below(md) {
+                margin: 20px 0 30px;
+            }
+        }
+        .language-dropdown {
+            .dropdown-toggle {
+                border: 0;
+                padding: 0;
+                border-radius: $border-radius-lg;
+                &:after {
+                    border-top: 0;
+                    border-left: 0;
+                    border-bottom: 2px solid $gray-400;
+                    border-right: 2px solid $gray-400;
+                    content: '';
+                    display: inline-block;
+                    pointer-events: none;
+                    width: 8px;
+                    height: 8px;
+                    vertical-align: 2px;
+                    @include transform-origin(66% 66%);
+                    @include transition(all 0.2s ease);
+                    @include transform(rotate(45deg));
+                }
+                &[aria-expanded="true"]:after {
+                    @include transform(rotate(-135deg));
+                }
+            }
+            .dropdown-menu {
+                padding: 15px;
+                background: $white;
+                box-shadow: $box-shadow-lg;
+                border: 1px solid $secondary-100;
+                .dropdown-item {
+                    padding: 5px 10px;
+                    background: $white;
+                    border-radius: $border-radius-lg;
+                    display: block;
+                    &:hover {
+                        background: $light-300;
+                    }
+                }
+            }
+        }
+    }
+}
+.login-or {
+    text-align: center;
+    font-size: 15px;
+    color: $gray-700;
+    font-weight: $font-weight-medium;
+    margin: 5px 0;
+    padding: 10px 0;
+    position: relative;
+	&::after {
+		width: 100%;
+		content: "";
+		border-top: 1px solid $gray-200;
+		position: absolute;
+		top: 50%;
+		right: 0;
+	}
+	&::before {
+		width: 100%;
+		content: "";
+		border-top: 1px solid $gray-200;
+		position: absolute;
+		top: 50%;
+		left: 0;
+	}
+	.span-or {
+		background-color: $white;
+		padding: 0 10px;
+		z-index: 9;
+		position: relative;
+	}
+}
+.authentication-card {
+    padding: 40px;
+}
+.authen-overlay-item {
+    background: #FFF7F340;
+    border-radius: 15px;
+    padding: 40px;
+    position: relative;
+    backdrop-filter: blur(26px);
+}
+.authen-overlay-img {
+    max-width: 400px;
+}
+.bg-overlay-img {
+    .bg-1 {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+    .bg-2 {
+        position: absolute;
+        left: 60px;
+        bottom: 0;
+        z-index: 1;
+        max-width: 100px;
+    }
+    .bg-3 {
+        position: absolute;
+        top: 40%;
+        right: 30%;
+        z-index: 1;
+    }
+}
+.bg-linear-gradiant {
+    background: linear-gradient(115.43deg, #FFFFFF 0.45%, #FFF3ED 100%);
+}
+.border.border-dark-2 {
+    border: 2px solid #E8E8E9 !important;
+    border-radius: 8px !important;
+    height: 70px;
+    width: 70px;
+}
+.error-images img {
+    max-width: 500px;
+}
+
+.password-strength span{
+	width: 100%;
+    height: 5px;
+    background: #e3e3e3;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+.poor-active span.active#poor,
+.poor-active span.active#poors {
+  background: $danger;
+}
+.avg-active span.active#poor,
+.avg-active span.active#weak,
+.avg-active span.active#poors,
+.avg-active span.active#weaks {
+  background: $warning;
+}
+.strong-active span.active#poor,
+.strong-active span.active#weak,
+.strong-active span.active#strong,
+.strong-active span.active#poors,
+.strong-active span.active#weaks,
+.strong-active span.active#strongs {
+  background: $info;
+}
+.heavy-active span.active#poor,
+.heavy-active span.active#weak,
+.heavy-active span.active#strong,
+.heavy-active span.active#heavy,
+.heavy-active span.active#poors,
+.heavy-active span.active#weaks,
+.heavy-active span.active#strongs,
+.heavy-active span.active#heavys {
+  background: $success;
+}
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+.under-maintenance{
+  position: relative;
+}
+.maintenance-overlay-image{
+  .overlay-image-bottom{
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+  }
+  .overlay-image-top{
+    position: absolute;
+    top: -80px;
+    right: 2%;
+    z-index: -1;
+  }
+}
+.coming-soon{
+  .comming-soon-pg{
+    .counts-card{
+      width: 50px;
+      height: 50px;
+    }
+    
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "data" : [
+    {
+      "Expense_Name": "Online Course",
+      "Date": "14/01/2024",
+      "Payment_Method": "Cash",
+      "Amount": "$3000"
+    },
+    {
+      "Expense_Name": "Employee Benefits",
+      "Date": "21/01/2024",
+      "Payment_Method": "Cash",
+      "Amount": "$2500"
+    },
+    {
+      "Expense_Name": "Travel",
+      "Date": "20/02/2024",
+      "Payment_Method": "Cheque",
+      "Amount": "$2800"
+    },
+    {
+      "Expense_Name": "Office Supplies",
+      "Date": "15/03/2024",
+      "Payment_Method": "Cash",
+      "Amount": "$3300"
+    },
+    {
+      "Expense_Name": "Welcome Kit",
+      "Date": "12/04/2024",
+      "Payment_Method": "Cheque",
+      "Amount": "$3600"
+    },
+    {
+      "Expense_Name": "Equipment",
+      "Date": "20/05/2024",
+      "Payment_Method": "Cheque",
+      "Amount": "$2000"
+    },
+    {
+      "Expense_Name": "Miscellaneous",
+      "Date": "06/07/2024",
+      "Payment_Method": "Cash",
+      "Amount": "$3400"
+    },
+    {
+      "Expense_Name": "Payroll",
+      "Date": "02/09/2024",
+      "Payment_Method": "Cheque",
+      "Amount": "$4000"
+    },
+    {
+      "Expense_Name": "Cafeteria",
+      "Date": "15/11/2024",
+      "Payment_Method": "Cash",
+      "Amount": "$4500"
+    },
+    {
+      "Expense_Name": "Cleaning Supplies",
+      "Date": "10/12/2024",
+      "Payment_Method": "Cheque",
+      "Amount": "$3800"
+    }
+  ],
+  "totalData": 10
+}

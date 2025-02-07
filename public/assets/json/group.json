@@ -1,0 +1,95 @@
+{
+    "data" : [
+        {
+            "groupName": "The Dream Team",
+            "groupDescription": "Design enthusiasts unite! Share, learn, and create together!",
+            "members": "35+",
+            "totalChatCount": "105",
+            "createdDate": "02 Sep 2024, 10:00 AM",
+            "img": "assets/admin/img/group-chat/group-01.jpg",
+            "group":1
+        },
+        {
+            "groupName": "The Meme Team",
+            "groupDescription": "Welcome to the Meme Team! Share and enjoy memes!",
+            "members": "40+",
+            "totalChatCount": "120",
+            "createdDate": "14 Sep 2024, 11:30 AM",
+            "img": "assets/admin/img/group-chat/group-02.jpg",
+            "group":2
+        },
+        {
+            "groupName": "Tech Talk Tribe",
+            "groupDescription": "Share insights, ask questions, and explore new trends!",
+            "members": "20+",
+            "totalChatCount": "200",
+            "createdDate": "28 Sep 2024, 08:15 AM",
+            "img": "assets/admin/img/group-chat/group-03.jpg",
+            "group":3
+        },
+        {
+            "groupName": "Game Changers",
+            "groupDescription": "Game on! Share tips, play together, and have fun!",
+            "members": "15+",
+            "totalChatCount": "250",
+            "createdDate": "12 Oct 2024, 06:40 PM",
+            "img": "assets/admin/img/group-chat/group-04.jpg",
+            "group":4
+        },
+        {
+            "groupName": "The Chill Zone",
+            "groupDescription": "Chill vibes only! Relax, chat, and unwind.",
+            "members": "30+",
+            "totalChatCount": "300",
+            "createdDate": "20 Oct 2024, 04:18 PM",
+            "img": "assets/admin/img/group-chat/group-05.jpg",
+            "group":1
+        },
+        {
+            "groupName": "Squad Goals",
+            "groupDescription": "Squad goals! Connect, plan, and have a blast together.",
+            "members": "25+",
+            "totalChatCount": "180",
+            "createdDate": "30 Oct 2024, 07:25 AM",
+            "img": "assets/admin/img/group-chat/group-06.jpg",
+            "group":5
+        },
+        {
+            "groupName": "Scholars Society",
+            "groupDescription": "Share knowledge, discuss ideas, and support each other.",
+            "members": "28+",
+            "totalChatCount": "200",
+            "createdDate": "01 Nov 2024, 08:50 AM",
+            "img": "assets/admin/img/group-chat/group-07.jpg",
+            "group":1
+        },
+        {
+            "groupName": "Travel Tribe",
+            "groupDescription": "\"Explore together! Share travel tips, stories, and adventures\"",
+            "members": "35+",
+            "totalChatCount": "320",
+            "createdDate": "10 Nov 2024, 11:20 AM",
+            "img": "assets/admin/img/group-chat/group-08.jpg",
+            "group":3
+        },
+        {
+            "groupName": "Fitness Fanatics",
+            "groupDescription": "Get fit together! Share workouts, tips, and motivation.",
+            "members": "40+",
+            "totalChatCount": "400",
+            "createdDate": "17 Nov 2024, 04:50 PM",
+            "img": "assets/admin/img/group-chat/group-09.jpg",
+            "group":1
+        },
+        {
+            "groupName": "Movie Buffs",
+            "groupDescription": "Movie buffs unite! Discuss, review, and enjoy films together.",
+            "members": "50+",
+            "totalChatCount": "210",
+            "createdDate": "12 Dec 2024, 09:30 AM",
+            "img": "assets/admin/img/group-chat/group-10.jpg",
+            "group":5
+        }
+        ],
+    "totalData": 10
+}

@@ -21,6 +21,7 @@
     "@types/jest": "^29.5.14",
     "antd": "^5.22.3",
     "apexcharts": "^4.1.0",
+    "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.7",
     "clipboard-copy": "^4.0.1",

@@ -97,6 +97,9 @@ import TwoStepVerification3 from "../auth/twoStepVerification/twoStepVerificatio
 import Register2 from "../auth/register/register-2";
 import Register3 from "../auth/register/register-3";
 import RegisterWizard from "../../user-management/register-wizard";
+import LoginUser  from "../../user-login/loginuser"
+import UserHome  from "../../user-home/userhome"
+import VerifyEmail  from "../../user-login/VerifyEmail"
 import ForgotPassword2 from "../auth/forgotPassword/forgotPassword-2";
 import ForgotPassword3 from "../auth/forgotPassword/forgotPassword-3";
 import ResetPasswordSuccess from "../auth/resetPasswordSuccess/resetPasswordSuccess";
@@ -1651,6 +1654,21 @@ export const publicRoutes = [
 
 export const authRoutes = [
   {
+    path: "/LoginUser",
+    element: <LoginUser  />,
+    route: Route,
+  },
+  {
+    path: "/home",
+    element: <UserHome  />,
+    route: Route,
+  },
+  {
+    path: "/VerifyEmail",
+    element: <VerifyEmail  />,
+    route: Route,
+  },
+  {
     path: "/register",
     element: <RegisterWizard />,
     route: Route,
@@ -1688,6 +1706,21 @@ export const authRoutes = [
   {
     path: routes.register3,
     element: <Register3 />,
+    route: Route,
+  },
+  {
+    path: "/LoginUser",
+    element: <LoginUser   />,
+    route: Route,
+  },
+  {
+    path: "/home",
+    element: <UserHome  />,
+    route: Route,
+  },
+  {
+    path: "/VerifyEmail",
+    element: <VerifyEmail  />,
     route: Route,
   },
   {

@@ -1,18 +1,38 @@
-# Node modules
+# Node.js dependencies
 node_modules/
 
 # Logs
+logs/
 *.log
-npm-debug.log*
 
-# Environment variables
+# Environment files (for sensitive info like API keys)
 .env
-
-# Build files
-/build
 
 # OS-specific files
 .DS_Store
+Thumbs.db
 
-# IDE-specific files
+# Editor-specific files
 .vscode/
+.idea/
+
+# Build output directories
+build/
+dist/
+
+# Temporary files
+*.bak
+*.swp
+*.tmp
+
+# Frontend build files (if using React or similar)
+frontend/build/
+frontend/node_modules/
+
+# Backend build files (if applicable)
+backend/build/
+backend/node_modules/
+
+# Ignore any submodules if needed
+Frontend/
+Backend/

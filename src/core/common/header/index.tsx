@@ -9,7 +9,7 @@ import {
   setMobileSidebar,
   toggleMiniSidebar,
 } from "../../data/redux/sidebarSlice";
-import { all_routes } from "../../../feature-module/router/all_routes";
+import { all_routes } from "../../../routing-module/router/all_routes";
 import { HorizontalSidebarData } from '../../data/json/horizontalSidebar'
 const Header = () => {
   const routes = all_routes;

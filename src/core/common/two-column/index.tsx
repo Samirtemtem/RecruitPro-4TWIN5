@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { TowColData } from '../../data/json/twoColData'
 import ImageWithBasePath from '../imageWithBasePath';
-import { all_routes } from '../../../feature-module/router/all_routes';
+import { all_routes } from '../../../routing-module/router/all_routes';
 import Scrollbars from "react-custom-scrollbars-2";
 const TwoColumnSidebar = () => {
     const routes = all_routes

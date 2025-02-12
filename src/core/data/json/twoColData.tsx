@@ -1,4 +1,4 @@
-import { all_routes } from "../../../feature-module/router/all_routes";
+import { all_routes } from "../../../routing-module/router/all_routes";
 const routes = all_routes;
 
 export const TowColData = [
@@ -22,7 +22,7 @@ export const TowColData = [
                 menuValue: 'Admin Dashboard',
                 route: routes.adminDashboard,
                 base: 'index',
-              },
+              },]}]}]/*
               {
                 menuValue: 'Employee Dashboard',
                 route: routes.employeeDashboard,
@@ -1853,4 +1853,4 @@ export const TowColData = [
         ],
       },
       
-];
+];*/

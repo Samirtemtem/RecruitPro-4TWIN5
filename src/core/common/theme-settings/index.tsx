@@ -21,7 +21,7 @@ import {
 } from "../../data/redux/themeSettingSlice";
 import { Link } from "react-router-dom";
 import ImageWithBasePath from "../imageWithBasePath";
-import { all_routes } from "../../../feature-module/router/all_routes";
+import { all_routes } from "../../../routing-module/router/all_routes";
 import { ColorPicker } from 'antd';
 import type { ColorPickerProps, GetProp } from 'antd';
 

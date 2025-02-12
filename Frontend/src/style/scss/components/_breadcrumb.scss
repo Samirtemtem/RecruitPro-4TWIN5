@@ -1,0 +1,106 @@
+.page-header-breadcrumb {
+  .breadcrumb-item+.breadcrumb-item::before {
+    content: var(--bs-breadcrumb-divider, "\ea65");
+    font-family: "tabler-icons" !important;
+  }
+}
+[dir="rtl"] {
+  .page-header-breadcrumb {
+    .breadcrumb-item+.breadcrumb-item::before {
+      content: var(--bs-breadcrumb-divider, "\ea64");
+      font-family: "tabler-icons" !important;
+    }
+  }
+}
+.breadcrumb {
+  .breadcrumb-item {
+    color: $gray-500;
+    font-size: $font-size-12;
+    a {
+      color: $gray-500;
+      &:hover {
+        color: $primary;
+      }
+    }
+    &.active {
+      color: $gray-900;
+    }
+  }
+}
+.breadcrumb-item+.breadcrumb-item::before {
+  color: $gray-600;
+  opacity: 0.4;
+}
+.breadcrumb-arrow {
+  .breadcrumb-item+.breadcrumb-item::before {
+    color: $gray-600;
+    content: "\f101";
+    font-family: $font-awesome !important;
+  }
+}
+.breadcrumb-pipe {
+  .breadcrumb-item+.breadcrumb-item::before {
+    color: $gray-600;
+    content: "\f061";
+    font-family: $font-awesome !important;
+  }
+}
+.breadcrumb-line {
+  .breadcrumb-item+.breadcrumb-item::before {
+    color: $gray-600;
+    content: "-";
+  }
+}
+.breadcrumb-dot {
+  .breadcrumb-item+.breadcrumb-item::before {
+    color: $gray-600;
+    content: "•";
+  }
+}
+.breadcrumb-divide {
+  .breadcrumb-item+.breadcrumb-item::before {
+    color: $gray-600;
+    content: "\f054";
+    font-family: $font-awesome !important;
+  }
+}
+.breadcrumb-separatorless {
+  .breadcrumb-item+.breadcrumb-item::before {
+    content: "";
+    display: none;
+  }
+}
+.breadcrumb-colored {
+  padding: 12px 15px;
+  border-radius: $border-radius;
+	li {
+		a {
+			color: $white;
+		}
+	}
+	.breadcrumb-item {
+    a {
+			color: $white;
+    }
+		&.active {
+			color: $white;
+			opacity: 0.8;
+		}
+		& + .breadcrumb-item {
+      a {
+        color: $white;
+      }
+			&::before {
+				color: $white;
+			}
+		}
+	}
+}
+.embedded-breadcrumb:before {
+  opacity: 0.7;
+}
+[data-theme-mode="dark"] {
+  .embedded-breadcrumb:before {
+    filter: invert(1);
+  }
+}

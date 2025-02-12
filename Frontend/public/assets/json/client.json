@@ -1,0 +1,105 @@
+{
+  "data": [
+    {
+      "ClientID": "Cli-001",
+      "ClientName": "Michael Walker",
+      "Work": "CEO",
+      "CompanyName": "BrightWave Innovations",
+      "Email": "michael@example.com",
+      "Phone": "(163) 2459 315",
+      "Image": "user-39.jpg",
+      "Status": "Active"
+    },
+    {
+      "ClientID": "Cli-002",
+      "ClientName": "Sophie Headrick",
+      "Work": "Manager",
+      "CompanyName": "Stellar Dynamics",
+      "Email": "sophie@example.com",
+      "Phone": "(146) 1249 296",
+      "Image": "user-40.jpg",
+      "Status": "Active"
+    },
+    {
+      "ClientID": "Cli-003",
+      "ClientName": "Cameron Drake",
+      "Work": "Director",
+      "CompanyName": "Quantum Nexus",
+      "Email": "cameron@example.com",
+      "Phone": "(135) 3489 516",
+      "Image": "user-41.jpg",
+      "Status": "Active"
+    },
+    {
+      "ClientID": "Cli-004",
+      "ClientName": "Doris Crowley",
+      "Work": "Consultant",
+      "CompanyName": "EcoVision Enterprises",
+      "Email": "doris@example.com",
+      "Phone": "(158) 3459 596",
+      "Image": "user-42.jpg",
+      "Status": "Active"
+    },
+    {
+      "ClientID": "Cli-005",
+      "ClientName": "Thomas Bordelon",
+      "Work": "Manager",
+      "CompanyName": "Aurora Technologies",
+      "Email": "thomas@example.com",
+      "Phone": "(196) 4862 196",
+      "Image": "user-44.jpg",
+      "Status": "Active"
+    },
+    {
+      "ClientID": "Cli-006",
+      "ClientName": "Kathleen Gutierrez",
+      "Work": "Director",
+      "CompanyName": "BlueSky Ventures",
+      "Email": "kathleen@example.com",
+      "Phone": "(163) 6498 256",
+      "Image": "user-45.jpg",
+      "Status": "Active"
+    },
+    {
+      "ClientID": "Cli-007",
+      "ClientName": "Bruce Wright",
+      "Work": "CEO",
+      "CompanyName": "TerraFusion Energy",
+      "Email": "bruce@example.com",
+      "Phone": "(154) 6481 075",
+      "Image": "user-46.jpg",
+      "Status": "Active"
+    },
+    {
+      "ClientID": "Cli-008",
+      "ClientName": "Estelle Morgan",
+      "Work": "Manager",
+      "CompanyName": "UrbanPulse Design",
+      "Email": "estelle@example.com",
+      "Phone": "(184) 6348 195",
+      "Image": "user-47.jpg",
+      "Status": "Inactive"
+    },
+    {
+      "ClientID": "Cli-009",
+      "ClientName": "Stephen Dias",
+      "Work": "CEO",
+      "CompanyName": "Nimbus Networks",
+      "Email": "stephen@example.com",
+      "Phone": "(175) 2496 125",
+      "Image": "user-48.jpg",
+      "Status": "Active"
+    },
+    {
+      "ClientID": "Cli-010",
+      "ClientName": "Angela Thomas",
+      "Work": "Consultant",
+      "CompanyName": "Epicurean Delights",
+      "Email": "angela@example.com",
+      "Phone": "(132) 3145 977",
+      "Image": "user-43.jpg",
+      "Status": "Active"
+    }
+  ],
+  "totalData": 10
+}

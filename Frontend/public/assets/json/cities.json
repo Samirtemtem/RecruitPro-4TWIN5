@@ -1,0 +1,65 @@
+{
+    "data":[
+        {
+          "CityName": "Los Angeles",
+          "StateName": "California",
+          "CountryName": "United States",
+          "Status": "Active"
+        },
+        {
+          "CityName": "New York City",
+          "StateName": "California",
+          "CountryName": "United States",
+          "Status": "Active"
+        },
+        {
+          "CityName": "Houston",
+          "StateName": "Texas",
+          "CountryName": "United States",
+          "Status": "Active"
+        },
+        {
+          "CityName": "Munich",
+          "StateName": "Bavaria",
+          "CountryName": "Germany",
+          "Status": "Active"
+        },
+        {
+          "CityName": "Montreal",
+          "StateName": "Quebec",
+          "CountryName": "Canada",
+          "Status": "Active"
+        },
+        {
+          "CityName": "Toronto",
+          "StateName": "Ontario",
+          "CountryName": "Canada",
+          "Status": "Active"
+        },
+        {
+          "CityName": "Miami",
+          "StateName": "Florida",
+          "CountryName": "United States",
+          "Status": "Active"
+        },
+        {
+          "CityName": "Calgary",
+          "StateName": "Berlin",
+          "CountryName": "Germany",
+          "Status": "Active"
+        },
+        {
+          "CityName": "Melbourne",
+          "StateName": "Victoria",
+          "CountryName": "Australia",
+          "Status": "Active"
+        },
+        {
+          "CityName": "Johannesburg",
+          "StateName": "Gauteng",
+          "CountryName": "Egypt",
+          "Status": "Active"
+        }
+       ],
+    "totaldata":10
+}

@@ -1,0 +1,85 @@
+{
+    "data":[
+        {
+          "Image": "user-32.jpg",
+          "Name": "Anthony Lewis",
+          "Email": "anthony@example.com",
+          "CreatedDate": "12/09/2024",
+          "Role": "Employee",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-09.jpg",
+          "Name": "Brian Villalobos",
+          "Email": "brian@example.com",
+          "CreatedDate": "24/10/2024",
+          "Role": "Employee",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-40.jpg",
+          "Name": "Sophie Headrick",
+          "Email": "sophie@example.com",
+          "CreatedDate": "18/02/2024",
+          "Role": "Client",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-33.jpg",
+          "Name": "Stephan Peralt",
+          "Email": "peral@example.com",
+          "CreatedDate": "17/10/2024",
+          "Role": "Employee",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-44.jpg",
+          "Name": "Thomas Bordelon",
+          "Email": "thomas@example.com",
+          "CreatedDate": "20/07/2024",
+          "Role": "Client",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-34.jpg",
+          "Name": "Doglas Martini",
+          "Email": "martniwr@example.com",
+          "CreatedDate": "10/04/2024",
+          "Role": "Employee",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-41.jpg",
+          "Name": "Cameron Drake",
+          "Email": "cameron@example.com",
+          "CreatedDate": "29/08/2024",
+          "Role": "Client",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-01.jpg",
+          "Name": "Harvey Smith",
+          "Email": "harvey@example.com",
+          "CreatedDate": "22/02/2024",
+          "Role": "Employee",
+          "Status": "Inactive"
+        },
+        {
+          "Image": "user-39.jpg",
+          "Name": "Michael Walker",
+          "Email": "michael@example.com",
+          "CreatedDate": "03/11/2024",
+          "Role": "Client",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-42.jpg",
+          "Name": "Doris Crowley",
+          "Email": "doris@example.com",
+          "CreatedDate": "17/12/2024",
+          "Role": "Client",
+          "Status": "Active"
+        }
+       ],
+    "totaldata":10
+}

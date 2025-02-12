@@ -1,0 +1,62 @@
+{
+  "data": [
+    {
+      "name": "Secret",
+      "size": "7.6 MB",
+      "type": "Doc",
+      "modified": { "date": "Mar 15, 2025", "time": "05:00:14 PM" },
+      "share": [
+        "assets/img/profiles/avatar-27.jpg",
+        "assets/img/profiles/avatar-29.jpg",
+        "assets/img/profiles/avatar-12.jpg"
+      ]
+    },
+    {
+      "name": "Sophie Headrick",
+      "size": "7.4 MB",
+      "type": "PDF",
+      "modified": { "date": "Jan 8, 2025", "time": "08:20:13 PM" },
+      "share": [
+        "assets/img/profiles/avatar-15.jpg",
+        "assets/img/profiles/avatar-16.jpg"
+      ]
+    },
+    {
+      "name": "Gallery",
+      "size": "6.1 MB",
+      "type": "Image",
+      "modified": { "date": "Aug 6, 2025", "time": "04:10:12 PM" },
+      "share": [
+        "assets/img/profiles/avatar-02.jpg",
+        "assets/img/profiles/avatar-03.jpg",
+        "assets/img/profiles/avatar-05.jpg",
+        "assets/img/profiles/avatar-06.jpg",
+        "+1"
+      ]
+    },
+    {
+      "name": "Doris Crowley",
+      "size": "5.2 MB",
+      "type": "Folder",
+      "modified": { "date": "Jan 6, 2025", "time": "03:40:14 PM" },
+      "share": [
+        "assets/img/profiles/avatar-06.jpg",
+        "assets/img/profiles/avatar-10.jpg",
+        "assets/img/profiles/avatar-15.jpg"
+      ]
+    },
+    {
+      "name": "Cheat_codez",
+      "size": "8 MB",
+      "type": "Xml",
+      "modified": { "date": "Oct 12, 2025", "time": "05:00:14 PM" },
+      "share": [
+        "assets/img/profiles/avatar-04.jpg",
+        "assets/img/profiles/avatar-28.jpg",
+        "assets/img/profiles/avatar-14.jpg",
+        "assets/img/profiles/avatar-15.jpg"
+      ]
+    }
+  ],
+  "totalData": 5
+}

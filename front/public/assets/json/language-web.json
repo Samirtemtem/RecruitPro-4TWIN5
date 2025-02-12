@@ -1,0 +1,36 @@
+
+{
+    "data":[
+        {
+            "moduleName": "Chat",
+            "total": "560",
+            "complete": "560",
+            "progress": 1
+        },
+        {
+            "moduleName": "Group",
+            "total": "320",
+            "complete": "262",
+            "progress": 2
+        },
+        {
+            "moduleName": "Contacts",
+            "total": "270",
+            "complete": "180",
+            "progress": 3
+        },
+        {
+            "moduleName": "Calls",
+            "total": "250",
+            "complete": "154",
+            "progress": 4
+        },
+        {
+            "moduleName": "Settings",
+            "total": "220",
+            "complete": "140",
+            "progress": 5
+        }
+    ]
+       
+}

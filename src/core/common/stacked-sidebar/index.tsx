@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { TowColData } from '../../data/json/twoColData'
 import ImageWithBasePath from '../imageWithBasePath';
-import { all_routes } from '../../../feature-module/router/all_routes';
+import { all_routes } from '../../../routing-module/router/all_routes';
 
 const StackedSidebar = () => {
     const routes = all_routes

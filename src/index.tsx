@@ -12,20 +12,21 @@ import "../src/style/icon/weather/weathericons.css";
 import "../src/style/icon/typicons/typicons.css";
 import "../node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css";
 import "../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+
 import "../src/style/icon/ionic/ionicons.css";
 import "../src/style/icon/tabler-icons/webfont/tabler-icons.css";
-import ALLRoutes from "./feature-module/router/router";
+import ALLRoutes from "./routing-module/router/router";
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  //<React.StrictMode>
     <Provider store={store}>
       <BrowserRouter basename={base_path}>
         <ALLRoutes />
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>
+  //</React.StrictMode>
 );

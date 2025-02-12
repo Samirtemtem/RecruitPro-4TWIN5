@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom"; // Assuming you're using React Router
-import { all_routes } from "../../../feature-module/router/all_routes";
+import { all_routes } from "../../../routing-module/router/all_routes";
 
 const Loader = () => {
   const routes = all_routes

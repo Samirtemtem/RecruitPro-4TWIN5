@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import CommonSelect from '../common/commonSelect';
 import CommonTagsInput from '../common/Taginput';
 import { status } from '../common/selectoption/selectoption';
-import { all_routes } from '../../feature-module/router/all_routes';
+import { all_routes } from '../../routing-module/router/all_routes';
 import ImageWithBasePath from '../common/imageWithBasePath';
 
 const SuccesContacts = () => {

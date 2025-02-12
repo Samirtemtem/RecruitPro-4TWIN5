@@ -1,5 +1,5 @@
 import React from 'react'
-import { all_routes } from '../../feature-module/router/all_routes'
+import { all_routes } from '../../routing-module/router/all_routes'
 import { Link } from 'react-router-dom';
 
 const CountriesModal = () => {

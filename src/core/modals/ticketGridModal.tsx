@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { all_routes } from "../../feature-module/router/all_routes";
+import { all_routes } from "../../routing-module/router/all_routes";
 import CommonSelect from "../common/commonSelect";
 import CommonTagsInput from "../common/Taginput";
 

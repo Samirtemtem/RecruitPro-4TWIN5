@@ -35,5 +35,5 @@ backend/node_modules/
 backend/.env
 
 # Ignore any submodules if needed
-Frontend/
-Backend/
+#Frontend/
+#Backend/

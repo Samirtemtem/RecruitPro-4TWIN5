@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { all_routes } from "../../routing-module/router/all_routes";
-import ImageWithBasePath from "../../core/common/imageWithBasePath";
-import "./loginuser.scss"; // Use the same SCSS file for styling
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
@@ -18,34 +16,57 @@ const VerifyEmail = () => {
         const params = new URLSearchParams(window.location.search);
         const token = params.get("token");
 
+        // Check if the token is missing
         if (!token) {
-          setError("Invalid or missing token.");
-          navigate(all_routes.register);
+          setError("Missing verification token.");
+          setLoading(false);
           return;
         }
 
-        // Make the verification request
-        const response = await axios.get(`http://localhost:5000/api/auth/verify-email?token=${token}`);
+        // Optional: Token format validation (e.g., if you know it's a JWT)
+        if (!isValidTokenFormat(token)) {
+          setError("Invalid token format.");
+          setLoading(false);
+          return;
+        }
 
-        setMessage(response.data.message);
-      } catch (error: any) {
-        console.error("Verification failed:", error.response?.data || error.message);
-        setError("Invalid or expired token.");
+        // Call backend API to verify email
+        const response = await axios.get(`http://localhost:5000/api/auth/verifyEmail?token=${token}`);
+        console.log("after call verify from frontend");
+        console.log(response.data); // Log the full response to inspect its structure
+        console.log(response.data.message);
+        setMessage(response.data.message); // Set success message
+      } catch (error: unknown) {
+        // Handle Axios error
+        if (axios.isAxiosError(error)) {
+          console.error("Axios Error:", error.response?.data);
+          setError(error.response?.data?.message || "Failed to verify token.");
+        } else {
+          console.error("Unexpected error:", error);
+          setError("An unexpected error occurred. Please try again later.");
+        }
       } finally {
-        setLoading(false);
+        setLoading(false); // Ensure loading state is updated
       }
     };
 
     verifyEmail();
-  }, []);
+  }, []); // Empty dependency array to run only once on mount
 
+  // Optional: Validate token format (e.g., check for JWT structure)
+  const isValidTokenFormat = (token: string) => {
+    // Simple check for JWT structure (3 parts separated by dots)
+    return token.split('.').length === 3;
+  };
+
+  // Countdown and automatic redirection
   useEffect(() => {
-    if (!loading) {
+    if (!loading && message) {
       const timer = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
             clearInterval(timer);
-            navigate(message ? all_routes.LoginUser : all_routes.register);
+            navigate(all_routes.LoginUser); // Redirect after countdown
             return 0;
           }
           return prev - 1;
@@ -54,7 +75,7 @@ const VerifyEmail = () => {
 
       return () => clearInterval(timer); // Cleanup timer on unmount
     }
-  }, [loading, message, error]);
+  }, [loading, message, navigate]);
 
   return (
     <div className="container-fluid vh-100 d-flex align-items-center justify-content-center">
@@ -65,7 +86,7 @@ const VerifyEmail = () => {
               <div className="card-body">
                 {/* Logo */}
                 <div className="mx-auto mb-4 text-center">
-                  <ImageWithBasePath src="assets/img/logo.svg" className="img-fluid" alt="Logo" />
+                  <img src="assets/img/logo.svg" className="img-fluid" alt="Logo" />
                 </div>
 
                 {/* Verification Status */}
@@ -74,6 +95,7 @@ const VerifyEmail = () => {
                   <p className="text-muted">Verifying your email address...</p>
                 </div>
 
+                {/* Loading spinner */}
                 {loading && (
                   <div className="text-center">
                     <div className="spinner-border text-primary" role="status">
@@ -82,30 +104,33 @@ const VerifyEmail = () => {
                   </div>
                 )}
 
+                {/* Success message */}
                 {!loading && message && (
                   <div className="alert alert-success">{message}</div>
                 )}
 
+                {/* Error message */}
                 {!loading && error && (
-                  <div className="alert alert-danger">{error}</div>
-                )}
-
-                {/* Redirect Info */}
-                {!loading && (
-                  <div className="text-center mt-4">
-                    <p className="text-muted">
-                      You will be redirected automatically.
-                    </p>
-                    <p className="fw-bold text-primary">Redirecting in {countdown} seconds...</p>
+                  <div className="alert alert-danger">
+                    {error}
+                    <br />
+                    {/* Provide manual redirection on error */}
+                    <button
+                      className="btn btn-primary mt-3"
+                      onClick={() => navigate(all_routes.register)}
+                    >
+                      Go Back to Registration
+                    </button>
                   </div>
                 )}
 
-                {/* Footer 
-                
-                <div className="mt-4 pb-2 text-center">
-                  <p className="mb-0 text-gray-9">Copyright © 2024 - Smarthr</p>
-                </div>
-                */}
+                {/* Redirect Info */}
+                {!loading && message && (
+                  <div className="text-center mt-4">
+                    <p className="text-muted">You will be redirected automatically.</p>
+                    <p className="fw-bold text-primary">Redirecting in {countdown} seconds...</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

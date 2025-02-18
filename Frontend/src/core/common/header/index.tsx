@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation,useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setDataLayout,
@@ -74,6 +74,17 @@ const Header = () => {
         setIsFullscreen(false);
       }
     }
+  };
+
+
+  
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+	//console.log("before",localStorage.getItem('token')); // Should be null after removal
+    localStorage.removeItem('token'); // Clear token
+	//console.log("after",localStorage.getItem('token')); // Should be null after removal
+    navigate('/LoginUser', { replace: true }); // Redirect to login page
   };
 
   return (
@@ -436,7 +447,7 @@ const Header = () => {
 											</Link>
 										</div>
 										<div className="card-footer">
-											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to={routes.login}><i className="ti ti-login me-2"></i>Logout</Link>
+											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to="/LoginUser" onClick={handleLogout}><i className="ti ti-login me-2"></i>Logout</Link>
 										</div>
 									</div>
 								</div>
@@ -452,7 +463,7 @@ const Header = () => {
 					<div className="dropdown-menu dropdown-menu-end">
 						<Link className="dropdown-item" to={routes.profile}>My Profile</Link>
 						<Link className="dropdown-item" to={routes.profilesettings}>Settings</Link>
-						<Link className="dropdown-item" to={routes.login}>Logout</Link>
+					{/* 	<Link className="dropdown-item" to="/LoginUser" onClick={handleLogout}>Logout</Link> */}
 					</div>
 				</div>
 

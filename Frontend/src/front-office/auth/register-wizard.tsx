@@ -1,67 +1,146 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './register-wizard.scss';
 import ImageWithBasePath from '../../core/common/imageWithBasePath';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { register as registerUser } from '../../services/auth.service';
+import { Education, EducationInput } from '../../models/Education';
+import { Experience, ExperienceInput } from '../../models/Experience';
+import { Skill, SkillDegree, skillDegreeDescriptions } from '../../models/Skill';
+import { Profile, ProfileFormData, SocialLink, SocialPlatform } from '../../models/Profile';
+import * as Yup from 'yup';
 
 type FormSection = 'personal' | 'professional' | 'educationHistory' | 'workExperience' | 'skills' | 'terms';
 
-interface Education {
-  id: number;
-  institution: string;
-  diploma: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-  location: string;
-}
-
-interface Experience {
-  id: number;
-  position: string;
-  enterprise: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-  location: string;
-}
-
-interface Skill {
-  id: number;
-  name: string;
-  degree: SkillDegree;
-}
-
-type SkillDegree = 'NOVICE' | 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT';
-
-interface SocialLink {
-  id: number;
-  platform: 'LINKEDIN' | 'GITHUB' | 'PORTFOLIO' | 'OTHER';
-  link: string;
-}
-
-interface FormData {
-  // Personal Information
-  firstName: string;
-  lastName: string;
-  email: string;
+interface FormData extends Omit<ProfileFormData, 'id'> {
   password: string;
   confirmPassword: string;
-  phoneNumber: string;
-  address: string;
-  profileImage: File | null;
-  cv: File | null;
-
-  // Professional Information
   education: Education[];
   experience: Experience[];
   skills: Skill[];
-  socialLinks: SocialLink[];
-
-  // Terms
   agreeToTerms: boolean;
 }
+
+// Validation Schemas
+const personalInfoSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .required('First name is required')
+    .min(2, 'First name must be at least 2 characters')
+    .max(50, 'First name must not exceed 50 characters'),
+  lastName: Yup.string()
+    .required('Last name is required')
+    .min(2, 'Last name must be at least 2 characters')
+    .max(50, 'Last name must not exceed 50 characters'),
+  email: Yup.string()
+    .required('Email is required')
+    .email('Please enter a valid email address'),
+  password: Yup.string()
+    .required('Password is required')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+      'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number'
+    ),
+  confirmPassword: Yup.string()
+    .required('Please confirm your password')
+    .oneOf([Yup.ref('password')], 'Passwords must match'),
+  phoneNumber: Yup.string()
+    .required('Phone number is required')
+    .matches(/^[23457][0-9]{7}$/, 'Please enter a valid Tunisian phone number'),
+  address: Yup.string()
+    .required('Address is required')
+    .min(5, 'Address must be at least 5 characters')
+});
+
+const professionalInfoSchema = Yup.object().shape({
+  cv: Yup.mixed()
+    .required('CV is required')
+    .test('fileType', 'Only PDF and Word documents are allowed', (value) => {
+      if (!value) return true;
+      const file = value as File;
+      return ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+        .includes(file.type);
+    })
+    .test('fileSize', 'File size must be less than 5MB', (value) => {
+      if (!value) return true;
+      const file = value as File;
+      return file.size <= 5 * 1024 * 1024;
+    }),
+  profileImage: Yup.mixed()
+    .test('fileType', 'Only image files are allowed', (value) => {
+      if (!value) return true;
+      const file = value as File;
+      return file.type.startsWith('image/');
+    })
+    .test('fileSize', 'File size must be less than 5MB', (value) => {
+      if (!value) return true;
+      const file = value as File;
+      return file.size <= 5 * 1024 * 1024;
+    }),
+  socialLinks: Yup.array().of(
+    Yup.object().shape({
+      platform: Yup.string().required('Platform is required'),
+      link: Yup.string()
+        .url('Please enter a valid URL')
+        .test('validPlatformUrl', 'Invalid platform URL', function (value) {
+          if (!value) return true;
+          const platform = this.parent.platform;
+          if (platform === 'LINKEDIN') return value.includes('linkedin.com');
+          if (platform === 'GITHUB') return value.includes('github.com');
+          return true;
+        })
+    })
+  )
+});
+
+const educationSchema = Yup.array().of(
+  Yup.object().shape({
+    institution: Yup.string().required('Institution is required'),
+    diploma: Yup.string().required('Diploma is required'),
+    startDate: Yup.string().required('Start date is required'),
+    endDate: Yup.string()
+      .required('End date is required')
+      .test('dateOrder', 'End date must be after start date', function (value) {
+        const { startDate } = this.parent;
+        if (!startDate || !value) return true;
+        return new Date(startDate) <= new Date(value);
+      }),
+    description: Yup.string().required('Description is required'),
+    location: Yup.string().required('Location is required')
+  })
+);
+
+const experienceSchema = Yup.array().of(
+  Yup.object().shape({
+    position: Yup.string().required('Position is required'),
+    enterprise: Yup.string().required('Enterprise is required'),
+    startDate: Yup.string().required('Start date is required'),
+    endDate: Yup.string()
+      .required('End date is required')
+      .test('dateOrder', 'End date must be after start date', function (value) {
+        const { startDate } = this.parent;
+        if (!startDate || !value) return true;
+        return new Date(startDate) <= new Date(value);
+      }),
+    description: Yup.string().required('Description is required'),
+    location: Yup.string().required('Location is required')
+  })
+);
+
+const skillsSchema = Yup.array().of(
+  Yup.object().shape({
+    name: Yup.string().required('Skill name is required'),
+    degree: Yup.string()
+      .required('Proficiency level is required')
+      .oneOf(['NOVICE', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'], 'Invalid proficiency level')
+  })
+);
+
+const termsSchema = Yup.object().shape({
+  agreeToTerms: Yup.boolean()
+    .required('You must accept the terms and conditions')
+    .oneOf([true], 'You must accept the terms and conditions')
+});
 
 const RequiredLabel: React.FC<{ text: string }> = ({ text }) => (
   <label className="form-label">
@@ -80,8 +159,8 @@ const RegisterWizard = () => {
     confirmPassword: '',
     phoneNumber: '',
     address: '',
-    profileImage: null,
-    cv: null,
+    profileImage: undefined,
+    cv: undefined,
     education: [{
       id: 0,
       institution: '',
@@ -159,6 +238,8 @@ const RegisterWizard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formFeedback, setFormFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
+  const navigate = useNavigate();
+
   const handleInputChange = (section: FormSection, field: string, value: any, index?: number) => {
     setFormData(prev => {
       let newState = { ...prev };
@@ -171,17 +252,7 @@ const RegisterWizard = () => {
         case 'professional':
           if (field === 'socialLinks' && typeof index === 'number') {
             const newLinks = [...prev.socialLinks];
-            if (index === 0) { // Add new link
-              newLinks.push({ id: prev.socialLinks.length + 1, platform: 'OTHER', link: '' });
-            } else {
-              // Determine if we're updating the platform or the link
-              const linkIndex = index - 1;
-              if (field.includes('platform')) {
-                newLinks[linkIndex] = { ...newLinks[linkIndex], platform: value };
-              } else {
-                newLinks[linkIndex] = { ...newLinks[linkIndex], link: value };
-              }
-            }
+            newLinks[index] = { ...newLinks[index], link: value };
             newState = { ...prev, socialLinks: newLinks };
           } else {
             newState = { ...prev, [field]: value };
@@ -567,79 +638,75 @@ const RegisterWizard = () => {
     }
   };
 
-  const validateStep = (step: number): boolean => {
-    const newErrors: any = {};
+  const validateStep = async (step: number): Promise<boolean> => {
+    try {
+      const newErrors: any = {};
 
-    switch (step) {
-      case 1: // Personal Information
-        if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-        if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-        if (!formData.email.trim()) {
-          newErrors.email = 'Email is required';
-        } else if (!validateEmail(formData.email)) {
-          newErrors.email = 'Please enter a valid email';
-        }
-        if (!formData.password) {
-          newErrors.password = 'Password is required';
-        } else if (!validatePassword(formData.password)) {
-          newErrors.password = 'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number';
-        }
-        if (!formData.confirmPassword) {
-          newErrors.confirmPassword = 'Please confirm your password';
-        } else if (formData.password !== formData.confirmPassword) {
-          newErrors.confirmPassword = 'Passwords do not match';
-        }
-        if (!formData.phoneNumber) {
-          newErrors.phoneNumber = 'Phone number is required';
-        } else if (!validatePhoneNumber(formData.phoneNumber)) {
-          newErrors.phoneNumber = 'Please enter a valid Tunisian phone number (8 digits starting with 2, 3, 4, 5, 7, or 9)';
-        }
-        if (!formData.address.trim()) newErrors.address = 'Address is required';
-        break;
+      switch (step) {
+        case 1: // Personal Information
+          await personalInfoSchema.validate(formData, { abortEarly: false });
+          break;
 
-      case 2: // Professional Information
-        if (!formData.cv) newErrors.cv = 'CV is required';
+        case 2: // Professional Information
+          await professionalInfoSchema.validate(
+            { cv: formData.cv, profileImage: formData.profileImage, socialLinks: formData.socialLinks },
+            { abortEarly: false }
+          );
+          break;
 
-        formData.socialLinks.forEach((link, index) => {
-          if (link.link) {
-            if (!validateUrl(link.link)) {
-              if (!newErrors.socialLinks) newErrors.socialLinks = [];
-              newErrors.socialLinks[index] = 'Please enter a valid URL';
-            } else if (link.platform === 'LINKEDIN' && !link.link.includes('linkedin.com')) {
-              if (!newErrors.socialLinks) newErrors.socialLinks = [];
-              newErrors.socialLinks[index] = 'Please enter a valid LinkedIn URL';
-            } else if (link.platform === 'GITHUB' && !link.link.includes('github.com')) {
-              if (!newErrors.socialLinks) newErrors.socialLinks = [];
-              newErrors.socialLinks[index] = 'Please enter a valid GitHub URL';
+        case 3: // Education
+          if (formData.education.length > 0) {
+            await educationSchema.validate(formData.education, { abortEarly: false });
+          }
+          break;
+
+        case 4: // Experience
+          if (formData.experience.length > 0) {
+            await experienceSchema.validate(formData.experience, { abortEarly: false });
+          }
+          break;
+
+        case 5: // Skills
+          if (formData.skills.length > 0) {
+            await skillsSchema.validate(formData.skills, { abortEarly: false });
+          }
+          break;
+
+        case 6: // Terms
+          await termsSchema.validate({ agreeToTerms: formData.agreeToTerms }, { abortEarly: false });
+          break;
+      }
+
+      setErrors({});
+      return true;
+    } catch (validationError) {
+      if (validationError instanceof Yup.ValidationError) {
+        const newErrors: any = {};
+        validationError.inner.forEach((error) => {
+          if (error.path) {
+            const path = error.path.split('.');
+            if (path.length === 1) {
+              newErrors[path[0]] = error.message;
+            } else if (path.length === 2) {
+              const [arrayName, index] = path;
+              if (!newErrors[`${arrayName}Fields`]) {
+                newErrors[`${arrayName}Fields`] = {};
+              }
+              if (!newErrors[`${arrayName}Fields`][index]) {
+                newErrors[`${arrayName}Fields`][index] = {};
+              }
+              newErrors[`${arrayName}Fields`][index][path[1]] = error.message;
             }
           }
         });
-        break;
-
-      case 3: // Education - Optional
-        break;
-
-      case 4: // Experience - Optional
-        break;
-
-      case 5: // Skills - Optional
-        break;
-
-      case 6: // Terms
-        if (!formData.agreeToTerms) {
-          newErrors.terms = 'You must agree to the terms and conditions';
-        }
-        break;
+        setErrors(newErrors);
+      }
+      return false;
     }
-
-    console.log('Step:', step, 'Errors:', newErrors);
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
-    const isValid = validateStep(activeStep);
-    console.log('Step:', activeStep, 'Valid:', isValid);
+  const handleNext = async () => {
+    const isValid = await validateStep(activeStep);
 
     if (isValid) {
       if (activeStep < 6) {
@@ -659,7 +726,7 @@ const RegisterWizard = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let isValid = true;
     for (let step = 1; step <= 6; step++) {
       if (!validateStep(step)) {
@@ -670,7 +737,61 @@ const RegisterWizard = () => {
     }
 
     if (isValid) {
-      console.log('Form submitted:', formData);
+      setIsLoading(true);
+      try {
+        // Create FormData object
+        const submitData = new FormData();
+
+        // Add basic user information
+        submitData.append('firstName', formData.firstName);
+        submitData.append('lastName', formData.lastName);
+        submitData.append('email', formData.email);
+        submitData.append('password', formData.password);
+        submitData.append('phoneNumber', formData.phoneNumber);
+        submitData.append('address', formData.address);
+
+        // Add files if they exist
+        if (formData.profileImage) {
+          submitData.append('profileImage', formData.profileImage);
+        }
+        if (formData.cv) {
+          submitData.append('cv', formData.cv);
+        }
+
+        // Add arrays as JSON strings
+        submitData.append('education', JSON.stringify(formData.education));
+        submitData.append('experience', JSON.stringify(formData.experience));
+        submitData.append('skills', JSON.stringify(formData.skills));
+        submitData.append('socialLinks', JSON.stringify(formData.socialLinks));
+
+        const response = await registerUser(submitData);
+
+        setFormFeedback({
+          type: 'success',
+          message: 'Registration successful! Redirecting to login...'
+        });
+
+        // Store the token if needed
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+        }
+
+        // Redirect after a short delay
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+
+      } catch (error: any) {
+        setFormFeedback({
+          type: 'error',
+          message: error?.message || 'Registration failed. Please try again.'
+        });
+        
+        // Scroll to top to show error message
+        window.scrollTo(0, 0);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -791,6 +912,22 @@ const RegisterWizard = () => {
                       <h2 className="mb-2">Registration Form</h2>
                       <p className="text-muted">Please complete all steps to create your account</p>
                     </div>
+
+                    {/* Feedback Message */}
+                    {formFeedback && (
+                      <div className={`alert alert-${formFeedback.type === 'success' ? 'success' : 'danger'} mb-4`}>
+                        {formFeedback.message}
+                      </div>
+                    )}
+
+                    {/* Loading Overlay */}
+                    {isLoading && (
+                      <div className="position-absolute w-100 h-100 top-0 left-0 d-flex justify-content-center align-items-center" style={{ background: 'rgba(255, 255, 255, 0.8)', zIndex: 1000 }}>
+                        <div className="spinner-border text-primary" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Progress Steps */}
                     <div className="wizard-steps mb-4">
@@ -977,10 +1114,10 @@ const RegisterWizard = () => {
                                   <div className="form-group">
                                     <label>LinkedIn Profile</label>
                                     <input
-                                      type="url"
+                                      type="text"
                                       className={`form-control ${errors.socialLinks?.[0] ? 'is-invalid' : ''}`}
                                       value={formData.socialLinks[0].link}
-                                      onChange={(e) => handleInputChange('professional', 'link', e.target.value, 1)}
+                                      onChange={(e) => handleInputChange('professional', 'socialLinks', e.target.value, 0)}
                                       placeholder="https://linkedin.com/in/your-profile"
                                     />
                                     {errors.socialLinks?.[0] && (
@@ -994,10 +1131,10 @@ const RegisterWizard = () => {
                                   <div className="form-group">
                                     <label>GitHub Profile</label>
                                     <input
-                                      type="url"
+                                      type="text"
                                       className={`form-control ${errors.socialLinks?.[1] ? 'is-invalid' : ''}`}
                                       value={formData.socialLinks[1].link}
-                                      onChange={(e) => handleInputChange('professional', 'link', e.target.value, 2)}
+                                      onChange={(e) => handleInputChange('professional', 'socialLinks', e.target.value, 1)}
                                       placeholder="https://github.com/your-username"
                                     />
                                     {errors.socialLinks?.[1] && (

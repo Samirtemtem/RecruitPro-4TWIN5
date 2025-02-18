@@ -3,8 +3,14 @@ import User, { IUser } from '../models/User';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { sendVerificationEmail, sendPasswordEmail } from '../utils/emailService';
-import { generateToken,generateRandomPassword } from '../utils/generateToken';
+import { generateToken, generateRandomPassword } from '../utils/generateToken';
 import bcrypt from 'bcrypt';
+import Profile from '../models/Profile';
+import Education from '../models/Education';
+import Experience from '../models/Experience';
+import Skill from '../models/Skill';
+import { uploadToCloudinary } from '../utils/cloudinary';
+import fs from 'fs/promises';
 
 // Helper function for error responses
 const errorResponse = (res: Response, statusCode: number, message: string, code?: string) => {
@@ -67,35 +73,157 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   try {
-    const { email, password } = req.body;
-    const existingUser = await User.findOne({ email });
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      address,
+      education,
+      experience,
+      skills,
+      socialLinks
+    } = req.body;
 
+    // Check if user exists
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      errorResponse(res, 400, 'User already exists');
-      return;
+      return errorResponse(res, 400, 'User already exists');
     }
 
-    // Hash the password
-    // password is hashed in user model
-    //const saltRounds = 10;
-    //const hashedPassword = await bcrypt.hash(password, saltRounds);
+    // Handle file uploads if they exist
+    let profileImageUrl = '';
+    let cvUrl = '';
 
+    if (req.files) {
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      
+      try {
+        // Upload profile image to Cloudinary
+        if (files.profileImage?.[0]) {
+          profileImageUrl = await uploadToCloudinary(files.profileImage[0], 'profile-images');
+          // Delete temp file
+          await fs.unlink(files.profileImage[0].path);
+        }
+        
+        // Upload CV to Cloudinary
+        if (files.cv?.[0]) {
+          cvUrl = await uploadToCloudinary(files.cv[0], 'cvs');
+          // Delete temp file
+          await fs.unlink(files.cv[0].path);
+        }
+      } catch (error) {
+        // Clean up any remaining temp files
+        for (const fieldname in files) {
+          for (const file of files[fieldname]) {
+            try {
+              await fs.unlink(file.path);
+            } catch (unlinkError) {
+              console.error('Error deleting temp file:', unlinkError);
+            }
+          }
+        }
+        throw error;
+      }
+    }
+
+    // Generate verification token
     const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET!, { expiresIn: '1h' });
-    console.log("JWT_SECRET in registration:", process.env.JWT_SECRET);
 
+    // Create new user
     const user = new User({
       email,
-      password: password,
+      password,
       verificationToken,
+      provider: 'local',
+      isVerified: false
     });
 
     await user.save();
+
+    // Create profile
+    const profile = new Profile({
+      user: user._id,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+      profileImage: profileImageUrl,
+      cv: cvUrl,
+      socialLinks: JSON.parse(typeof socialLinks === 'string' ? socialLinks : JSON.stringify(socialLinks))
+    });
+
+    await profile.save();
+
+    // Parse and validate education data
+    if (education) {
+      const educationData = typeof education === 'string' ? JSON.parse(education) : education;
+      if (Array.isArray(educationData) && educationData.length > 0) {
+        const educationPromises = educationData.map(edu => {
+          const newEducation = new Education({
+            user: user._id,
+            ...edu
+          });
+          return newEducation.save();
+        });
+        await Promise.all(educationPromises);
+      }
+    }
+
+    // Parse and validate experience data
+    if (experience) {
+      const experienceData = typeof experience === 'string' ? JSON.parse(experience) : experience;
+      if (Array.isArray(experienceData) && experienceData.length > 0) {
+        const experiencePromises = experienceData.map(exp => {
+          const newExperience = new Experience({
+            user: user._id,
+            ...exp
+          });
+          return newExperience.save();
+        });
+        await Promise.all(experiencePromises);
+      }
+    }
+
+    // Parse and validate skills data
+    if (skills) {
+      const skillsData = typeof skills === 'string' ? JSON.parse(skills) : skills;
+      if (Array.isArray(skillsData) && skillsData.length > 0) {
+        const skillPromises = skillsData.map(skill => {
+          const newSkill = new Skill({
+            user: user._id,
+            ...skill
+          });
+          return newSkill.save();
+        });
+        await Promise.all(skillPromises);
+      }
+    }
+
+    // Send verification email
     await sendVerificationEmail(email, verificationToken);
-    res.status(201).json({ message: 'Verification email sent' });
+
+    res.status(201).json({ 
+      message: 'Registration successful. Please check your email to verify your account.',
+      user: {
+        id: user._id,
+        email: user.email,
+        profile: {
+          firstName,
+          lastName,
+          phoneNumber,
+          address,
+          profileImage: profileImageUrl,
+          cv: cvUrl
+        }
+      }
+    });
+
   } catch (error) {
     console.error('Error in registration:', error);
-    errorResponse(res, 500, 'Server error');
-    return;
+    return errorResponse(res, 500, 'Server error during registration');
   }
 };
 

@@ -31,9 +31,11 @@
     "react-slick": "^0.30.3",
     "react-tag-input-component": "^2.0.2",
     "react-time-picker": "^7.0.0",
+    "smart-hr": "file:",
     "swiper": "^11.1.15",
     "typescript": "^4.9.5",
-    "yet-another-react-lightbox": "^3.21.7"
+    "yet-another-react-lightbox": "^3.21.7",
+    "yup": "^1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",

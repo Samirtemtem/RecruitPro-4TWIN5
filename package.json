@@ -15,8 +15,10 @@
         "@types/express-session": "^1.18.1",
         "@types/passport-google-oauth20": "^2.0.16",
         "bcrypt": "^5.1.1",
+        "cloudinary": "^2.5.1",
         "cors": "^2.8.5",
         "express-session": "^1.18.1",
+        "mern-project": "file:",
         "passport-google-oauth20": "^2.0.0"
     }
 }

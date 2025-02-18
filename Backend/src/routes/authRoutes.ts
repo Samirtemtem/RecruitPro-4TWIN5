@@ -44,7 +44,7 @@ const socialAuthCallback = async (req: Request, res: Response): Promise<any> => 
     }
 
     const token = generateToken((req.user as any)._id); // Type assertion for user ID
-    res.redirect(`${process.env.FRONTEND_URL}/UserHome?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}`);
   } catch (error) {
     console.error('Error in socialAuthCallback:', error);
     res.status(500).json({ error: 'Internal Server Error' });

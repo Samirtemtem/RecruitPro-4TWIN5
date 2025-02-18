@@ -40,18 +40,18 @@ const userSchema = new Schema<IUser>({
   phoneNumber: { type: String },
   role: { 
     type: String, 
-    enum: ['DEPARTMENT-MANAGER', 'HR-MANAGER', 'EMPLOYEE'], 
-    required: true 
+    enum: ['DEPARTMENT-MANAGER', 'HR-MANAGER', 'EMPLOYEE', 'CANDIDATE', 'ADMIN']
+    , required: true 
   },
   privilege: { 
     type: String, 
-    enum: ['JOB-POSTING', 'REGULAR'], 
-    required: true 
+    enum: ['JOB-POSTING', 'REGULAR']
+    //, required: true 
   },
   department: { 
     type: String, 
-    enum: ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC'], 
-    required: true 
+    enum: ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC']
+    //, required: true 
   },
   creationDate: { type: Date, default: Date.now },
   lastLogged: { type: Date, default: null },

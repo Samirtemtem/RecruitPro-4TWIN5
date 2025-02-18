@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import PredefinedDateRanges from '../../../core/common/datePicker'
 import Table from "../../../core/common/dataTable/index";
-import { all_routes } from '../../router/all_routes';
+import { all_routes } from '../../../routing-module/router/all_routes';
 import ImageWithBasePath from '../../../core/common/imageWithBasePath';
 import { employeereportDetails } from '../../../core/data/json/employeereportDetails';
 import { DatePicker, TimePicker } from "antd";

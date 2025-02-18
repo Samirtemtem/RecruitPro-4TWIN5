@@ -1,5 +1,4 @@
-
-/*import express, { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import 'dotenv/config';
 import passport from 'passport';
 import { 
@@ -68,5 +67,3 @@ router.get('/linkedin/callback',passport.authenticate('linkedin', {
 
 export default router;
 
-
-*/

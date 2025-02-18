@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { all_routes } from '../../router/all_routes';
+import { all_routes } from '../../../routing-module/router/all_routes';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import './style.css'; // Import the CSS file for custom styles

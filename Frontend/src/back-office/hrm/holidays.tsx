@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import CollapseHeader from "../../core/common/collapse-header/collapse-header";
-import { all_routes } from "../router/all_routes";
+import { all_routes } from "../../routing-module/router/all_routes";
 import Table from "../../core/common/dataTable/index";
 import { HolidaysData } from "../../core/data/json/holidaysData";
 import HolidaysModal from "../../core/modals/holidaysModal";

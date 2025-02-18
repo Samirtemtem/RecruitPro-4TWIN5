@@ -26,8 +26,20 @@ const LoginUser = () => {
         return;
       }
   
+      localStorage.setItem("userRole", response.data.user.role);
       localStorage.setItem("token", response.data.token);
-      navigate(all_routes.UserHome);
+
+      // Redirect based on the user's role
+      const userRole = response.data.user.role;
+      if (userRole === "ADMIN") {
+        navigate(all_routes.adminDashboard); // Redirect to admin dashboard
+      } else if (userRole === "CANDIDATE") {
+        navigate(all_routes.UserHome); // Redirect to user home
+      } else {
+        // You can add more roles or a default redirect
+        navigate(all_routes.LoginUser); // Example default redirect
+      }
+
     } catch (err: any) {
       const errorCode = err.response?.data?.code;
       switch (errorCode) {

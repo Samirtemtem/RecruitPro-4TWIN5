@@ -36,7 +36,8 @@ passport.use(
             picture: profile.photos[0].value,
             email: profile.emails[0].value,
             provider: 'google',
-            isVerified: true
+            isVerified: true,
+            role: 'CANDIDATE',
           });
           // Send the welcome email after creating the user
           await sendWelcomeEmail(user.email, profile.name.givenName);
@@ -83,6 +84,7 @@ passport.use(
             email:profile.email,
             provider: 'linkedin',
             isVerified: true,
+            role: 'CANDIDATE',
           });
           // Send the welcome email after creating the user
          // await sendWelcomeEmail(user.email, profile.givenName);

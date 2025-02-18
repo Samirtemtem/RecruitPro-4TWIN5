@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Scrollbars from "react-custom-scrollbars-2";
@@ -10,13 +11,32 @@ import {
   setDataLayout,
 } from "../../data/redux/themeSettingSlice";
 import usePreviousRoute from "./usePreviousRoute";
-import { SidebarDataTest } from "../../data/json/sidebarMenu";
+//import { SidebarDataTest } from "../../../back-office/sidebarMenuAdmin";
 
 const Sidebar = () => {
   const Location = useLocation();
 
   const [subOpen, setSubopen] = useState<any>("Dashboard");
   const [subsidebar, setSubsidebar] = useState("");
+
+  // Function to dynamically import sidebar data based on role
+
+  const [SidebarData, setSidebarData] = useState<any[]>([]);
+  const loadSidebarData = async (role: string) => {
+    if (role === "ADMIN") {
+      const { SidebarDataTest } = await import("../../../back-office/sidebarMenuAdmin");
+      setSidebarData(SidebarDataTest);
+    } else if (role === "CANDIDATE") {
+      const { SidebarDataTest } = await import("../../../front-office/sidebarMenuCandidate");
+      setSidebarData(SidebarDataTest);
+    }
+  };
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("userRole") || "candidate"; // Default to candidate
+    loadSidebarData(userRole);
+  }, []);
+
 
   const toggleSidebar = (title: any) => {
     localStorage.setItem("menuOpened", title);
@@ -225,14 +245,14 @@ const Sidebar = () => {
           <div className="sidebar-inner slimscroll">
             <div id="sidebar-menu" className="sidebar-menu">
               <ul>
-              {SidebarDataTest?.map((mainLabel, index) => (
+              {SidebarData?.map((mainLabel, index) => (
                 <React.Fragment key={`main-${index}`}>
                     <li className="menu-title">
                         <span>{mainLabel?.tittle}</span>
                     </li>
                     <li>
                     <ul>
-                        {mainLabel?.submenuItems?.map((title: any, i) => {
+                        {mainLabel?.submenuItems?.map((title: any, i:any) => {
                         let link_array: any = [];
                         if ("submenuItems" in title) {
                             title.submenuItems?.forEach((link: any) => {

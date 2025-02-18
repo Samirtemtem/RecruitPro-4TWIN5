@@ -31,6 +31,7 @@ const AuthFeature = () => {
   const location = useLocation();
 
   const navigate = useNavigate(); // For redirecting
+  //const [SidebarData, setSidebarData] = useState<any[]>([]); // State for sidebar data
 
   useEffect(() => {
     // Token verification logic
@@ -39,7 +40,32 @@ const AuthFeature = () => {
       navigate("/LoginUser", { state: { from: location }, replace: true }); // Redirect to login if no token
     }
   }, [location, navigate]);
-
+  
+/*
+  useEffect(() => {
+    const userRole = localStorage.getItem("userRole") || "CANDIDATE"; // Default to candidate
+    const token = localStorage.getItem("token");
+    const hasRedirected = localStorage.getItem("hasRedirected"); // Check if redirection already occurred
+  
+    // Default to "false" if `hasRedirected` is not set
+    if (!hasRedirected) {
+      localStorage.setItem("hasRedirected", "false");
+    }
+  
+    if (!token) {
+      navigate("/LoginUser", { state: { from: location }, replace: true });
+    } else if (hasRedirected === "false") {
+      // Redirect to the default dashboard if this is the first time
+      if (userRole === "ADMIN") {
+        localStorage.setItem("hasRedirected", "true"); // Mark as redirected
+        navigate("/adminDashboard", { replace: true });
+      } else if (userRole === "CANDIDATE") {
+        localStorage.setItem("hasRedirected", "true"); // Mark as redirected
+        navigate("/UserHome", { replace: true });
+      }
+    }
+  }, [location, navigate]);
+  */
 
   useEffect(() => {
     if (dataTheme === "dark_data_theme") {
@@ -123,7 +149,7 @@ const AuthFeature = () => {
         ${mobileSidebar ? "slide-nav" : ""}`}
           >
             <Header />
-            <Sidebar />
+            <Sidebar  />
             <HorizontalSidebar />
             <TwoColumnSidebar/>
             <StackedSidebar/>

@@ -1,5 +1,4 @@
 
-/*
 import { NextFunction, Request, Response } from 'express';
 import User, { IUser } from '../models/User';
 import argon2 from 'argon2';

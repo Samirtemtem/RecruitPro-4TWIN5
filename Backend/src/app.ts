@@ -2,7 +2,7 @@ import errorHandler from "./middlewares/errorMiddleware";
 import mongoose from 'mongoose';
 //import dotenv from 'dotenv';
 import express from 'express';
-//import authRoutes from './routes/authRoutes'; // Correct import
+import authRoutes from './routes/authRoutes'; // Correct import
 import cors from 'cors';
 import passport from 'passport';
 import 'dotenv/config'; // TypeScript equivalent of `require('dotenv').config()`
@@ -66,7 +66,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter); 
-//app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 
 

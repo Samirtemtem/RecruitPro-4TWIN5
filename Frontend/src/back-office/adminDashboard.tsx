@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ReactApexChart from "react-apexcharts";
 import { Link } from "react-router-dom";
-import ImageWithBasePath from "../../../core/common/imageWithBasePath";
-import { all_routes } from "../../router/all_routes";
+import ImageWithBasePath from "../core/common/imageWithBasePath";
+import { all_routes } from "../routing-module/router/all_routes";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Chart } from "primereact/chart";
 import { Calendar } from 'primereact/calendar';
-import ProjectModals from "../../../core/modals/projectModal";
-import RequestModals from "../../../core/modals/requestModal";
-import TodoModal from "../../../core/modals/todoModal";
-import CollapseHeader from "../../../core/common/collapse-header/collapse-header";
+import ProjectModals from "../core/modals/projectModal";
+import RequestModals from "../core/modals/requestModal";
+import TodoModal from "../core/modals/todoModal";
+import CollapseHeader from "../core/common/collapse-header/collapse-header";
 import { ApexOptions } from 'apexcharts';
 
 interface JobPost {

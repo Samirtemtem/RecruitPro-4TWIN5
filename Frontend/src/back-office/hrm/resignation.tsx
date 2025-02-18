@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Table from "../../core/common/dataTable/index";
 import { resignation_table } from '../../core/data/json/resignation_table';
-import { all_routes } from '../router/all_routes';
+import { all_routes } from '../../routing-module/router/all_routes';
 import ImageWithBasePath from '../../core/common/imageWithBasePath';
 import CommonSelect from '../../core/common/commonSelect';
 import { DatePicker } from "antd";

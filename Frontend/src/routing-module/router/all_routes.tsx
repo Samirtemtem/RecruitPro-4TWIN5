@@ -1,15 +1,17 @@
 
 export const all_routes = {
   // dashboard routes
-  adminDashboard: "/index",
+  adminDashboard: "/adminDashboard",
   UserHome: "/UserHome",
+
+  // public routes
+  LoginUser : "/LoginUser",
+  register : "/register",
+  VerifyEmail: "/VerifyEmail",
 
 
   // auth routes
-  LoginUser : "/LoginUser",
-  register : "/register",
   forgotPassword : "/ResetAuth",
-  VerifyEmail: "/VerifyEmail",
   SocialAuthHandler : "/SocialAuthHandler",
 
 

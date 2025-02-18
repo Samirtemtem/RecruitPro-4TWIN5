@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Table from "../../core/common/dataTable/index";
 import { promotion_table } from '../../core/data/json/promotion_table';
-import { all_routes } from '../router/all_routes';
+import { all_routes } from '../../routing-module/router/all_routes';
 import ImageWithBasePath from '../../core/common/imageWithBasePath';
 import { promotionto, promotiontype, termination, terminationtype } from '../../core/common/selectoption/selectoption';
 import CommonSelect from '../../core/common/commonSelect';

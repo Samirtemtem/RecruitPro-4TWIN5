@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { all_routes } from '../../router/all_routes'
+import { all_routes } from '../../../routing-module/router/all_routes'
 import { Link } from 'react-router-dom'
 import ImageWithBasePath from '../../../core/common/imageWithBasePath';
 import CommonSelect from '../../../core/common/commonSelect';

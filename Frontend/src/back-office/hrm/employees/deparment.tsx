@@ -1,28 +1,25 @@
 import React, { useState } from 'react'
-import { all_routes } from '../../router/all_routes'
+import { all_routes } from '../../../routing-module/router/all_routes'
 import { Link } from 'react-router-dom'
 import Table from "../../../core/common/dataTable/index";
 import CommonSelect from '../../../core/common/commonSelect';
-import { designation_details } from '../../../core/data/json/designation_details';
+import { department_details } from '../../../core/data/json/department_details';
 import CollapseHeader from '../../../core/common/collapse-header/collapse-header';
 type PasswordField = "password" | "confirmPassword";
 
-const Designations = () => {
+const Department = () => {
 
-  const data = designation_details;
+  const data = department_details;
   const columns = [
-    {
-      title: "Designation",
-      dataIndex: "Designation",
-      render: (text: String, record: any) => (
-        <h6 className="fw-medium fs-14 text-dark">{text}</h6>
-
-      ),
-      sorter: (a: any, b: any) => a.Designation.length - b.Designation.length,
-    },
     {
       title: "Department",
       dataIndex: "Department",
+      render: (text: String, record: any) => (
+        <h6 className="fw-medium">
+          <Link to="#">{text}</Link>
+        </h6>
+
+      ),
       sorter: (a: any, b: any) => a.Department.length - b.Department.length,
     },
     {
@@ -51,7 +48,7 @@ const Designations = () => {
             to="#"
             className="me-2"
             data-bs-toggle="modal" data-inert={true}
-            data-bs-target="#edit_designation"
+            data-bs-target="#edit_department"
           >
             <i className="ti ti-edit" />
           </Link>
@@ -63,6 +60,7 @@ const Designations = () => {
             <i className="ti ti-trash" />
           </Link>
         </div>
+
       ),
     },
   ]
@@ -81,7 +79,7 @@ const Designations = () => {
           {/* Breadcrumb */}
           <div className="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
             <div className="my-auto mb-2">
-              <h2 className="mb-1">Designations</h2>
+              <h2 className="mb-1">Departments</h2>
               <nav>
                 <ol className="breadcrumb mb-0">
                   <li className="breadcrumb-item">
@@ -91,7 +89,7 @@ const Designations = () => {
                   </li>
                   <li className="breadcrumb-item">Employee</li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    Designations
+                    Departments
                   </li>
                 </ol>
               </nav>
@@ -133,15 +131,15 @@ const Designations = () => {
                 <Link
                   to="#"
                   data-bs-toggle="modal" data-inert={true}
-                  data-bs-target="#add_designation"
+                  data-bs-target="#add_department"
                   className="btn btn-primary d-flex align-items-center"
                 >
                   <i className="ti ti-circle-plus me-2" />
-                  Add Designation
+                  Add Department
                 </Link>
               </div>
               <div className="head-icons ms-2">
-              <CollapseHeader />
+                <CollapseHeader />
               </div>
             </div>
           </div>
@@ -149,7 +147,7 @@ const Designations = () => {
           {/* Performance Indicator list */}
           <div className="card">
             <div className="card-header d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-              <h5>Designation List</h5>
+              <h5>Department List</h5>
               <div className="d-flex my-xl-auto right-content align-items-center flex-wrap row-gap-3">
                 <div className="dropdown me-3">
                   <Link
@@ -157,34 +155,7 @@ const Designations = () => {
                     className="dropdown-toggle btn btn-white d-inline-flex align-items-center"
                     data-bs-toggle="dropdown"
                   >
-                    Department
-                  </Link>
-                  <ul className="dropdown-menu  dropdown-menu-end p-3">
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        Finance
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        Application Development
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-                <div className="dropdown me-3">
-                  <Link
-                    to="#"
-                    className="dropdown-toggle btn btn-white d-inline-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                  >
-                    Select Status
+                    Status
                   </Link>
                   <ul className="dropdown-menu  dropdown-menu-end p-3">
                     <li>
@@ -275,12 +246,12 @@ const Designations = () => {
         </div>
       </div>
       {/* /Page Wrapper */}
-      {/* Add Designation */}
-      <div className="modal fade" id="add_designation">
+      {/* Add Department */}
+      <div className="modal fade" id="add_department">
         <div className="modal-dialog modal-dialog-centered modal-md">
           <div className="modal-content">
             <div className="modal-header">
-              <h4 className="modal-title">Add Designation</h4>
+              <h4 className="modal-title">Add Department</h4>
               <button
                 type="button"
                 className="btn-close custom-btn-close"
@@ -293,12 +264,6 @@ const Designations = () => {
             <form>
               <div className="modal-body pb-0">
                 <div className="row">
-                  <div className="col-md-12">
-                    <div className="mb-3">
-                      <label className="form-label">Designation Name</label>
-                      <input type="text" className="form-control" />
-                    </div>
-                  </div>
                   <div className="col-md-12">
                     <div className="mb-3">
                       <label className="form-label">Department Name</label>
@@ -326,20 +291,20 @@ const Designations = () => {
                   Cancel
                 </button>
                 <button type="button" data-bs-dismiss="modal" className="btn btn-primary">
-                  Add Designation
+                  Add Department
                 </button>
               </div>
             </form>
           </div>
         </div>
       </div>
-      {/* /Add Designation */}
-      {/* Edit Designation */}
-      <div className="modal fade" id="edit_designation">
+      {/* /Add Department */}
+      {/* Edit Department */}
+      <div className="modal fade" id="edit_department">
         <div className="modal-dialog modal-dialog-centered modal-md">
           <div className="modal-content">
             <div className="modal-header">
-              <h4 className="modal-title">Edit Designation</h4>
+              <h4 className="modal-title">Edit Department</h4>
               <button
                 type="button"
                 className="btn-close custom-btn-close"
@@ -352,16 +317,6 @@ const Designations = () => {
             <form>
               <div className="modal-body pb-0">
                 <div className="row">
-                  <div className="col-md-12">
-                    <div className="mb-3">
-                      <label className="form-label">Designation Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        defaultValue="Accountant"
-                      />
-                    </div>
-                  </div>
                   <div className="col-md-12">
                     <div className="mb-3">
                       <label className="form-label">Department Name</label>
@@ -393,7 +348,7 @@ const Designations = () => {
                   Cancel
                 </button>
                 <button type="button" data-bs-dismiss="modal" className="btn btn-primary">
-                  Save Changes
+                  Save Department
                 </button>
               </div>
             </form>
@@ -404,8 +359,7 @@ const Designations = () => {
     </>
 
 
-
   )
 }
 
-export default Designations
+export default Department

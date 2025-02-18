@@ -6,28 +6,12 @@ import VerifyEmail from "../../front-office/auth/VerifyEmail";
 import UserHome from "../../front-office/userhome";
 import SocialAuthHandler from "../../front-office/auth/SocialAuthHandler";
 
-import AdminDashboard from "../../feature-module/mainMenu/adminDashboard/index";
-
-
-
-
-
-
-
-
-
-import JobGrid from "../../feature-module/recruitment/jobs/jobgrid";
-import JobList from "../../feature-module/recruitment/joblist/joblist";
-import CandidateGrid from "../../feature-module/recruitment/candidates/candidategrid";
-
-
-
-
-import ProjectDetails from "../../feature-module/projects/project/projectdetails";
-
-
-
-import EmployeeList from "../../feature-module/hrm/employees/employeesList";
+import AdminDashboard from "../../back-office/adminDashboard";
+import JobGrid from "../../back-office/recruitment/jobs/jobgrid";
+import JobList from "../../back-office/recruitment/joblist/joblist";
+import CandidateGrid from "../../back-office/recruitment/candidates/candidategrid";
+import ProjectDetails from "../../back-office/projects/project/projectdetails";
+import EmployeeList from "../../back-office/hrm/employees/employeesList";
 
 
 const routes = all_routes;
@@ -66,6 +50,8 @@ export const authRoutes = [
     element: <Navigate to="/index" />,
     route: Route,
   },
+  
+  // Candidate Routes
   {
     path: "/UserHome",
     name: "Root",
@@ -78,18 +64,13 @@ export const authRoutes = [
     element: <SocialAuthHandler  />,
     route: Route,
   },
+
+  // Admin Routes
   {
     path: routes.adminDashboard,
     element: <AdminDashboard />,
     route: Route,
   },
-
-
-
-
-
-  
-
   {
     path: routes.jobgrid,
     element: <JobGrid />,
@@ -105,33 +86,14 @@ export const authRoutes = [
     element: <CandidateGrid />,
     route: Route,
   },
-
- 
-
- 
-
   {
     path: routes.projectdetails,
     element: <ProjectDetails />,
     route: Route,
   },
- 
-
-
- 
-
-
-  
   {
     path: routes.employeeList,
     element: <EmployeeList />,
     route: Route,
-  },
-
-
-
-
-
-
-  
+  },  
 ]

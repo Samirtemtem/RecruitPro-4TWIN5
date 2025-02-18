@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { all_routes } from "../../router/all_routes";
+import { all_routes } from "../../../routing-module/router/all_routes";
 import { Link } from "react-router-dom";
 import ImageWithBasePath from "../../../core/common/imageWithBasePath";
 import { DatePicker } from "antd";

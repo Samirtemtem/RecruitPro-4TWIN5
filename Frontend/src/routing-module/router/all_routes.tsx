@@ -10,6 +10,7 @@ export const all_routes = {
   register : "/register",
   forgotPassword : "/ResetAuth",
   VerifyEmail: "/VerifyEmail",
+  SocialAuthHandler : "/SocialAuthHandler",
 
 
 

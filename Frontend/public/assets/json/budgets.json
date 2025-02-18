@@ -1,0 +1,45 @@
+{
+    "data":[
+        {
+            "BudgetTitle": "Office Supplies",
+            "BudgetType": "Category",
+            "StartDate": "14/01/2024",
+            "EndDate": "13/11/2024",
+            "TotalRevenue": "250000",
+            "TotalExpense": "150000",
+            "TaxAmount": "10000",
+            "BudgetAmount": "90000"
+        },
+        {
+            "BudgetTitle": "Recruitment",
+            "BudgetType": "Category",
+            "StartDate": "21/01/2024",
+            "EndDate": "20/11/2024",
+            "TotalRevenue": "300000",
+            "TotalExpense": "200000",
+            "TaxAmount": "15000",
+            "BudgetAmount": "85000"
+        },
+        {
+            "BudgetTitle": "Tender",
+            "BudgetType": "Project",
+            "StartDate": "10/02/2024",
+            "EndDate": "08/12/2024",
+            "TotalRevenue": "200000",
+            "TotalExpense": "170000",
+            "TaxAmount": "5000",
+            "BudgetAmount": "25000"
+        },
+        {
+            "BudgetTitle": "Salary 2024",
+            "BudgetType": "Category",
+            "StartDate": "18/02/2024",
+            "EndDate": "16/12/2024",
+            "TotalRevenue": "300000",
+            "TotalExpense": "200000",
+            "TaxAmount": "15000",
+            "BudgetAmount": "85000"
+        }
+    ],
+    "totaldata":4
+}

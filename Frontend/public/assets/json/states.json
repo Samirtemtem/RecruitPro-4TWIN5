@@ -1,0 +1,55 @@
+{
+    "data":[
+        {
+          "StateName": "California",
+          "CountryName": "United States",
+          "Status": "Active"
+        },
+        {
+          "StateName": "New York",
+          "CountryName": "United States",
+          "Status": "Active"
+        },
+        {
+          "StateName": "Texas",
+          "CountryName": "United States",
+          "Status": "Active"
+        },
+        {
+          "StateName": "Bavaria",
+          "CountryName": "Germany",
+          "Status": "Active"
+        },
+        {
+          "StateName": "Quebec",
+          "CountryName": "Canada",
+          "Status": "Active"
+        },
+        {
+          "StateName": "Ontario",
+          "CountryName": "Canada",
+          "Status": "Active"
+        },
+        {
+          "StateName": "Florida",
+          "CountryName": "United States",
+          "Status": "Active"
+        },
+        {
+          "StateName": "Berlin",
+          "CountryName": "Germany",
+          "Status": "Active"
+        },
+        {
+          "StateName": "Victoria",
+          "CountryName": "Australia",
+          "Status": "Active"
+        },
+        {
+          "StateName": "Gauteng",
+          "CountryName": "Egypt",
+          "Status": "Active"
+        }
+       ],
+    "totaldata":10
+}

@@ -1,0 +1,37 @@
+{
+    "data": [
+        {
+            "medium": "App",
+            "file": "Group",
+            "total": "3456",
+            "complete": "3456",
+            "progress":1
+            
+           
+        },
+        {
+            "medium": "App",
+            "file": "Chat",
+            "total": "3456",
+            "complete": "3456",
+            "progress":2
+        },
+        {
+            "medium": "App",
+            "file": "Status",
+            "total": "3456",
+            "complete": "3456",
+            "progress":3
+        },
+        {
+            "medium": "App",
+            "file": "Setting",
+            "total": "3456",
+            "complete": "3456",
+            "progress":4
+        }
+       
+       
+    ],
+    "totalData": 10
+}

@@ -1,0 +1,42 @@
+export const promotion_table = [
+    {
+        Image: "user-32.jpg",
+        Promoted_Employee: "Anthony Lewis",
+        Department: "Finance",
+        Designation_From: "Accountant",
+        Designation_To: "Sr Accountant",
+        Promotion_Date: "14 Jan 2024",
+    },
+    {
+        Image: "user-09.jpg",
+        Promoted_Employee: "Brian Villalobos",
+        Department: "Application Development",
+        Designation_From: "Jr App Developer",
+        Designation_To: "Sr App Developer",
+        Promotion_Date: "21 Jan 2024",
+    },
+    {
+        Image: "user-01.jpg",
+        Promoted_Employee: "Harvey Smith",
+        Department: "Web Development",
+        Designation_From: "Sr Web Developer",
+        Designation_To: "Team Lead",
+        Promotion_Date: "20 Feb 2024",
+    },
+    {
+        Image: "user-33.jpg",
+        Promoted_Employee: "Stephan Peralt",
+        Department: "UI / UX",
+        Designation_From: "Jr Designer",
+        Designation_To: "Sr Designer",
+        Promotion_Date: "15 Mar 2024",
+    },
+    {
+        Image: "user-34.jpg",
+        Promoted_Employee: "Doglas Martini",
+        Department: "Marketing",
+        Designation_From: "SEO Analyst",
+        Designation_To: "Sr SEO Analyst",
+        Promotion_Date: "10 Apr 2024",
+    },
+];

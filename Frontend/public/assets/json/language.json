@@ -1,0 +1,38 @@
+{
+    "data":[
+        {
+            "name": "Arabic",
+            "code": "en",
+            "total": "1620",
+            "done": "1296",
+            "progress": 1,
+            "img":"assets/admin/img/flag/ar.png"
+        },
+        {
+            "name": "Chinese",
+            "code": "zh",
+            "total": "1620",
+            "done": "972",
+            "progress": 2,
+            "img":"assets/admin/img/flag/cn.png"
+        },
+        {
+            "name": "English",
+            "code": "en",
+            "total": "1620",
+            "done": "810",
+            "progress": 3,
+            "img":"assets/admin/img/flag/us.png"
+            
+        },
+        {
+            "name": "Hindi",
+            "code": "hi",
+            "total": "1620",
+            "done": "324",
+            "progress"  : 4,
+            "img":"assets/admin/img/flag/in.png"
+        }
+    ]
+    
+}

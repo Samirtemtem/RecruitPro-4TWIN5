@@ -1,0 +1,20 @@
+{
+    "data":[
+        {
+          "Name": "Leave Balance Amount",
+          "Category": "Monthly Remuneration",
+          "Amount": "$5"
+        },
+        {
+          "Name": "Arrears of Salary",
+          "Category": "Additional Remuneration",
+          "Amount": "$8"
+        },
+        {
+          "Name": "Gratuity",
+          "Category": "Monthly Remuneration",
+          "Amount": "$20"
+        }
+      ],
+    "totaldata":3
+}

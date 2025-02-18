@@ -1,0 +1,55 @@
+{
+    "data":[
+        {
+          "Page": "Employee",
+          "PageSlug": "employee",
+          "Status": "Active"
+        },
+        {
+          "Page": "Clients",
+          "PageSlug": "clients",
+          "Status": "Active"
+        },
+        {
+          "Page": "Projects",
+          "PageSlug": "projects",
+          "Status": "Active"
+        },
+        {
+          "Page": "Tickets",
+          "PageSlug": "tickets",
+          "Status": "Active"
+        },
+        {
+          "Page": "Contacts",
+          "PageSlug": "contacts",
+          "Status": "Active"
+        },
+        {
+          "Page": "Companies",
+          "PageSlug": "companies",
+          "Status": "Active"
+        },
+        {
+          "Page": "Deals",
+          "PageSlug": "deals",
+          "Status": "Active"
+        },
+        {
+          "Page": "Leads",
+          "PageSlug": "leads",
+          "Status": "Active"
+        },
+        {
+          "Page": "Pipeline",
+          "PageSlug": "pipeline",
+          "Status": "Active"
+        },
+        {
+          "Page": "Activities",
+          "PageSlug": "activities",
+          "Status": "Active"
+        }
+       ],
+    "totaldata":10
+}

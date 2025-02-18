@@ -1,0 +1,42 @@
+<svg width="200" height="150" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1_1066_41261" fill="white">
+<path d="M0 0H200V11H0V0Z"/>
+</mask>
+<path d="M0 0H200V11H0V0Z" fill="white"/>
+<path d="M0 0V-0.5H-0.5V0H0ZM200 0H200.5V-0.5H200V0ZM0 0.5H200V-0.5H0V0.5ZM199.5 0V11H200.5V0H199.5ZM0.5 11V0H-0.5V11H0.5Z" fill="#E5E7EB" mask="url(#path-1-inside-1_1066_41261)"/>
+<circle cx="6.5" cy="5.5" r="1.5" fill="#D00C0C"/>
+<circle cx="11.5" cy="5.5" r="1.5" fill="#03C95A"/>
+<circle cx="16.5" cy="5.5" r="1.5" fill="#FFC107"/>
+<path d="M0.25 11.25H199.75V149.75H0.25V11.25Z" fill="white"/>
+<path d="M0.25 11.25H199.75V149.75H0.25V11.25Z" stroke="#E5E7EB" stroke-width="0.5"/>
+<mask id="path-7-inside-2_1066_41261" fill="white">
+<path d="M0 11H37V150H0V11Z"/>
+</mask>
+<path d="M36.5 11V150H37.5V11H36.5Z" fill="#E5E7EB" mask="url(#path-7-inside-2_1066_41261)"/>
+<rect x="5" y="21" width="27" height="4" rx="2" fill="#F37438"/>
+<rect x="5" y="37" width="18" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="42" width="18" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="47" width="9" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="52" width="22" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="57" width="13" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="62" width="22" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="67" width="11" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="72" width="27" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="77" width="18" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="5" y="82" width="27" height="3" rx="1.5" fill="#DCE5E8"/>
+<line x1="5" y1="138.9" x2="32" y2="138.9" stroke="#E5E7EB" stroke-width="0.2"/>
+<circle cx="13.5" cy="143" r="2" fill="#DCE5E8"/>
+<circle cx="18.5" cy="143" r="2" fill="#DCE5E8"/>
+<circle cx="23.5" cy="143" r="2" fill="#DCE5E8"/>
+<mask id="path-24-inside-3_1066_41261" fill="white">
+<path d="M37 11H200V19H37V11Z"/>
+</mask>
+<path d="M37 11.5H200V10.5H37V11.5Z" fill="#E5E7EB" mask="url(#path-24-inside-3_1066_41261)"/>
+<rect x="42" y="13" width="41" height="4" rx="2" fill="#EDF2F4"/>
+<circle cx="181" cy="15" r="2" fill="#DCE5E8"/>
+<circle cx="187" cy="15" r="2" fill="#DCE5E8"/>
+<circle cx="193" cy="15" r="2" fill="#DCE5E8"/>
+<rect x="37" y="19" width="162.5" height="125" fill="#EDF2F4"/>
+<path d="M37 144.25H200V143.75H37V144.25Z" fill="#E5E7EB"/>
+<rect width="41" height="2" rx="1" transform="matrix(1 0 0 -1 95.5 148)" fill="#EDF2F4"/>
+</svg>

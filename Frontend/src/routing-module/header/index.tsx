@@ -1,16 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import { Link, useLocation,useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setDataLayout,
-} from "../../data/redux/themeSettingSlice";
-import ImageWithBasePath from "../imageWithBasePath";
+} from "../../core/data/redux/themeSettingSlice";
+import ImageWithBasePath from "../../core/common/imageWithBasePath";
 import {
   setMobileSidebar,
   toggleMiniSidebar,
-} from "../../data/redux/sidebarSlice";
-import { all_routes } from "../../../routing-module/router/all_routes";
-import { HorizontalSidebarData } from '../../data/json/horizontalSidebar'
+} from "../../core/data/redux/sidebarSlice";
+import { all_routes } from "../router/all_routes";
+import { HorizontalSidebarData } from '../../core/data/json/horizontalSidebar'
+
+import { AuthContext } from "../AuthContext"; // Import your AuthContext
+
+
 const Header = () => {
   const routes = all_routes;
   const dispatch = useDispatch();
@@ -76,17 +80,22 @@ const Header = () => {
     }
   };
 
-
-  
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const navigate = useNavigate();
 
+  const { logout } = useContext(AuthContext); // Get logout from context
+
   const handleLogout = () => {
-	//console.log("before",localStorage.getItem('token')); // Should be null after removal
-    localStorage.removeItem('token'); // Clear token
-	//console.log("after",localStorage.getItem('token')); // Should be null after removal
+
+	// Call the logout function from AuthContext to clear token and role
+	logout();
+	// clear the token and role from localStorage
+	sessionStorage.removeItem('token'); // Clear token
+	sessionStorage.removeItem('userRole'); // Clear token
+
     navigate('/LoginUser', { replace: true }); // Redirect to login page
   };
-
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <>
       {/* Header */}

@@ -44,12 +44,19 @@ const socialAuthCallback = async (req: Request, res: Response): Promise<any> => 
     }
 
     const token = generateToken((req.user as any)._id); // Type assertion for user ID
-    res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}`);
+    const userRole = (req.user as any).role; // Type assertion for role
+
+    //res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}`);
+    //res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}&role=${encodeURIComponent(userRole)}`);
+    // redirect to SocialAuthHandler page
+    res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}&role=${encodeURIComponent(userRole)}`);
+
   } catch (error) {
     console.error('Error in socialAuthCallback:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 // Google Auth
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));

@@ -67,7 +67,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   try {
-    const { email, password } = req.body;
+    const { email, password,provider,role } = req.body;
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -87,6 +87,8 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       email,
       password: password,
       verificationToken,
+      role,
+      provider,
     });
 
     await user.save();

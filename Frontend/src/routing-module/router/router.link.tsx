@@ -67,12 +67,12 @@ export const authRoutes = [
 
   // Admin Routes
   {
-    path: routes.adminDashboard,
+    path: "/adminDashboard",
     element: <AdminDashboard />,
     route: Route,
   },
   {
-    path: routes.jobgrid,
+    path: "/jobgrid",
     element: <JobGrid />,
     route: Route,
   },

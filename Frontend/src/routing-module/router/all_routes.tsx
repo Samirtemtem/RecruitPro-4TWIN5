@@ -1,5 +1,9 @@
 
 export const all_routes = {
+
+  // main
+  //main: "/index",
+
   // dashboard routes
   adminDashboard: "/adminDashboard",
   UserHome: "/UserHome",
@@ -8,6 +12,7 @@ export const all_routes = {
   LoginUser : "/LoginUser",
   register : "/register",
   VerifyEmail: "/VerifyEmail",
+
 
 
   // auth routes

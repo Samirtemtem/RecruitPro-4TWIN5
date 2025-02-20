@@ -206,7 +206,7 @@ const LoginUser = () => {
                         <div className="text-end">
                           <Link to={all_routes.forgotPassword} className="link-danger">
                             Forgot Password?
-                          </Link>
+                          </Link> 
                         </div>
                       </div>
                       {/* Submit Button */}

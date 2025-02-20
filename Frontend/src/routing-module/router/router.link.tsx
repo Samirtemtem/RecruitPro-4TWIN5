@@ -5,7 +5,9 @@ import RegisterWizard from "../../front-office/auth/register-wizard";
 import VerifyEmail from "../../front-office/auth/VerifyEmail";
 import UserHome from "../../front-office/userhome";
 import SocialAuthHandler from "../../front-office/auth/SocialAuthHandler";
-
+import ForgotPassword from "../../front-office/auth/forgotPassword";
+import ResetPasswordSuccess from "../../front-office/auth/resetPasswordSuccess";
+import ResetPassword from "../../front-office/auth/resetPassword";
 import AdminDashboard from "../../back-office/adminDashboard";
 import JobGrid from "../../back-office/recruitment/jobs/jobgrid";
 import JobList from "../../back-office/recruitment/joblist/joblist";
@@ -41,6 +43,22 @@ export const publicRoutes = [
     name: "Root",
     element: <RegisterWizard  />,
     route: Route,
+  },
+  {
+    path: "/forgotpassword",
+    name: "Root",
+    element: <ForgotPassword  />,
+    route: Route,
+  },
+  {
+    path: routes.resetPassword,
+    element: <ResetPassword />,
+    route: Route,
+  },
+  
+  {
+    path: routes.resetPasswordSuccess,
+    element: <ResetPasswordSuccess />,
   },
 ]
 export const authRoutes = [
@@ -95,5 +113,6 @@ export const authRoutes = [
     path: routes.employeeList,
     element: <EmployeeList />,
     route: Route,
-  },  
+  },
+
 ]

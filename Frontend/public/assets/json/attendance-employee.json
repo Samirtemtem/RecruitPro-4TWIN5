@@ -1,0 +1,116 @@
+{
+    "data":[
+        {
+            "Date": "14/01/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "06:45 PM",
+            "Break": "30 Min",
+            "Late": "32 Min",
+            "Overtime": "20 Min",
+            "Production":1,
+            "ProductionHours": "8.55 Hrs"
+        },
+        {
+            "Date": "21/01/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "06:12 PM",
+            "Break": "20 Min",
+            "Late": "-",
+            "Overtime": "45 Min",
+            "Production":3,
+            "ProductionHours": "7.54 Hrs"
+        },
+        {
+            "Date": "20/02/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "06:13 PM",
+            "Break": "50 Min",
+            "Late": "-",
+            "Overtime": "33 Min",
+            "Production":1,
+            "ProductionHours": "8.45 Hrs"
+        },
+        {
+            "Date": "15/03/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "06:23 PM",
+            "Break": "41 Min",
+            "Late": "-",
+            "Overtime": "50 Min",
+            "Production":1,
+            "ProductionHours": "8.35 Hrs"
+        },
+        {
+            "Date": "12/04/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "06:43 PM",
+            "Break": "23 Min",
+            "Late": "-",
+            "Overtime": "10 Min",
+            "Production":1,
+            "ProductionHours": "8.22 Hrs"
+        },
+        {
+            "Date": "20/05/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "07:15 PM",
+            "Break": "03 Min",
+            "Late": "-",
+            "Overtime": "-",
+            "Production":1,
+            "ProductionHours": "8.32 Hrs"
+        },
+        {
+            "Date": "06/07/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "07:13 PM",
+            "Break": "32 Min",
+            "Late": "-",
+            "Overtime": "-",
+            "Production":1,
+            "ProductionHours": "9.15 Hrs"
+        },
+        {
+            "Date": "02/09/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "09:17 PM",
+            "Break": "14 Min",
+            "Late": "12 Min",
+            "Overtime": "-",
+            "Production":1,
+            "ProductionHours": "8.35 Hrs"
+        },
+        {
+            "Date": "10/12/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Absent",
+            "CheckOut": "09:23 PM",
+            "Break": "10 Min",
+            "Late": "-",
+            "Overtime": "45 Min",
+            "Production":1,
+            "ProductionHours": "9.25 Hrs"
+        },
+        {
+            "Date": "15/11/2024",
+            "CheckIn": "09:00 AM",
+            "Status": "Present",
+            "CheckOut": "08:15 PM",
+            "Break": "12 Min",
+            "Late": "-",
+            "Overtime": "-",
+            "Production":3,
+            "ProductionHours": "8.35 Hrs"
+        }
+    ],
+    "totaldata":10
+    
+}

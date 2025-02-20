@@ -1,0 +1,556 @@
+@mixin tablecolor($color-bg) {
+  background-color: $white;
+  color: $black;
+  --bs-table-color-state: $black;
+  border-color: var(--bs-table-border-color);
+  --bs-table-bg: rgba(#{$color-bg}, 0.1);
+  --bs-table-border-color: rgba(#{$color-bg}, 0.05);
+  --bs-table-striped-bg: rgba(#{$color-bg}, 0.2);
+  --bs-table-active-bg: rgba(#{$color-bg}, 0.2);
+  --bs-table-hover-bg: rgba(#{$color-bg}, 0.2);
+  &.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: var(--bs-table-accent-bg);
+    --bs-table-accent-bg: rgba(#{$color-bg}, 0.2);
+    color: $black;
+  }
+  &.table.table-hover > tbody > tr:hover > * {
+    background-color: var(--bs-table-accent-bg);
+    --bs-table-accent-bg: rgba(#{$color-bg}, 0.4);
+    color: $white;
+  }
+  .table-active {
+    background-color: var(--bs-table-accent-bg);
+    --bs-table-accent-bg: rgb(#{$color-bg});
+    color: $white;
+  }
+}
+caption {
+  color: $text-muted;
+}
+.table-active{
+  --bs-table-color-state: var(--default-text-color);
+}
+@mixin tablehead($color-bg) {
+  background-color: $white;
+  color: var(--bs-table-color);
+  --bs-table-color-state: #000;
+  --bs-table-color: #{$black};
+  --bs-table-bg: rgba(#{$color-bg}, 0.1);
+  --bs-table-border-color: rgba(#{$color-bg}, 0.1);
+  --bs-table-striped-bg: rgba(#{$color-bg}, 0.5);
+  --bs-table-striped-color: #{$black};
+  --bs-table-active-bg: rgba(#{$color-bg}, 0.5);
+  --bs-table-hover-bg: rgba(#{$color-bg}, 0.5);
+  color: var(--bs-table-color);
+  border-color: var(--bs-table-border-color);
+}
+@mixin table-color($color-bg) {
+  --bs-table-color: #{$black};
+  --bs-table-color-state: $black;
+  --bs-table-bg: rgba(#{$color-bg}, 0.1);
+  --bs-table-border-color: rgba(#{$color-bg}, 0.1);
+  --bs-table-striped-bg: rgba(#{$color-bg}, 0.3);
+  --bs-table-striped-color: #{$black};
+  --bs-table-active-bg: rgba(#{$color-bg}, 0.3);
+  --bs-table-active-color: #{$black};
+  --bs-table-hover-bg: rgba(#{$color-bg}, 0.3);
+  --bs-table-hover-color: #{$black};
+  color: #{$black};
+  border-color: rgba(#{$color-bg}, 0.1);
+  background-color: #{$white};
+}
+.table {
+  color: $text-color;
+  border-color: $default-border;
+  margin-block-end: 0;
+  tbody {
+    tr {
+        border-color: $light-900;
+      th {
+        font-weight: $font-weight-medium;
+      }
+    }
+  }
+  th,
+  td {
+    padding: 8px 20px;
+    vertical-align: middle;
+    font-size: $font-size-14;
+    white-space: nowrap;
+  }
+  thead tr {
+    border-color: $light-900;
+    th {
+    font-weight: $font-weight-semibold;
+    border-color: $light-900;
+    background: $gray-200;
+    font-size: $font-size-14;
+    color: $gray-900;
+    }
+  }
+  &.table-sm > :not(caption) > * > * {
+    padding: 0.3rem;
+  }
+  &.table-dark {
+    color: $light-700;
+    border-color: rgba($white, 0.1);
+  }
+  .thead-primary th {
+      background-color: $primary;
+      color: $white;
+  }
+  .thead-secondary th {
+      background-color: $secondary;
+      color: $white;
+  }
+  .thead-info th {
+      background-color: $info;
+      color: $white;
+  }
+  .thead-warning th {
+      background-color: $warning;
+      color: $white;
+  }
+  .thead-danger th {
+      background-color: $danger;
+      color: $white;
+  }
+  .thead-success th {
+      background-color: $success;
+      color: $white;
+  }
+  .thead-dark th {
+      background-color: $dark;
+      color: $white;
+  }
+  .thead-light th {
+      background-color: $gray-200;
+      color: $gray-900;
+  }
+  &.table-primary {
+    @include tablecolor(var(--primary-rgb));
+  }
+  &.table-secondary {
+    @include tablecolor(var(--secondary-rgb));
+  }
+  &.table-warning {
+    @include tablecolor(var(--warning-rgb));
+  }
+  &.table-success {
+    @include tablecolor(var(--success-rgb));
+  }
+  &.table-danger {
+    @include tablecolor(var(--danger-rgb));
+  }
+  &.table-info {
+    @include tablecolor(var(--info-rgb));
+  }
+  &.table-light {
+    @include tablecolor(var(--light-rgb));
+  }
+  &.table-dark {
+    @include tablecolor(var(--dark-rgb));
+  }
+  &.table-bordered {
+    &.border-primary {
+      tbody,
+      td,
+      tfoot,
+      th,
+      thead,
+      tr {
+        border-color: rgba($primary, 0.1);
+      }
+    }
+    &.border-info {
+      tbody,
+      td,
+      tfoot,
+      th,
+      thead,
+      tr {
+        border-color: rgba($info, 0.1);
+      }
+    }
+    &.border-secondary {
+      tbody,
+      td,
+      tfoot,
+      th,
+      thead,
+      tr {
+        border-color: rgba($secondary, 0.1);
+      }
+    }
+    &.border-warning {
+      tbody,
+      td,
+      tfoot,
+      th,
+      thead,
+      tr {
+        border-color: rgba($warning, 0.1);
+      }
+    }
+    &.border-success {
+      tbody,
+      td,
+      tfoot,
+      th,
+      thead,
+      tr {
+        border-color: rgba($success, 0.1);
+      }
+    }
+    &.border-danger {
+      tbody,
+      td,
+      tfoot,
+      th,
+      thead,
+      tr {
+        border-color: rgba($danger, 0.1);
+      }
+    }
+  }
+  &.table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-accent-bg: rgba(var(--dark-rgb),0.0125);
+    color: $text-color;
+  }
+  &.table-striped-columns > :not(caption) > tr > :nth-child(2n) {
+    --bs-table-accent-bg: rgba(var(--dark-rgb),0.025);
+    color: $text-color;
+  }
+  tbody.table-group-divider {
+    border-top: 1px solid $default-border;
+  }
+  &.table-hover > tbody > tr:hover > * {
+    --bs-table-accent-bg: #{$default-background};
+    color: $text-color;
+  }
+  .table-active {
+    --bs-table-accent-bg: #{$light};
+    color: $text-color;
+  }
+  thead {
+    &.table-primary {
+      @include tablehead(var(--primary-rgb));
+    }
+    &.table-secondary {
+      @include tablehead(var(--secondary-rgb));
+    }
+    &.table-warning {
+      @include tablehead(var(--warning-rgb));
+    }
+    &.table-success {
+      @include tablehead(var(--success-rgb));
+    }
+    &.table-danger {
+      @include tablehead(var(--danger-rgb));
+    }
+    &.table-info {
+      @include tablehead(var(--info-rgb));
+    }
+    &.table-light {
+      @include tablehead(var(--light-rgb));
+    }
+    &.table-dark {
+      @include tablehead(var(--dark-rgb));
+    }
+  }
+}
+.datanew {
+  tbody{
+      border-top: 1px solid $light-900;
+  }
+}
+.table-primary {
+  @include table-color(var(--primary-rgb));
+}
+.table-secondary {
+  @include table-color(var(--secondary-rgb));
+}
+.table-warning {
+  @include table-color(var(--warning-rgb));
+}
+.table-success {
+  @include table-color(var(--success-rgb));
+}
+.table-info {
+  @include table-color(var(--info-rgb));
+}
+.table-danger {
+  @include table-color(var(--danger-rgb));
+}
+.table-dark {
+  @include table-color(var(--dark-rgb));
+}
+.table-light {
+  @include table-color(var(--light-rgb));
+}
+[data-theme-mode="dark"] {
+  .table-dark {
+    border-color: rgba(0,0,0,0.025);
+  }
+}
+[dir="rtl"] {
+  .table {
+    margin-inline-end: 1px;
+  }
+}
+.invoice-table {
+  border: 1px solid $light-900;
+  border-radius: 5px;
+  margin: 20px 0;
+  thead {
+      th {
+          border-bottom: 1px solid $light-900;
+          &:first-child {
+              width: 80%;
+          }
+      }
+  }
+  tbody {
+      tr {
+          &:last-child {
+              td {
+                  border-bottom: 0;
+              } 
+          }
+      }
+     
+  }
+  .delete-invoive-list {
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $danger-100;
+      color: $danger;
+      border-radius: 5px;
+      font-size: $font-size-16;
+  }
+}
+.invoice-product-table {
+    border-top: 1px solid $light-900;
+}
+.table{
+    margin: 0;
+    tbody{
+        tr{
+            td{
+                color: $gray-700;
+                font-size: $font-size-14; 
+                .product-img{
+                    img{
+                        border: 0;
+                    }
+                }
+                
+            .action-icon {
+              a {
+                  color: $gray-500;
+                  &:hover {
+                      background: $light-900;
+                      color: $gray-900;
+                  }
+              }
+            }
+            }
+            &.active{
+                border-bottom: 0;
+                td{
+                    font-size: $font-size-18;
+                    color: $gray-700;
+                    font-weight: $font-weight-semibold;
+                    border-bottom: 0;
+                }
+            }
+            .checkboxs {
+                .checkmarks {
+                    top: 50%;
+                    @include transform(translateY(-50%));
+                }
+            }
+        }
+        
+    } 
+    
+}
+.new {
+    tbody {
+        tr {
+            td {
+                border-bottom: none;
+            }
+        }
+    }
+}
+.dataTables_filter {
+    & + .dataTables_filter {
+        display: none;
+    }
+}
+.productimgname {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    a{
+        color: $secondary;
+        font-weight: $font-weight-medium;
+    }
+}
+.table {
+    .input-blocks {
+        input[type=text] {
+            height:40px;
+        }
+    }
+}
+.table{
+  margin: 0;
+  tbody{
+      tr{
+          td{
+              color: $gray-500;
+              a {
+                  color:$gray-900;
+                  .info-img {
+                      margin-right: 8px;
+                      width: 16px;
+                      height: 16px;
+                  }
+                  &:hover {
+                      color: $primary;
+                  }
+              }
+          }
+          &.active{
+              border-bottom: 0;
+              td{
+                  font-size: $font-size-18;
+                  color: $gray-700;
+                  font-weight: $font-weight-semibold;
+                  border-bottom: 0;
+              }
+          }
+      } 
+  }
+  
+}
+table {
+  tbody {
+      .productimgname {
+          min-width: 200px;
+          a {
+              &.stock-img.product-img {
+                  display: -webkit-box;
+                  display: -ms-flexbox;
+                  display: flex;
+                  align-items: center;
+                  -webkit-box-align: center;
+                  -ms-flex-align: center;
+                  justify-content: center;
+                  -webkit-justify-content: center;
+                  -ms-flex-pack: center;
+                  margin-right: 8px;
+                  img {
+                      width: 50px;
+                      height: 50px;
+                      max-width: 100%;
+                      margin-right: 0;
+                  }
+              }
+          }
+      }
+  }
+}
+table.table-bordered thead tr th p {
+  margin-bottom: 0;
+}
+.custom-table {
+    border-radius: 5px;
+    table {
+        thead {
+            tr {
+                th {
+                    background: $gray-100;
+                    color: $gray-900;
+                    font-size: $font-size-14;
+                    border: 0;
+                    padding: 12px 20px;
+                }
+            }
+        }
+        tbody {
+            tr {
+                td {
+                    border: 0;
+                    padding: 12px 20px;
+                    .detail-link {
+                        font-weight: $font-weight-semibold;
+                        color: $gray-900;
+                        text-decoration: underline;
+                        &:hover {
+                            color: $primary;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.table tbody tr td a {
+  &.delete-icon {
+      font-size: $font-size-16;
+      color: $danger;
+
+      &:hover {
+          color: $danger-hover;
+      }
+  }
+}
+.custom-table {
+  overflow: hidden;
+  .table-responsive {
+      tr {
+          th {
+              border: 0;
+              border-bottom: 1px solid $light-900;
+          }
+          &.report-first-head {
+              th {
+                  border-bottom: 0;
+              }
+          }
+          td {
+              border: 0;
+              border-bottom: 1px solid $light-900;
+              input.form-control {
+                  min-width: 200px;
+              }
+          }
+          &:last-child {
+              td {
+                  border-bottom: 0;
+              }
+          }
+      }
+  }
+}
+.table {
+  tr {
+      td {
+          .attendance-range {
+              width: 8px;
+              height: 15px;
+              border-radius: 5px;
+              display: block;
+          }
+      }
+  }
+}

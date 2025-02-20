@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import User, { IUser } from '../models/User';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import { sendVerificationEmail, sendPasswordEmail } from '../utils/emailService';
+import { sendVerificationEmail, sendPasswordEmail,sendPasswordResetEmail, sendPasswordResetSuccessEmail } from '../utils/emailService';
 import { generateToken,generateRandomPassword } from '../utils/generateToken';
 import bcrypt from 'bcrypt';
 
@@ -152,13 +152,13 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
 
 
 
-/*
+
 /////////////////////////////////////////////////////////// Forgot Password //////////////////////////////////////////////////
 
-export const forgotPassword = async (req: Request, res: Response) => {
+export const forgotPassword = async (req: Request, res: Response): Promise<Response | any> => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email });
 
     if (!user) return errorResponse(res, 404, 'User not found');
 
@@ -167,29 +167,53 @@ export const forgotPassword = async (req: Request, res: Response) => {
     await user.save();
 
     await sendPasswordResetEmail(email, resetToken);
-    res.json({ message: 'Reset instructions sent to email' });
+    return res.json({ message: 'Reset instructions sent to email' });
   } catch (error) {
-    errorResponse(res, 500, 'Server error');
+    return errorResponse(res, 500, 'Server error');
   }
 };
 
 /////////////////////////////////////////////////////////// Reset Password //////////////////////////////////////////////////
 
-export const resetPassword = async (req: Request, res: Response) => {
+export const resetPassword = async (req: Request, res: Response): Promise<any> => {
   try {
     const { token, newPassword } = req.body;
+    console.log(req.body);
+    if (!token || !newPassword) {
+      return errorResponse(res, 400, 'Token and new password are required');
+    }
+    console.log("here");
+
+    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
-
+    const userc = await User.findOne({ _id: decoded.userId });
+    console.log(userc);
     const user = await User.findOne({ _id: decoded.userId, resetToken: token });
-    if (!user) return errorResponse(res, 400, 'Invalid token');
+    console.log(decoded);
+    console.log(user);
 
-    user.password = await argon2.hash(newPassword);
+    if (!user) {
+      return errorResponse(res, 400, 'Invalid or expired reset token');
+    }
+
+    // Hash and update password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
     user.resetToken = undefined;
     await user.save();
 
+    // Send success email
+    await sendPasswordResetSuccessEmail(user.email);
+
     res.json({ message: 'Password updated successfully' });
   } catch (error) {
-    errorResponse(res, 400, 'Invalid or expired token');
+    if (error instanceof jwt.TokenExpiredError) {
+      return errorResponse(res, 400, 'Reset token has expired');
+    }
+    if (error instanceof jwt.JsonWebTokenError) {
+      return errorResponse(res, 400, 'Invalid reset token');
+    }
+    return errorResponse(res, 500, 'An error occurred while resetting password');
   }
 };
 
@@ -203,5 +227,3 @@ export const getAll = async (req: Request, res: Response) => {
     res.send(err);
   }
 };
-
-*/

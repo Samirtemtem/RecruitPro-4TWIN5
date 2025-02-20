@@ -5,8 +5,8 @@ import {
   login,
   register,
   verifyEmail ,
- // forgotPassword, 
- // resetPassword, 
+  forgotPassword, 
+  resetPassword, 
  // createAdmin, 
  // getall 
 } from '../controllers/authController';
@@ -28,8 +28,8 @@ router.post('/register', register);
 router.get('/verifyEmail', verifyEmail);
 
 // Password Reset
-//router.post('/forgot-password', forgotPassword);
-//router.post('/reset-password/:token', resetPassword);
+router.post('/forgotpassword', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 
 

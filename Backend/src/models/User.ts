@@ -12,6 +12,7 @@ export interface IUser extends Document {
   isVerified: boolean;
   verificationToken?: string;
   googleId?: string;
+  resetToken?:string;
   address?: string;
   phoneNumber?: string;
   role: 'DEPARTMENT-MANAGER' | 'HR-MANAGER' | 'EMPLOYEE';
@@ -37,6 +38,7 @@ const userSchema = new Schema<IUser>({
   verificationToken: { type: String },
   googleId: { type: String },
   address: { type: String },
+  resetToken: { type: String },
   phoneNumber: { type: String },
   role: { 
     type: String, 

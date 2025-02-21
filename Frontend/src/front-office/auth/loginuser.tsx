@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 //import './loginuser.scss';
 import axios from "axios";
 import { all_routes } from "../../routing-module/router/all_routes";
 import ImageWithBasePath from "../../core/common/imageWithBasePath";
+
+import { useContext } from "react";  
+import { AuthContext } from "../../routing-module/AuthContext";  // Import your AuthContext
+
+//const { setToken, setRole } = useContext(AuthContext);  // Extract setToken & setRole
+
+
+
 const LoginUser = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,6 +21,27 @@ const LoginUser = () => {
     password: false,
   });
   const navigate = useNavigate();
+
+  ////////////////////////////// auto redirect if user is already logged in////////////////////////////////////////////////////////
+  const { token, setToken, setRole } = useContext(AuthContext); // Use context inside the component
+  useEffect(() => {
+    // Check if the user is already authenticated
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      // If token exists, redirect to the appropriate dashboard based on the role
+      const userRole = sessionStorage.getItem("userRole");
+      if (userRole === "ADMIN") {
+        navigate(all_routes.adminDashboard);
+      } else if (userRole === "CANDIDATE") {
+        navigate(all_routes.UserHome);
+      } else {
+        navigate(all_routes.LoginUser); // Adjust default route as needed
+      }
+    }
+  }, [token, navigate]);
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -25,21 +54,26 @@ const LoginUser = () => {
         setError("Please verify your email before logging in.");
         return;
       }
+      ////////////////////////////////////////////
+      const { token, user } = response.data;
   
-      localStorage.setItem("userRole", response.data.user.role);
-      localStorage.setItem("token", response.data.token);
+      // Store token & role in AuthContext
+      setToken(token);
+      setRole(user.role); 
 
-      // Redirect based on the user's role
-      const userRole = response.data.user.role;
-      if (userRole === "ADMIN") {
-        navigate(all_routes.adminDashboard); // Redirect to admin dashboard
-      } else if (userRole === "CANDIDATE") {
-        navigate(all_routes.UserHome); // Redirect to user home
+      // Also persist in sessionStorage (optional)
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("userRole", user.role);
+
+      // Redirect based on role
+      if (user.role === "ADMIN") {
+        navigate(all_routes.adminDashboard); 
+      } else if (user.role === "CANDIDATE") {
+        navigate(all_routes.UserHome);
       } else {
-        // You can add more roles or a default redirect
-        navigate(all_routes.LoginUser); // Example default redirect
+        navigate(all_routes.LoginUser); 
       }
-
+      /////////////////////////////////////////////
     } catch (err: any) {
       const errorCode = err.response?.data?.code;
       switch (errorCode) {
@@ -172,7 +206,7 @@ const LoginUser = () => {
                         <div className="text-end">
                           <Link to={all_routes.forgotPassword} className="link-danger">
                             Forgot Password?
-                          </Link>
+                          </Link> 
                         </div>
                       </div>
                       {/* Submit Button */}

@@ -12,6 +12,7 @@ export interface IUser extends Document {
   isVerified: boolean;
   verificationToken?: string;
   googleId?: string;
+  resetToken?:string;
   address?: string;
   phoneNumber?: string;
   is2FAEnabled?: boolean;
@@ -41,7 +42,8 @@ const userSchema = new Schema<IUser>({
   verificationToken: { type: String },
   googleId: { type: String },
   address: { type: String },
-  is2FAEnabled: {type: Boolean},
+  is2FAEnabled: {type: Boolean}
+  resetToken: { type: String },
   phoneNumber: { type: String },
   OneTimePassword: { type: String },
   role: { 

@@ -1,5 +1,9 @@
 
 export const all_routes = {
+
+  // main
+  //main: "/index",
+
   // dashboard routes
   adminDashboard: "/adminDashboard",
   UserHome: "/UserHome",
@@ -10,8 +14,11 @@ export const all_routes = {
   VerifyEmail: "/VerifyEmail",
 
 
+
   // auth routes
-  forgotPassword : "/ResetAuth",
+  forgotPassword: "/forgotpassword",
+  resetPassword: "/reset-password",
+  resetPasswordSuccess: "/successPasswordSuccess",
   SocialAuthHandler : "/SocialAuthHandler",
 
 
@@ -87,10 +94,10 @@ export const all_routes = {
   emailVerification2: "/email-verification-2",
   emailVerification3: "/email-verification-3",
   lockScreen: "/lock-screen",
-  resetPassword: "/reset-password",
+ 
   resetPassword2: "/reset-password-2",
   resetPassword3: "/reset-password-3",
-  resetPasswordSuccess: "/success",
+
   resetPasswordSuccess2: "/success-2",
   resetPasswordSuccess3: "/success-3",
 

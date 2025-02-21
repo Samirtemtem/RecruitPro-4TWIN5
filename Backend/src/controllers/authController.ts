@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import User, { IUser } from '../models/User';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import { sendVerificationEmail, sendPasswordEmail,sendPasswordResetEmail, sendPasswordResetSuccessEmail } from '../utils/emailService';
+
+import { sendVerificationEmail, sendPasswordEmail,sendPasswordResetEmail, sendPasswordResetSuccessEmail,sendOTPEmail } from '../utils/emailService';
 import { generateToken,generateRandomPassword } from '../utils/generateToken';
 import bcrypt from 'bcrypt';
 
@@ -47,13 +48,28 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
     }
 
     const token = generateToken(user.id);
-    res.json({
+   if (user.is2FAEnabled){
+    sendOTP(user.email);
+    return res.json({
       token,
       user: {
         id: user._id,
         email: user.email,
         role: user.role,
         isVerified: user.isVerified,
+        is2FAEnabled: user.is2FAEnabled,
+      },
+    });
+   }
+   return res.json({
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+      
+        is2FAEnabled: user.is2FAEnabled,
       },
     });
   } catch (error) {
@@ -149,8 +165,82 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
+/////////////////////////////////////////////////////////// Send OTP //////////////////////////////////////////////////
 
+export const sendOTP = async (email: string) => {
+  try {
 
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return;
+    }
+
+    // Generate a 4-digit OTP
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    user.OneTimePassword = otp;
+    
+    // Save the OTP to the user document
+    await user.save();
+
+    // Send the OTP via email
+    await sendOTPEmail(user);
+
+    return;
+
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+
+    return;
+    }
+};
+
+/////////////////////////////////////////////////////////// Verify OTP //////////////////////////////////////////////////
+
+export const verifyOTP = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return errorResponse(res, 400, 'Email and OTP are required', 'INVALID_REQUEST');
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return errorResponse(res, 404, 'User not found', 'USER_NOT_FOUND');
+    }
+
+    if (!user.OneTimePassword) {
+      return errorResponse(res, 400, 'No OTP was generated for this user', 'INVALID_OTP');
+    }
+
+    if (user.OneTimePassword.toString() !== otp.toString()) {
+      return errorResponse(res, 400, 'Invalid OTP', 'INVALID_OTP');
+    }
+
+    // Clear the OTP after successful verification
+    user.OneTimePassword = undefined;
+    await user.save();
+
+    const token = generateToken(user.id);
+
+    return res.status(200).json({
+      message: 'OTP verified successfully',
+      email: user.email,
+      token,
+      user: {
+          id: user._id,
+          email: user.email,
+          role: user.role
+        },
+      });
+
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    return errorResponse(res, 500, 'An error occurred while verifying OTP', 'SERVER_ERROR');
+  }
+};
 
 
 /////////////////////////////////////////////////////////// Forgot Password //////////////////////////////////////////////////
@@ -227,3 +317,4 @@ export const getAll = async (req: Request, res: Response) => {
     res.send(err);
   }
 };
+

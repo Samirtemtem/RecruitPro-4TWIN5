@@ -4,21 +4,18 @@ import passport from 'passport';
 import { 
   login,
   register,
-  verifyEmail ,
- // forgotPassword, 
- // resetPassword, 
- // createAdmin, 
- // getall 
+  verifyEmail,
+  sendOTP,
+  verifyOTP
+  // forgotPassword, 
+  // resetPassword, 
+  // createAdmin, 
+  // getall 
 } from '../controllers/authController';
 //import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware';
 import { generateToken } from '../utils/generateToken';
 
-
-
-
-
 const router = express.Router();
-
 
 // Local Auth
 router.post('/login', login);
@@ -27,13 +24,13 @@ router.post('/register', register);
 // Email Verification
 router.get('/verifyEmail', verifyEmail);
 
+// OTP Routes
+router.post('/send-otp', sendOTP);
+router.post('/verify-otp', verifyOTP);
+
 // Password Reset
 //router.post('/forgot-password', forgotPassword);
 //router.post('/reset-password/:token', resetPassword);
-
-
-
-
 
 // Social Auth Callback
 const socialAuthCallback = async (req: Request, res: Response): Promise<any> => {

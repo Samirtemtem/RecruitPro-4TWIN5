@@ -14,12 +14,16 @@ export interface IUser extends Document {
   googleId?: string;
   address?: string;
   phoneNumber?: string;
+  is2FAEnabled?: boolean;
   role: 'DEPARTMENT-MANAGER' | 'HR-MANAGER' | 'EMPLOYEE';
   privilege: 'JOB-POSTING' | 'REGULAR';
   department: 'ELECTROMECANIQUE' | 'GENIE-CIVIL' | 'TIC';
   creationDate: Date;
   lastLogged?: Date ;
   linkedinId?: string;
+  OneTimePassword?: Number,
+
+
   provider: 'local' | 'google' | 'linkedin';
  
   comparePassword: (password: string) => Promise<boolean>;
@@ -37,7 +41,9 @@ const userSchema = new Schema<IUser>({
   verificationToken: { type: String },
   googleId: { type: String },
   address: { type: String },
+  is2FAEnabled: {type: Boolean},
   phoneNumber: { type: String },
+  OneTimePassword: { type: String },
   role: { 
     type: String, 
     enum: ['DEPARTMENT-MANAGER', 'HR-MANAGER', 'EMPLOYEE', 'CANDIDATE', 'ADMIN']

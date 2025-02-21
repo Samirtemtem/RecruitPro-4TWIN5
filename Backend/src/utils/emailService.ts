@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import 'dotenv/config'; // TypeScript equivalent of `require('dotenv').config()`
+import { IUser } from '../models/User';
 
 
 
@@ -102,7 +103,50 @@ export const sendPasswordEmail = async (email: string, password: string): Promis
   }
 };
 
+/**
+ * Sends a one-time password (OTP) to the user for verification.
+ * @param user - The user object containing email and OTP.
+ */
+export const sendOTPEmail = async (user: IUser): Promise<void> => {
+  try {
+    if (!user.OneTimePassword) {
+      throw new Error('No OTP found for user');
+    }
 
+    await transporter.sendMail({
+      from: `${APP_NAME} <noreply@recruitpro.com>`,
+      to: user.email,
+      subject: `Your Verification Code for ${APP_NAME}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ccc;">
+          <div style="text-align: center;">
+            <img src="${LOGO_URL}" alt="${APP_NAME} Logo" style="max-width: 200px; margin-bottom: 20px;" />
+            <h1 style="color: #333;">Verification Code</h1>
+          </div>
+          <p style="color: #555;">Hello${user.firstName ? ' ' + user.firstName : ''},</p>
+          <p style="color: #555;">Your verification code is:</p>
+          <div style="text-align: center;">
+            <p style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #2c3e50; 
+               background: #f8f9fa; padding: 15px; margin: 20px auto; display: inline-block; 
+               border-radius: 8px; border: 2px solid #e9ecef;">
+              ${user.OneTimePassword}
+            </p>
+          </div>
+          <p style="color: #555;">
+            Please use this code to complete your verification process. This code will expire shortly.
+          </p>
+          <p style="color: #888; font-size: 12px; margin-top: 20px; text-align: center;">
+            If you didn't request this code, please ignore this email.
+          </p>
+        </div>
+      `,
+    });
+    console.log(`OTP email sent to ${user.email}`);
+  } catch (error) {
+    console.error('Error sending OTP email:', error);
+    throw error;
+  }
+};
 
 
 

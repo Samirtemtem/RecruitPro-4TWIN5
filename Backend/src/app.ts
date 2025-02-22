@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 //import dotenv from 'dotenv';
 import express from 'express';
 import authRoutes from './routes/authRoutes'; // Correct import
+import cvRoutes from './routes/cvRoutes';
 import cors from 'cors';
 import passport from 'passport';
 import 'dotenv/config'; // TypeScript equivalent of `require('dotenv').config()`
@@ -66,6 +67,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter); 
 app.use('/api/auth', authRoutes);
+app.use('/api/cv', cvRoutes);
 
 
 

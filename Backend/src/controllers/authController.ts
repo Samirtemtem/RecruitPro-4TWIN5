@@ -1,16 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
-import User, { IUser } from '../models/User';
-import argon2 from 'argon2';
-import jwt from 'jsonwebtoken';
-import { sendVerificationEmail, sendPasswordEmail } from '../utils/emailService';
-import { generateToken, generateRandomPassword } from '../utils/generateToken';
-import bcrypt from 'bcrypt';
+import { User, IUser } from '../models/User';
 import Profile from '../models/Profile';
 import Education from '../models/Education';
 import Experience from '../models/Experience';
 import Skill from '../models/Skill';
+import SocialLinks from '../models/SocialLinks';
+import { Role } from '../models/types';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { sendVerificationEmail, sendPasswordEmail } from '../utils/emailService';
+import { generateToken, generateRandomPassword } from '../utils/generateToken';
 import { uploadToCloudinary } from '../utils/cloudinary';
 import fs from 'fs/promises';
+import { Schema } from 'mongoose';
 
 // Helper function for error responses
 const errorResponse = (res: Response, statusCode: number, message: string, code?: string) => {
@@ -18,7 +20,7 @@ const errorResponse = (res: Response, statusCode: number, message: string, code?
 };
 
 /////////////////////////////////////////////////////////// Login //////////////////////////////////////////////////
-
+/*
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   try {
     const { email, password } = req.body;
@@ -27,30 +29,32 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
       return errorResponse(res, 400, 'Email and password are required', 'INVALID_CREDENTIALS');
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate('profile');
 
     if (!user) {
       return errorResponse(res, 401, 'User not found. Please register first.', 'USER_NOT_FOUND');
     }
 
-    if ((user.provider === 'linkedin' || user.provider === 'google')&& !user.password) {
+    if ((user.provider === 'linkedin' || user.provider === 'google') && !user.password) {
       const randomPassword = generateRandomPassword();
       user.password = randomPassword;
       await user.save();
       await sendPasswordEmail(user.email, randomPassword);
-     // return res.status(200).json({ message: "Please check your email for a new password." });
       return errorResponse(res, 403, 'You have not set a password yet. Please check your email. A new password will be sent to you.', 'USER_PASSWORD_EMAIL');
     }
-
 
     if (!user.isVerified) {
       return errorResponse(res, 403, 'Email not verified. Please verify your email.', 'EMAIL_NOT_VERIFIED');
     }
 
-    const isMatch = await bcrypt.compare(password, user.password!);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return errorResponse(res, 401, 'Incorrect password. Please try again.', 'INCORRECT_PASSWORD');
     }
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
 
     const token = generateToken(user.id);
     res.json({
@@ -59,15 +63,21 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
         id: user._id,
         email: user.email,
         role: user.role,
-        isVerified: user.isVerified,
-      },
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        image: user.image,
+        profile: user.profile,
+        createDate: user.createDate,
+        lastLogin: user.lastLogin,
+        isVerified: user.isVerified
+      }
     });
   } catch (error) {
     console.error('Login error:', error);
     return errorResponse(res, 500, 'An internal server error occurred', 'SERVER_ERROR');
   }
-};
-
+};*/
 
 /////////////////////////////////////////////////////////// Register //////////////////////////////////////////////////
 
@@ -102,29 +112,49 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       try {
         // Upload profile image to Cloudinary
         if (files.profileImage?.[0]) {
-          profileImageUrl = await uploadToCloudinary(files.profileImage[0], 'profile-images');
-          // Delete temp file
-          await fs.unlink(files.profileImage[0].path);
+          const profileFile = files.profileImage[0];
+          profileFile.mimetype = 'image/jpeg'; // Ensure proper mimetype
+          profileImageUrl = await uploadToCloudinary(
+            profileFile, 
+            'profile-images'
+          );
         }
         
         // Upload CV to Cloudinary
         if (files.cv?.[0]) {
-          cvUrl = await uploadToCloudinary(files.cv[0], 'cvs');
-          // Delete temp file
-          await fs.unlink(files.cv[0].path);
+          const cvFile = files.cv[0];
+          cvFile.mimetype = 'application/pdf'; // Ensure proper mimetype
+          cvUrl = await uploadToCloudinary(
+            cvFile, 
+            'cvs'
+          );
         }
-      } catch (error) {
-        // Clean up any remaining temp files
-        for (const fieldname in files) {
-          for (const file of files[fieldname]) {
-            try {
-              await fs.unlink(file.path);
-            } catch (unlinkError) {
-              console.error('Error deleting temp file:', unlinkError);
+
+        // Verify the uploaded URLs are accessible
+        if (profileImageUrl || cvUrl) {
+          const urlsToCheck = [];
+          if (profileImageUrl) urlsToCheck.push(profileImageUrl);
+          if (cvUrl) urlsToCheck.push(cvUrl);
+
+          try {
+            const responses = await Promise.all(
+              urlsToCheck.map(url => fetch(url))
+            );
+            
+            for (const response of responses) {
+              if (!response.ok) {
+                console.error('URL verification failed:', response.statusText);
+                return errorResponse(res, 500, 'File upload verification failed');
+              }
             }
+          } catch (verifyError) {
+            console.error('Error verifying uploaded files:', verifyError);
+            return errorResponse(res, 500, 'Error verifying uploaded files');
           }
         }
-        throw error;
+      } catch (error) {
+        console.error('Error uploading files:', error);
+        return errorResponse(res, 500, 'Error uploading files');
       }
     }
 
@@ -133,8 +163,14 @@ export const register = async (req: Request, res: Response, next: NextFunction):
 
     // Create new user
     const user = new User({
+      firstName,
+      lastName,
       email,
       password,
+      role: Role.CANDIDATE, // Default role for registration
+      phoneNumber,
+      createDate: new Date(),
+      image: profileImageUrl,
       verificationToken,
       provider: 'local',
       isVerified: false
@@ -151,54 +187,88 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       phoneNumber,
       address,
       profileImage: profileImageUrl,
-      cv: cvUrl,
-      socialLinks: JSON.parse(typeof socialLinks === 'string' ? socialLinks : JSON.stringify(socialLinks))
+      cv: cvUrl
     });
 
     await profile.save();
 
-    // Parse and validate education data
+    // Update user with profile reference
+    user.profile = profile._id as Schema.Types.ObjectId;
+    await user.save();
+
+    // Parse and create social links
+    if (socialLinks) {
+      const socialLinksData = typeof socialLinks === 'string' ? JSON.parse(socialLinks) : socialLinks;
+      if (Array.isArray(socialLinksData) && socialLinksData.length > 0) {
+        const socialLinksPromises = socialLinksData.map(social => {
+          const newSocialLink = new SocialLinks({
+            type: social.type,
+            link: social.link
+          });
+          return newSocialLink.save();
+        });
+        const savedSocialLinks = await Promise.all(socialLinksPromises);
+        profile.socialLinks = savedSocialLinks.map(link => link._id) as Schema.Types.ObjectId[];
+        await profile.save();
+      }
+    }
+
+    // Parse and create education records
     if (education) {
       const educationData = typeof education === 'string' ? JSON.parse(education) : education;
       if (Array.isArray(educationData) && educationData.length > 0) {
         const educationPromises = educationData.map(edu => {
           const newEducation = new Education({
-            user: user._id,
-            ...edu
+            institution: edu.institution,
+            diploma: edu.diploma,
+            startDate: edu.startDate,
+            endDate: edu.endDate,
+            description: edu.description,
+            location: edu.location
           });
           return newEducation.save();
         });
-        await Promise.all(educationPromises);
+        const savedEducation = await Promise.all(educationPromises);
+        profile.education = savedEducation.map(edu => edu._id) as Schema.Types.ObjectId[];
+        await profile.save();
       }
     }
 
-    // Parse and validate experience data
+    // Parse and create experience records
     if (experience) {
       const experienceData = typeof experience === 'string' ? JSON.parse(experience) : experience;
       if (Array.isArray(experienceData) && experienceData.length > 0) {
         const experiencePromises = experienceData.map(exp => {
           const newExperience = new Experience({
-            user: user._id,
-            ...exp
+            position: exp.position,
+            enterprise: exp.enterprise,
+            startDate: exp.startDate,
+            endDate: exp.endDate,
+            description: exp.description,
+            location: exp.location
           });
           return newExperience.save();
         });
-        await Promise.all(experiencePromises);
+        const savedExperience = await Promise.all(experiencePromises);
+        profile.experience = savedExperience.map(exp => exp._id) as Schema.Types.ObjectId[];
+        await profile.save();
       }
     }
 
-    // Parse and validate skills data
+    // Parse and create skills
     if (skills) {
       const skillsData = typeof skills === 'string' ? JSON.parse(skills) : skills;
       if (Array.isArray(skillsData) && skillsData.length > 0) {
         const skillPromises = skillsData.map(skill => {
           const newSkill = new Skill({
-            user: user._id,
-            ...skill
+            name: skill.name,
+            degree: skill.degree
           });
           return newSkill.save();
         });
-        await Promise.all(skillPromises);
+        const savedSkills = await Promise.all(skillPromises);
+        profile.skills = savedSkills.map(skill => skill._id) as Schema.Types.ObjectId[];
+        await profile.save();
       }
     }
 
@@ -210,7 +280,13 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       user: {
         id: user._id,
         email: user.email,
+        role: user.role,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        image: user.image,
         profile: {
+          id: profile._id,
           firstName,
           lastName,
           phoneNumber,
@@ -237,12 +313,8 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
       return res.status(400).json({ message: "Missing token" });
     }
 
-    console.log(`Token received: ${token}`);
-
     // Verify JWT
     const decoded = jwt.verify(token as string, process.env.JWT_SECRET!) as { email: string };
-    console.log(`Decoded token: ${JSON.stringify(decoded)}`);
-    
     const user = await User.findOne({ email: decoded.email });
 
     if (!user) {
@@ -258,25 +330,19 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
     user.verificationToken = undefined;
     await user.save();
 
-    console.log("User verification successful");
     res.status(200).json({ message: "Email verified successfully. You can now log in." });
   } catch (error: unknown) {
-    console.error("Caught error:", error);
+    console.error("Verification error:", error);
 
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(400).json({ message: "Token has expired. Please request a new verification email." });
     } else if (error instanceof jwt.JsonWebTokenError) {
       return res.status(400).json({ message: "Invalid token. Please request a new verification email." });
-    } else if (error instanceof Error) {
-      return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
     } else {
       return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
     }
   }
 };
-
-
-
 
 /*
 /////////////////////////////////////////////////////////// Forgot Password //////////////////////////////////////////////////

@@ -1,35 +1,74 @@
 import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import 'dotenv/config';
+import fs from 'fs';
 
-// Parse CLOUDINARY_URL
-const parseCloudinaryUrl = (url: string) => {
-  const match = url.match(/cloudinary:\/\/(\d+):([^@]+)@(.+)$/);
-  if (!match) {
-    throw new Error('Invalid CLOUDINARY_URL format');
-  }
-  return {
-    api_key: match[1],
-    api_secret: match[2],
-    cloud_name: match[3]
-  };
-};
-
-// Configure Cloudinary
-const cloudinaryConfig = parseCloudinaryUrl(process.env.CLOUDINARY_URL || '');
-cloudinary.config({
-  cloud_name: cloudinaryConfig.cloud_name,
-  api_key: cloudinaryConfig.api_key,
-  api_secret: cloudinaryConfig.api_secret
+// Debug: Log Cloudinary config
+console.log('Configuring Cloudinary with:', {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET?.substring(0, 5) + '...'
 });
 
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dlwmx7jxt',
+  api_key: process.env.CLOUDINARY_API_KEY || '262566918812916',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'z79kUONbia147t5PocRrwHvJOwU',
+  secure: true
+});
+
+// Cloudinary storage configuration
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    // Determine the appropriate folder based on file type
+    const folder = file.mimetype.startsWith('image/') ? 'profile-images' : 'cvs';
+    
+    return {
+      folder: folder,
+      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
+      resource_type: 'auto',
+      access_mode: 'public',
+      unique_filename: true
+    };
+  }
+});
+
+// Initialize multer with Cloudinary storage
+export const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  }
+});
+
+// Function to upload file to Cloudinary
 export const uploadToCloudinary = async (file: Express.Multer.File, folder: string): Promise<string> => {
   try {
+    // Determine resource_type based on mimetype
+    const resource_type = file.mimetype.startsWith('image/') ? 'image' : 'raw';
+    
     const result = await cloudinary.uploader.upload(file.path, {
-      folder: `recruitpro/${folder}`,
-      resource_type: 'auto'
+      folder: folder,
+      resource_type: resource_type,
+      access_mode: 'public',
+      unique_filename: true,
+      use_filename: true,
+      overwrite: true
     });
+
+    // Clean up the temporary file
+    try {
+      await fs.promises.unlink(file.path);
+    } catch (unlinkError) {
+      console.warn('Warning: Could not delete temporary file:', unlinkError);
+    }
+
     return result.secure_url;
   } catch (error) {
-    console.error('Cloudinary upload error:', error);
-    throw new Error('File upload to Cloudinary failed');
+    console.error('Error uploading to Cloudinary:', error);
+    throw new Error('Failed to upload file to Cloudinary');
   }
-}; 
+};

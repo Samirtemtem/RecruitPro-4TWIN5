@@ -2,11 +2,11 @@ import 'dotenv/config'; // TypeScript equivalent of `require('dotenv').config()`
 import passport from 'passport';
 import { Strategy as GoogleStrategy, VerifyCallback as GoogleVerifyCallback } from 'passport-google-oauth20';
 import { Strategy as LinkedInStrategy, Profile as LinkedInProfile } from 'passport-linkedin-oauth2';
-import User, { IUser } from '../models/User'; // Ensure User model is typed
+import { User } from '../models/User';
 import { sendWelcomeEmail } from '../utils/emailService';
 import axios from 'axios';
 
-
+/*
 // Google Strategy
 passport.use(
   new GoogleStrategy(
@@ -111,4 +111,4 @@ passport.deserializeUser(async (id: string, done) => {
   } catch (error) {
     done(error, null);
   }
-});
+});*/

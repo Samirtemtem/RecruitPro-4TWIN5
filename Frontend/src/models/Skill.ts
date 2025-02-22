@@ -1,18 +1,15 @@
 export type SkillDegree = 'NOVICE' | 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT';
 
 export interface Skill {
-  id: number;
-  userId?: string;
+  id: string;
+  userId: string;
   name: string;
   degree: SkillDegree;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface SkillInput {
-  name: string;
-  degree: SkillDegree;
-}
+export interface SkillInput extends Omit<Skill, 'id' | 'userId' | 'createdAt' | 'updatedAt'> {}
 
 export const skillDegreeDescriptions: Record<SkillDegree, string> = {
   NOVICE: 'Basic theoretical knowledge but limited practical experience',

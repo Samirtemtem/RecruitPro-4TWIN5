@@ -1,21 +1,14 @@
 export interface Education {
-  id: number;
-  userId?: string;
+  id: string;
+  userId: string;
   institution: string;
   diploma: string;
   startDate: string;
   endDate: string;
   description: string;
   location: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface EducationInput {
-  institution: string;
-  diploma: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-  location: string;
-} 
+export interface EducationInput extends Omit<Education, 'id' | 'userId' | 'createdAt' | 'updatedAt'> {} 

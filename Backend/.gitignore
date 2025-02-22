@@ -1,9 +1,6 @@
 # Dependencies
 node_modules/
 
-# Environment variables
-.env
-
 # Temporary files
 temp/*
 !temp/.gitkeep

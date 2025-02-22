@@ -4,6 +4,8 @@ import LoginUser from "../../front-office/auth/loginuser";
 import RegisterWizard from "../../front-office/auth/register-wizard";
 import VerifyEmail from "../../front-office/auth/VerifyEmail";
 import UserHome from "../../front-office/userhome";
+import ManageProfile from "../../front-office/profile/manage-profile";
+import Profile from "../../front-office/profile/manage-profile";
 const routes = all_routes;
 
 export const publicRoutes = [
@@ -36,7 +38,7 @@ export const authRoutes = [
   },
   {
     path: "/register",
-    name: "Root",
+    name: "Register",
     element: <RegisterWizard  />,
     route: Route,
   },
@@ -44,6 +46,12 @@ export const authRoutes = [
     path: "/UserHome",
     name: "Root",
     element: <UserHome  />,
+    route: Route,
+  },
+  {
+    path: "/Profile",
+    name: "Profile",
+    element: <Profile  />,
     route: Route,
   },
   

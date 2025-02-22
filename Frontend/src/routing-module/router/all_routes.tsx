@@ -11,7 +11,8 @@ export const all_routes = {
   forgotPassword : "/ResetAuth",
   VerifyEmail: "/VerifyEmail",
 
-
+  //profile routes
+  profile: "/profile",
 
   /// dump
   employeeDashboard: "/employee-dashboard",
@@ -54,7 +55,7 @@ export const all_routes = {
 
   //page module
   starter: "/starter",
-  profile: "/pages/profile",
+  //profile: "/pages/profile",
   gallery: "/gallery",
   searchresult: "/search-result",
   timeline: "/timeline",

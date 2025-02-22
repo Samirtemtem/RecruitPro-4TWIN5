@@ -2,18 +2,19 @@ import mongoose, { Document, Schema, Model } from 'mongoose';
 
 // Interface for Profile Document
 export interface IProfile extends Document {
-  user: Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId;  // Reference to User
   firstName: string;
   lastName: string;
   email: string;
   phoneNumber: string;
   address: string;
-  profileImage?: string;  // URL to stored profile image
-  cv?: string;           // URL to stored CV
-  socialLinks: Array<{
-    platform: 'LINKEDIN' | 'GITHUB' | 'PORTFOLIO' | 'OTHER';
-    link: string;
-  }>;
+  profileImage: string;
+  cv: string;
+  education: Schema.Types.ObjectId[];  // References to Education
+  experience: Schema.Types.ObjectId[];  // References to Experience
+  skills: Schema.Types.ObjectId[];  // References to Skills
+  socialLinks: Schema.Types.ObjectId[];  // References to SocialLinks
+  profileHistory: Schema.Types.ObjectId[];  // References to ProfileHistory
 }
 
 // Define Profile Schema
@@ -26,14 +27,11 @@ const profileSchema = new Schema<IProfile>({
   address: { type: String, required: true },
   profileImage: { type: String },
   cv: { type: String },
-  socialLinks: [{
-    platform: {
-      type: String,
-      enum: ['LINKEDIN', 'GITHUB', 'PORTFOLIO', 'OTHER'],
-      required: true
-    },
-    link: { type: String, required: true }
-  }]
+  education: [{ type: Schema.Types.ObjectId, ref: 'Education' }],
+  experience: [{ type: Schema.Types.ObjectId, ref: 'Experience' }],
+  skills: [{ type: Schema.Types.ObjectId, ref: 'Skill' }],
+  socialLinks: [{ type: Schema.Types.ObjectId, ref: 'SocialLink' }],
+  profileHistory: [{ type: Schema.Types.ObjectId, ref: 'ProfileHistory' }]
 }, {
   timestamps: true
 });

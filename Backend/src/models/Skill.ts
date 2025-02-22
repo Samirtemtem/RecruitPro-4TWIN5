@@ -2,20 +2,14 @@ import mongoose, { Document, Schema, Model } from 'mongoose';
 
 // Interface for Skill Document
 export interface ISkill extends Document {
-  user: Schema.Types.ObjectId;
   name: string;
-  degree: 'NOVICE' | 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT';
+  degree: string;
 }
 
 // Define Skill Schema
 const skillSchema = new Schema<ISkill>({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, required: true },
-  degree: { 
-    type: String,
-    enum: ['NOVICE', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'],
-    required: true
-  }
+  degree: { type: String, required: true }
 }, {
   timestamps: true
 });

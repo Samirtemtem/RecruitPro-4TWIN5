@@ -9,16 +9,67 @@ import { Education, EducationInput } from '../../models/Education';
 import { Experience, ExperienceInput } from '../../models/Experience';
 import { Skill, SkillDegree, skillDegreeDescriptions } from '../../models/Skill';
 import { Profile, ProfileFormData, SocialLink, SocialPlatform } from '../../models/Profile';
+import { Role, Socials } from '../../models/types';
 import * as Yup from 'yup';
+import { parseCV, ParsedCVData } from '../../services/cv-parser.service';
+
+import { toast } from 'react-hot-toast';
 
 type FormSection = 'personal' | 'professional' | 'educationHistory' | 'workExperience' | 'skills' | 'terms';
 
-interface FormData extends Omit<ProfileFormData, 'id'> {
+interface EducationFormData {
+  id: string;
+  institution: string;
+  diploma: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  location: string;
+}
+
+interface ExperienceFormData {
+  id: string;
+  position: string;
+  enterprise: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  location: string;
+}
+
+interface SkillFormData {
+  id: string;
+  name: string;
+  degree: SkillDegree;
+}
+
+interface SocialLinkFormData {
+  id: string;
+  type: Socials;
+  link: string;
+}
+
+interface FormData {
+  // User fields
+  firstName: string;
+  lastName: string;
+  email: string;
   password: string;
   confirmPassword: string;
-  education: Education[];
-  experience: Experience[];
-  skills: Skill[];
+  phoneNumber: string;
+  role: Role;
+  createDate?: Date;
+  lastLogin?: Date;
+  image?: File;
+  
+  // Profile fields
+  address: string;
+  profileImage?: File;
+  cv?: File;
+  education: EducationFormData[];
+  experience: ExperienceFormData[];
+  skills: SkillFormData[];
+  socialLinks: SocialLinkFormData[];
   agreeToTerms: boolean;
 }
 
@@ -79,18 +130,20 @@ const professionalInfoSchema = Yup.object().shape({
     }),
   socialLinks: Yup.array().of(
     Yup.object().shape({
-      platform: Yup.string().required('Platform is required'),
+      type: Yup.string()
+        .required('Platform is required')
+        .oneOf(Object.values(Socials), 'Invalid platform'),
       link: Yup.string()
         .url('Please enter a valid URL')
         .test('validPlatformUrl', 'Invalid platform URL', function (value) {
           if (!value) return true;
-          const platform = this.parent.platform;
-          if (platform === 'LINKEDIN') return value.includes('linkedin.com');
-          if (platform === 'GITHUB') return value.includes('github.com');
+          const platform = this.parent.type;
+          if (platform === Socials.LINKEDIN) return value.includes('linkedin.com');
+          if (platform === Socials.GITHUB) return value.includes('github.com');
           return true;
         })
     })
-  )
+  ).notRequired()
 });
 
 const educationSchema = Yup.array().of(
@@ -158,11 +211,10 @@ const RegisterWizard = () => {
     password: '',
     confirmPassword: '',
     phoneNumber: '',
+    role: Role.CANDIDATE,
     address: '',
-    profileImage: undefined,
-    cv: undefined,
     education: [{
-      id: 0,
+      id: crypto.randomUUID(),
       institution: '',
       diploma: '',
       startDate: '',
@@ -171,7 +223,7 @@ const RegisterWizard = () => {
       location: ''
     }],
     experience: [{
-      id: 0,
+      id: crypto.randomUUID(),
       position: '',
       enterprise: '',
       startDate: '',
@@ -180,19 +232,19 @@ const RegisterWizard = () => {
       location: ''
     }],
     skills: [{
-      id: 0,
+      id: crypto.randomUUID(),
       name: '',
-      degree: 'NOVICE'
+      degree: 'NOVICE' as SkillDegree
     }],
     socialLinks: [
       {
-        id: 1,
-        platform: 'LINKEDIN',
+        id: crypto.randomUUID(),
+        type: Socials.LINKEDIN,
         link: ''
       },
       {
-        id: 2,
-        platform: 'GITHUB',
+        id: crypto.randomUUID(),
+        type: Socials.GITHUB,
         link: ''
       }
     ],
@@ -238,6 +290,9 @@ const RegisterWizard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formFeedback, setFormFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
+  const [isParsingCV, setIsParsingCV] = useState(false);
+  const [parsingFeedback, setParsingFeedback] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
+
   const navigate = useNavigate();
 
   const handleInputChange = (section: FormSection, field: string, value: any, index?: number) => {
@@ -265,7 +320,7 @@ const RegisterWizard = () => {
             if (index === newEducation.length) {
               // Adding new education entry
               newEducation.push({
-                id: prev.education.length + 1,
+                id: crypto.randomUUID(),
                 institution: '',
                 diploma: '',
                 startDate: '',
@@ -290,7 +345,7 @@ const RegisterWizard = () => {
             if (index === newExperience.length) {
               // Adding new experience entry
               newExperience.push({
-                id: prev.experience.length + 1,
+                id: crypto.randomUUID(),
                 position: '',
                 enterprise: '',
                 startDate: '',
@@ -315,9 +370,9 @@ const RegisterWizard = () => {
             if (index === newSkills.length) {
               // Adding new skill entry
               newSkills.push({
-                id: prev.skills.length + 1,
+                id: crypto.randomUUID(),
                 name: '',
-                degree: 'NOVICE'
+                degree: 'NOVICE' as SkillDegree
               });
             } else {
               // Updating existing skill entry
@@ -561,7 +616,7 @@ const RegisterWizard = () => {
             education: [
               ...prev.education,
               {
-                id: 0,
+                id: crypto.randomUUID(),
                 institution: '',
                 diploma: '',
                 startDate: '',
@@ -577,7 +632,7 @@ const RegisterWizard = () => {
             experience: [
               ...prev.experience,
               {
-                id: 0,
+                id: crypto.randomUUID(),
                 position: '',
                 enterprise: '',
                 startDate: '',
@@ -593,16 +648,23 @@ const RegisterWizard = () => {
             skills: [
               ...prev.skills,
               {
-                id: 0,
+                id: crypto.randomUUID(),
                 name: '',
-                degree: 'NOVICE'
+                degree: 'NOVICE' as SkillDegree
               }
             ]
           };
         case 'professional':
           return {
             ...prev,
-            socialLinks: [...prev.socialLinks, { id: 0, platform: 'OTHER', link: '' }]
+            socialLinks: [
+              ...prev.socialLinks,
+              {
+                id: crypto.randomUUID(),
+                type: Socials.PORTFOLIO,
+                link: ''
+              }
+            ]
           };
         default:
           return prev;
@@ -739,18 +801,18 @@ const RegisterWizard = () => {
     if (isValid) {
       setIsLoading(true);
       try {
-        // Create FormData object
         const submitData = new FormData();
 
-        // Add basic user information
+        // Add user information
         submitData.append('firstName', formData.firstName);
         submitData.append('lastName', formData.lastName);
         submitData.append('email', formData.email);
         submitData.append('password', formData.password);
         submitData.append('phoneNumber', formData.phoneNumber);
+        submitData.append('role', Role.CANDIDATE);
         submitData.append('address', formData.address);
 
-        // Add files if they exist
+        // Add files
         if (formData.profileImage) {
           submitData.append('profileImage', formData.profileImage);
         }
@@ -762,7 +824,10 @@ const RegisterWizard = () => {
         submitData.append('education', JSON.stringify(formData.education));
         submitData.append('experience', JSON.stringify(formData.experience));
         submitData.append('skills', JSON.stringify(formData.skills));
-        submitData.append('socialLinks', JSON.stringify(formData.socialLinks));
+        submitData.append('socialLinks', JSON.stringify(formData.socialLinks.map(link => ({
+          type: link.type,
+          link: link.link
+        }))));
 
         const response = await registerUser(submitData);
 
@@ -771,12 +836,10 @@ const RegisterWizard = () => {
           message: 'Registration successful! Redirecting to login...'
         });
 
-        // Store the token if needed
         if (response.token) {
           localStorage.setItem('token', response.token);
         }
 
-        // Redirect after a short delay
         setTimeout(() => {
           navigate('/login');
         }, 2000);
@@ -787,7 +850,6 @@ const RegisterWizard = () => {
           message: error?.message || 'Registration failed. Please try again.'
         });
         
-        // Scroll to top to show error message
         window.scrollTo(0, 0);
       } finally {
         setIsLoading(false);
@@ -871,6 +933,165 @@ const RegisterWizard = () => {
       newErrors.skills = [...(newErrors.skills || [])].filter((_, i) => i !== index);
       if (newErrors.skills.length === 0) delete newErrors.skills;
       setErrors(newErrors);
+    }
+  };
+
+  const handleCVUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      
+      // Validate file type
+      const allowedTypes = [
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'text/plain',
+        'text/csv',
+        'text/html',
+        'text/xml',
+        'application/rtf'
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        setParsingFeedback({
+          type: 'error',
+          message: 'Please upload a PDF, DOCX, or text-based file (TXT, CSV, HTML, XML, RTF).'
+        });
+        return;
+      }
+
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        setParsingFeedback({
+          type: 'error',
+          message: 'File size must be less than 5MB.'
+        });
+        return;
+      }
+
+      // Update CV file in form data
+      setFormData(prev => ({
+        ...prev,
+        cv: file
+      }));
+
+      try {
+        // Show parsing status
+        setIsParsingCV(true);
+        const fileType = file.type === 'application/pdf' ? 'PDF' : 
+                        file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'DOCX' : 
+                        'text-based';
+        setParsingFeedback({ 
+          type: 'info', 
+          message: `Parsing your ${fileType} CV...`
+        });
+
+        // Parse CV using backend service
+        const parsedData = await parseCV(file);
+        
+        // Track what was successfully parsed
+        const parsedFields: string[] = [];
+        
+        // Update form with parsed data
+        setFormData(prev => {
+          const newData = { ...prev };
+
+          // Update name if available
+          if (parsedData.name && !prev.firstName) {
+            const nameParts = parsedData.name.split(' ');
+            if (nameParts.length >= 2) {
+              newData.firstName = nameParts[0];
+              newData.lastName = nameParts.slice(1).join(' ');
+              parsedFields.push('name');
+            }
+          }
+
+          // Update email if not already set
+          if (parsedData.email && !prev.email) {
+            newData.email = parsedData.email;
+            parsedFields.push('email');
+          }
+
+          // Update phone number if not already set
+          if (parsedData.phone && !prev.phoneNumber) {
+            newData.phoneNumber = parsedData.phone;
+            parsedFields.push('phone number');
+          }
+
+          // Update address if not already set
+          if (parsedData.address && !prev.address) {
+            newData.address = parsedData.address;
+            parsedFields.push('address');
+          }
+
+          // Update skills
+          if (parsedData.skills && parsedData.skills.length > 0) {
+            newData.skills = parsedData.skills.map(skillName => ({
+              id: crypto.randomUUID(),
+              name: skillName,
+              degree: 'INTERMEDIATE' as SkillDegree
+            }));
+            parsedFields.push(`${parsedData.skills.length} skills`);
+          }
+
+          // Update education
+          if (parsedData.education && parsedData.education.length > 0) {
+            newData.education = parsedData.education.map(edu => {
+              // Try to extract institution and diploma if in format "Diploma at Institution"
+              const match = edu.match(/^(.*?)\s+at\s+(.*)$/);
+              return {
+                id: crypto.randomUUID(),
+                institution: match ? match[2] : edu,
+                diploma: match ? match[1] : '',
+                startDate: '',
+                endDate: '',
+                description: '',
+                location: ''
+              };
+            });
+            parsedFields.push(`${parsedData.education.length} education entries`);
+          }
+
+          // Update experience
+          if (parsedData.work_experience && parsedData.work_experience.length > 0) {
+            newData.experience = parsedData.work_experience.map(exp => {
+              // Try to extract position and company if in format "Position at Company"
+              const match = exp.match(/^(.*?)\s+at\s+(.*)$/);
+              return {
+                id: crypto.randomUUID(),
+                position: match ? match[1] : exp,
+                enterprise: match ? match[2] : '',
+                startDate: '',
+                endDate: '',
+                description: '',
+                location: ''
+              };
+            });
+            parsedFields.push(`${parsedData.work_experience.length} work experiences`);
+          }
+
+          return newData;
+        });
+
+        // Show success message with details of what was parsed
+        if (parsedFields.length > 0) {
+          setParsingFeedback({
+            type: 'success',
+            message: `Successfully parsed: ${parsedFields.join(', ')}. Please review and complete any missing information.`
+          });
+        } else {
+          setParsingFeedback({
+            type: 'info',
+            message: 'CV was processed but no relevant information was found. Please fill in the information manually.'
+          });
+        }
+      } catch (error) {
+        console.error('Error parsing CV:', error);
+        setParsingFeedback({
+          type: 'error',
+          message: error instanceof Error ? error.message : 'Failed to parse CV. Please check the file format or fill in the information manually.'
+        });
+      } finally {
+        setIsParsingCV(false);
+      }
     }
   };
 
@@ -1098,11 +1319,25 @@ const RegisterWizard = () => {
                                 <input
                                   type="file"
                                   className={`form-control ${errors.cv ? 'is-invalid' : ''}`}
-                                  accept=".pdf,.doc,.docx"
-                                  onChange={(e) => handleInputChange('professional', 'cv', e.target.files?.[0])}
+                                  accept=".pdf,.doc,.docx,.txt"
+                                  onChange={handleCVUpload}
+                                  disabled={isParsingCV}
                                 />
                                 {errors.cv && (
                                   <div className="invalid-feedback">{errors.cv}</div>
+                                )}
+                                {isParsingCV && (
+                                  <div className="parsing-status mt-2">
+                                    <div className="spinner-border text-primary spinner-border-sm me-2" role="status">
+                                      <span className="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span className="text-primary">Resume parsing...</span>
+                                  </div>
+                                )}
+                                {parsingFeedback && (
+                                  <div className={`parsing-feedback alert alert-${parsingFeedback.type} mt-2`}>
+                                    {parsingFeedback.message}
+                                  </div>
                                 )}
                               </div>
                             </div>
@@ -1153,7 +1388,7 @@ const RegisterWizard = () => {
                                             <RequiredLabel text="Platform" />
                                             <select
                                               className="form-control"
-                                              value={link.platform}
+                                              value={link.type}
                                               onChange={(e) => handleInputChange('professional', 'socialLinks', e.target.value, index + 2)}
                                             >
                                               <option value="">Select Platform</option>
@@ -1438,7 +1673,6 @@ const RegisterWizard = () => {
                                       className={`form-control ${errors.skills?.[index] ? 'is-invalid' : ''}`}
                                       value={skill.name}
                                       onChange={(e) => handleInputChange('skills', 'name', e.target.value, index)}
-                                      placeholder="e.g., JavaScript, Project Management, Digital Marketing"
                                     />
                                     {errors.skills?.[index] && (
                                       <div className="invalid-feedback">{errors.skills[index]}</div>
@@ -1447,22 +1681,19 @@ const RegisterWizard = () => {
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Proficiency Level" />
+                                    <RequiredLabel text="Degree" />
                                     <select
                                       className={`form-control ${errors.skills?.[index] ? 'is-invalid' : ''}`}
                                       value={skill.degree}
-                                      onChange={(e) => handleInputChange('skills', 'degree', e.target.value as SkillDegree, index)}
+                                      onChange={(e) => handleInputChange('skills', 'degree', e.target.value, index)}
                                     >
-                                      <option value="">Select Proficiency Level</option>
-                                      <option value="NOVICE">Novice - Basic understanding</option>
-                                      <option value="BEGINNER">Beginner - Limited experience</option>
-                                      <option value="INTERMEDIATE">Intermediate - Practical application</option>
-                                      <option value="ADVANCED">Advanced - Deep understanding</option>
-                                      <option value="EXPERT">Expert - Comprehensive mastery</option>
+                                      <option value="">Select Degree</option>
+                                      <option value="NOVICE">NOVICE</option>
+                                      <option value="BEGINNER">BEGINNER</option>
+                                      <option value="INTERMEDIATE">INTERMEDIATE</option>
+                                      <option value="ADVANCED">ADVANCED</option>
+                                      <option value="EXPERT">EXPERT</option>
                                     </select>
-                                    <small className="form-text text-muted">
-                                      {getSkillDegreeDescription(skill.degree)}
-                                    </small>
                                     {errors.skills?.[index] && (
                                       <div className="invalid-feedback">{errors.skills[index]}</div>
                                     )}
@@ -1484,67 +1715,24 @@ const RegisterWizard = () => {
                           </div>
                         </div>
 
-                        {/* Step 6: Review & Submit */}
+                        {/* Step 6: Terms */}
                         <div className={`tab-pane ${activeStep === 6 ? 'active' : ''}`}>
                           <div className="mb-4">
-                            <h4>Terms & Conditions</h4>
-                            <p className="text-muted">Please read and accept our terms and conditions to complete your registration.</p>
+                            <h4>Terms</h4>
                           </div>
-                          <div className="terms-content">
-                            <h5>1. User Registration Agreement</h5>
-                            <p>By registering for an account on our platform, you agree to provide accurate, current, and complete information. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
-
-                            <h5>2. Professional Information</h5>
-                            <p>You certify that all professional information provided, including work experience, education history, and skills, is truthful and accurate. Any misrepresentation may result in immediate account termination and possible legal consequences.</p>
-
-                            <h5>3. Privacy and Data Protection</h5>
-                            <p>We are committed to protecting your personal information. Your data will be collected, stored, and processed in accordance with our Privacy Policy and applicable data protection laws. We implement appropriate security measures to protect your information.</p>
-
-                            <h5>4. Account Usage</h5>
-                            <p>Your account is for personal and professional use only. You may not:</p>
-                            <ul>
-                              <li>Share your account credentials with third parties</li>
-                              <li>Use the platform for any illegal or unauthorized purpose</li>
-                              <li>Upload false or misleading information</li>
-                              <li>Attempt to access restricted areas of the platform</li>
-                            </ul>
-
-                            <h5>5. Content Ownership</h5>
-                            <p>You retain ownership of the content you submit to our platform. However, by submitting content, you grant us a worldwide, non-exclusive license to use, reproduce, and display your content for platform-related purposes.</p>
-
-                            <h5>6. Platform Updates</h5>
-                            <p>We reserve the right to modify, suspend, or discontinue any part of our services at any time. We will make reasonable efforts to notify users of significant changes that may affect their use of the platform.</p>
-
-                            <h5>7. Termination</h5>
-                            <p>We reserve the right to suspend or terminate your account if you violate these terms or engage in any activity that we determine to be harmful to other users or our platform's operation.</p>
-
-                            <h5>8. Communication Preferences</h5>
-                            <p>By accepting these terms, you agree to receive important notifications about your account, security updates, and platform announcements. You can manage your communication preferences in your account settings.</p>
-
-                            <h5>9. Liability Limitations</h5>
-                            <p>We strive to maintain platform availability but cannot guarantee uninterrupted access. We are not liable for any damages arising from platform unavailability or loss of data.</p>
-
-                            <h5>10. Changes to Terms</h5>
-                            <p>We may update these terms from time to time. Continued use of the platform after such changes constitutes acceptance of the new terms.</p>
-                          </div>
-                          <div className="form-group mt-4">
-                            <div className="custom-control custom-checkbox">
+                          <div className="form-group">
+                            <label>
                               <input
                                 type="checkbox"
-                                className={`custom-control-input ${errors.terms ? 'is-invalid' : ''}`}
-                                id="agreeToTerms"
                                 checked={formData.agreeToTerms}
                                 onChange={(e) => handleInputChange('terms', 'agreeToTerms', e.target.checked)}
                               />
-                              <label className="custom-control-label" htmlFor="agreeToTerms">
-                                I have read and agree to the Terms & Conditions
-                              </label>
-                              {errors.terms && (
-                                <div className="invalid-feedback d-block">{errors.terms}</div>
-                              )}
-                            </div>
+                              I agree to the terms and conditions
+                            </label>
+                            {errors.terms && (
+                              <div className="invalid-feedback">{errors.terms}</div>
+                            )}
                           </div>
-
                         </div>
                       </div>
                     </div>
@@ -1555,7 +1743,7 @@ const RegisterWizard = () => {
                         {activeStep > 1 && (
                           <button
                             type="button"
-                            className="btn btn-outline-primary rounded-pill"
+                            className="btn btn-outline-primary rounded-pill me-2"
                             onClick={handlePrevious}
                           >
                             <i className="ti ti-arrow-left me-2"></i>Previous
@@ -1564,7 +1752,7 @@ const RegisterWizard = () => {
                         {activeStep < 6 ? (
                           <button
                             type="button"
-                            className="btn btn-primary rounded-pill ms-auto"
+                            className="btn btn-primary rounded-pill"
                             onClick={handleNext}
                           >
                             Next<i className="ti ti-arrow-right ms-2"></i>
@@ -1572,7 +1760,7 @@ const RegisterWizard = () => {
                         ) : (
                           <button
                             type="submit"
-                            className="btn btn-primary rounded-pill ms-auto"
+                            className="btn btn-primary rounded-pill"
                             onClick={handleSubmit}
                             disabled={!formData.agreeToTerms}
                           >

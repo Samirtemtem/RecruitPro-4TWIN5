@@ -1511,10 +1511,7 @@ export const SidebarDataTest = [
         showSubRoute: false,
         icon: 'password',
         submenuItems: [
-          {
-            label: 'Cover',
-            link: routes.twoStepVerification,
-          },
+       
           {
             label: 'Illustration',
             link: routes.twoStepVerification2,

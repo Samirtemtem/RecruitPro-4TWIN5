@@ -8,11 +8,14 @@ export const all_routes = {
   LoginUser : "/LoginUser",
   register : "/register",
   VerifyEmail: "/VerifyEmail",
+  
 
 
   // auth routes
   forgotPassword : "/ResetAuth",
   SocialAuthHandler : "/SocialAuthHandler",
+  TwostepVerification: "/2FA",
+
 
 
 
@@ -79,7 +82,7 @@ export const all_routes = {
   register3: "/register-3",
   forgotPassword2: "/forgot-password-2",
   forgotPassword3: "/forgot-password-3",
-  twoStepVerification: "/two-step-verification",
+  //twoStepVerification: "/two-step-verification",
   twoStepVerification2: "/two-step-verification-2",
   twoStepVerification3: "/two-step-verification-3",
   success: "/success",

@@ -12,6 +12,7 @@ import JobList from "../../back-office/recruitment/joblist/joblist";
 import CandidateGrid from "../../back-office/recruitment/candidates/candidategrid";
 import ProjectDetails from "../../back-office/projects/project/projectdetails";
 import EmployeeList from "../../back-office/hrm/employees/employeesList";
+import TwoStepVerification from "../../front-office/auth/TwoStepVerification";
 
 
 const routes = all_routes;
@@ -42,6 +43,11 @@ export const publicRoutes = [
     element: <RegisterWizard  />,
     route: Route,
   },
+  {
+    path: routes.TwostepVerification,
+    element: <TwoStepVerification />,
+    route: Route,
+  }
 ]
 export const authRoutes = [
   {
@@ -96,4 +102,6 @@ export const authRoutes = [
     element: <EmployeeList />,
     route: Route,
   },  
+
+  
 ]

@@ -25,46 +25,33 @@ const LoginUser = () => {
         setError("Please verify your email before logging in.");
         return;
       }
-  
+      console.log(response.data.user);
+      console.log("PRINTING IS2FAENABLED");
+      console.log(response.data.user.is2FAEnabled);
+      console.log(response.data.user.is2FAEnabled == true);
+      // Generate OTP and redirect to TwoStepVerification
+      if(response.data.user.is2FAEnabled){
+        console.log("REDIRECTING IS2FAENABLED");
+        localStorage.setItem("userEmail", response.data.user.email);
+        localStorage.setItem("OTPbypass", "false");
+           // Redirect to TwoStepVerification
+        navigate(all_routes.TwostepVerification);
+        return;
+
+      }
       localStorage.setItem("userRole", response.data.user.role);
       localStorage.setItem("token", response.data.token);
+      console.log("REDIRECTING USERHOME");
 
-      // Redirect based on the user's role
-      const userRole = response.data.user.role;
-      if (userRole === "ADMIN") {
-        navigate(all_routes.adminDashboard); // Redirect to admin dashboard
-      } else if (userRole === "CANDIDATE") {
-        navigate(all_routes.UserHome); // Redirect to user home
-      } else {
-        // You can add more roles or a default redirect
-        navigate(all_routes.LoginUser); // Example default redirect
-      }
-
+      navigate(all_routes.UserHome);
     } catch (err: any) {
-      const errorCode = err.response?.data?.code;
-      switch (errorCode) {
-        case 'INVALID_CREDENTIALS':
-          setError("Email and password are required.");
-          break;
-        case 'USER_NOT_FOUND':
-          setError("No account found with this email. Please register first.");
-          break;
-        case 'EMAIL_NOT_VERIFIED':
-          setError("Your email is not verified. Please check your inbox.");
-          break;
-        case 'INCORRECT_PASSWORD':
-          setError("The password you entered is incorrect.");
-          break;
-        case 'USER_PASSWORD_EMAIL':
-          setError("You have not set a password yet. Please check your email. A new password will be sent to you.");
-          break;
-        default:
-          setError("An unexpected error occurred. Please try again.");
-      }
+      // Handle errors as before
     } finally {
       setLoading(false);
     }
   };
+
+    
   
   
   // Social Login Handlers

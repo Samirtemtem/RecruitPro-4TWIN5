@@ -173,6 +173,7 @@ function Login() {
   }
 
   return (
+    <div className="h-screen flex flex-col justify-between">
     <div className="h-full flex flex-col items-center justify-center gap-[24px] max-w-[720px] mx-auto ">
       {!localUserStream && !modelsLoaded && (
         <h2 className="text-center font-poppins text-3xl  tracking-tight text-gray-900 sm:text-4xl">
@@ -311,6 +312,7 @@ function Login() {
           </svg>
         </div>
       )}
+    </div>
     </div>
   );
 }

@@ -39,6 +39,7 @@ function UserSelect() {
 
   return (
     <>
+      <div className="h-screen flex flex-col justify-between">
       <div className="flex items-center justify-center w-full h-full bg-gradient-to-r from-blue-50 to-purple-100">
         <div className="bg-white shadow-lg rounded-lg p-6 w-[90%] max-w-md">
           <h1 className="text-4xl font-extrabold text-indigo-700 mb-8 text-center">
@@ -94,6 +95,7 @@ function UserSelect() {
             </svg>
           </Link>
         </div>
+      </div>
       </div>
     </>
   );

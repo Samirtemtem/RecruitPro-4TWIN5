@@ -13,7 +13,7 @@ import Protected from "./pages/Protected";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<Layout />}>
+      <Route >
         <Route path="/" element={<UserSelect />} />
         <Route path="user-select" element={<UserSelect />} />
         <Route path="login" element={<Login />} />

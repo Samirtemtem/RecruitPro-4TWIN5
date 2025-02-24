@@ -11,6 +11,10 @@ import {
   // resetPassword, 
   // createAdmin, 
   // getall 
+  forgotPassword, 
+  resetPassword, 
+ // createAdmin, 
+ // getall 
 } from '../controllers/authController';
 //import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware';
 import { generateToken } from '../utils/generateToken';
@@ -29,8 +33,8 @@ router.post('/send-otp', sendOTP);
 router.post('/verify-otp', verifyOTP);
 
 // Password Reset
-//router.post('/forgot-password', forgotPassword);
-//router.post('/reset-password/:token', resetPassword);
+router.post('/forgotpassword', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 // Social Auth Callback
 const socialAuthCallback = async (req: Request, res: Response): Promise<any> => {
@@ -41,12 +45,19 @@ const socialAuthCallback = async (req: Request, res: Response): Promise<any> => 
     }
 
     const token = generateToken((req.user as any)._id); // Type assertion for user ID
-    res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}`);
+    const userRole = (req.user as any).role; // Type assertion for role
+
+    //res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}`);
+    //res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}&role=${encodeURIComponent(userRole)}`);
+    // redirect to SocialAuthHandler page
+    res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}&role=${encodeURIComponent(userRole)}`);
+
   } catch (error) {
     console.error('Error in socialAuthCallback:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 // Google Auth
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));

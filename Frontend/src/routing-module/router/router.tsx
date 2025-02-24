@@ -1,13 +1,15 @@
 import React from "react";
-import {  Route, Routes } from "react-router";
-import { authRoutes, publicRoutes } from "./router.link";
+import { Route, Routes } from "react-router";
+import { publicRoutes, authRoutes } from "./router.link"; // Assuming routes are imported from here
 import Feature from "../feature";
 import AuthFeature from "../authFeature";
 
+// Import AuthProvider for managing authentication
+import AuthProvider from "../AuthContext";
 
 const ALLRoutes: React.FC = () => {
   return (
-    <>
+    <AuthProvider>
       <Routes>
         {/* Public Routes (No Authentication Required) */}
         <Route element={<Feature />}>
@@ -23,9 +25,8 @@ const ALLRoutes: React.FC = () => {
           ))}
         </Route>
       </Routes>
-    </>
+    </AuthProvider>
   );
 };
-
 
 export default ALLRoutes;

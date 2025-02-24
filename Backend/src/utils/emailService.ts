@@ -163,7 +163,7 @@ export const sendOTPEmail = async (user: IUser): Promise<void> => {
  * @param email - The recipient's email address.
  * @param token - The reset token to be included in the URL.
  */
-/*
+
 export const sendPasswordResetEmail = async (email: string, token: string): Promise<void> => {
   try {
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
@@ -178,4 +178,31 @@ export const sendPasswordResetEmail = async (email: string, token: string): Prom
     console.error('Error sending password reset email:', error);
   }
 };
-*/
+
+/**
+ * Sends a confirmation email after successful password reset.
+ * @param email - The recipient's email address.
+ */
+export const sendPasswordResetSuccessEmail = async (email: string): Promise<void> => {
+  try {
+    await transporter.sendMail({
+      from: `${APP_NAME} <noreply@recruitpro.com>`,
+      to: email,
+      subject: 'Password Reset Successful',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ccc;">
+          <div style="text-align: center;">
+            <img src="${LOGO_URL}" alt="${APP_NAME} Logo" style="max-width: 200px; margin-bottom: 20px;" />
+            <h1 style="color: #333;">Password Reset Successful</h1>
+          </div>
+          <p style="color: #555;">Your password has been successfully reset.</p>
+          <p style="color: #555;">If you did not make this change, please contact our support team immediately.</p>
+          <p style="color: #555;">For security reasons, we recommend logging out of all devices and logging back in with your new password.</p>
+        </div>
+      `,
+    });
+    console.log(`Password reset success email sent to ${email}`);
+  } catch (error) {
+    console.error('Error sending password reset success email:', error);
+  }
+};

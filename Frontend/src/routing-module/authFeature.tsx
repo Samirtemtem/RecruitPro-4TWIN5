@@ -1,16 +1,45 @@
 
 import { useSelector } from "react-redux";
 import { Outlet, useLocation , useNavigate } from "react-router";
-import Header from "../core/common/header";
-import Sidebar from "../core/common/sidebar";
+import Header from "./header";
+import Sidebar from "./sidebar";
 import ThemeSettings from "../core/common/theme-settings";
 import { useEffect, useState } from "react";
 import HorizontalSidebar from "../core/common/horizontal-sidebar";
 import TwoColumnSidebar from "../core/common/two-column";
 import StackedSidebar from "../core/common/stacked-sidebar";
 //import DeleteModal from "../core/modals/deleteModal";
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import React, { useContext } from "react"; // Add useContext to the import statement
+// Import AuthProvider for managing authentication
+import { AuthContext } from "./AuthContext";
+
+
 const AuthFeature = () => {
+
+  const { token } = useContext(AuthContext); // Use token from AuthContext
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [showLoader, setShowLoader] = useState(true);
+
+  // Redirect to login if no token is found
+  useEffect(() => {
+    if (!token) {
+      navigate("/LoginUser", { replace: true });
+    }
+  }, [token, navigate]);
+
+  // Theme and layout settings logic (unchanged)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //const [showLoader, setShowLoader] = useState(true);
   const headerCollapse = useSelector((state: any) => state.themeSetting.headerCollapse);
   const mobileSidebar = useSelector(
     (state: any) => state.sidebarSlice.mobileSidebar
@@ -27,45 +56,6 @@ const AuthFeature = () => {
   const dataColorAll = useSelector((state: any) => state.themeSetting.dataColorAll);
   const dataTopBarColorAll = useSelector((state: any) => state.themeSetting.dataTopBarColorAll);
   const dataTopbarAll = useSelector((state: any) => state.themeSetting.dataTopbarAll);
-
-  const location = useLocation();
-
-  const navigate = useNavigate(); // For redirecting
-  //const [SidebarData, setSidebarData] = useState<any[]>([]); // State for sidebar data
-
-  useEffect(() => {
-    // Token verification logic
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/LoginUser", { state: { from: location }, replace: true }); // Redirect to login if no token
-    }
-  }, [location, navigate]);
-  
-/*
-  useEffect(() => {
-    const userRole = localStorage.getItem("userRole") || "CANDIDATE"; // Default to candidate
-    const token = localStorage.getItem("token");
-    const hasRedirected = localStorage.getItem("hasRedirected"); // Check if redirection already occurred
-  
-    // Default to "false" if `hasRedirected` is not set
-    if (!hasRedirected) {
-      localStorage.setItem("hasRedirected", "false");
-    }
-  
-    if (!token) {
-      navigate("/LoginUser", { state: { from: location }, replace: true });
-    } else if (hasRedirected === "false") {
-      // Redirect to the default dashboard if this is the first time
-      if (userRole === "ADMIN") {
-        localStorage.setItem("hasRedirected", "true"); // Mark as redirected
-        navigate("/adminDashboard", { replace: true });
-      } else if (userRole === "CANDIDATE") {
-        localStorage.setItem("hasRedirected", "true"); // Mark as redirected
-        navigate("/UserHome", { replace: true });
-      }
-    }
-  }, [location, navigate]);
-  */
 
   useEffect(() => {
     if (dataTheme === "dark_data_theme") {

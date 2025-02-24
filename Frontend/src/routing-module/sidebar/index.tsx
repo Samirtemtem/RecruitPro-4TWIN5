@@ -1,41 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Scrollbars from "react-custom-scrollbars-2";
-import ImageWithBasePath from "../imageWithBasePath";
-import "../../../style/icon/tabler-icons/webfont/tabler-icons.css";
-import { setExpandMenu } from "../../data/redux/sidebarSlice";
+import ImageWithBasePath from "../../core/common/imageWithBasePath";
+import "../../style/icon/tabler-icons/webfont/tabler-icons.css";
+import { setExpandMenu } from "../../core/data/redux/sidebarSlice";
 import { useDispatch } from "react-redux";
 import {
   resetAllMode,
   setDataLayout,
-} from "../../data/redux/themeSettingSlice";
+} from "../../core/data/redux/themeSettingSlice";
 import usePreviousRoute from "./usePreviousRoute";
 //import { SidebarDataTest } from "../../../back-office/sidebarMenuAdmin";
+import { AuthContext } from "../../routing-module/AuthContext";
 
 const Sidebar = () => {
   const Location = useLocation();
 
   const [subOpen, setSubopen] = useState<any>("Dashboard");
   const [subsidebar, setSubsidebar] = useState("");
-
-  // Function to dynamically import sidebar data based on role
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const { role, setRole } = useContext(AuthContext); // Get role from AuthContext
   const [SidebarData, setSidebarData] = useState<any[]>([]);
-  const loadSidebarData = async (role: string) => {
-    if (role === "ADMIN") {
-      const { SidebarDataTest } = await import("../../../back-office/sidebarMenuAdmin");
+
+  // Function to dynamically load sidebar data based on role
+  const loadSidebarData = async (currentRole: string) => {
+    if (currentRole === "ADMIN") {
+      const { SidebarDataTest } = await import("../../back-office/sidebarMenuAdmin");
       setSidebarData(SidebarDataTest);
-    } else if (role === "CANDIDATE") {
-      const { SidebarDataTest } = await import("../../../front-office/sidebarMenuCandidate");
+    } else if (currentRole === "CANDIDATE") {
+      const { SidebarDataTest } = await import("../../front-office/sidebarMenuCandidate");
       setSidebarData(SidebarDataTest);
     }
   };
 
   useEffect(() => {
-    const userRole = localStorage.getItem("userRole") || "candidate"; // Default to candidate
-    loadSidebarData(userRole);
-  }, []);
+    // Ensure role is always a string and not null before loading sidebar data
+    if (role) {
+      loadSidebarData(role);
+    }
 
+    // Function to handle role changes and update the sidebar
+    const handleRoleChange = () => {
+      const updatedUserRole = sessionStorage.getItem("userRole") || "CANDIDATE";
+      if (updatedUserRole !== role) {
+        setRole(updatedUserRole); // Update role in AuthContext
+        loadSidebarData(updatedUserRole); // Reload sidebar data
+      }
+    };
+
+    // Listen to storage changes (for other tabs)
+    window.addEventListener("storage", handleRoleChange);
+
+    // Trigger role change handler when sessionStorage updates
+    handleRoleChange();
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("storage", handleRoleChange);
+    };
+  }, [role, setRole]);
+   
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const toggleSidebar = (title: any) => {
     localStorage.setItem("menuOpened", title);

@@ -54,7 +54,6 @@ const LoginUser = () => {
         setError("Please verify your email before logging in.");
         return;
       }
-<<<<<<< HEAD
       console.log(response.data.user);
       console.log("PRINTING IS2FAENABLED");
       console.log(response.data.user.is2FAEnabled);
@@ -74,28 +73,6 @@ const LoginUser = () => {
       console.log("REDIRECTING USERHOME");
 
       navigate(all_routes.UserHome);
-=======
-      ////////////////////////////////////////////
-      const { token, user } = response.data;
-  
-      // Store token & role in AuthContext
-      setToken(token);
-      setRole(user.role); 
-
-      // Also persist in sessionStorage (optional)
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("userRole", user.role);
-
-      // Redirect based on role
-      if (user.role === "ADMIN") {
-        navigate(all_routes.adminDashboard); 
-      } else if (user.role === "CANDIDATE") {
-        navigate(all_routes.UserHome);
-      } else {
-        navigate(all_routes.LoginUser); 
-      }
-      /////////////////////////////////////////////
->>>>>>> 2c0aa2beb9f2265abb30d42b4d02f92e52265033
     } catch (err: any) {
       // Handle errors as before
     } finally {

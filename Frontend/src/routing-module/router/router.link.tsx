@@ -46,12 +46,10 @@ export const publicRoutes = [
     route: Route,
   },
   {
-<<<<<<< HEAD
     path: routes.TwostepVerification,
     element: <TwoStepVerification />,
     route: Route,
-  }
-=======
+  },{
     path: "/forgotpassword",
     name: "Root",
     element: <ForgotPassword  />,
@@ -67,7 +65,6 @@ export const publicRoutes = [
     path: routes.resetPasswordSuccess,
     element: <ResetPasswordSuccess />,
   },
->>>>>>> 2c0aa2beb9f2265abb30d42b4d02f92e52265033
 ]
 export const authRoutes = [
   {
@@ -121,12 +118,7 @@ export const authRoutes = [
     path: routes.employeeList,
     element: <EmployeeList />,
     route: Route,
-<<<<<<< HEAD
   },  
 
   
-=======
-  },
-
->>>>>>> 2c0aa2beb9f2265abb30d42b4d02f92e52265033
 ]

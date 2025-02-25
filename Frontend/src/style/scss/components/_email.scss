@@ -1,0 +1,38 @@
+.table-inbox {
+    .starred.fas.fa-star {
+        color: $warning;
+    }
+    .checked {
+        background-color: $gray-300;
+    }
+    th{
+        border-color: $light-700;  
+    }
+    tbody{
+        tr{
+            td{
+                font-size: $font-size-14;
+                color: $secondary;
+                border-color: $light-900;
+            }
+        }
+    }
+}
+.unread{
+    .name,
+    .subject,
+    .mail-date{
+        color: $black;
+        font-weight: $font-weight-bold;
+    }
+}
+.email-header{
+    .btn-white{
+        min-width: auto;
+        height: 38px;
+        border: 1px solid $light-900;
+        i{
+            margin-left:5px;
+        }
+    }
+}

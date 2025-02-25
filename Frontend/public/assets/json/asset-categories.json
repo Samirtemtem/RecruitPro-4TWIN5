@@ -1,0 +1,45 @@
+{
+    "data":[
+        {
+            "CategoryName": "Laptops",
+            "Status": "Active"
+        },
+        {
+            "CategoryName": "MobilePhones",
+            "Status": "Active"
+        },
+        {
+            "CategoryName": "OfficeFurnitures",
+            "Status": "Active"
+        },
+        {
+            "CategoryName": "Printers",
+            "Status": "Active"
+        },
+        {
+            "CategoryName": "Keyboards",
+            "Status": "Active"
+        },
+        {
+            "CategoryName": "Mouse",
+            "Status": "Active"
+        },
+        {
+            "CategoryName": "Headsets",
+            "Status": "Active"
+        },
+        {
+            "CategoryName": "Scanners",
+            "Status": "Inactive"
+        },
+        {
+            "CategoryName": "Projectors",
+            "Status": "Active"
+        },
+        {
+            "CategoryName": "Tablets",
+            "Status": "Active"
+        }
+    ],
+    "totaldata":10
+}

@@ -4,6 +4,7 @@ import passport from 'passport';
 import { 
   register,
   verifyEmail,
+  getUserByEmail,
 } from '../controllers/authController';
 import { generateToken } from '../utils/generateToken';
 import { upload } from '../utils/cloudinary';
@@ -51,6 +52,9 @@ router.get('/linkedin/callback', passport.authenticate('linkedin', {
   session: false,
   failureRedirect: `${process.env.FRONTEND_URL}/loginuser`,
 }), socialAuthCallback);
+
+// Get user by email route
+router.get('/user/:email', getUserByEmail);
 
 export default router;
 

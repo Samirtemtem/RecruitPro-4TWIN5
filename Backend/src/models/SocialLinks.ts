@@ -3,12 +3,12 @@ import { Socials } from './types';
 
 export interface ISocialLinks extends Document {
   type: Socials;
-  link: string;
+  link?: string;
 }
 
 const socialLinksSchema = new Schema<ISocialLinks>({
   type: { type: String, enum: Object.values(Socials), required: true },
-  link: { type: String, required: true }
+  link: { type: String, required: false }
 }, {
   timestamps: true
 });

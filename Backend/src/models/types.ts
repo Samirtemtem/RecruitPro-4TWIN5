@@ -12,10 +12,12 @@ export enum Privilege {
 }
 
 export enum OfferStatus {
+  PENDING = 'PENDING',
   SENT = 'SENT',
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
   NEGOTIATING = 'NEGOTIATING'
+
 }
 
 export enum InterviewStatus {

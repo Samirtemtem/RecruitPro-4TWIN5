@@ -8,8 +8,8 @@ export interface ISkill extends Document {
 
 // Define Skill Schema
 const skillSchema = new Schema<ISkill>({
-  name: { type: String, required: true },
-  degree: { type: String, required: true }
+  name: { type: String },
+  degree: { type: String }
 }, {
   timestamps: true
 });

@@ -4,15 +4,19 @@ import LoginUser from "../../front-office/auth/loginuser";
 import RegisterWizard from "../../front-office/auth/register-wizard";
 import VerifyEmail from "../../front-office/auth/VerifyEmail";
 import UserHome from "../../front-office/userhome";
-import ManageProfile from "../../front-office/profile/manage-profile";
-import Profile from "../../front-office/profile/manage-profile";
-const routes = all_routes;
-
+import Profile from "../../front-office/profile/profile";
+import Profilesettings from "../../front-office/profile/profile2";
 export const publicRoutes = [
   {
     path: "/",
     name: "Root",
     element: <Navigate to="/index" />,
+    route: Route,
+  },
+  {
+    path: "/profile",
+    name: "Root",
+    element: <Profilesettings />,
     route: Route,
   },
 ]
@@ -47,12 +51,12 @@ export const authRoutes = [
     name: "Root",
     element: <UserHome  />,
     route: Route,
-  },
+  },/*
   {
     path: "/Profile",
     name: "Profile",
     element: <Profile  />,
     route: Route,
-  },
+  },*/
   
 ]

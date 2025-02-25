@@ -11,9 +11,10 @@ export const register = async (formData: FormData) => {
     });
     return response.data;
   } catch (error : any) {
+    console.log('Full error object:', error.response.data);
     if (error.response) {
-      throw new Error(error.response.data.message || 'Registration failed');
+      return (error.response.data || 'Registration failed');
     }
-    throw new Error('Network error occurred');
+    return('Network error occurred');
   }
 }; 

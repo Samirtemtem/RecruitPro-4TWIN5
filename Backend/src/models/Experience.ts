@@ -12,12 +12,12 @@ export interface IExperience extends Document {
 
 // Define Experience Schema
 const experienceSchema = new Schema<IExperience>({
-  position: { type: String, required: true },
-  enterprise: { type: String, required: true },
-  startDate: { type: Date, required: true },
-  endDate: { type: Date, required: true },
-  description: { type: String, required: true },
-  location: { type: String, required: true }
+  position: { type: String },
+  enterprise: { type: String },
+  startDate: { type: Date },
+  endDate: { type: Date },
+  description: { type: String },
+  location: { type: String }
 }, {
   timestamps: true
 });

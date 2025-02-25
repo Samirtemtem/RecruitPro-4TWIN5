@@ -15,7 +15,7 @@ import { parseCV, ParsedCVData } from '../../services/cv-parser.service';
 
 import { toast } from 'react-hot-toast';
 
-type FormSection = 'personal' | 'professional' | 'educationHistory' | 'workExperience' | 'skills' | 'terms';
+type FormSection = 'personal' | 'education' | 'experience' | 'skills' | 'socialLinks' | 'terms';
 
 interface EducationFormData {
   id: string;
@@ -73,6 +73,47 @@ interface FormData {
   agreeToTerms: boolean;
 }
 
+interface ValidationError {
+  field: string;
+  message: string;
+}
+
+interface ErrorState {
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string | null;
+  password?: string | null;
+  confirmPassword?: string | null;
+  phoneNumber?: string | null;
+  address?: string | null;
+  cv?: string | null;
+  education?: Array<string | null>;
+  educationFields?: { 
+    [key: number]: { 
+      institution?: string | null; 
+      diploma?: string | null; 
+      startDate?: string | null; 
+      endDate?: string | null;
+      description?: string | null;
+      location?: string | null;
+    } 
+  };
+  experience?: Array<string | null>;
+  experienceFields?: { 
+    [key: number]: { 
+      position?: string | null; 
+      enterprise?: string | null; 
+      startDate?: string | null; 
+      endDate?: string | null;
+      description?: string | null;
+      location?: string | null;
+    } 
+  };
+  skills?: Array<string | null>;
+  socialLinks?: Array<string | null>;
+  terms?: string | null;
+}
+
 // Validation Schemas
 const personalInfoSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -94,10 +135,18 @@ const personalInfoSchema = Yup.object().shape({
     ),
   confirmPassword: Yup.string()
     .required('Please confirm your password')
-    .oneOf([Yup.ref('password')], 'Passwords must match'),
+    .oneOf([Yup.ref('password')], 'Passwords must match')
+    .test('log', 'Logging value', (value) => {
+      console.log('Confirm password value:', value);
+      return true;
+    }),
   phoneNumber: Yup.string()
     .required('Phone number is required')
-    .matches(/^[23457][0-9]{7}$/, 'Please enter a valid Tunisian phone number'),
+    .matches(/^[0-9]{11}$/, 'Please enter a valid Tunisian phone number')
+    .test('log', 'Logging value', (value) => {
+      console.log('Phone number value:', value); 
+      return true;
+    }),
   address: Yup.string()
     .required('Address is required')
     .min(5, 'Address must be at least 5 characters')
@@ -201,7 +250,7 @@ const RequiredLabel: React.FC<{ text: string }> = ({ text }) => (
   </label>
 );
 
-const RegisterWizard = () => {
+const RegisterWizard: React.FC = () => {
   const [activeStep, setActiveStep] = useState(1);
   const [direction, setDirection] = useState<'next' | 'prev'>('next');
   const [formData, setFormData] = useState<FormData>({
@@ -251,74 +300,75 @@ const RegisterWizard = () => {
     agreeToTerms: false
   });
 
-  const [errors, setErrors] = useState<{
-    firstName?: string | null;
-    lastName?: string | null;
-    email?: string | null;
-    password?: string | null;
-    confirmPassword?: string | null;
-    phoneNumber?: string | null;
-    address?: string | null;
-    cv?: string | null;
-    education?: (string | null)[];
-    educationFields?: { 
-      [key: number]: { 
-        institution?: string | null; 
-        diploma?: string | null; 
-        startDate?: string | null; 
-        endDate?: string | null;
-        description?: string | null;
-        location?: string | null;
-      } 
-    };
-    experience?: (string | null)[];
-    experienceFields?: { 
-      [key: number]: { 
-        position?: string | null; 
-        enterprise?: string | null; 
-        startDate?: string | null; 
-        endDate?: string | null;
-        description?: string | null;
-        location?: string | null;
-      } 
-    };
-    skills?: (string | null)[];
-    socialLinks?: (string | null)[];
-    terms?: string | null;
-  }>({});
-
   const [isLoading, setIsLoading] = useState(false);
-  const [formFeedback, setFormFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-
   const [isParsingCV, setIsParsingCV] = useState(false);
   const [parsingFeedback, setParsingFeedback] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
 
   const navigate = useNavigate();
 
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
+
+  const validateField = (field: string, value: string) => {
+    switch (field) {
+      case 'firstName':
+        if (!value) return 'First name is required';
+        if (value.length < 2 || value.length > 50) return 'First name must be between 2 and 50 characters';
+          break;
+      case 'lastName':
+        if (!value) return 'Last name is required';
+        if (value.length < 2 || value.length > 50) return 'Last name must be between 2 and 50 characters';
+        break;
+      case 'email':
+        if (!value) return 'Email is required';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Please enter a valid email';
+        break;
+      case 'password':
+        if (!value) return 'Password is required';
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(value)) 
+          return 'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number';
+        break;
+      case 'confirmPassword':
+        if (!value) return 'Please confirm your password';
+        if (value !== formData.password) return 'Passwords must match';
+        break;
+      case 'phoneNumber':
+        if (!value) return 'Phone number is required';
+        if (!/^\d{11}$/.test(value.replace(/\D/g, ''))) return 'Please enter a valid 11-digit number';
+        break;
+      case 'address':
+        if (!value) return 'Address is required';
+        if (value.length < 5) return 'Address must be at least 5 characters';
+        break;
+    }
+    return '';
+  };
+
   const handleInputChange = (section: FormSection, field: string, value: any, index?: number) => {
-    setFormData(prev => {
-      let newState = { ...prev };
+    if (section === 'personal') {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
 
-      switch (section) {
-        case 'personal':
-          newState = { ...prev, [field]: value };
-          break;
-
-        case 'professional':
-          if (field === 'socialLinks' && typeof index === 'number') {
-            const newLinks = [...prev.socialLinks];
-            newLinks[index] = { ...newLinks[index], link: value };
-            newState = { ...prev, socialLinks: newLinks };
+      const error = validateField(field, value);
+      setErrors(prev => ({
+        ...prev,
+        [field]: error
+      }));
+    } else if (section === 'terms') {
+      setFormData(prev => ({
+        ...prev,
+        agreeToTerms: value
+      }));
           } else {
-            newState = { ...prev, [field]: value };
-          }
-          break;
+      setFormData(prev => {
+        const newState = { ...prev };
 
-        case 'educationHistory':
-          if (typeof index === 'number') {
+        if (index !== undefined) {
+          switch (section) {
+            case 'education':
             const newEducation = [...prev.education];
             if (index === newEducation.length) {
-              // Adding new education entry
               newEducation.push({
                 id: crypto.randomUUID(),
                 institution: '',
@@ -328,22 +378,13 @@ const RegisterWizard = () => {
                 description: '',
                 location: ''
               });
-            } else {
-              // Updating existing education entry
-              newEducation[index] = {
-                ...newEducation[index],
-                [field]: value
-              };
-            }
-            newState = { ...prev, education: newEducation };
-          }
-          break;
+              }
+              newEducation[index] = { ...newEducation[index], [field]: value };
+              return { ...prev, education: newEducation };
 
-        case 'workExperience':
-          if (typeof index === 'number') {
+            case 'experience':
             const newExperience = [...prev.experience];
             if (index === newExperience.length) {
-              // Adding new experience entry
               newExperience.push({
                 id: crypto.randomUUID(),
                 position: '',
@@ -353,430 +394,127 @@ const RegisterWizard = () => {
                 description: '',
                 location: ''
               });
-            } else {
-              // Updating existing experience entry
-              newExperience[index] = {
-                ...newExperience[index],
-                [field]: value
-              };
-            }
-            newState = { ...prev, experience: newExperience };
-          }
-          break;
+              }
+              newExperience[index] = { ...newExperience[index], [field]: value };
+              return { ...prev, experience: newExperience };
 
         case 'skills':
-          if (typeof index === 'number') {
             const newSkills = [...prev.skills];
             if (index === newSkills.length) {
-              // Adding new skill entry
               newSkills.push({
                 id: crypto.randomUUID(),
                 name: '',
                 degree: 'NOVICE' as SkillDegree
               });
-            } else {
-              // Updating existing skill entry
-              newSkills[index] = {
-                ...newSkills[index],
-                [field]: value
-              };
-            }
-            newState = { ...prev, skills: newSkills };
-          }
-          break;
-
-        case 'terms':
-          newState = { ...prev, agreeToTerms: value };
-          break;
-      }
-
-      // Validate the changed field immediately
-      const newErrors = { ...errors };
-
-      // Field validation
-      switch (field) {
-        case 'firstName':
-        case 'lastName':
-          if (!value.trim()) {
-            newErrors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
-          } else {
-            newErrors[field] = null;
-          }
-          break;
-
-        case 'email':
-          if (!value || !validateEmail(value)) {
-            newErrors.email = 'Valid email is required';
-          } else {
-            newErrors.email = null;
-          }
-          break;
-
-        case 'password':
-          if (!value) {
-            newErrors.password = 'Password is required';
-          } else if (!validatePassword(value)) {
-            newErrors.password = 'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number';
-          } else {
-            newErrors.password = null;
-          }
-          if (prev.confirmPassword && value !== prev.confirmPassword) {
-            newErrors.confirmPassword = 'Passwords do not match';
-          } else if (prev.confirmPassword) {
-            newErrors.confirmPassword = null;
-          }
-          break;
-
-        case 'confirmPassword':
-          if (!value) {
-            newErrors.confirmPassword = 'Please confirm your password';
-          } else if (value !== prev.password) {
-            newErrors.confirmPassword = 'Passwords do not match';
-          } else {
-            newErrors.confirmPassword = null;
-          }
-          break;
-
-        case 'address':
-          if (!value.trim()) {
-            newErrors.address = 'Address is required';
-          } else {
-            newErrors.address = null;
-          }
-          break;
-        case 'cv':
-          if (!value) {
-            newErrors.cv = 'CV is required';
-          } else {
-            newErrors.cv = null;
-          }
-          break;
-      }
-
-      // Array field validation
-      if (index !== undefined) {
-        switch (section) {
-          case 'educationHistory':
-            if (!newErrors.education) newErrors.education = [];
-            const educationEntry = newState.education[index];
-            
-            // Initialize field-specific errors object if not exists
-            if (!newErrors.educationFields) newErrors.educationFields = [];
-            if (!newErrors.educationFields[index]) newErrors.educationFields[index] = {};
-            
-            // Validate each field individually
-            if (!educationEntry.institution.trim()) {
-              newErrors.educationFields[index].institution = 'Institution is required';
-            } else {
-              newErrors.educationFields[index].institution = null;
-            }
-            
-            if (!educationEntry.diploma.trim()) {
-              newErrors.educationFields[index].diploma = 'Diploma is required';
-            } else {
-              newErrors.educationFields[index].diploma = null;
-            }
-            
-            if (!educationEntry.startDate) {
-              newErrors.educationFields[index].startDate = 'Start date is required';
-            } else {
-              newErrors.educationFields[index].startDate = null;
-            }
-            
-            if (!educationEntry.endDate) {
-              newErrors.educationFields[index].endDate = 'End date is required';
-            } else if (educationEntry.startDate && educationEntry.endDate &&
-              new Date(educationEntry.startDate) > new Date(educationEntry.endDate)) {
-              newErrors.educationFields[index].endDate = 'End date must be after start date';
-            } else {
-              newErrors.educationFields[index].endDate = null;
-            }
-            
-            if (!educationEntry.description.trim()) {
-              newErrors.educationFields[index].description = 'Description is required';
-            } else {
-              newErrors.educationFields[index].description = null;
-            }
-            
-            if (!educationEntry.location.trim()) {
-              newErrors.educationFields[index].location = 'Location is required';
-            } else {
-              newErrors.educationFields[index].location = null;
-            }
-            
-            // Set overall education error state
-            if (Object.values(newErrors.educationFields[index]).some(error => error !== null)) {
-              newErrors.education[index] = 'Please fix the errors below';
-            } else {
-              newErrors.education[index] = null;
-              if (newErrors.education.every(e => e === null)) {
-                delete newErrors.education;
               }
-            }
-            break;
+              newSkills[index] = { ...newSkills[index], [field]: value };
+              return { ...prev, skills: newSkills };
 
-          case 'workExperience':
-            if (!newErrors.experience) newErrors.experience = [];
-            const experienceEntry = newState.experience[index];
-            
-            // Initialize field-specific errors object if not exists
-            if (!newErrors.experienceFields) newErrors.experienceFields = [];
-            if (!newErrors.experienceFields[index]) newErrors.experienceFields[index] = {};
-            
-            // Validate each field individually
-            if (!experienceEntry.position.trim()) {
-              newErrors.experienceFields[index].position = 'Position is required';
-            } else {
-              newErrors.experienceFields[index].position = null;
-            }
-            
-            if (!experienceEntry.enterprise.trim()) {
-              newErrors.experienceFields[index].enterprise = 'Enterprise is required';
-            } else {
-              newErrors.experienceFields[index].enterprise = null;
-            }
-            
-            if (!experienceEntry.startDate) {
-              newErrors.experienceFields[index].startDate = 'Start date is required';
-            } else {
-              newErrors.experienceFields[index].startDate = null;
-            }
-            
-            if (!experienceEntry.endDate) {
-              newErrors.experienceFields[index].endDate = 'End date is required';
-            } else if (experienceEntry.startDate && experienceEntry.endDate &&
-              new Date(experienceEntry.startDate) > new Date(experienceEntry.endDate)) {
-              newErrors.experienceFields[index].endDate = 'End date must be after start date';
-            } else {
-              newErrors.experienceFields[index].endDate = null;
-            }
-            
-            if (!experienceEntry.description.trim()) {
-              newErrors.experienceFields[index].description = 'Description is required';
-            } else {
-              newErrors.experienceFields[index].description = null;
-            }
-            
-            if (!experienceEntry.location.trim()) {
-              newErrors.experienceFields[index].location = 'Location is required';
-            } else {
-              newErrors.experienceFields[index].location = null;
-            }
-            
-            // Set overall experience error state
-            if (Object.values(newErrors.experienceFields[index]).some(error => error !== null)) {
-              newErrors.experience[index] = 'Please fix the errors below';
-            } else {
-              newErrors.experience[index] = null;
-              if (newErrors.experience.every(e => e === null)) {
-                delete newErrors.experience;
+            case 'socialLinks':
+              const newLinks = [...prev.socialLinks];
+              if (index === newLinks.length) {
+                newLinks.push({
+                  id: crypto.randomUUID(),
+                  type: Socials.PORTFOLIO,
+                  link: ''
+                });
               }
-            }
-            break;
-
-          case 'skills':
-            if (!newErrors.skills) newErrors.skills = [];
-            if (!newState.skills[index].name.trim() || !newState.skills[index].degree) {
-              newErrors.skills[index] = 'Skill name and degree are required';
-            } else {
-              newErrors.skills[index] = null;
-              if (newErrors.skills.every(e => e === null)) {
-                delete newErrors.skills;
-              }
-            }
-            break;
-
-          case 'professional':
-            if (field === 'socialLinks' && typeof value === 'string' && value.startsWith('http')) {
-              if (!newErrors.socialLinks) newErrors.socialLinks = [];
-              if (!validateUrl(value)) {
-                newErrors.socialLinks[index] = 'Please enter a valid URL';
-              } else {
-                newErrors.socialLinks[index] = null;
-                if (newErrors.socialLinks.every(e => e === null)) {
-                  delete newErrors.socialLinks;
-                }
-              }
-            }
-            break;
+              newLinks[index] = { ...newLinks[index], [field]: value };
+              return { ...prev, socialLinks: newLinks };
+          }
         }
-      }
-
-      setErrors(newErrors);
-      return newState;
-    });
-  };
-
-  const addArrayItem = (section: FormSection) => {
-    setFormData(prev => {
-      switch (section) {
-        case 'educationHistory':
-          return {
-            ...prev,
-            education: [
-              ...prev.education,
-              {
-                id: crypto.randomUUID(),
-                institution: '',
-                diploma: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-                location: ''
-              }
-            ]
-          };
-        case 'workExperience':
-          return {
-            ...prev,
-            experience: [
-              ...prev.experience,
-              {
-                id: crypto.randomUUID(),
-                position: '',
-                enterprise: '',
-                startDate: '',
-                endDate: '',
-                description: '',
-                location: ''
-              }
-            ]
-          };
-        case 'skills':
-          return {
-            ...prev,
-            skills: [
-              ...prev.skills,
-              {
-                id: crypto.randomUUID(),
-                name: '',
-                degree: 'NOVICE' as SkillDegree
-              }
-            ]
-          };
-        case 'professional':
-          return {
-            ...prev,
-            socialLinks: [
-              ...prev.socialLinks,
-              {
-                id: crypto.randomUUID(),
-                type: Socials.PORTFOLIO,
-                link: ''
-              }
-            ]
-          };
-        default:
-          return prev;
-      }
-    });
-  };
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePhoneNumber = (phoneNumber: string): boolean => {
-    // Remove country code (+216) and any non-digit characters
-    const cleanNumber = phoneNumber.replace(/\D/g, '').slice(-8);
-    // Tunisian phone numbers are 8 digits starting with 2, 3, 4, 5, 7, or 9
-    const tunisianPhoneRegex = /^[23457][0-9]{7}$/;
-    return tunisianPhoneRegex.test(cleanNumber);
-  };
-
-  const validatePassword = (password: string): boolean => {
-    // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-    return passwordRegex.test(password);
-  };
-
-  const validateUrl = (url: string): boolean => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
+        
+        return {
+          ...prev,
+          [field]: value
+        };
+      });
     }
   };
 
-  const validateStep = async (step: number): Promise<boolean> => {
-    try {
-      const newErrors: any = {};
+  const validateProfessionalInfo = () => {
+    const newErrors: {[key: string]: string} = {};
+    let hasErrors = false;
 
-      switch (step) {
-        case 1: // Personal Information
-          await personalInfoSchema.validate(formData, { abortEarly: false });
-          break;
-
-        case 2: // Professional Information
-          await professionalInfoSchema.validate(
-            { cv: formData.cv, profileImage: formData.profileImage, socialLinks: formData.socialLinks },
-            { abortEarly: false }
-          );
-          break;
-
-        case 3: // Education
-          if (formData.education.length > 0) {
-            await educationSchema.validate(formData.education, { abortEarly: false });
-          }
-          break;
-
-        case 4: // Experience
-          if (formData.experience.length > 0) {
-            await experienceSchema.validate(formData.experience, { abortEarly: false });
-          }
-          break;
-
-        case 5: // Skills
-          if (formData.skills.length > 0) {
-            await skillsSchema.validate(formData.skills, { abortEarly: false });
-          }
-          break;
-
-        case 6: // Terms
-          await termsSchema.validate({ agreeToTerms: formData.agreeToTerms }, { abortEarly: false });
-          break;
+    // Validate CV
+    if (!formData.cv) {
+            newErrors.cv = 'CV is required';
+      hasErrors = true;
+          } else {
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      ];
+      if (!allowedTypes.includes(formData.cv.type)) {
+        newErrors.cv = 'Only PDF and Word documents are allowed';
+        hasErrors = true;
       }
+      if (formData.cv.size > 5 * 1024 * 1024) {
+        newErrors.cv = 'File size must be less than 5MB';
+        hasErrors = true;
+      }
+    }
 
-      setErrors({});
-      return true;
-    } catch (validationError) {
-      if (validationError instanceof Yup.ValidationError) {
-        const newErrors: any = {};
-        validationError.inner.forEach((error) => {
-          if (error.path) {
-            const path = error.path.split('.');
-            if (path.length === 1) {
-              newErrors[path[0]] = error.message;
-            } else if (path.length === 2) {
-              const [arrayName, index] = path;
-              if (!newErrors[`${arrayName}Fields`]) {
-                newErrors[`${arrayName}Fields`] = {};
-              }
-              if (!newErrors[`${arrayName}Fields`][index]) {
-                newErrors[`${arrayName}Fields`][index] = {};
-              }
-              newErrors[`${arrayName}Fields`][index][path[1]] = error.message;
-            }
+    // Validate profile image if provided
+    if (formData.profileImage) {
+      if (!formData.profileImage.type.startsWith('image/')) {
+        newErrors.profileImage = 'Only image files are allowed';
+        hasErrors = true;
+      }
+      if (formData.profileImage.size > 5 * 1024 * 1024) {
+        newErrors.profileImage = 'File size must be less than 5MB';
+        hasErrors = true;
+      }
+    }
+
+    // Validate social links
+    formData.socialLinks.forEach((link, index) => {
+      if (link.link) {
+        if (!link.link.startsWith('https://')) {
+          newErrors[`socialLinks_${index}`] = 'URL must start with https://';
+          hasErrors = true;
+        } else if (link.type === Socials.LINKEDIN && !link.link.includes('linkedin.com')) {
+          newErrors[`socialLinks_${index}`] = 'Invalid LinkedIn URL';
+          hasErrors = true;
+        } else if (link.type === Socials.GITHUB && !link.link.includes('github.com')) {
+          newErrors[`socialLinks_${index}`] = 'Invalid GitHub URL';
+          hasErrors = true;
+        }
+      }
+    });
+
+      setErrors(newErrors);
+    return !hasErrors;
+  };
+
+  const handleNext = () => {
+    let isValid = true;
+
+    if (activeStep === 1) {
+      // Validate all fields in step 1
+      const newErrors: {[key: string]: string} = {};
+      ['firstName', 'lastName', 'email', 'password', 'confirmPassword', 'phoneNumber', 'address'].forEach(field => {
+        const error = validateField(field, formData[field as keyof FormData] as string);
+        if (error) {
+          newErrors[field] = error;
+          isValid = false;
           }
         });
         setErrors(newErrors);
+    } else if (activeStep === 2) {
+      isValid = validateProfessionalInfo();
       }
-      return false;
+
+    if (!isValid) {
+      return;
     }
-  };
 
-  const handleNext = async () => {
-    const isValid = await validateStep(activeStep);
-
-    if (isValid) {
       if (activeStep < 6) {
         setDirection('next');
         setActiveStep(activeStep + 1);
       } else if (activeStep === 6) {
         handleSubmit();
-      }
     }
   };
 
@@ -784,21 +522,10 @@ const RegisterWizard = () => {
     if (activeStep > 1) {
       setDirection('prev');
       setActiveStep(activeStep - 1);
-      setErrors({});
     }
   };
 
   const handleSubmit = async () => {
-    let isValid = true;
-    for (let step = 1; step <= 6; step++) {
-      if (!validateStep(step)) {
-        isValid = false;
-        setActiveStep(step);
-        break;
-      }
-    }
-
-    if (isValid) {
       setIsLoading(true);
       try {
         const submitData = new FormData();
@@ -824,36 +551,172 @@ const RegisterWizard = () => {
         submitData.append('education', JSON.stringify(formData.education));
         submitData.append('experience', JSON.stringify(formData.experience));
         submitData.append('skills', JSON.stringify(formData.skills));
-        submitData.append('socialLinks', JSON.stringify(formData.socialLinks.map(link => ({
+      
+      // Filter out social links with empty links before sending
+      const validSocialLinks = formData.socialLinks.filter(link => link.link && link.link.trim() !== '');
+      submitData.append('socialLinks', JSON.stringify(validSocialLinks.map(link => ({
           type: link.type,
-          link: link.link
+        link: link.link.trim()
         }))));
 
         const response = await registerUser(submitData);
-
-        setFormFeedback({
-          type: 'success',
-          message: 'Registration successful! Redirecting to login...'
-        });
-
-        if (response.token) {
-          localStorage.setItem('token', response.token);
-        }
-
+      console.log('response:', response);
+      // Display success message from backend
+      if (response.message) {
+        toast.success(response.message);
+        // If registration is successful, redirect after a delay
         setTimeout(() => {
-          navigate('/login');
+          navigate('/LoginUser');
         }, 2000);
+      }
+       // Scroll to top to show error messages
+       window.scrollTo(0, 0);
+      
+       // Clear previous errors
+       setErrors({});
+      if(response.error){
+        toast.error(response.error);
+        var error = response;
+      }
+       // Log the error object
+       console.log('Full error object:', error);
+       console.log('error.response:', error.error);
+       console.log('error.response:', error.code);
+       // The error object is returned directly from the auth service
+       if (error.code && error.error) {
+         // Always show the error message in a toast
+         toast.error(error.error);
+ 
+         // Handle specific error codes
+         switch (error.code) {
+           case 'USER_EXISTS':
+             setErrors(prev => ({
+               ...prev,
+               email: error.error
+             }));
+             setActiveStep(1);
+             break;
+ 
+           case 'INVALID_EMAIL':
+           case 'INVALID_PASSWORD':
+           case 'INVALID_FIRSTNAME':
+           case 'INVALID_LASTNAME':
+           case 'INVALID_PHONE':
+           case 'INVALID_ADDRESS':
+             const field = error.code.toLowerCase().split('_')[1];
+             setErrors(prev => ({
+               ...prev,
+               [field]: error.error
+             }));
+             setActiveStep(1);
+             break;
+ 
+           case 'INVALID_CV_TYPE':
+           case 'INVALID_CV_SIZE':
+             setErrors(prev => ({
+               ...prev,
+               cv: error.error
+             }));
+             setActiveStep(2);
+             break;
+ 
+           case 'INVALID_IMAGE_TYPE':
+           case 'INVALID_IMAGE_SIZE':
+             setErrors(prev => ({
+               ...prev,
+               profileImage: error.error
+             }));
+             setActiveStep(2);
+             break;
+ 
+           case 'MISSING_FIELDS':
+             toast.error('Please fill in all required fields');
+             setActiveStep(1);
+             break;
+ 
+           default:
+             toast.error(error.error || 'An unexpected error occurred');
+         }
+       } else {
+         // Handle network or unexpected errors
+         toast.error('An unexpected error occurred. Please try again later.');
+         console.error('Unexpected error:', error);
+       }
+     
 
       } catch (error: any) {
-        setFormFeedback({
-          type: 'error',
-          message: error?.message || 'Registration failed. Please try again.'
-        });
-        
+      // Scroll to top to show error messages
         window.scrollTo(0, 0);
+      
+      // Clear previous errors
+      setErrors({});
+
+      // Log the error object
+      console.log('Full error object:', error);
+      console.log('error.response:', error.error);
+      console.log('error.response:', error.code);
+      // The error object is returned directly from the auth service
+      if (error.code && error.error) {
+        // Always show the error message in a toast
+        toast.error(error.error);
+
+        // Handle specific error codes
+        switch (error.code) {
+          case 'USER_EXISTS':
+            setErrors(prev => ({
+              ...prev,
+              email: error.error
+            }));
+            setActiveStep(1);
+            break;
+
+          case 'INVALID_EMAIL':
+          case 'INVALID_PASSWORD':
+          case 'INVALID_FIRSTNAME':
+          case 'INVALID_LASTNAME':
+          case 'INVALID_PHONE':
+          case 'INVALID_ADDRESS':
+            const field = error.code.toLowerCase().split('_')[1];
+            setErrors(prev => ({
+              ...prev,
+              [field]: error.error
+            }));
+            setActiveStep(1);
+            break;
+
+          case 'INVALID_CV_TYPE':
+          case 'INVALID_CV_SIZE':
+            setErrors(prev => ({
+              ...prev,
+              cv: error.error
+            }));
+            setActiveStep(2);
+            break;
+
+          case 'INVALID_IMAGE_TYPE':
+          case 'INVALID_IMAGE_SIZE':
+            setErrors(prev => ({
+              ...prev,
+              profileImage: error.error
+            }));
+            setActiveStep(2);
+            break;
+
+          case 'MISSING_FIELDS':
+            toast.error('Please fill in all required fields');
+            setActiveStep(1);
+            break;
+
+          default:
+            toast.error(error.error || 'An unexpected error occurred');
+        }
+      } else {
+        // Handle network or unexpected errors
+        toast.error('An unexpected error occurred. Please try again later.');
+        console.error('Unexpected error:', error);
+      }
       } finally {
         setIsLoading(false);
-      }
     }
   };
 
@@ -879,22 +742,6 @@ const RegisterWizard = () => {
       ...prev,
       phoneNumber: value
     }));
-
-    // Clear previous errors
-    if (errors.phoneNumber) {
-      setErrors(prev => ({
-        ...prev,
-        phoneNumber: undefined
-      }));
-    }
-
-    // Validate for Tunisia specifically
-    if (country.countryCode === 'tn' && !validatePhoneNumber(value)) {
-      setErrors(prev => ({
-        ...prev,
-        phoneNumber: 'Tunisian phone numbers must be 8 digits'
-      }));
-    }
   };
 
   const handleRemoveEducation = (index: number) => {
@@ -902,12 +749,6 @@ const RegisterWizard = () => {
       ...prev,
       education: prev.education.filter((_, i) => i !== index)
     }));
-    if (errors.education) {
-      const newErrors = { ...errors };
-      newErrors.education = [...(newErrors.education || [])].filter((_, i) => i !== index);
-      if (newErrors.education.length === 0) delete newErrors.education;
-      setErrors(newErrors);
-    }
   };
 
   const handleRemoveExperience = (index: number) => {
@@ -915,12 +756,6 @@ const RegisterWizard = () => {
       ...prev,
       experience: prev.experience.filter((_, i) => i !== index)
     }));
-    if (errors.experience) {
-      const newErrors = { ...errors };
-      newErrors.experience = [...(newErrors.experience || [])].filter((_, i) => i !== index);
-      if (newErrors.experience.length === 0) delete newErrors.experience;
-      setErrors(newErrors);
-    }
   };
 
   const handleRemoveSkill = (index: number) => {
@@ -928,12 +763,6 @@ const RegisterWizard = () => {
       ...prev,
       skills: prev.skills.filter((_, i) => i !== index)
     }));
-    if (errors.skills) {
-      const newErrors = { ...errors };
-      newErrors.skills = [...(newErrors.skills || [])].filter((_, i) => i !== index);
-      if (newErrors.skills.length === 0) delete newErrors.skills;
-      setErrors(newErrors);
-    }
   };
 
   const handleCVUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1012,7 +841,9 @@ const RegisterWizard = () => {
 
           // Update phone number if not already set
           if (parsedData.phone && !prev.phoneNumber) {
-            newData.phoneNumber = parsedData.phone;
+            // Remove any '+216' prefix if present
+            const phoneNumber = parsedData.phone.replace('+216', '').trim();
+            newData.phoneNumber = phoneNumber;
             parsedFields.push('phone number');
           }
 
@@ -1024,47 +855,39 @@ const RegisterWizard = () => {
 
           // Update skills
           if (parsedData.skills && parsedData.skills.length > 0) {
-            newData.skills = parsedData.skills.map(skillName => ({
+            newData.skills = parsedData.skills.map(skill => ({
               id: crypto.randomUUID(),
-              name: skillName,
-              degree: 'INTERMEDIATE' as SkillDegree
+              name: skill.name,
+              degree: skill.degree as SkillDegree
             }));
             parsedFields.push(`${parsedData.skills.length} skills`);
           }
 
           // Update education
           if (parsedData.education && parsedData.education.length > 0) {
-            newData.education = parsedData.education.map(edu => {
-              // Try to extract institution and diploma if in format "Diploma at Institution"
-              const match = edu.match(/^(.*?)\s+at\s+(.*)$/);
-              return {
+            newData.education = parsedData.education.map(edu => ({
                 id: crypto.randomUUID(),
-                institution: match ? match[2] : edu,
-                diploma: match ? match[1] : '',
-                startDate: '',
-                endDate: '',
-                description: '',
-                location: ''
-              };
-            });
+              institution: edu.institution,
+              diploma: edu.diploma,
+              startDate: edu.startDate,
+              endDate: edu.endDate,
+              description: edu.description,
+              location: edu.location
+            }));
             parsedFields.push(`${parsedData.education.length} education entries`);
           }
 
           // Update experience
           if (parsedData.work_experience && parsedData.work_experience.length > 0) {
-            newData.experience = parsedData.work_experience.map(exp => {
-              // Try to extract position and company if in format "Position at Company"
-              const match = exp.match(/^(.*?)\s+at\s+(.*)$/);
-              return {
+            newData.experience = parsedData.work_experience.map(exp => ({
                 id: crypto.randomUUID(),
-                position: match ? match[1] : exp,
-                enterprise: match ? match[2] : '',
-                startDate: '',
-                endDate: '',
-                description: '',
-                location: ''
-              };
-            });
+              position: exp.position,
+              enterprise: exp.enterprise,
+              startDate: exp.startDate,
+              endDate: exp.endDate,
+              description: exp.description,
+              location: exp.location
+            }));
             parsedFields.push(`${parsedData.work_experience.length} work experiences`);
           }
 
@@ -1072,17 +895,10 @@ const RegisterWizard = () => {
         });
 
         // Show success message with details of what was parsed
-        if (parsedFields.length > 0) {
           setParsingFeedback({
             type: 'success',
             message: `Successfully parsed: ${parsedFields.join(', ')}. Please review and complete any missing information.`
           });
-        } else {
-          setParsingFeedback({
-            type: 'info',
-            message: 'CV was processed but no relevant information was found. Please fill in the information manually.'
-          });
-        }
       } catch (error) {
         console.error('Error parsing CV:', error);
         setParsingFeedback({
@@ -1097,7 +913,7 @@ const RegisterWizard = () => {
 
   const steps = [
     { number: 1, title: 'Personal Information', description: 'Basic details and contact information' },
-    { number: 2, title: 'Professional Details', description: 'Social media and online presence' },
+    { number: 2, title: 'Professional Information', description: 'Social media and online presence' },
     { number: 3, title: 'Education', description: 'Academic background and qualifications' },
     { number: 4, title: 'Experience', description: 'Work history and professional experience' },
     { number: 5, title: 'Skills', description: 'Professional skills and expertise levels' },
@@ -1133,13 +949,6 @@ const RegisterWizard = () => {
                       <h2 className="mb-2">Registration Form</h2>
                       <p className="text-muted">Please complete all steps to create your account</p>
                     </div>
-
-                    {/* Feedback Message */}
-                    {formFeedback && (
-                      <div className={`alert alert-${formFeedback.type === 'success' ? 'success' : 'danger'} mb-4`}>
-                        {formFeedback.message}
-                      </div>
-                    )}
 
                     {/* Loading Overlay */}
                     {isLoading && (
@@ -1186,87 +995,75 @@ const RegisterWizard = () => {
                           <div className="row">
                             <div className="col-lg-6">
                               <div className="form-group">
-                                <RequiredLabel text="First Name" />
+                                <label className="form-label">First Name <span className="text-danger">*</span></label>
                                 <input
                                   type="text"
                                   className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
                                   value={formData.firstName}
                                   onChange={(e) => handleInputChange('personal', 'firstName', e.target.value)}
                                 />
-                                {errors.firstName && (
-                                  <div className="invalid-feedback">{errors.firstName}</div>
-                                )}
+                                {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
                               </div>
                             </div>
                             <div className="col-lg-6">
                               <div className="form-group">
-                                <RequiredLabel text="Last Name" />
+                                <label className="form-label">Last Name <span className="text-danger">*</span></label>
                                 <input
                                   type="text"
                                   className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
                                   value={formData.lastName}
                                   onChange={(e) => handleInputChange('personal', 'lastName', e.target.value)}
                                 />
-                                {errors.lastName && (
-                                  <div className="invalid-feedback">{errors.lastName}</div>
-                                )}
+                                {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
                               </div>
                             </div>
                             <div className="col-lg-6">
                               <div className="form-group">
-                                <RequiredLabel text="Email" />
+                                <label className="form-label">Email <span className="text-danger">*</span></label>
                                 <input
                                   type="email"
                                   className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                                   value={formData.email}
                                   onChange={(e) => handleInputChange('personal', 'email', e.target.value)}
                                 />
-                                {errors.email && (
-                                  <div className="invalid-feedback">{errors.email}</div>
-                                )}
+                                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                               </div>
                             </div>
                             <div className="col-lg-6">
                               <div className="form-group">
-                                <RequiredLabel text="Password" />
+                                <label className="form-label">Password <span className="text-danger">*</span></label>
                                 <div className="pass-group">
                                   <input
                                     type="password"
-                                    className={`form-control pass-input ${errors.password ? 'is-invalid' : ''}`}
+                                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                                     value={formData.password}
                                     onChange={(e) => handleInputChange('personal', 'password', e.target.value)}
                                   />
-                                  <span className={`fas toggle-password`}></span>
+                                  {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                                 </div>
-                                {errors.password && (
-                                  <div className="invalid-feedback">{errors.password}</div>
-                                )}
                               </div>
                             </div>
                             <div className="col-lg-6">
                               <div className="form-group">
-                                <RequiredLabel text="Confirm Password" />
+                                <label className="form-label">Confirm Password <span className="text-danger">*</span></label>
                                 <div className="pass-group">
                                   <input
                                     type="password"
-                                    className={`form-control pass-input ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                                    className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
                                     value={formData.confirmPassword}
                                     onChange={(e) => handleInputChange('personal', 'confirmPassword', e.target.value)}
                                   />
-                                  <span className={`fas toggle-password`}></span>
+                                  {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
                                 </div>
-                                {errors.confirmPassword && (
-                                  <div className="invalid-feedback">{errors.confirmPassword}</div>
-                                )}
                               </div>
                             </div>
                             <div className="col-lg-6">
                               <div className="form-group">
-                                <RequiredLabel text="Phone Number" />
+                                <label className="form-label">Phone Number <span className="text-danger">*</span></label>
                                 <PhoneInput
                                   country={'tn'}
                                   value={formData.phoneNumber}
-                                  onChange={handlePhoneChange}
+                                  onChange={(value) => handleInputChange('personal', 'phoneNumber', value)}
                                   inputClass={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
                                   containerClass="phone-input-container"
                                   specialLabel=""
@@ -1274,23 +1071,19 @@ const RegisterWizard = () => {
                                   preferredCountries={['tn']}
                                   enableSearch={true}
                                 />
-                                {errors.phoneNumber && (
-                                  <div className="invalid-feedback d-block">{errors.phoneNumber}</div>
-                                )}
+                                {errors.phoneNumber && <div className="invalid-feedback d-block">{errors.phoneNumber}</div>}
                               </div>
                             </div>
                             <div className="col-lg-12">
                               <div className="form-group">
-                                <RequiredLabel text="Address" />
+                                <label className="form-label">Address <span className="text-danger">*</span></label>
                                 <input
                                   type="text"
                                   className={`form-control ${errors.address ? 'is-invalid' : ''}`}
                                   value={formData.address}
                                   onChange={(e) => handleInputChange('personal', 'address', e.target.value)}
                                 />
-                                {errors.address && (
-                                  <div className="invalid-feedback">{errors.address}</div>
-                                )}
+                                {errors.address && <div className="invalid-feedback">{errors.address}</div>}
                               </div>
                             </div>
                             <div className="col-lg-12">
@@ -1315,17 +1108,15 @@ const RegisterWizard = () => {
                           <div className="row">
                             <div className="col-lg-12">
                               <div className="form-group">
-                                <RequiredLabel text="Current CV" />
+                                <label className="form-label">Current CV <span className="text-danger">*</span></label>
                                 <input
                                   type="file"
                                   className={`form-control ${errors.cv ? 'is-invalid' : ''}`}
-                                  accept=".pdf,.doc,.docx,.txt"
+                                  accept=".pdf,.doc,.docx"
                                   onChange={handleCVUpload}
                                   disabled={isParsingCV}
                                 />
-                                {errors.cv && (
-                                  <div className="invalid-feedback">{errors.cv}</div>
-                                )}
+                                {errors.cv && <div className="invalid-feedback">{errors.cv}</div>}
                                 {isParsingCV && (
                                   <div className="parsing-status mt-2">
                                     <div className="spinner-border text-primary spinner-border-sm me-2" role="status">
@@ -1341,6 +1132,18 @@ const RegisterWizard = () => {
                                 )}
                               </div>
                             </div>
+                            <div className="col-lg-12">
+                              <div className="form-group">
+                                <label>Profile Image (Optional)</label>
+                                <input
+                                  type="file"
+                                  className={`form-control ${errors.profileImage ? 'is-invalid' : ''}`}
+                                  accept="image/*"
+                                  onChange={(e) => handleInputChange('personal', 'profileImage', e.target.files?.[0])}
+                                />
+                                {errors.profileImage && <div className="invalid-feedback">{errors.profileImage}</div>}
+                              </div>
+                            </div>
                             <div className="col-12">
                               <h5 className="mb-3">Social Links</h5>
                               <div className="row">
@@ -1350,14 +1153,12 @@ const RegisterWizard = () => {
                                     <label>LinkedIn Profile</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.socialLinks?.[0] ? 'is-invalid' : ''}`}
+                                      className={`form-control ${errors.socialLinks_0 ? 'is-invalid' : ''}`}
                                       value={formData.socialLinks[0].link}
-                                      onChange={(e) => handleInputChange('professional', 'socialLinks', e.target.value, 0)}
+                                      onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, 0)}
                                       placeholder="https://linkedin.com/in/your-profile"
                                     />
-                                    {errors.socialLinks?.[0] && (
-                                      <div className="invalid-feedback">{errors.socialLinks[0]}</div>
-                                    )}
+                                    {errors.socialLinks_0 && <div className="invalid-feedback">{errors.socialLinks_0}</div>}
                                   </div>
                                 </div>
 
@@ -1367,14 +1168,12 @@ const RegisterWizard = () => {
                                     <label>GitHub Profile</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.socialLinks?.[1] ? 'is-invalid' : ''}`}
+                                      className={`form-control ${errors.socialLinks_1 ? 'is-invalid' : ''}`}
                                       value={formData.socialLinks[1].link}
-                                      onChange={(e) => handleInputChange('professional', 'socialLinks', e.target.value, 1)}
+                                      onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, 1)}
                                       placeholder="https://github.com/your-username"
                                     />
-                                    {errors.socialLinks?.[1] && (
-                                      <div className="invalid-feedback">{errors.socialLinks[1]}</div>
-                                    )}
+                                    {errors.socialLinks_1 && <div className="invalid-feedback">{errors.socialLinks_1}</div>}
                                   </div>
                                 </div>
 
@@ -1385,30 +1184,33 @@ const RegisterWizard = () => {
                                       <div className="row">
                                         <div className="col-lg-6">
                                           <div className="form-group">
-                                            <RequiredLabel text="Platform" />
+                                            <label>Platform</label>
                                             <select
-                                              className="form-control"
+                                              className={`form-control ${errors[`socialLinks_${index + 2}`] ? 'is-invalid' : ''}`}
                                               value={link.type}
-                                              onChange={(e) => handleInputChange('professional', 'socialLinks', e.target.value, index + 2)}
+                                              onChange={(e) => handleInputChange('socialLinks', 'type', e.target.value, index + 2)}
                                             >
-                                              <option value="">Select Platform</option>
-                                              <option value="PORTFOLIO">Portfolio</option>
-                                              <option value="OTHER">Other</option>
+                                              {Object.values(Socials).map(platform => (
+                                                <option key={platform} value={platform}>{platform}</option>
+                                              ))}
                                             </select>
+                                            {errors[`socialLinks_${index + 2}`] && (
+                                              <div className="invalid-feedback">{errors[`socialLinks_${index + 2}`]}</div>
+                                            )}
                                           </div>
                                         </div>
                                         <div className="col-lg-6">
                                           <div className="form-group">
-                                            <RequiredLabel text="Link" />
+                                            <label>Link</label>
                                             <input
                                               type="url"
-                                              className={`form-control ${errors.socialLinks?.[index + 2] ? 'is-invalid' : ''}`}
+                                              className={`form-control ${errors[`socialLinks_${index + 2}`] ? 'is-invalid' : ''}`}
                                               value={link.link}
-                                              onChange={(e) => handleInputChange('professional', 'socialLinks', e.target.value, index + 2)}
+                                              onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, index + 2)}
                                               placeholder="https://"
                                             />
-                                            {errors.socialLinks?.[index + 2] && (
-                                              <div className="invalid-feedback">{errors.socialLinks[index + 2]}</div>
+                                            {errors[`socialLinks_${index + 2}`] && (
+                                              <div className="invalid-feedback">{errors[`socialLinks_${index + 2}`]}</div>
                                             )}
                                           </div>
                                         </div>
@@ -1424,7 +1226,7 @@ const RegisterWizard = () => {
                                   <button
                                     type="button"
                                     className="btn btn-primary"
-                                    onClick={() => addArrayItem('professional')}
+                                    onClick={() => handleInputChange('socialLinks', 'link', '', formData.socialLinks.length)}
                                   >
                                     Add Another Social Link
                                   </button>
@@ -1441,77 +1243,64 @@ const RegisterWizard = () => {
                           </div>
                           <div className="row">
                             {formData.education.map((edu, index) => (
-                              <div key={index} className="row position-relative mb-3">
+                              <div key={edu.id} className="education-form-group mb-4 p-3 border rounded position-relative">
                                 <div className="remove-btn" onClick={() => handleRemoveEducation(index)}>
                                   <i className="fas fa-times"></i>
                                 </div>
+                                <h5 className="mb-3">Education #{index + 1}</h5>
+                                <div className="row">
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Institution" />
+                                      <label>Institution</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.educationFields?.[index]?.institution ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={edu.institution}
-                                      onChange={(e) => handleInputChange('educationHistory', 'institution', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('education', 'institution', e.target.value, index)}
                                     />
-                                    {errors.educationFields?.[index]?.institution && (
-                                      <div className="invalid-feedback">{errors.educationFields[index].institution}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Diploma" />
+                                      <label>Diploma</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.educationFields?.[index]?.diploma ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={edu.diploma}
-                                      onChange={(e) => handleInputChange('educationHistory', 'diploma', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('education', 'diploma', e.target.value, index)}
                                     />
-                                    {errors.educationFields?.[index]?.diploma && (
-                                      <div className="invalid-feedback">{errors.educationFields[index].diploma}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Start Date" />
+                                      <label>Start Date</label>
                                     <input
                                       type="date"
-                                      className={`form-control ${errors.educationFields?.[index]?.startDate ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={edu.startDate}
-                                      onChange={(e) => handleInputChange('educationHistory', 'startDate', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('education', 'startDate', e.target.value, index)}
                                     />
-                                    {errors.educationFields?.[index]?.startDate && (
-                                      <div className="invalid-feedback">{errors.educationFields[index].startDate}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="End Date" />
+                                      <label>End Date</label>
                                     <input
                                       type="date"
-                                      className={`form-control ${errors.educationFields?.[index]?.endDate ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={edu.endDate}
-                                      onChange={(e) => handleInputChange('educationHistory', 'endDate', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('education', 'endDate', e.target.value, index)}
                                     />
-                                    {errors.educationFields?.[index]?.endDate && (
-                                      <div className="invalid-feedback">{errors.educationFields[index].endDate}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-12">
                                   <div className="form-group">
                                     <label>Description</label>
                                     <textarea
-                                      className={`form-control ${errors.educationFields?.[index]?.description ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={edu.description}
-                                      onChange={(e) => handleInputChange('educationHistory', 'description', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('education', 'description', e.target.value, index)}
                                     />
-                                    {errors.educationFields?.[index]?.description && (
-                                      <div className="invalid-feedback">{errors.educationFields[index].description}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-12">
@@ -1519,13 +1308,11 @@ const RegisterWizard = () => {
                                     <label>Location</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.educationFields?.[index]?.location ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={edu.location}
-                                      onChange={(e) => handleInputChange('educationHistory', 'location', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('education', 'location', e.target.value, index)}
                                     />
-                                    {errors.educationFields?.[index]?.location && (
-                                      <div className="invalid-feedback">{errors.educationFields[index].location}</div>
-                                    )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -1535,7 +1322,7 @@ const RegisterWizard = () => {
                                 <button
                                   type="button"
                                   className="btn btn-primary"
-                                  onClick={() => addArrayItem('educationHistory')}
+                                  onClick={() => handleInputChange('education', '', '', formData.education.length)}
                                 >
                                   Add Another Education
                                 </button>
@@ -1551,77 +1338,63 @@ const RegisterWizard = () => {
                           </div>
                           <div className="row">
                             {formData.experience.map((work, index) => (
-                              <div key={index} className="row position-relative mb-3">
+                              <>
+                                <div key={work.id} className="row position-relative mb-3">
                                 <div className="remove-btn" onClick={() => handleRemoveExperience(index)}>
                                   <i className="fas fa-times"></i>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Position" />
+                                      <label>Position</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.experienceFields?.[index]?.position ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={work.position}
-                                      onChange={(e) => handleInputChange('workExperience', 'position', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('experience', 'position', e.target.value, index)}
                                     />
-                                    {errors.experienceFields?.[index]?.position && (
-                                      <div className="invalid-feedback">{errors.experienceFields[index].position}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Enterprise" />
+                                      <label>Enterprise</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.experienceFields?.[index]?.enterprise ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={work.enterprise}
-                                      onChange={(e) => handleInputChange('workExperience', 'enterprise', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('experience', 'enterprise', e.target.value, index)}
                                     />
-                                    {errors.experienceFields?.[index]?.enterprise && (
-                                      <div className="invalid-feedback">{errors.experienceFields[index].enterprise}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Start Date" />
+                                      <label>Start Date</label>
                                     <input
                                       type="date"
-                                      className={`form-control ${errors.experienceFields?.[index]?.startDate ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={work.startDate}
-                                      onChange={(e) => handleInputChange('workExperience', 'startDate', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('experience', 'startDate', e.target.value, index)}
                                     />
-                                    {errors.experienceFields?.[index]?.startDate && (
-                                      <div className="invalid-feedback">{errors.experienceFields[index].startDate}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="End Date" />
+                                      <label>End Date</label>
                                     <input
                                       type="date"
-                                      className={`form-control ${errors.experienceFields?.[index]?.endDate ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={work.endDate}
-                                      onChange={(e) => handleInputChange('workExperience', 'endDate', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('experience', 'endDate', e.target.value, index)}
                                     />
-                                    {errors.experienceFields?.[index]?.endDate && (
-                                      <div className="invalid-feedback">{errors.experienceFields[index].endDate}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-12">
                                   <div className="form-group">
                                     <label>Description</label>
                                     <textarea
-                                      className={`form-control ${errors.experienceFields?.[index]?.description ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={work.description}
-                                      onChange={(e) => handleInputChange('workExperience', 'description', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('experience', 'description', e.target.value, index)}
                                     />
-                                    {errors.experienceFields?.[index]?.description && (
-                                      <div className="invalid-feedback">{errors.experienceFields[index].description}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-12">
@@ -1629,23 +1402,26 @@ const RegisterWizard = () => {
                                     <label>Location</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.experienceFields?.[index]?.location ? 'is-invalid' : ''}`}
+                                        className="form-control"
                                       value={work.location}
-                                      onChange={(e) => handleInputChange('workExperience', 'location', e.target.value, index)}
+                                        onChange={(e) => handleInputChange('experience', 'location', e.target.value, index)}
                                     />
-                                    {errors.experienceFields?.[index]?.location && (
-                                      <div className="invalid-feedback">{errors.experienceFields[index].location}</div>
-                                    )}
                                   </div>
                                 </div>
                               </div>
+                                {index < formData.experience.length - 1 && (
+                                  <div className="col-12">
+                                    <div style={{ height: '3px', backgroundColor: '#f0f0f0', margin: '1rem 0' }} />
+                                  </div>
+                                )}
+                              </>
                             ))}
                             <div className="row">
                               <div className="col-lg-12">
                                 <button
                                   type="button"
                                   className="btn btn-primary"
-                                  onClick={() => addArrayItem('workExperience')}
+                                  onClick={() => handleInputChange('experience', '', '', formData.experience.length)}
                                 >
                                   Add Another Work Experience
                                 </button>
@@ -1661,29 +1437,26 @@ const RegisterWizard = () => {
                           </div>
                           <div className="row">
                             {formData.skills.map((skill, index) => (
-                              <div key={index} className="row position-relative mb-3">
+                              <div key={skill.id} className="row position-relative mb-3">
                                 <div className="remove-btn" onClick={() => handleRemoveSkill(index)}>
                                   <i className="fas fa-times"></i>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Skill Name" />
+                                    <label>Skill Name</label>
                                     <input
                                       type="text"
-                                      className={`form-control ${errors.skills?.[index] ? 'is-invalid' : ''}`}
+                                      className="form-control"
                                       value={skill.name}
                                       onChange={(e) => handleInputChange('skills', 'name', e.target.value, index)}
                                     />
-                                    {errors.skills?.[index] && (
-                                      <div className="invalid-feedback">{errors.skills[index]}</div>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="col-lg-6">
                                   <div className="form-group">
-                                    <RequiredLabel text="Degree" />
+                                    <label>Degree</label>
                                     <select
-                                      className={`form-control ${errors.skills?.[index] ? 'is-invalid' : ''}`}
+                                      className="form-control"
                                       value={skill.degree}
                                       onChange={(e) => handleInputChange('skills', 'degree', e.target.value, index)}
                                     >
@@ -1694,9 +1467,6 @@ const RegisterWizard = () => {
                                       <option value="ADVANCED">ADVANCED</option>
                                       <option value="EXPERT">EXPERT</option>
                                     </select>
-                                    {errors.skills?.[index] && (
-                                      <div className="invalid-feedback">{errors.skills[index]}</div>
-                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -1706,7 +1476,7 @@ const RegisterWizard = () => {
                                 <button
                                   type="button"
                                   className="btn btn-primary"
-                                  onClick={() => addArrayItem('skills')}
+                                  onClick={() => handleInputChange('skills', '', '', formData.skills.length)}
                                 >
                                   Add Another Skill
                                 </button>
@@ -1729,9 +1499,6 @@ const RegisterWizard = () => {
                               />
                               I agree to the terms and conditions
                             </label>
-                            {errors.terms && (
-                              <div className="invalid-feedback">{errors.terms}</div>
-                            )}
                           </div>
                         </div>
                       </div>

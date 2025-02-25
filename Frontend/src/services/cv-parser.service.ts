@@ -1,7 +1,8 @@
 import axios from 'axios';
-import mammoth from 'mammoth';
-import dotenv from 'dotenv';
-import fs from 'fs';
+import { Education } from '../models/Education';
+import { Experience } from '../models/Experience';
+import { Skill } from '../models/Skill';
+
 //import pdf from 'pdf-parse';
 /*pdf(dataBuffer).then(function(data : any) {
 
@@ -26,9 +27,9 @@ export interface ParsedCVData {
   email?: string;
   phone?: string;
   address?: string;
-  skills?: string[];
-  education?: string[];
-  work_experience?: string[];
+  skills?: Skill[];
+  education?: Education[];
+  work_experience?: Experience[];
 }
 
 export const parseCV = async (file: File): Promise<ParsedCVData> => {
@@ -41,13 +42,13 @@ export const parseCV = async (file: File): Promise<ParsedCVData> => {
     // Validate and clean parsed data
     const parsedData = response.data;
     return {
-      name: cleanField(parsedData.name),
-      email: cleanEmail(parsedData.email),
-      phone: cleanPhone(parsedData.phone),
-      address: cleanField(parsedData.address),
-      skills: cleanArray(parsedData.skills),
-      education: cleanArray(parsedData.education),
-      work_experience: cleanArray(parsedData.work_experience)
+      name: parsedData.name,
+      email: parsedData.email,
+      phone: parsedData.phone,
+      address: parsedData.address,
+      skills: parsedData.skills,
+      education: parsedData.education,
+      work_experience: parsedData.work_experience
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes('Failed to load PDF')) {
@@ -84,30 +85,4 @@ const readFileAsText = (file: File): Promise<string> => {
   });
 };
 
-// Helper functions for data cleaning
-const cleanField = (field?: string): string | undefined => {
-  if (!field) return undefined;
-  return field.trim().replace(/\s+/g, ' ');
-};
-
-const cleanEmail = (email?: string): string | undefined => {
-  if (!email) return undefined;
-  email = email.trim().toLowerCase();
-  return email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) ? email : undefined;
-};
-
-const cleanPhone = (phone?: string): string | undefined => {
-  if (!phone) return undefined;
-  // Remove all non-digit characters
-  const cleaned = phone.replace(/\D/g, '');
-  // Check if it's a valid Tunisian number (8 digits starting with 2,3,4,5,7)
-  return cleaned.match(/^[23457]\d{7}$/) ? cleaned : undefined;
-};
-
-const cleanArray = (arr?: string[]): string[] | undefined => {
-  if (!arr || !Array.isArray(arr)) return undefined;
-  return arr
-    .map(item => item.trim())
-    .filter(item => item.length > 0)
-    .filter((item, index, self) => self.indexOf(item) === index); // Remove duplicates
-};
+// 

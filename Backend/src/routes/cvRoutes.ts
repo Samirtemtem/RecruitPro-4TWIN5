@@ -33,7 +33,7 @@ router.post('/parse', upload.single('file'), async (req, res) => {
             const text = data.text;
             console.log(text);
             let parsedData = await resumeToJsonParser(text as string);
-            console.log("################################################# AI RESULT");
+            console.log("################################################# AI parsing result");
             console.log(parsedData);
             res.status(200).json(parsedData);
           });

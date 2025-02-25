@@ -12,12 +12,12 @@ export interface IEducation extends Document {
 
 // Define Education Schema
 const educationSchema = new Schema<IEducation>({
-  institution: { type: String, required: true },
-  diploma: { type: String, required: true },
-  startDate: { type: Date, required: true },
-  endDate: { type: Date, required: true },
-  description: { type: String, required: true },
-  location: { type: String, required: true }
+  institution: { type: String },
+  diploma: { type: String },
+  startDate: { type: Date },
+  endDate: { type: Date },
+  description: { type: String },
+  location: { type: String }
 }, {
   timestamps: true
 });

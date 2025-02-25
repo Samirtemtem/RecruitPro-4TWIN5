@@ -96,10 +96,47 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       socialLinks
     } = req.body;
 
+    // Validate required fields
+    if (!firstName || !lastName || !email || !password || !phoneNumber || !address) {
+      return errorResponse(res, 400, 'All required fields must be provided', 'MISSING_FIELDS');
+    }
+
+    // Validate field lengths and formats
+    if (firstName.length < 2 || firstName.length > 50) {
+      return errorResponse(res, 400, 'First name must be between 2 and 50 characters', 'INVALID_FIRSTNAME');
+    }
+
+    if (lastName.length < 2 || lastName.length > 50) {
+      return errorResponse(res, 400, 'Last name must be between 2 and 50 characters', 'INVALID_LASTNAME');
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return errorResponse(res, 400, 'Please enter a valid email address', 'INVALID_EMAIL');
+    }
+
+    // Validate password strength
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return errorResponse(res, 400, 'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number', 'INVALID_PASSWORD');
+    }
+
+    // Validate phone number (11 digits)
+    const phoneRegex = /^\d{11}$/;
+    if (!phoneRegex.test(phoneNumber.replace(/\D/g, ''))) {
+      return errorResponse(res, 400, 'Please enter a valid 11-digit phone number', 'INVALID_PHONE');
+    }
+
+    // Validate address length
+    if (address.length < 5) {
+      return errorResponse(res, 400, 'Address must be at least 5 characters', 'INVALID_ADDRESS');
+    }
+
     // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return errorResponse(res, 400, 'User already exists');
+      return errorResponse(res, 400, 'User already exists', 'USER_EXISTS');
     }
 
     // Handle file uploads if they exist
@@ -109,52 +146,45 @@ export const register = async (req: Request, res: Response, next: NextFunction):
     if (req.files) {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
       
-      try {
-        // Upload profile image to Cloudinary
-        if (files.profileImage?.[0]) {
-          const profileFile = files.profileImage[0];
-          profileFile.mimetype = 'image/jpeg'; // Ensure proper mimetype
-          profileImageUrl = await uploadToCloudinary(
-            profileFile, 
-            'profile-images'
-          );
+      // Validate CV file if provided
+      if (files.cv?.[0]) {
+        const cvFile = files.cv[0];
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        
+        if (!allowedTypes.includes(cvFile.mimetype)) {
+          return errorResponse(res, 400, 'Only PDF and Word documents are allowed for CV', 'INVALID_CV_TYPE');
         }
         
-        // Upload CV to Cloudinary
-        if (files.cv?.[0]) {
-          const cvFile = files.cv[0];
-          cvFile.mimetype = 'application/pdf'; // Ensure proper mimetype
-          cvUrl = await uploadToCloudinary(
-            cvFile, 
-            'cvs'
-          );
+        if (cvFile.size > 5 * 1024 * 1024) {
+          return errorResponse(res, 400, 'CV file size must be less than 5MB', 'INVALID_CV_SIZE');
         }
-
-        // Verify the uploaded URLs are accessible
-        if (profileImageUrl || cvUrl) {
-          const urlsToCheck = [];
-          if (profileImageUrl) urlsToCheck.push(profileImageUrl);
-          if (cvUrl) urlsToCheck.push(cvUrl);
-
-          try {
-            const responses = await Promise.all(
-              urlsToCheck.map(url => fetch(url))
-            );
-            
-            for (const response of responses) {
-              if (!response.ok) {
-                console.error('URL verification failed:', response.statusText);
-                return errorResponse(res, 500, 'File upload verification failed');
-              }
-            }
-          } catch (verifyError) {
-            console.error('Error verifying uploaded files:', verifyError);
-            return errorResponse(res, 500, 'Error verifying uploaded files');
-          }
+        
+        try {
+          cvFile.mimetype = 'application/pdf';
+          cvUrl = await uploadToCloudinary(cvFile, 'cvs');
+        } catch (error) {
+          return errorResponse(res, 500, 'Error uploading CV', 'CV_UPLOAD_ERROR');
         }
-      } catch (error) {
-        console.error('Error uploading files:', error);
-        return errorResponse(res, 500, 'Error uploading files');
+      }
+      
+      // Validate profile image if provided
+      if (files.profileImage?.[0]) {
+        const profileFile = files.profileImage[0];
+        
+        if (!profileFile.mimetype.startsWith('image/')) {
+          return errorResponse(res, 400, 'Only image files are allowed for profile picture', 'INVALID_IMAGE_TYPE');
+        }
+        
+        if (profileFile.size > 5 * 1024 * 1024) {
+          return errorResponse(res, 400, 'Profile image size must be less than 5MB', 'INVALID_IMAGE_SIZE');
+        }
+        
+        try {
+          profileFile.mimetype = 'image/jpeg';
+          profileImageUrl = await uploadToCloudinary(profileFile, 'profile-images');
+        } catch (error) {
+          return errorResponse(res, 500, 'Error uploading profile image', 'IMAGE_UPLOAD_ERROR');
+        }
       }
     }
 
@@ -167,7 +197,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       lastName,
       email,
       password,
-      role: Role.CANDIDATE, // Default role for registration
+      role: Role.CANDIDATE, 
       phoneNumber,
       createDate: new Date(),
       image: profileImageUrl,
@@ -198,18 +228,35 @@ export const register = async (req: Request, res: Response, next: NextFunction):
 
     // Parse and create social links
     if (socialLinks) {
-      const socialLinksData = typeof socialLinks === 'string' ? JSON.parse(socialLinks) : socialLinks;
-      if (Array.isArray(socialLinksData) && socialLinksData.length > 0) {
-        const socialLinksPromises = socialLinksData.map(social => {
-          const newSocialLink = new SocialLinks({
-            type: social.type,
-            link: social.link
-          });
-          return newSocialLink.save();
-        });
-        const savedSocialLinks = await Promise.all(socialLinksPromises);
-        profile.socialLinks = savedSocialLinks.map(link => link._id) as Schema.Types.ObjectId[];
-        await profile.save();
+      try {
+        const socialLinksData = typeof socialLinks === 'string' ? JSON.parse(socialLinks) : socialLinks;
+        if (Array.isArray(socialLinksData) && socialLinksData.length > 0) {
+          const validSocialLinks = socialLinksData.filter(social => social.link && social.link.trim() !== '');
+          
+          if (validSocialLinks.length > 0) {
+            const socialLinksPromises = validSocialLinks.map(async (social) => {
+              try {
+                const newSocialLink = new SocialLinks({
+                  type: social.type,
+                  link: social.link.trim()
+                });
+                return await newSocialLink.save();
+              } catch (error) {
+                console.warn('Error saving social link:', error);
+                return null;
+              }
+            });
+            
+            const savedSocialLinks = (await Promise.all(socialLinksPromises)).filter(link => link !== null);
+            if (savedSocialLinks.length > 0) {
+              profile.socialLinks = savedSocialLinks.map(link => link!._id) as Schema.Types.ObjectId[];
+              await profile.save();
+            }
+          }
+        }
+      } catch (error) {
+        console.warn('Error processing social links:', error);
+        // Continue with registration even if social links fail
       }
     }
 
@@ -217,20 +264,28 @@ export const register = async (req: Request, res: Response, next: NextFunction):
     if (education) {
       const educationData = typeof education === 'string' ? JSON.parse(education) : education;
       if (Array.isArray(educationData) && educationData.length > 0) {
-        const educationPromises = educationData.map(edu => {
-          const newEducation = new Education({
-            institution: edu.institution,
-            diploma: edu.diploma,
-            startDate: edu.startDate,
-            endDate: edu.endDate,
-            description: edu.description,
-            location: edu.location
+        // Filter out empty education entries
+        const validEducation = educationData.filter(edu => 
+          edu.institution && edu.diploma && edu.startDate && 
+          edu.endDate && edu.description && edu.location
+        );
+        
+        if (validEducation.length > 0) {
+          const educationPromises = validEducation.map(edu => {
+            const newEducation = new Education({
+              institution: edu.institution,
+              diploma: edu.diploma,
+              startDate: edu.startDate,
+              endDate: edu.endDate,
+              description: edu.description,
+              location: edu.location
+            });
+            return newEducation.save();
           });
-          return newEducation.save();
-        });
-        const savedEducation = await Promise.all(educationPromises);
-        profile.education = savedEducation.map(edu => edu._id) as Schema.Types.ObjectId[];
-        await profile.save();
+          const savedEducation = await Promise.all(educationPromises);
+          profile.education = savedEducation.map(edu => edu._id) as Schema.Types.ObjectId[];
+          await profile.save();
+        }
       }
     }
 
@@ -238,20 +293,28 @@ export const register = async (req: Request, res: Response, next: NextFunction):
     if (experience) {
       const experienceData = typeof experience === 'string' ? JSON.parse(experience) : experience;
       if (Array.isArray(experienceData) && experienceData.length > 0) {
-        const experiencePromises = experienceData.map(exp => {
-          const newExperience = new Experience({
-            position: exp.position,
-            enterprise: exp.enterprise,
-            startDate: exp.startDate,
-            endDate: exp.endDate,
-            description: exp.description,
-            location: exp.location
+        // Filter out empty experience entries
+        const validExperience = experienceData.filter(exp => 
+          exp.position && exp.enterprise && exp.startDate && 
+          exp.endDate && exp.description && exp.location
+        );
+
+        if (validExperience.length > 0) {
+          const experiencePromises = validExperience.map(exp => {
+            const newExperience = new Experience({
+              position: exp.position,
+              enterprise: exp.enterprise,
+              startDate: exp.startDate,
+              endDate: exp.endDate,
+              description: exp.description,
+              location: exp.location
+            });
+            return newExperience.save();
           });
-          return newExperience.save();
-        });
-        const savedExperience = await Promise.all(experiencePromises);
-        profile.experience = savedExperience.map(exp => exp._id) as Schema.Types.ObjectId[];
-        await profile.save();
+          const savedExperience = await Promise.all(experiencePromises);
+          profile.experience = savedExperience.map(exp => exp._id) as Schema.Types.ObjectId[];
+          await profile.save();
+        }
       }
     }
 
@@ -259,16 +322,23 @@ export const register = async (req: Request, res: Response, next: NextFunction):
     if (skills) {
       const skillsData = typeof skills === 'string' ? JSON.parse(skills) : skills;
       if (Array.isArray(skillsData) && skillsData.length > 0) {
-        const skillPromises = skillsData.map(skill => {
-          const newSkill = new Skill({
-            name: skill.name,
-            degree: skill.degree
+        // Filter out empty skill entries
+        const validSkills = skillsData.filter(skill => 
+          skill.name && skill.degree
+        );
+
+        if (validSkills.length > 0) {
+          const skillPromises = validSkills.map(skill => {
+            const newSkill = new Skill({
+              name: skill.name,
+              degree: skill.degree
+            });
+            return newSkill.save();
           });
-          return newSkill.save();
-        });
-        const savedSkills = await Promise.all(skillPromises);
-        profile.skills = savedSkills.map(skill => skill._id) as Schema.Types.ObjectId[];
-        await profile.save();
+          const savedSkills = await Promise.all(skillPromises);
+          profile.skills = savedSkills.map(skill => skill._id) as Schema.Types.ObjectId[];
+          await profile.save();
+        }
       }
     }
 
@@ -341,6 +411,53 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
     } else {
       return res.status(500).json({ message: "An unexpected error occurred. Please try again later." });
     }
+  }
+};
+
+/////////////////////////////////////////////////////////// Get User By Email //////////////////////////////////////////////////
+
+export const getUserByEmail = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  try {
+    const { email } = req.params;
+
+    if (!email) {
+      return errorResponse(res, 400, 'Email is required', 'INVALID_REQUEST');
+    }
+
+    const user = await User.findOne({ email })
+      .populate({
+        path: 'profile',
+        populate: [
+          { path: 'education', model: 'Education' },
+          { path: 'experience', model: 'Experience' },
+          { path: 'skills', model: 'Skill' },
+          { path: 'socialLinks', model: 'SocialLinks' }
+        ]
+      })
+      .lean();
+
+    if (!user) {
+      return errorResponse(res, 404, 'User not found', 'USER_NOT_FOUND');
+    }
+
+    res.json({
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        image: user.image,
+        profile: user.profile,
+        createDate: user.createDate,
+        lastLogin: user.lastLogin,
+        isVerified: user.isVerified
+      }
+    });
+  } catch (error) {
+    console.error('Get user by email error:', error);
+    return errorResponse(res, 500, 'An internal server error occurred', 'SERVER_ERROR');
   }
 };
 

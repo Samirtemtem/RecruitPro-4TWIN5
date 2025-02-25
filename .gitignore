@@ -5,8 +5,7 @@ node_modules/
 logs/
 *.log
 
-# Environment files (for sensitive info like API keys)
-.env
+
 
 # OS-specific files
 .DS_Store

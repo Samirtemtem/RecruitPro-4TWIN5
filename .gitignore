@@ -31,7 +31,7 @@ frontend/node_modules/
 # Backend build files (if applicable)
 backend/build/
 backend/node_modules/
-backend/.env
+#backend/.env
 
 # Ignore any submodules if needed
 #Frontend/

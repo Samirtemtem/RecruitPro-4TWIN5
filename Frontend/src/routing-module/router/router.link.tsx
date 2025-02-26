@@ -18,6 +18,22 @@ import ProjectDetails from "../../back-office/projects/project/projectdetails";
 import EmployeeList from "../../back-office/hrm/employees/employeesList";
 import TwoStepVerification from "../../front-office/auth/TwoStepVerification";
 
+///////////////////////////////////////////////////////////
+//import IndexPage from "../../front-office/indexpage/IndexPage";
+import Home from "../../index/Home";
+import AppSection from "../../index/components/AppSection";
+import AuthModal from "../../index/components/AuthModal";
+import CallToAction from "../../index/components/CallToAction";
+import Footer from "../../index/components/Footer";
+import Funfact from "../../index/components/Funfact";
+import Header from "../../index/components/Header";
+import JobCategorie from "../../index/components/JobCategorie";
+import JobFeatured from "../../index/components/JobFeatured";
+import JobSearchBanner from "../../index/components/JobSearchBanner";
+import PartnerSlider from "../../index/components/PartnerSlider";
+import Testimonial from "../../index/components/Testimonial";
+import About from "../../index/components/About";
+import Blog from "../../index/components/Blog";
 
 const routes = all_routes;
 
@@ -62,6 +78,49 @@ export const publicRoutes = [
     path: routes.resetPasswordSuccess,
     element: <ResetPasswordSuccess />,
   },
+]
+export const publicRoutesFront = [
+  {
+    path: "/",
+    name: "Root",
+    element: <Navigate to="/index" />,
+    route: Route,
+  },
+  {
+    path: "/index",
+    name: "Root",
+    element: <Home />,
+    route: Route,
+  },
+     // { path: "/home", name: "Home", element: <Home />,
+ //   route: Route, },
+ { path: "/about", name: "About", element: <About /> , route: Route,},
+ { path: "/app-section", name: "App Section", element: <AppSection />, route: Route,},
+ { path: "/auth-modal", name: "Auth Modal", element: <AuthModal /> ,route: Route,},
+ { path: "/blog", name: "Blog", element: <Blog />,route: Route, },
+ { path: "/call-to-action", name: "Call To Action", element: <CallToAction />,route: Route, },
+ { path: "/footer", name: "Footer", element: <Footer /> ,route: Route,},
+ { path: "/funfact", name: "Funfact", element: <Funfact />,route: Route, },
+ { path: "/header", name: "Header", element: <Header />,route: Route, },
+ { path: "/job-categorie", name: "Job Categorie", element: <JobCategorie /> ,route: Route,},
+ { path: "/job-featured", name: "Job Featured", element: <JobFeatured />,route: Route,},
+ { path: "/job-search-banner", name: "Job Search Banner", element: <JobSearchBanner />,route: Route, },
+ { path: "/partner-slider", name: "Partner Slider", element: <PartnerSlider />,route: Route, },
+ { path: "/testimonial", name: "Testimonial", element: <Testimonial /> ,route: Route,},
+
+ ///////////////////////////////////////////////////////////////////
+  
+]
+
+export const authRoutesfront = [
+  {
+    path: "/",
+    name: "Root",
+    element: <Navigate to="/index" />,
+    route: Route,
+  },
+  
+
 ]
 export const authRoutes = [
   {

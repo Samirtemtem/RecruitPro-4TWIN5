@@ -3,6 +3,27 @@ export const all_routes = {
 
   // main
   //main: "/index",
+  // main page
+  IndexPage: "/index",
+
+  // Other sections for the front
+  Home: "/home",
+  About: "/about",
+  AppSection: "/app-section",
+  AuthModal: "/auth-modal",
+  Blog: "/blog",
+  CallToAction: "/call-to-action",
+  Footer: "/footer",
+  Funfact: "/funfact",
+  Header: "/header",
+  JobCategorie: "/job-categorie",
+  JobFeatured: "/job-featured",
+  JobSearchBanner: "/job-search-banner",
+  PartnerSlider: "/partner-slider",
+  Testimonial: "/testimonial",
+
+
+
 
   // dashboard routes
   adminDashboard: "/adminDashboard",

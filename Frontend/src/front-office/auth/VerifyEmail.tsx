@@ -8,7 +8,7 @@ const VerifyEmail = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [countdown, setCountdown] = useState(10); // Countdown Timer
+  const [countdown, setCountdown] = useState(3); // Countdown Timer
 
   useEffect(() => {
     const verifyEmail = async () => {

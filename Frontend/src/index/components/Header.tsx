@@ -37,32 +37,46 @@ const Header = () => {
   };
 
   return (
-    <header className={`main-header ${navbar ? "fixed-header animated slideInDown" : ""}`}>
+    <header className={`main-header ${navbar ? "fixed-header animated slideInDown" : ""}`} style={{ background: 'linear-gradient(to right, #D50000, #A00000)', color: '#FFFFFF' }}>
       <div className="main-box">
         <div className="nav-outer">
           <div className="logo-box">
             <a href="/" className="logo">
-              <img src="/images/logo.svg" alt="brand" />
+              <img src="/images/Logo_ESPRIT_Ariana-removebg-preview.png" alt="brand" />
             </a>
           </div>
 
           <nav className="nav main-menu">
-            <ul className="navigation">
+            <ul className="navigation" style={{ color: '#FFFFFF' }}>
               {menuGroups.map((menuGroup, index) => (
                 <li key={index} className="dropdown">
-                  <span>{menuGroup.title}</span>
-                  <ul>
+                  <span 
+                    style={{ 
+                      color: '#FFFFFF', 
+                      padding: '10px', 
+                      transition: 'color 0.3s' 
+                    }} 
+                    onMouseOver={(e) => e.currentTarget.style.color = '#FFC0C0'} 
+                    onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}
+                  >
+                    {menuGroup.title}
+                  </span>
+                  <ul style={{ color: '#000000' }}>
                     {menuGroup.items.map((item, itemIndex) => (
                       <li key={itemIndex} className="dropdown">
-                        {/* Check if it's a parent item or a single link */}
-                        <span>{isParentItem(item) ? `Category ${item.id}` : item.name}</span>
-
-                        {/* If it's a parent item, render its sub-items */}
+                        <span style={{ color: '#000000', padding: '10px', transition: 'color 0.3s' }} onMouseOver={(e) => e.currentTarget.style.color = '#D50000'} onMouseOut={(e) => e.currentTarget.style.color = '#000000'}>{isParentItem(item) ? `Category ${item.id}` : item.name}</span>
                         {isParentItem(item) && (
-                          <ul>
+                          <ul style={{ color: '#000000' }}>
                             {item.items.map((menu, i) => (
                               <li key={i}>
-                                <a href={menu.routePath}>{menu.name}</a>
+                                <a 
+                                  href={menu.routePath} 
+                                  style={{ color: '#000000', transition: 'color 0.3s ease' }} 
+                                  onMouseOver={(e) => e.currentTarget.style.color = '#D50000'} 
+                                  onMouseOut={(e) => e.currentTarget.style.color = '#000000'}
+                                >
+                                  {menu.name}
+                                </a>
                               </li>
                             ))}
                           </ul>
@@ -77,10 +91,44 @@ const Header = () => {
         </div>
 
         <div className="outer-box">
-          <a href="/LoginUser" className="theme-btn btn-style-three call-modal"  >
+          <a 
+            href="/LoginUser" 
+            className="theme-btn btn-style-three call-modal" 
+            style={{ 
+              backgroundColor: 'transparent', 
+              color: '#FFFFFF', 
+              borderColor: '#FFFFFF',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = '#FFFFFF';
+              e.currentTarget.style.color = '#D50000';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#FFFFFF';
+            }}
+          >
             Login / Register
           </a>
-          <a href="/employers-dashboard/post-jobs" className="theme-btn btn-style-one">
+          <a 
+            href="/employers-dashboard/post-jobs" 
+            className="theme-btn btn-style-one" 
+            style={{ 
+              backgroundColor: '#FFFFFF', 
+              color: '#D50000', 
+              borderColor: '#FFFFFF',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = '#D50000';
+              e.currentTarget.style.color = '#FFFFFF';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = '#FFFFFF';
+              e.currentTarget.style.color = '#D50000';
+            }}
+          >
             Job Post
           </a>
         </div>

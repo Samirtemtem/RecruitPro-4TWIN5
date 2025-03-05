@@ -11,6 +11,7 @@ import 'dotenv/config'; // TypeScript equivalent of `require('dotenv').config()`
 require('./config/passport');
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 
 // Load environment variables from .env file
 dotenv.config({ path: './.env' });
@@ -50,6 +51,14 @@ var app = express();
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
+// Configure Content Security Policy
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;"
+  );
+  next();
+});
 
 
 // Connect to MongoDB
@@ -81,6 +90,8 @@ app.use('/api/cv', cvRoutes);
 
 console.log('Client ID:', process.env.CLIENT_ID);
 console.log('Client Secret:', process.env.CLIENT_SECRET);
+console.log('GitHub Client ID:', process.env.GITHUB_CLIENT_ID);
+console.log('GitHub Client Secret:', process.env.GITHUB_CLIENT_SECRET);
 // Use Routes
  app.use('/api/jobs', jobRoutes);
 // User Routes 

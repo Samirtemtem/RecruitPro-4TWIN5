@@ -82,6 +82,19 @@ router.get('/linkedin/callback', passport.authenticate('linkedin', {
   failureRedirect: `${process.env.FRONTEND_URL}/loginuser`,
 }), socialAuthCallback);
 
+// GitHub Auth route
+router.get('/github', (req, res, next) => {
+  console.log('GitHub authentication route hit');
+  passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
+});
+router.get('/github/callback', (req, res, next) => {
+  console.log('GitHub callback route hit');
+  passport.authenticate('github', {
+    session: false,
+    failureRedirect: `${process.env.FRONTEND_URL}/loginuser`,
+  })(req, res, next);
+}, socialAuthCallback);
+
 // Get user by email route
 router.get('/user/:token', getUserByEmail);
 

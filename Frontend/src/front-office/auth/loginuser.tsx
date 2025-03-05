@@ -124,6 +124,9 @@ const LoginUser = () => {
   const handleLinkedInLogin = () => {
     window.location.href = "http://localhost:5000/api/auth/linkedin";
   };
+  const handleGitHubLogin = () => {
+    window.location.href = "http://localhost:5000/api/auth/github";
+  };
   const togglePasswordVisibility = (field: "password") => {
     setPasswordVisibility((prevState) => ({
       ...prevState,
@@ -239,7 +242,7 @@ const LoginUser = () => {
                       {/* Registration Link */}
                       <div className="text-center">
                         <h6 className="fw-normal text-dark mb-0">
-                          Don’t have an account?
+                          Don't have an account?
                           <Link to={all_routes.register} className="hover-a">
                             {" "}
                             Create Account
@@ -269,7 +272,7 @@ const LoginUser = () => {
                             </Link>
                           </div>
                           {/* LinkedIn Login */}
-                          <div className="text-center  flex-fill">
+                          <div className="text-center me-2 flex-fill">
                             <Link
                               to=""
                               type="button"
@@ -280,6 +283,21 @@ const LoginUser = () => {
                                 className="img-fluid m-1"
                                 src="assets/img/icons/LinkedIn-Logo.wine.svg"
                                 alt="LinkedIn"
+                              />
+                            </Link>
+                          </div>
+                          {/* GitHub Login */}
+                          <div className="text-center flex-fill">
+                            <Link
+                              to=""
+                              type="button"
+                              onClick={handleGitHubLogin}
+                              className="br-10 p-2 btn btn-outline-dark border d-flex align-items-center justify-content-center"
+                            >
+                              <ImageWithBasePath
+                                className="img-fluid m-1"
+                                src="assets/img/icons/github-logo.svg"
+                                alt="GitHub"
                               />
                             </Link>
                           </div>

@@ -17,6 +17,7 @@ export interface IUser extends Document {
   image: string;
   googleId: string;
   linkedinId: string;
+  githubId: string;
   is2FAEnabled?: boolean;
   resetToken?:string;
 
@@ -25,7 +26,7 @@ export interface IUser extends Document {
   applications: Schema.Types.ObjectId[];  // References to Applications
   interviews: Schema.Types.ObjectId[];  // References to Interviews
   jobPosts: Schema.Types.ObjectId[];  // References to JobPosts
-  provider?: 'local' | 'google' | 'linkedin';
+  provider?: 'local' | 'google' | 'linkedin' | 'github';
   isVerified: boolean;
   verificationToken?: string;
 
@@ -83,6 +84,7 @@ const userSchema = new Schema<IUser>({
   image: { type: String },
   googleId: { type: String },
   linkedinId: { type: String },
+  githubId: { type: String },
   OneTimePassword: { type: Number },
   is2FAEnabled: {type: Boolean},
   resetToken: { type: String },
@@ -90,7 +92,7 @@ const userSchema = new Schema<IUser>({
   applications: [{ type: Schema.Types.ObjectId, ref: 'Application' }],
   interviews: [{ type: Schema.Types.ObjectId, ref: 'Interview' }],
   jobPosts: [{ type: Schema.Types.ObjectId, ref: 'JobPost' }],
-  provider: { type: String, enum: ['local', 'google', 'linkedin'] },
+  provider: { type: String, enum: ['local', 'google', 'linkedin', 'github'] },
   isVerified: { type: Boolean, required: true },
   verificationToken: { type: String }
 }, {

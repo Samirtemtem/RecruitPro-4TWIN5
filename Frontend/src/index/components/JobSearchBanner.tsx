@@ -31,7 +31,23 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                     <input type="text" placeholder="City or postcode" />
                   </div>
                   <div className="form-group col-lg-3 col-md-12 col-sm-12 btn-box">
-                    <button type="submit" className="theme-btn btn-style-one">
+                    <button 
+                      type="submit" 
+                      className="theme-btn btn-style-one" 
+                      style={{ 
+                        backgroundColor: '#D50000', 
+                        borderColor: '#D50000',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = '#B50000';  
+                        e.currentTarget.style.borderColor = '#B50000';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = '#D50000';
+                        e.currentTarget.style.borderColor = '#D50000';
+                      }}
+                    >
                       <span className="btn-title">Find Jobs</span>
                     </button>
                   </div>

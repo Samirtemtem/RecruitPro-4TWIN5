@@ -24,10 +24,30 @@ const AppSection = () => {
               </div>
             </div>
             <div className="download-btn">
-              <a href="#" onClick={(e) => e.preventDefault()}>
+              <a 
+                href="#" 
+                onClick={(e) => e.preventDefault()}
+                style={{ 
+                  transition: 'all 0.3s ease',
+                  transform: 'scale(1)',
+                  display: 'inline-block'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
                 <img src="/images/icons/apple.png" alt="Apple Store" />
               </a>
-              <a href="#" onClick={(e) => e.preventDefault()}>
+              <a 
+                href="#" 
+                onClick={(e) => e.preventDefault()}
+                style={{ 
+                  transition: 'all 0.3s ease',
+                  transform: 'scale(1)',
+                  display: 'inline-block'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
                 <img src="/images/icons/google.png" alt="Google Play" />
               </a>
             </div>

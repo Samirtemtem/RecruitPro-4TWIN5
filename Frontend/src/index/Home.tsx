@@ -40,10 +40,10 @@ const Home = () => {
       <JobSearchBanner />
       {/* End Hero Section */}
 
-      <section className="job-categories ui-job-categories">
+      <section className="job-categories ui-job-categories" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2>Popular Job Categories</h2>
+            <h2 style={{ color: '#D50000' }}>Popular Job Categories</h2>
             <div className="text">2020 jobs live - 293 added today.</div>
           </div>
 
@@ -58,10 +58,10 @@ const Home = () => {
       </section>
       {/* End Job Categorie Section */}
 
-      <section className="job-section">
+      <section className="job-section" style={{ backgroundColor: '#F5F5F5' }}>
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2>Featured Jobs</h2>
+            <h2 style={{ color: '#D50000' }}>Featured Jobs</h2>
             <div className="text">
               Know your worth and find the job that qualifies your life
             </div>
@@ -74,7 +74,20 @@ const Home = () => {
           <div className="btn-box">
             <Link
               to="/job-list/job-list-v1"
-              className="theme-btn btn-style-one bg-blue"
+              className="theme-btn btn-style-one"
+              style={{ 
+                backgroundColor: '#D50000', 
+                borderColor: '#D50000',
+                transition: 'all 0.3s ease' 
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#B50000';
+                e.currentTarget.style.borderColor = '#B50000';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#D50000';
+                e.currentTarget.style.borderColor = '#D50000';
+              }}
             >
               <span className="btn-title">Load More Listing</span>
             </Link>
@@ -83,11 +96,11 @@ const Home = () => {
       </section>
       {/* End Job Featured Section */}
 
-      <section className="testimonial-section">
+      <section className="testimonial-section" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="container-fluid">
           {/* Sec Title */}
           <div className="sec-title text-center">
-            <h2>Testimonials From Our Customers</h2>
+            <h2 style={{ color: '#D50000' }}>Testimonials From Our Customers</h2>
             <div className="text">
               Lorem ipsum dolor sit amet elit, sed do eiusmod tempor
             </div>
@@ -102,7 +115,7 @@ const Home = () => {
       </section>
       {/* End Testimonial Section */}
 
-      <section className="clients-section">
+      <section className="clients-section" style={{ backgroundColor: '#F5F5F5', border: '1px solid #D50000' }}>
         <div className="sponsors-outer" data-aos="fade">
           {/* Sponsors Carousel */}
           <ul className="sponsors-carousel">
@@ -112,7 +125,7 @@ const Home = () => {
       </section>
       {/* End Clients Section*/}
 
-      <section className="about-section">
+      <section className="about-section" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="auto-container">
           <div className="row">
             <About />
@@ -129,10 +142,10 @@ const Home = () => {
       </section>
       {/* End About Section */}
 
-      <section className="news-section">
+      <section className="news-section" style={{ backgroundColor: '#F5F5F5' }}>
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2>Recent News Articles</h2>
+            <h2 style={{ color: '#D50000' }}>Recent News Articles</h2>
             <div className="text">
               Fresh job related news content posted each day.
             </div>
@@ -145,7 +158,7 @@ const Home = () => {
       </section>
       {/* End News Section */}
 
-      <section className="app-section">
+      <section className="app-section" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="auto-container">
           <AppSection />
         </div>

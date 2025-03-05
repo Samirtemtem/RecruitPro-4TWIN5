@@ -18,7 +18,23 @@ const About = () => {
             <li>Capitalize on low hanging fruit to identify</li>
             <li>But I must explain to you how all this</li>
           </ul>
-          <Link to="/register" className="theme-btn btn-style-one bg-blue">
+          <Link 
+            to="/register" 
+            className="theme-btn btn-style-one"
+            style={{ 
+              backgroundColor: '#D50000', 
+              borderColor: '#D50000',
+              transition: 'all 0.3s ease' 
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = '#B50000';
+              e.currentTarget.style.borderColor = '#B50000';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = '#D50000';
+              e.currentTarget.style.borderColor = '#D50000';
+            }}
+          >
             <span className="btn-title">Get Started</span>
           </Link>
         </div>

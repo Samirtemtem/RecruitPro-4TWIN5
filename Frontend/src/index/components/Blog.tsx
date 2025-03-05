@@ -35,7 +35,16 @@ const Blog = () => {
                 </Link>
               </h3>
               <p className="text">{item.blogText}</p>
-              <Link to={`/blog-details/${item.id}`} className="read-more">
+              <Link 
+                to={`/blog-details/${item.id}`} 
+                className="read-more"
+                style={{ 
+                  color: '#D50000', 
+                  transition: 'all 0.3s ease' 
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = '#B50000'}
+                onMouseOut={(e) => e.currentTarget.style.color = '#D50000'}
+              >
                 Read More <i className="fa fa-angle-right"></i>
               </Link>
             </div>

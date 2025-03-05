@@ -30,7 +30,7 @@ const Footer = ({ footerStyle = "" }) => {
   ];
 
   return (
-    <footer className={`main-footer ${footerStyle}`}>
+    <footer className={`main-footer ${footerStyle}`} style={{ background: 'linear-gradient(to right, #D50000, #A00000)' }}>
       <div className="auto-container">
         {/* Footer Widgets Section */}
         <div className="widgets-section" data-aos="fade-up">
@@ -40,17 +40,17 @@ const Footer = ({ footerStyle = "" }) => {
               <div className="footer-column about-widget">
                 <div className="logo">
                   <Link to="/">
-                    <img src="/images/logo.svg" alt="brand" />
+                    <img src="/images/Logo_ESPRIT_Ariana-removebg-preview.png" alt="brand" />
                   </Link>
                 </div>
-                <p className="phone-num">
+                <p className="phone-num" style={{ color: '#FFFFFF' }}>
                   <span>Call us </span>
-                  <a href="tel:1234567890">123 456 7890</a>
+                  <a href="tel:1234567890" style={{ color: '#FFFFFF' }}>123 456 7890</a>
                 </p>
-                <p className="address">
+                <p className="address" style={{ color: '#FFFFFF' }}>
                   329 Queensberry Street, North Melbourne VIC 3051, Australia.
                   <br />
-                  <a href="mailto:support@superio.com" className="email">
+                  <a href="mailto:support@superio.com" className="email" style={{ color: '#FFFFFF' }}>
                     support@superio.com
                   </a>
                 </p>
@@ -66,12 +66,12 @@ const Footer = ({ footerStyle = "" }) => {
                     key={item.id}
                   >
                     <div className="footer-widget links-widget">
-                      <h4 className="widget-title">{item.title}</h4>
+                      <h4 className="widget-title" style={{ color: '#FFFFFF' }}>{item.title}</h4>
                       <div className="widget-content">
                         <ul className="list">
                           {item?.menuList?.map((menu, i) => (
                             <li key={i}>
-                              <Link to={menu.route}>{menu.name}</Link>
+                              <Link to={menu.route} style={{ color: '#FFFFFF' }}>{menu.name}</Link>
                             </li>
                           ))}
                         </ul>
@@ -89,7 +89,7 @@ const Footer = ({ footerStyle = "" }) => {
       <div className="footer-bottom">
         <div className="auto-container">
           <div className="outer-box">
-            <div className="copyright-text">
+            <div className="copyright-text" style={{ color: '#FFFFFF' }}>
               © {new Date().getFullYear()} Superio by{" "}
               <a
                 href="https://themeforest.net/user/ib-themes"
@@ -107,6 +107,9 @@ const Footer = ({ footerStyle = "" }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   key={item.id}
+                  style={{ color: '#FFFFFF', transition: 'color 0.3s' }}
+                  onMouseOver={(e) => e.currentTarget.style.color = '#FFD700'}
+                  onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}
                 >
                   <i className={`fab ${item.icon}`}></i>
                 </a>

@@ -10,7 +10,24 @@ const CallToAction = () => {
                   Advertise your jobs to millions of monthly users and search 15.8
                   million CVs in our database.
                 </div>
-                <a href="#" className="theme-btn btn-style-one bg-blue" onClick={(e) => e.preventDefault()}>
+                <a 
+                  href="#" 
+                  className="theme-btn btn-style-one" 
+                  onClick={(e) => e.preventDefault()}
+                  style={{ 
+                    backgroundColor: '#D50000', 
+                    borderColor: '#D50000',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = '#B50000';
+                    e.currentTarget.style.borderColor = '#B50000';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = '#D50000';
+                    e.currentTarget.style.borderColor = '#D50000';
+                  }}
+                >
                   <span className="btn-title">Start Recruiting Now</span>
                 </a>
               </div>

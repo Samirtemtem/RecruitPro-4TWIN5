@@ -9,7 +9,7 @@ import AuthModal from "./components/AuthModal";
 import PartnerSlider from "./components/PartnerSlider";
 import FooterDefault from "../common/Footer";
 import Funfact from "./components/Funfact";
-import DefaulHeader2 from "./components/Header";
+import DefaulHeader2 from "../common/Header";
 // import MobileMenu from "./components/MobileMenu";
 import JobSearchBanner from "./components/JobSearchBanner";
 import JobCategorie1 from "./components/JobCategorie";

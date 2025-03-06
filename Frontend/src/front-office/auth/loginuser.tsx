@@ -10,9 +10,22 @@ import { AuthContext } from "../../routing-module/AuthContext";  // Import your 
 
 //const { setToken, setRole } = useContext(AuthContext);  // Extract setToken & setRole
 
+//import AuthModal from "./components/AuthModal";
+//import DefaulHeader2 from "./components/Header";
 
+import AuthModal from "../../index/components/AuthModal";
+import DefaulHeader2 from "../../common/Header";
+import FooterDefault from "../../common/Footer";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const LoginUser = () => {
+    useEffect(() => {
+      AOS.init({
+        duration: 1200, // Animation duration
+        once: true,     // Run animations only once
+      });
+    }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -144,6 +157,16 @@ const LoginUser = () => {
     }));
   };
   return (
+<>
+    <AuthModal />
+          {/* End Login Popup Modal */}
+    
+          <DefaulHeader2 />
+          {/* End Header with upload cv btn */}
+<section className="job-categories ui-job-categories" style={{ backgroundColor: '#FFFFFF' }}>
+  <div className="auto-container">
+
+
     <div className="container-fluid bg-white">
       <div className="w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
         <div className="row">
@@ -326,6 +349,10 @@ const LoginUser = () => {
         </div>
       </div>
     </div>
+  </div>
+</section>
+<FooterDefault />
+    </>
   );
 };
 export default LoginUser; 

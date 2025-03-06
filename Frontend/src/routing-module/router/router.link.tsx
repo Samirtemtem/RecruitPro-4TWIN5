@@ -24,7 +24,7 @@ import Home from "../../index/Home";
 import AppSection from "../../index/components/AppSection";
 import AuthModal from "../../index/components/AuthModal";
 import Funfact from "../../index/components/Funfact";
-import Header from "../../index/components/Header";
+import Header from "../../common/Header";
 import JobCategorie from "../../index/components/JobCategorie";
 import JobFeatured from "../../index/components/JobFeatured";
 import JobSearchBanner from "../../index/components/JobSearchBanner";
@@ -72,12 +72,7 @@ export const publicRoutes = [
     route: Route,
   },
     
-  {
-    path: "/LoginUser",
-    name: "Root",
-    element: <LoginUser  />,
-    route: Route,
-  },
+  
   {
     path: "/forgotpassword",
     name: "Root",
@@ -104,6 +99,13 @@ export const publicRoutesFront = [
     path: "/",
     name: "Root",
     element: <Navigate to="/index" />,
+    route: Route,
+  },
+
+  {
+    path: "/LoginUser",
+    name: "Root",
+    element: <LoginUser  />,
     route: Route,
   },
   {

@@ -31,11 +31,12 @@ const Footer = ({ footerStyle = "" }) => {
 
   return (
     <footer className={`main-footer ${footerStyle}`} style={{ background: 'linear-gradient(to right, #D50000, #A00000)' }}>
-      <div className="auto-container">
-        {/* Footer Widgets Section */}
+       
+      <div className="auto-container" style={{ marginBottom: '30px' }}>
+      {/*  
         <div className="widgets-section" data-aos="fade-up">
           <div className="row">
-            {/* Footer Left - About Widget */}
+            
             <div className="big-column col-xl-4 col-lg-3 col-md-12">
               <div className="footer-column about-widget">
                 <div className="logo">
@@ -57,7 +58,7 @@ const Footer = ({ footerStyle = "" }) => {
               </div>
             </div>
 
-            {/* Footer Right - Links */}
+            {
             <div className="big-column col-xl-8 col-lg-9 col-md-12">
               <div className="row">
                 {footerContent.map((item) => (
@@ -83,7 +84,9 @@ const Footer = ({ footerStyle = "" }) => {
             </div>
           </div>
         </div>
+        */}
       </div>
+      
 
       {/* Footer Bottom */}
       <div className="footer-bottom">

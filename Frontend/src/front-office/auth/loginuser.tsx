@@ -22,6 +22,16 @@ const LoginUser = () => {
   });
   const navigate = useNavigate();
 
+    /////////////////////////////// cancel login with social error //////////////////////////////////////////////////////////
+    const params = new URLSearchParams(window.location.search);
+    const errorlogin = params.get('error');
+    useEffect(() => {
+    if (errorlogin === 'GoogleLoginCancelled') {
+      alert('Google login was canceled. Please try again.');
+    } else if (errorlogin === 'LinkedInLoginCancelled') {
+      alert('LinkedIn login was canceled. Please try again.');
+    }
+  }, [errorlogin]);
   ////////////////////////////// auto redirect if user is already logged in////////////////////////////////////////////////////////
   const { token, setToken, setRole } = useContext(AuthContext); // Use context inside the component
   useEffect(() => {
@@ -33,7 +43,7 @@ const LoginUser = () => {
       if (userRole === "ADMIN") {
         navigate(all_routes.adminDashboard);
       } else if (userRole === "CANDIDATE") {
-        navigate(all_routes.profile);
+        navigate(all_routes.DashboardCandidate);
       } else {
         navigate(all_routes.LoginUser); // Adjust default route as needed
       }
@@ -82,7 +92,7 @@ const LoginUser = () => {
       if (user.role === "ADMIN") {
         navigate(all_routes.adminDashboard); 
       } else if (user.role === "CANDIDATE") {
-        navigate(all_routes.UserHome);
+        navigate(all_routes.DashboardCandidate);
       } else {
         navigate(all_routes.LoginUser); 
       }

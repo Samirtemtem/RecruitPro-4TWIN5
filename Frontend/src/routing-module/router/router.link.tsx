@@ -23,8 +23,6 @@ import TwoStepVerification from "../../front-office/auth/TwoStepVerification";
 import Home from "../../index/Home";
 import AppSection from "../../index/components/AppSection";
 import AuthModal from "../../index/components/AuthModal";
-import CallToAction from "../../index/components/CallToAction";
-import Footer from "../../index/components/Footer";
 import Funfact from "../../index/components/Funfact";
 import Header from "../../index/components/Header";
 import JobCategorie from "../../index/components/JobCategorie";
@@ -34,6 +32,28 @@ import PartnerSlider from "../../index/components/PartnerSlider";
 import Testimonial from "../../index/components/Testimonial";
 import About from "../../index/components/About";
 import Blog from "../../index/components/Blog";
+
+//common components fro the front template
+import CallToAction from "../../common/CallToAction";
+import Footer from "../../common/Footer";
+
+///////////////////////////////////////////////////////////
+import JobListFront from "../../job-listing/JobListFront";
+//import CallToAction from "../../job-listing/components/CallToActions";
+import Categories from "../../job-listing/components/Categories";
+import DatePosted from "../../job-listing/components/DatePosted";
+import DestinationRangeSlider from "../../job-listing/components/DestinationRangeSlider";
+import ExperienceLevel from "../../job-listing/components/ExperienceLevel";
+import JobSelect from "../../job-listing/components/JobSelect";
+import JobType from "../../job-listing/components/JobType";
+import ListingShowing from "../../job-listing/components/ListingShowing";
+import LocationBox from "../../job-listing/components/LocationBox";
+import Pagination from "../../job-listing/components/Pagination";
+import SalaryRangeSlider from "../../job-listing/components/SalaryRangeSlider";
+import SearchBox from "../../job-listing/components/SearchBox";
+import Tag from "../../job-listing/components/Tag";
+import DashboardCandidate from "../../candidates-dashboard/dashboard/DashboardCandidate";
+
 
 const routes = all_routes;
 
@@ -92,8 +112,9 @@ export const publicRoutesFront = [
     element: <Home />,
     route: Route,
   },
-     // { path: "/home", name: "Home", element: <Home />,
- //   route: Route, },
+
+ //   landing page components     /////////////////////////////////////////////////////
+
  { path: "/about", name: "About", element: <About /> , route: Route,},
  { path: "/app-section", name: "App Section", element: <AppSection />, route: Route,},
  { path: "/auth-modal", name: "Auth Modal", element: <AuthModal /> ,route: Route,},
@@ -109,7 +130,7 @@ export const publicRoutesFront = [
  { path: "/testimonial", name: "Testimonial", element: <Testimonial /> ,route: Route,},
 
  ///////////////////////////////////////////////////////////////////
-  
+
 ]
 
 export const authRoutesfront = [
@@ -119,7 +140,18 @@ export const authRoutesfront = [
     element: <Navigate to="/index" />,
     route: Route,
   },
-  
+  {
+    path: "/JobListFront",
+    name: "Root", 
+    element: <JobListFront />,
+    route: Route,
+  },
+  {
+    path: "/DashboardCandidate",
+    name: "Root", 
+    element: <DashboardCandidate />,
+    route: Route,
+  },
 
 ]
 export const authRoutes = [

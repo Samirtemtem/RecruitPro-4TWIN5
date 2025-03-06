@@ -6,7 +6,7 @@ export const all_routes = {
   // main page
   IndexPage: "/index",
 
-  // Other sections for the front
+  // Other sections for the front for landing page
   Home: "/home",
   About: "/about",
   AppSection: "/app-section",
@@ -23,6 +23,24 @@ export const all_routes = {
   Testimonial: "/testimonial",
 
 
+  // job listing routes
+  CallToActions: "/call-to-actions",
+  Categories: "/categories",
+  DatePosted: "/date-posted",
+  DestinationRangeSlider: "/destination-range-slider",
+  ExperienceLevel: "/experience-level",
+  JobSelect: "/job-select",
+  JobType: "/job-type",
+  ListingShowing: "/listing-showing",
+  LocationBox: "/location-box",
+  Pagination: "/pagination",
+  SalaryRangeSlider: "/salary-range-slider",
+  SearchBox: "/search-box",
+  Tag: "/tag",
+ // MapJobFinder:"/MapJobFinder",
+  JobListFront:"/JobListFront",
+
+  DashboardCandidate: "/DashboardCandidate",
 
 
   // dashboard routes

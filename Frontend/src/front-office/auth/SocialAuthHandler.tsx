@@ -28,7 +28,7 @@ const SocialAuthHandler = () => {
         if (userRole === "ADMIN") {
           navigate(all_routes.adminDashboard);
         } else if (userRole === "CANDIDATE") {
-          navigate(all_routes.profile);
+          navigate(all_routes.DashboardCandidate);
         } else {
           navigate(all_routes.LoginUser);
         }

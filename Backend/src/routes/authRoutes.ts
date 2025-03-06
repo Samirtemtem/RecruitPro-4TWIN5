@@ -70,17 +70,33 @@ const socialAuthCallback = async (req: Request, res: Response): Promise<any> => 
 
 // Google Auth
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google/callback', (req, res, next) => {
+  if (req.query.error) {
+    return res.redirect(`${process.env.FRONTEND_URL}/LoginUser?error=GoogleLoginCancelled`);
+  }
+  next();
+}, passport.authenticate('google', { session: false }), socialAuthCallback);
+/*
 router.get('/google/callback', passport.authenticate('google', {
   session: false,
   failureRedirect: `${process.env.FRONTEND_URL}/loginuser`,
 }), socialAuthCallback);
+*/
 
 // LinkedIn Auth route
 router.get('/linkedin', passport.authenticate('linkedin'));
+router.get('/linkedin/callback', (req, res, next) => {
+  if (req.query.error === 'user_cancelled_login') {
+    return res.redirect(`${process.env.FRONTEND_URL}/LoginUser?error=LinkedInLoginCancelled`);
+  }
+  next();
+}, passport.authenticate('linkedin', { session: false }), socialAuthCallback);
+/*
 router.get('/linkedin/callback', passport.authenticate('linkedin', {
   session: false,
   failureRedirect: `${process.env.FRONTEND_URL}/loginuser`,
 }), socialAuthCallback);
+*/
 
 // GitHub Auth route
 router.get('/github', (req, res, next) => {

@@ -34,7 +34,7 @@ const TwoStepVerification = () => {
       // Also persist in sessionStorage (optional)
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("userRole", response.data.user.role);
-        navigation(routes.profile); // Redirect to UserHome on success
+        navigation(routes.DashboardCandidate); // Redirect to UserHome on success
       }
     } catch (err) {
       console.error("Invalid OTP:", err);

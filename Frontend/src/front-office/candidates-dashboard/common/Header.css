@@ -1,0 +1,229 @@
+/* Header styling for Superio theme */
+
+.main-header {
+  position: fixed;
+  left: 500px;
+  top: 0;
+  width: 100%;
+  height: auto;
+  background-color: #ffffff;
+  z-index: 99;
+  -webkit-transition: all 300ms ease;
+  -o-transition: all 300ms ease;
+  transition: all 300ms ease;
+}
+
+.main-header.header-shaddow {
+  -webkit-box-shadow: 0px 6px 15px rgba(64, 79, 104, 0.05);
+  box-shadow: 0px 6px 15px rgba(64, 79, 104, 0.05);
+  border-bottom: 1px solid #ecedf2;
+}
+
+.main-header.fixed-header {
+  position: fixed;
+  animation: fadeInDown 0.5s;
+  -webkit-animation: fadeInDown 0.5s;
+  -moz-animation: fadeInDown 0.5s;
+  -ms-animation: fadeInDown 0.5s;
+  -o-animation: fadeInDown 0.5s;
+}
+
+.main-header .main-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 40px;
+  max-width: 1370px;
+  margin: 0 auto;
+}
+
+.main-header .nav-outer {
+  position: relative;
+  float: left;
+  display: flex;
+  align-items: center;
+}
+
+.main-header .logo-box {
+  position: relative;
+  padding: 10px 0;
+  margin-right: 40px;
+}
+
+.main-header .logo-box .logo img {
+  max-height: 50px;
+}
+
+.main-header .main-menu .navigation {
+  position: relative;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.main-header .main-menu .navigation li {
+  position: relative;
+  padding: 20px 0;
+  margin-right: 30px;
+  transition: all 300ms ease;
+}
+
+.main-header .main-menu .navigation li a {
+  position: relative;
+  display: block;
+  text-align: center;
+  font-size: 15px;
+  line-height: 25px;
+  font-weight: 400;
+  color: #202124;
+  padding: 0;
+  transition: all 300ms ease;
+}
+
+.main-header .main-menu .navigation li a:hover,
+.main-header .main-menu .navigation li.current a {
+  color: #1967d2;
+}
+
+.main-header .outer-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.main-header .outer-box .menu-btn {
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  margin-left: 20px;
+}
+
+.main-header .outer-box .menu-btn .count {
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  height: 18px;
+  width: 18px;
+  line-height: 18px;
+  font-size: 10px;
+  font-weight: 600;
+  background: #1967d2;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.main-header .outer-box .menu-btn .icon {
+  position: relative;
+  font-size: 22px;
+  color: #1967d2;
+}
+
+.main-header .dashboard-option .dropdown-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  padding-left: 15px;
+  font-size: 15px;
+  line-height: 25px;
+  cursor: pointer;
+}
+
+.main-header .dashboard-option .dropdown-toggle .thumb {
+  position: relative;
+  height: 42px;
+  width: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 15px;
+}
+
+.main-header .dashboard-option .dropdown-toggle .name {
+  position: relative;
+  color: #202124;
+  font-weight: 500;
+}
+
+.main-header .dashboard-option .dropdown-menu {
+  transform: none !important;
+  top: 100% !important;
+  right: 0 !important;
+  left: auto !important;
+  min-width: 220px;
+  border-radius: 8px;
+}
+
+.main-header .dashboard-option .dropdown-menu li {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.main-header .dashboard-option .dropdown-menu li a {
+  position: relative;
+  display: block;
+  padding: 10px 20px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #696969;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.main-header .dashboard-option .dropdown-menu li a i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.main-header .dashboard-option .dropdown-menu li.active a,
+.main-header .dashboard-option .dropdown-menu li:hover a {
+  background: #1967d2;
+  color: #ffffff;
+}
+
+/* For the header span */
+.header-span {
+  position: relative;
+  height: 80px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: none;
+  z-index: 1;
+}
+
+/* Animation */
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Media Queries */
+@media (max-width: 1199px) {
+  .main-header .main-menu {
+    margin-left: 30px;
+  }
+  .main-header .main-box {
+    padding: 10px 30px;
+  }
+}
+
+@media (max-width: 767px) {
+  .main-header .outer-box {
+    margin-left: 0;
+  }
+  .main-header .dashboard-option .dropdown-toggle .name {
+    display: none;
+  }
+  .main-header .main-box {
+    padding: 10px 15px;
+  }
+} 

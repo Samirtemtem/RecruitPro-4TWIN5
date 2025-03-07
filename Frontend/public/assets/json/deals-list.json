@@ -1,0 +1,105 @@
+{
+  "data": [
+    {
+      "DealName": "Collins",
+      "Stage": "Quality To Buy",
+      "DealValue": "$4,50,000",
+      "Tags": "Promotion",
+      "ExpectedClosedDate": "14/01/2024",
+      "Owner": "Hendry",
+      "Probability": "70%",
+      "Status": "Open"
+    },
+    {
+      "DealName": "Konopelski",
+      "Stage": "Proposal Made",
+      "DealValue": "$3,15,000",
+      "Tags": "Rated",
+      "ExpectedClosedDate": "21/01/2024",
+      "Owner": "Guilory",
+      "Probability": "85%",
+      "Status": "Won"
+    },
+    {
+      "DealName": "Adams",
+      "Stage": "Contact Made",
+      "DealValue": "$8,40,000",
+      "Tags": "Promotion",
+      "ExpectedClosedDate": "20/02/2024",
+      "Owner": "Jami",
+      "Probability": "60%",
+      "Status": "Open"
+    },
+    {
+      "DealName": "Schumm",
+      "Stage": "Quality To Buy",
+      "DealValue": "$6,10,000",
+      "Tags": "Collab",
+      "ExpectedClosedDate": "15/03/2024",
+      "Owner": "Theresa",
+      "Probability": "75%",
+      "Status": "Won"
+    },
+    {
+      "DealName": "Wisozk",
+      "Stage": "Presentation",
+      "DealValue": "$4,70,000",
+      "Tags": "Rejected",
+      "ExpectedClosedDate": "12/04/2024",
+      "Owner": "Smith",
+      "Probability": "80%",
+      "Status": "Won"
+    },
+    {
+      "DealName": "Heller",
+      "Stage": "Appointment",
+      "DealValue": "$5,50,000",
+      "Tags": "Rated",
+      "ExpectedClosedDate": "20/05/2024",
+      "Owner": "Martin",
+      "Probability": "65%",
+      "Status": "Lost"
+    },
+    {
+      "DealName": "Gutkowski",
+      "Stage": "Qualify to Buy",
+      "DealValue": "$5,00,000",
+      "Tags": "Calls",
+      "ExpectedClosedDate": "06/07/2024",
+      "Owner": "Newell",
+      "Probability": "90%",
+      "Status": "Lost"
+    },
+    {
+      "DealName": "Walter",
+      "Stage": "Proposal Made",
+      "DealValue": "$4,50,000",
+      "Tags": "Rejected",
+      "ExpectedClosedDate": "02/09/2024",
+      "Owner": "Janet",
+      "Probability": "55%",
+      "Status": "Won"
+    },
+    {
+      "DealName": "Hansen",
+      "Stage": "Presentation",
+      "DealValue": "$6,20,000",
+      "Tags": "Collab",
+      "ExpectedClosedDate": "15/11/2024",
+      "Owner": "Craig",
+      "Probability": "95%",
+      "Status": "Lost"
+    },
+    {
+      "DealName": "Leuschke",
+      "Stage": "Appointment",
+      "DealValue": "$7,40,000",
+      "Tags": "Calls",
+      "ExpectedClosedDate": "10/12/2024",
+      "Owner": "Daniel",
+      "Probability": "50%",
+      "Status": "Won"
+    }
+  ],
+  "totalData": 10
+}

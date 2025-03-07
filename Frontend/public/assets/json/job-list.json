@@ -1,0 +1,137 @@
+{
+  "data": [
+    {
+      "Job_ID": "Job-001",
+      "Experience":"2",
+      "Image": "apple.svg",
+      "Job_Title": "Senior IOS Developer",
+      "Roll": "25 Applicants",
+      "Category": "Software",
+      "Location": "New York , USA",
+      "Salary_Range": "30, 000 - 35, 000 / month",
+      "Posted_Date": "12/09/2024"
+    },
+    {
+      "Job_ID": "Job-002",
+      "Experience":"4",
+      "Image": "php.svg",
+      "Job_Title": "Junior PHP Developer",
+      "Roll": "20 Applicants",
+      "Category": "Software",
+      "Location": "Los Angeles, USA",
+      "Salary_Range": "20, 000 - 25, 000 / month",
+      "Posted_Date": "24/10/2024"
+    },
+    {
+      "Job_ID": "Job-003",
+      "Experience":"1",
+      "Image": "black.svg",
+      "Job_Title": "Junior PHP Developer",
+      "Roll": "20 Applicants",
+      "Category": "Software",
+      "Location": "Los Angeles, USA",
+      "Salary_Range": "20, 000 - 25, 000 / month",
+      "Posted_Date": "24/10/2024"
+    },
+    {
+      "Job_ID": "Job-004",
+      "Experience":"3",
+      "Image": "react.svg",
+      "Job_Title": "Junior React Developer",
+      "Roll": "35 Applicants",
+      "Category": "Software",
+      "Location": "Bristol, UK",
+      "Salary_Range": "30, 000 - 35, 000 / month",
+      "Posted_Date": "18/02/2024"
+    },
+    {
+      "Job_ID": "Job-005",
+      "Experience":"1",
+      "Image": "laravel.svg",
+      "Job_Title": "Senior Laravel Developer",
+      "Roll": "40 Applicants",
+      "Category": "Software",
+      "Location": "Washington, USA",
+      "Salary_Range": "32, 000 - 36, 000 / month",
+      "Posted_Date": "20/07/2024"
+    },
+    {
+      "Job_ID": "Job-006",
+      "Experience":"6",
+      "Image": "devops.svg",
+      "Job_Title": "DevOps Engineer",
+      "Roll": "20 Applicants",
+      "Category": "Software",
+      "Location": "Coventry, UK",
+      "Salary_Range": "25, 000 - 35, 000 / month",
+      "Posted_Date": "10/04/2024"
+    },
+    {
+      "Job_ID": "Job-007",
+      "Experience":"5",
+      "Image": "android.svg",
+      "Job_Title": "Junior Android Developer",
+      "Roll": "25 Applicants",
+      "Category": "Software",
+      "Location": "Chicago, USA",
+      "Salary_Range": "28, 000 - 32, 000 / month",
+      "Posted_Date": "29/08/2024"
+    },
+    {
+      "Job_ID": "Job-008",
+      "Experience":"3",
+      "Image": "html.svg",
+      "Job_Title": "Senior HTML Developer",
+      "Roll": "35 Applicants",
+      "Category": "Software",
+      "Location": "Carlisle, UK",
+      "Salary_Range": "25, 000 - 28, 000 / month",
+      "Posted_Date": "22/02/2024"
+    },
+    {
+      "Job_ID": "Job-009",
+      "Experience":"4",
+      "Image": "ui.svg",
+      "Job_Title": "Junior UI/UX Designer",
+      "Roll": "20 Applicants",
+      "Category": "Software",
+      "Location": "Lancaster, UK",
+      "Salary_Range": "20, 000 - 25, 000 / month",
+      "Posted_Date": "03/11/2024"
+    },
+    {
+      "Job_ID": "Job-010",
+      "Experience":"3",
+      "Image": "grafic.svg",
+      "Job_Title": "Senior Graphic Designer",
+      "Roll": "25 Applicants",
+      "Category": "Software",
+      "Location": "San Diego, USA",
+      "Salary_Range": "22, 000 - 28, 000 / month",
+      "Posted_Date": "17/12/2024"
+    },
+    {
+      "Job_ID": "Job-011",
+      "Experience":"2",
+      "Image": "angular.svg",
+      "Job_Title": "Angular Developer",
+      "Roll": "21 Applicants",
+      "Category": "Software",
+      "Location": "Sheffield, UK",
+      "Salary_Range": "28, 000 - 30, 000 / month",
+      "Posted_Date": "17/12/2024"
+    },
+    {
+      "Job_ID": "Job-012",
+      "Experience":"3",
+      "Image": "nodejs.svg",
+      "Job_Title": "Node js Developer",
+      "Roll": "25 Applicants",
+      "Category": "Software",
+      "Location": "Boston, USA",
+      "Salary_Range": "25, 000 - 28, 000 / month",
+      "Posted_Date": "20/12/2024"
+    }
+  ],
+  "totalData": 12
+}

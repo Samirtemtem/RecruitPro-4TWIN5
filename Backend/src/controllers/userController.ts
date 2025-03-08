@@ -142,10 +142,51 @@ export const getCandidates = async (req: Request, res: Response): Promise<void> 
 export const getLastCandidates = async (req: Request, res: Response): Promise<void> => {
   try {
     const candidates = await User.find({ role: Role.CANDIDATE })
-      .sort({ createdAt: -1 }); // Assuming 'createdAt' is the field that indicates when the user was created
-      
+      .sort({ createdAt: -1 }) // Assuming 'createdAt' is the field that indicates when the user was created
+      .limit(5);  
 
     res.status(200).json(candidates);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+export const getCandidateCountPerYear = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const currentYear = new Date().getFullYear();
+    const lastTwoYears = await User.aggregate([
+      { $match: { role: 'CANDIDATE', createdAt: { $gte: new Date(currentYear - 2, 0, 1) } } },
+      { $group: { _id: { $year: '$createdAt' }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ]);
+
+    const yearCounts: { [key: number]: number } = {};
+    lastTwoYears.forEach(item => {
+      yearCounts[item._id] = item.count;
+    });
+
+    const lastYearCount = yearCounts[currentYear] || 0; // Most recent year
+    const yearBeforeLastCount = yearCounts[currentYear - 1] || 0; // Year before last
+    const yearBeforeThatCount = yearCounts[currentYear - 2] || 0; // Two years ago
+
+    // Calculate percentage changes
+    const changeFromLastToYearBeforeLast = yearBeforeLastCount > 0
+      ? ((lastYearCount - yearBeforeLastCount) / yearBeforeLastCount) * 100
+      : 0;
+
+    const changeFromYearBeforeLastToLast = yearBeforeThatCount > 0
+      ? ((yearBeforeLastCount - yearBeforeThatCount) / yearBeforeThatCount) * 100
+      : 0;
+
+    res.status(200).json({
+      counts: lastTwoYears,
+      lastYearCount,
+      yearBeforeLastCount,
+      percentageChangeLastToYearBeforeLast: changeFromLastToYearBeforeLast.toFixed(2),
+      percentageChangeYearBeforeLastToLast: changeFromYearBeforeLastToLast.toFixed(2)
+    });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

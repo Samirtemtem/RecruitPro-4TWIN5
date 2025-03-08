@@ -7,8 +7,8 @@ import {
   deleteUser,
   getLatestUsers ,
   getCandidates,
-  getLastCandidates
-} from '../controllers/userController';
+  getLastCandidates,
+  getCandidateCountPerYear} from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
 
@@ -24,7 +24,7 @@ router.put('/update/:id', updateUser);
 router.delete('/delete/:id', deleteUser);
 router.get('/get/candidates', getCandidates);
 router.get('/get/Lastcandidates', getLastCandidates);
-
+router.get('/count-per-year', getCandidateCountPerYear);
 
 
 // Export the router

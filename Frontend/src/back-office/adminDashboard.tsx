@@ -419,6 +419,56 @@ useEffect(() => {
 
 
 
+
+
+
+
+
+
+
+
+const [userData, setUserData] = useState<any>(null); 
+
+useEffect(() => {
+  const fetchUserData = async () => {
+    const token = sessionStorage.getItem('token'); // Replace 'token' with the actual key if different
+
+    if (!token) {
+      console.error('No token found in session storage.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/auth/user/${token}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+
+      const data = await response.json();
+      console.log('API Response:', data); // Log the API response
+      setUserData(data.user); // Accessing the nested user object
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  fetchUserData();
+}, []);
+
+useEffect(() => {
+  console.log('User Data:', userData); // Log userData whenever it changes
+}, [userData]);
+const imageUrl = userData?.image;
+console.log('Image URL:', imageUrl);
+
+
+
   return (
     <>
       {/* Page Wrapper */}
@@ -493,15 +543,11 @@ useEffect(() => {
             <div className="card-body d-flex align-items-center justify-content-between flex-wrap pb-1">
               <div className="d-flex align-items-center mb-3">
                 <span className="avatar avatar-xl flex-shrink-0">
-                  <ImageWithBasePath
-                    src="assets/img/profiles/avatar-31.jpg"
-                    className="rounded-circle"
-                    alt="img"
-                  />
+                <img src={imageUrl || "assets/img/users/user-01.jpg"} alt="User Image" className="img-fluid" />
                 </span>
                 <div className="ms-3">
                   <h3 className="mb-2">
-                    Welcome Back, Maliik{" "}
+                    Welcome Back {userData ? `${userData.firstName} ${userData.lastName}` : 'Loading...'}
                     <Link to="#" className="edit-icon">
                       <i className="ti ti-edit fs-14" />
                     </Link>
@@ -862,7 +908,7 @@ useEffect(() => {
                 <tr>
                   <th> Name</th>
                   <th>email</th>
-                  <th>Status</th>
+                  <th>Phone Number</th>
                 </tr>
               </thead>
               <tbody>

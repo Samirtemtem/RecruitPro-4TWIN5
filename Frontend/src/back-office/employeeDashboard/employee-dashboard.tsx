@@ -12,11 +12,18 @@ import { Calendar } from 'primereact/calendar';
 import { DatePicker } from "antd";
 import CommonSelect from "../../core/common/commonSelect";
 import CollapseHeader from "../../core/common/collapse-header/collapse-header";
+import { ApexOptions } from 'apexcharts';
+
 
 interface Skill {
   name: string;
   count: number;
   percentage: string; // You can change this to a number if you prefer
+}
+interface CandidateCount {
+  year: number;
+  count: number;
+  _id:number;
 }
 
 interface JobPostCount {
@@ -72,65 +79,48 @@ const EmployeeDashboard = () => {
 
   
 
-  const [performance_chart2] = useState<any>({
+  const [performanceChartData, setPerformanceChartData] = useState<ApexOptions>({
     series: [{
-      name: "performance",
-      data: [20, 20, 35, 35, 40, 60, 60]
+      name: "Performance",
+      data: [],
     }],
     chart: {
       height: 288,
       type: 'area',
       zoom: {
-        enabled: false
-      }
+        enabled: false,
+      },
     },
     colors: ['#03C95A'],
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     stroke: {
-      curve: 'straight'
+      curve: 'smooth',
     },
     title: {
       text: '',
-      align: 'left'
+      align: 'left',
     },
     xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+      categories: [ ],
     },
     yaxis: {
-      min: 10,
-      max: 60,
+      min: 0,
       tickAmount: 5,
       labels: {
-        formatter: (val: number) => {
-          return val / 1 + 'K'
-        }
-      }
+        formatter: (val: number) => `${val}Candidates`,
+      },
     },
     legend: {
       position: 'top',
-      horizontalAlign: 'left'
-    }
-  })
+      horizontalAlign: 'left',
+    },
+  });
 
-  const employeename = [
-    { value: "Select", label: "Select" },
-    { value: "Anthony Lewis", label: "Anthony Lewis" },
-    { value: "Brian Villalobos", label: "Brian Villalobos" },
-    { value: "Harvey Smith", label: "Harvey Smith" },
-  ];
-  const leaveType = [
-    { value: "Select", label: "Select" },
-    { value: "Medical Leave", label: "Medical Leave" },
-    { value: "Casual Leave", label: "Casual Leave" },
-    { value: "Annual Leave", label: "Annual Leave" },
-  ];
 
-  const getModalContainer = () => {
-    const modalElement = document.getElementById('modal-datepicker');
-    return modalElement ? modalElement : document.body; // Fallback to document.body if modalElement is null
-  };
+
+
   
   const [skills, setSkills] = useState<Skill[]>([]);
 
@@ -276,6 +266,71 @@ useEffect(() => {
 }, [userData]);
 const imageUrl = userData?.image;
 console.log('Image URL:', imageUrl);
+
+
+
+
+
+const [counts, setCounts] = useState({
+  lastYearCount: 0,
+  yearBeforeLastCount: 0,
+  percentageChangeLastToYearBeforeLast: "0.00",
+  percentageChangeYearBeforeLastToLast: "0.00",
+});
+
+  // Fetch data and update chart data
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/user/count-per-year');
+      console.log(response.data); // Log the response data
+  
+      const data = response.data; // Access the whole response
+  
+      // Get the counts array
+      const counts = data.counts;
+      const lastYearCount = data.lastYearCount; // Get last year count
+      const yearBeforeLastCount = data.yearBeforeLastCount; // Get year before last count
+      const percentageChangeLastToYearBeforeLast = data.percentageChangeLastToYearBeforeLast; // Percentage change last to year before last
+      const percentageChangeYearBeforeLastToLast = data.percentageChangeYearBeforeLastToLast; // Percentage change year before last to last
+  
+      const years = counts.map((item: CandidateCount) => item._id); // Specify the type here
+      const countValues = counts.map((item: CandidateCount) => item.count); // Specify the type here
+      console.log(years, countValues); // Log the mapped arrays
+  
+      // Update the performance chart data
+      setPerformanceChartData((prevState) => {
+        const updatedState = {
+          ...prevState,
+          series: [{
+            name: "Performance",
+            data: countValues,
+          }],
+          xaxis: {
+            categories: years, // Set the categories to the fetched years
+          },
+        };
+        console.log(updatedState); // Log the updated state
+        return updatedState;
+      });
+  
+      // Set additional state for counts and percentage changes
+      setCounts({
+        lastYearCount,
+        yearBeforeLastCount,
+        percentageChangeLastToYearBeforeLast,
+        percentageChangeYearBeforeLastToLast,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+
 
   return (
     <>
@@ -699,72 +754,60 @@ console.log('Image URL:', imageUrl);
 
            
           </div>
+
+  {/* /Performance */}
+
           <div className="row">
             {/* Peformance */}
 
             <div className="col-xl-12 d-flex">
-              <div className="card flex-fill">
-                <div className="card-header">
-                  <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-2">
-                    <h5>Performance</h5>
-                    <div className="dropdown">
-                      <Link
-                        to="#"
-                        className="btn btn-white border btn-sm d-inline-flex align-items-center"
-                        data-bs-toggle="dropdown"
-                      >
-                        <i className="ti ti-calendar me-1" />
-                        2024
-                      </Link>
-                      <ul className="dropdown-menu  dropdown-menu-end p-3">
-                        <li>
-                          <Link
-                            to="#"
-                            className="dropdown-item rounded-1"
-                          >
-                            2024
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="#"
-                            className="dropdown-item rounded-1"
-                          >
-                            2023
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="#"
-                            className="dropdown-item rounded-1"
-                          >
-                            2022
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-body">
-                  <div>
-                    <div className="bg-light d-flex align-items-center rounded p-2">
-                      <h3 className="me-2">98%</h3>
-                      <span className="badge badge-outline-success bg-success-transparent rounded-pill me-1">
-                        12%
-                      </span>
-                      <span>vs last years</span>
-                    </div>
-                    <ReactApexChart
-                      id="performance_chart2"
-                      options={performance_chart2}
-                      series={performance_chart2.series}
-                      type="area"
-                      height={288}
-                    />
-                  </div>
-                </div>
-              </div>
+      <div className="card flex-fill">
+        <div className="card-header">
+          <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-2">
+            <h5>Performance</h5>
+            <div className="dropdown">
+              <Link
+                to="#"
+                className="btn btn-white border btn-sm d-inline-flex align-items-center"
+                data-bs-toggle="dropdown"
+              >
+                <i className="ti ti-calendar me-1" />
+                2024
+              </Link>
+              <ul className="dropdown-menu dropdown-menu-end p-3">
+                <li>
+                  <Link to="#" className="dropdown-item rounded-1">2024</Link>
+                </li>
+                <li>
+                  <Link to="#" className="dropdown-item rounded-1">2023</Link>
+                </li>
+                <li>
+                  <Link to="#" className="dropdown-item rounded-1">2022</Link>
+                </li>
+              </ul>
             </div>
+          </div>
+        </div>
+        <div className="card-body">
+          <div>
+          <div className="bg-light d-flex align-items-center rounded p-3">
+  <h3 className="me-2">{counts.lastYearCount} Candidates</h3>
+  <span className="badge bg-success text-white rounded-pill me-1">
+    {counts.percentageChangeLastToYearBeforeLast}%
+  </span>
+  <span>vs last year</span>
+</div>
+            <ReactApexChart
+              id="performance_chart2"
+              options={performanceChartData}
+              series={performanceChartData.series}
+              type="area"
+              height={288}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
 
 
             {/* Jobs Applicants */}
@@ -777,134 +820,18 @@ console.log('Image URL:', imageUrl);
           
         </div>
         <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
-          <p className="mb-0">2014 - 2025 © SmartHR.</p>
-          <p>
-            Designed &amp; Developed By{" "}
-            <Link to="#" className="text-primary">
-              Dreams
-            </Link>
-          </p>
+          <p className="mb-0"> 2025 © RecruitPro.</p>
+                    <p>
+                      Designed &amp; Developed By{" "}
+                      <Link to="#" className="text-primary">
+                        InfiniteLoopers
+                      </Link>
+                    </p>
         </div>
       </div>
       {/* /Page Wrapper */}
       <>
-        {/* Add Leaves */}
-        <div className="modal fade" id="add_leaves">
-          <div className="modal-dialog modal-dialog-centered modal-md">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Add Leave</h4>
-                <button
-                  type="button"
-                  className="btn-close custom-btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <i className="ti ti-x" />
-                </button>
-              </div>
-              <form>
-                <div className="modal-body pb-0">
-                  <div className="row">
-                    <div className="col-md-12">
-                      <div className="mb-3">
-                        <label className="form-label">Employee Name</label>
-                        <CommonSelect
-                          className="select"
-                          options={employeename}
-                          defaultValue={employeename[0]}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-12">
-                      <div className="mb-3">
-                        <label className="form-label">Leave Type</label>
-                        <CommonSelect
-                          className="select"
-                          options={leaveType}
-                          defaultValue={leaveType[0]}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">From </label>
-                        <div className="input-icon-end position-relative">
-                          <DatePicker
-                            className="form-control datetimepicker"
-                            format={{
-                              format: "DD-MM-YYYY",
-                              type: "mask",
-                            }}
-                            getPopupContainer={getModalContainer}
-                            placeholder="DD-MM-YYYY"
-                          />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-calendar text-gray-7" />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">To </label>
-                        <div className="input-icon-end position-relative">
-                          <DatePicker
-                            className="form-control datetimepicker"
-                            format={{
-                              format: "DD-MM-YYYY",
-                              type: "mask",
-                            }}
-                            getPopupContainer={getModalContainer}
-                            placeholder="DD-MM-YYYY"
-                          />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-calendar text-gray-7" />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">No of Days</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="col-md-6">
-                      <div className="mb-3">
-                        <label className="form-label">Remaining Days</label>
-                        <input type="text" className="form-control" />
-                      </div>
-                    </div>
-                    <div className="col-md-12">
-                      <div className="mb-3">
-                        <label className="form-label">Reason</label>
-                        <textarea
-                          className="form-control"
-                          rows={3}
-                          defaultValue={""}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-light me-2"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn btn-primary">
-                    Add Leaves
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-        {/* /Add Leaves */}
+       
       </>
 
     </>

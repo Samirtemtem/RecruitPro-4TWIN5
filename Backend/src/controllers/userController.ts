@@ -136,3 +136,17 @@ export const getCandidates = async (req: Request, res: Response): Promise<void> 
     res.status(500).json({ error: error.message });
   }
 };
+
+
+
+export const getLastCandidates = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const candidates = await User.find({ role: Role.CANDIDATE })
+      .sort({ createdAt: -1 }); // Assuming 'createdAt' is the field that indicates when the user was created
+      
+
+    res.status(200).json(candidates);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};

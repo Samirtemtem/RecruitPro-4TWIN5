@@ -18,6 +18,11 @@ import ProjectDetails from "../../back-office/projects/project/projectdetails";
 import EmployeeList from "../../back-office/hrm/employees/employeesList";
 import TwoStepVerification from "../../front-office/auth/TwoStepVerification";
 
+
+
+import EmployeeDashboard from "../../back-office/employeeDashboard/employee-dashboard";
+
+
 ///////////////////////////////////////////////////////////
 //import IndexPage from "../../front-office/indexpage/IndexPage";
 import Home from "../../index/Home";
@@ -195,6 +200,11 @@ export const authRoutes = [
     route: Route,
   },
   {
+    path: "/employeeDashboard",
+    element: <EmployeeDashboard />,
+    route: Route,
+  },
+  {
     path: "/jobgrid",
     element: <JobGrid />,
     route: Route,
@@ -214,6 +224,7 @@ export const authRoutes = [
     element: <ProjectDetails />,
     route: Route,
   },
+
   {
     path: routes.employeeList,
     element: <EmployeeList />,

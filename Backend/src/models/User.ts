@@ -20,7 +20,7 @@ export interface IUser extends Document {
   githubId: string;
   is2FAEnabled?: boolean;
   resetToken?:string;
-
+  department?: 'ELECTROMECANIQUE' | 'GENIE-CIVIL' | 'TIC';
   OneTimePassword?: Number,
     profile: Schema.Types.ObjectId;  // Reference to Profile
   applications: Schema.Types.ObjectId[];  // References to Applications
@@ -81,6 +81,7 @@ const userSchema = new Schema<IUser>({
   phoneNumber: { type: String, required: true, default: '0000000000' },
   createDate: { type: Date, default: Date.now },
   lastLogin: { type: Date },
+  department: { type: String, enum: ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC'] },
   image: { type: String },
   googleId: { type: String },
   linkedinId: { type: String },

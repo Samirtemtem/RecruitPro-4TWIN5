@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import express from 'express';
 import authRoutes from './routes/authRoutes'; // Correct import
 import cvRoutes from './routes/cvRoutes';
+import skillRoutes from './routes/skillRoutes'; // Assurez-vous que le chemin est correct
 import cors from 'cors';
 import passport from 'passport';
 import 'dotenv/config'; // TypeScript equivalent of `require('dotenv').config()`
@@ -86,7 +87,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter); 
 app.use('/api/auth', authRoutes);
 app.use('/api/cv', cvRoutes);
-
+app.use('/api/skills', skillRoutes);
 
 console.log('Client ID:', process.env.CLIENT_ID);
 console.log('Client Secret:', process.env.CLIENT_SECRET);

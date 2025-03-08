@@ -14,6 +14,20 @@ import TodoModal from "../core/modals/todoModal";
 import CollapseHeader from "../core/common/collapse-header/collapse-header";
 import { ApexOptions } from 'apexcharts';
 
+
+interface Candidate {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  appliedDate: string; // Adjust the type if needed
+  status: string;
+  image?: string; // Optional
+  createDate?:string;
+  phoneNumber?:string;
+}
+
 interface JobPost {
   _id: string;
   title: string;
@@ -379,6 +393,29 @@ const fetchUsers = async () => {
 useEffect(() => {
   fetchUsers();
 }, []);
+
+
+
+
+
+
+const [candidates, setCandidates] = useState<any[]>([]); // Adjust the type as per your data structure
+
+useEffect(() => {
+  const fetchCandidates = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/user/get/Lastcandidates'); // Adjust the API endpoint
+      const data = await response.json();
+      setCandidates(data);
+    } catch (error) {
+      console.error('Error fetching candidates:', error);
+    }
+  };
+
+  fetchCandidates();
+}, []);
+
+
 
 
 
@@ -823,54 +860,50 @@ useEffect(() => {
             <table className="table table-nowrap mb-0">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Department</th>
+                  <th> Name</th>
+                  <th>email</th>
                   <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {jobPosts.length > 0 ? (
-                  jobPosts.map((job) => (
-                    <tr key={job._id}> {/* Assuming job has a unique _id */}
+                {candidates.length > 0 ? (
+                  candidates.map((candidate) => (
+                    <tr key={candidate._id}> {/* Assuming candidate has a unique _id */}
                       <td>
                         <div className="d-flex align-items-center">
                           <Link to="/jobgrid" className="avatar">
-                            <ImageWithBasePath
-                              src="assets/img/icons/logo.png" // Placeholder image
-                              className="img-fluid  w-auto h-auto"
-                              alt="Job Icon"
-                            />
+                          <img src={candidate.image || "assets/img/users/user-01.jpg"} alt="User Image" className="img-fluid" />
                           </Link>
                           <div className="ms-2">
                             <h6 className="fw-medium">
-                              <Link to="#">{job.title}</Link>
+                              <Link to="#">{candidate.firstName} {candidate.lastName}</Link> {/* Adjust title field as necessary */}
                             </h6>
                           </div>
                         </div>
                       </td>
                       <td>
                         <span className="badge badge-secondary-transparent badge-xs">
-                          {job.department}
+                          {candidate.email} {/* Adjust department field as necessary */}
                         </span>
                       </td>
                       <td>
-                      <span
+                        <span
                           className={`badge badge-${
-                            job.status === 'OPEN'
+                            candidate.status === 'OPEN'
                               ? 'success'
-                              : job.status === 'CLOSED'
+                              : candidate.status === 'CLOSED'
                               ? 'danger'
                               : 'warning' // For PENDING status
                           }-transparent badge-xs`}
                         >
-                          {job.status}
+                          {candidate.phoneNumber} {/* Adjust status field as necessary */}
                         </span>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={3}>No job posts available</td>
+                    <td colSpan={3}>No candidates available</td>
                   </tr>
                 )}
               </tbody>

@@ -45,8 +45,10 @@ export enum JobPostingStatus {
 }
 
 export enum Department {
-  WEB = 'WEB',
-  MOBILE = 'MOBILE'
+  ELECTROMECANIQUE = 'ELECTROMECANIQUE',
+  GENIECIVIL = 'GENIE-CIVIL',
+  TIC= 'TIC'
+
 }
 
 export enum Socials {

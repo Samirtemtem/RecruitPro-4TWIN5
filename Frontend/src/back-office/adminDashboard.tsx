@@ -15,6 +15,39 @@ import CollapseHeader from "../core/common/collapse-header/collapse-header";
 import { ApexOptions } from 'apexcharts';
 
 
+interface DepartmentCount {
+  department: string;
+  count: number;
+}
+
+interface EmpDepartmentState {
+  series: { name: string; data: number[] }[];
+  options: {
+      chart: {
+          type: 'bar'; // Change this to 'bar' explicitly
+          height: number;
+      };
+      plotOptions: {
+          bar: {
+              horizontal: boolean;
+              endingShape: string;
+          };
+      };
+      dataLabels: {
+          enabled: boolean;
+      };
+      xaxis: {
+          categories: string[];
+      };
+      title: {
+          text: string;
+      };
+  };
+}
+
+
+
+
 interface Candidate {
   _id: string;
   firstName: string;
@@ -96,61 +129,7 @@ const AdminDashboard = () => {
 
   const [date, setDate] = useState(new Date());
 
-  //New Chart
-  const [empDepartment] = useState<any>({
-    chart: {
-      height: 280,
-      type: 'bar',
-      padding: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-      },
-      toolbar: {
-        show: false,
-      }
-    },
-    fill: {
-      colors: ['#F26522'], // Fill color for the bars
-      opacity: 1, // Adjust opacity (1 is fully opaque)
-    },
-    colors: ['#F26522'],
-    grid: {
-      borderColor: '#E5E7EB',
-      strokeDashArray: 5,
-      padding: {
-        top: -20,
-        left: 0,
-        right: 0,
-        bottom: 0
-      }
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 5,
-        horizontal: true,
-        barHeight: '35%',
-        endingShape: 'rounded'
-      }
-    },
-    dataLabels: {
-      enabled: false
-    },
-    series: [{
-      data: [80, 110, 80],
-      name: 'Employee'
-    }],
-    xaxis: {
-      categories: ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC'] ,
-      labels: {
-        style: {
-          colors: '#111827',
-          fontSize: '13px',
-        }
-      }
-    }
-  })
+ 
 
   const [salesIncome] = useState<any>({
     chart: {
@@ -469,6 +448,73 @@ console.log('Image URL:', imageUrl);
 
 
 
+
+
+
+
+const [empDepartment, setEmpDepartment] = useState<EmpDepartmentState>({
+  series: [],
+  options: {
+      chart: {
+          type: 'bar',
+          height: 220,
+      },
+      plotOptions: {
+          bar: {
+              horizontal: false,
+              endingShape: 'rounded',
+          },
+      },
+      dataLabels: {
+          enabled: false,
+      },
+      xaxis: {
+          categories: [],
+      },
+      title: {
+          text: '',
+      },
+  },
+});
+
+const [employeeGrowthPercentage, setEmployeeGrowthPercentage] = useState<number>(0);
+const [totalEmployees, setTotalEmployees] = useState<number>(0); // New state for total employees
+
+
+useEffect(() => {
+  const fetchEmployeeData = async () => {
+      try {
+          const response = await axios.get('http://localhost:5000/api/user/count-employees-by-department');
+          const { totalEmployees: total, percentageChange: change, departmentCounts }: { totalEmployees: number; percentageChange: number; departmentCounts: DepartmentCount[] } = response.data;
+
+          // Prepare data for the chart
+          const categories = departmentCounts.map((department: DepartmentCount) => department.department);
+          const seriesData = departmentCounts.map((department: DepartmentCount) => department.count);
+
+          setEmpDepartment(prevState => ({
+              ...prevState,
+              series: [{ name: 'Employees', data: seriesData }],
+              options: {
+                  ...prevState.options,
+                  xaxis: {
+                      categories,
+                  },
+              },
+          }));
+
+          setEmployeeGrowthPercentage(change);
+          setTotalEmployees(total); // Set the total employees
+      } catch (error) {
+          console.error('Error fetching employee data:', error);
+      }
+  };
+
+  fetchEmployeeData();
+}, []);
+
+
+
+
   return (
     <>
       {/* Page Wrapper */}
@@ -763,62 +809,72 @@ console.log('Image URL:', imageUrl);
               </div>
             </div>
             {/* /Widget Info */}
+
+
+
             {/* Employees By Department */}
             <div className="col-xxl-4 d-flex">
-              <div className="card flex-fill">
+            <div className="card flex-fill">
                 <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                  <h5 className="mb-2">Employees By Department</h5>
-                  <div className="dropdown mb-2">
-                    <Link to="#"
-                      className="btn btn-white border btn-sm d-inline-flex align-items-center"
-                      data-bs-toggle="dropdown"
-                    >
-                      <i className="ti ti-calendar me-1" />
-                      This Week
-                    </Link>
-                    <ul className="dropdown-menu  dropdown-menu-end p-3">
-                      <li>
+                    <h5 className="mb-2">Employees By Department</h5>
+                    <div className="dropdown mb-2">
                         <Link to="#"
-                          className="dropdown-item rounded-1"
+                            className="btn btn-white border btn-sm d-inline-flex align-items-center"
+                            data-bs-toggle="dropdown"
                         >
-                          This Month
+                            <i className="ti ti-calendar me-1" />
+                            This Week
                         </Link>
-                      </li>
-                      <li>
-                        <Link to="#"
-                          className="dropdown-item rounded-1"
-                        >
-                          This Week
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#"
-                          className="dropdown-item rounded-1"
-                        >
-                          Last Week
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
+                        <ul className="dropdown-menu dropdown-menu-end p-3">
+                            <li>
+                                <Link to="#"
+                                    className="dropdown-item rounded-1"
+                                >
+                                    This Month
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="#"
+                                    className="dropdown-item rounded-1"
+                                >
+                                    This Week
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="#"
+                                    className="dropdown-item rounded-1"
+                                >
+                                    Last Week
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div className="card-body">
-                  <ReactApexChart
-                    id="emp-department"
-                    options={empDepartment}
-                    series={empDepartment.series}
-                    type="bar"
-                    height={220}
-                  />
-                  <p className="fs-13">
-                    <i className="ti ti-circle-filled me-2 fs-8 text-primary" />
-                    No of Employees increased by{" "}
-                    <span className="text-success fw-bold">+20%</span> from last
-                    Week
-                  </p>
+                    <ReactApexChart
+                        id="emp-department"
+                        options={empDepartment.options}
+                        series={empDepartment.series}
+                        type="bar"
+                        height={220}
+                    />
+                     <p className="fs-13">
+                        <i className="ti ti-circle-filled me-2 fs-8 text-primary" />
+                        Total Employees: <span className="text-primary fw-bold">{totalEmployees}</span>
+                    </p>
+                    <p className="fs-13">
+                        <i className="ti ti-circle-filled me-2 fs-8 text-primary" />
+                        No of Employees increased by{" "}
+                        <span className="text-success fw-bold">+{employeeGrowthPercentage}%</span> from last Year
+                    </p>
                 </div>
-              </div>
             </div>
+        </div>
             {/* /Employees By Department */}
+
+
+
+
           </div>
           <div className="row">
              {/* Jobs Applicants */}

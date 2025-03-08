@@ -191,3 +191,64 @@ export const getCandidateCountPerYear = async (req: Request, res: Response): Pro
     res.status(500).json({ error: error.message });
   }
 };
+
+
+
+
+export const countEmployeesByDepartment = async (req: Request, res: Response): Promise<void> => {
+  try {
+      const currentYear = new Date().getFullYear();
+      const lastYear = currentYear - 1;
+
+      // Get the count of employees per department
+      const departmentCounts = await User.aggregate([
+          {
+              $match: {
+                  role: 'EMPLOYEE', // Filter for employees
+              },
+          },
+          {
+              $group: {
+                  _id: '$department', // Group by department
+                  count: { $sum: 1 }, // Count the number of employees
+              },
+          },
+          {
+              $project: {
+                  department: '$_id', // Rename _id to department
+                  count: 1,
+                  _id: 0, // Exclude the default _id field
+              },
+          },
+      ]);
+
+      // Get total number of employees
+      const totalEmployees = await User.countDocuments({ role: 'EMPLOYEE' });
+
+      // Get the count of employees from the last year
+      const lastYearCount = await User.countDocuments({
+          role: 'EMPLOYEE',
+          createDate: {
+              $gte: new Date(`${lastYear}-01-01`),
+              $lt: new Date(`${currentYear}-01-01`),
+          },
+      });
+
+      // Calculate percentage change
+      const percentageChange = lastYearCount > 0 
+          ? ((totalEmployees - lastYearCount) / lastYearCount) * 100 
+          : 0;
+
+      // Create the response object
+      const response = {
+          totalEmployees,
+          percentageChange,
+          departmentCounts,
+      };
+
+      res.status(200).json(response); // Send the result as a response
+  } catch (error) {
+      console.error('Error counting employees by department:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
+};

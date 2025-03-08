@@ -8,7 +8,8 @@ import {
   getLatestUsers ,
   getCandidates,
   getLastCandidates,
-  getCandidateCountPerYear} from '../controllers/userController';
+  getCandidateCountPerYear,
+  countEmployeesByDepartment} from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
 
@@ -25,6 +26,8 @@ router.delete('/delete/:id', deleteUser);
 router.get('/get/candidates', getCandidates);
 router.get('/get/Lastcandidates', getLastCandidates);
 router.get('/count-per-year', getCandidateCountPerYear);
+// Define the route for counting employees by department
+router.get('/count-employees-by-department', countEmployeesByDepartment);
 
 
 // Export the router

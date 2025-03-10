@@ -1,0 +1,95 @@
+{
+    "data":[
+        {
+           "Image": "user-32.jpg",
+           "Employee": "Anthony Lewis",
+           "Role": "Finance",
+           "LeaveType": "Medical Leave",
+           "From": "14/01/2024",
+           "To": "15/01/2024",
+           "NoOfDays": "2 Days"
+        },
+        {
+           "Image": "user-09.jpg",
+           "Employee": "Brian Villalobos",
+           "Role": "Developer",
+           "LeaveType": "Casual Leave",
+           "From": "21/01/2024",
+           "To": "25/01/2024",
+           "NoOfDays": "5 Days"
+        },
+        {
+           "Image": "user-01.jpg",
+           "Employee": "Harvey Smith",
+           "Role": "Developer",
+           "LeaveType": "Medical Leave",
+           "From": "20/02/2024",
+           "To": "22/02/2024",
+           "NoOfDays": "3 Days"
+        },
+        {
+           "Image": "user-33.jpg",
+           "Employee": "Stephan Peralt",
+           "Role": "Executive Officer",
+           "LeaveType": "Annual Leave",
+           "From": "15/03/2024",
+           "To": "17/03/2024",
+           "NoOfDays": "3 Days"
+        },
+        {
+           "Image": "user-34.jpg",
+           "Employee": "Doglas Martini",
+           "Role": "Manager",
+           "LeaveType": "Casual Leave",
+           "From": "12/04/2024",
+           "To": "16/04/2024",
+           "NoOfDays": "5 Days"
+        },
+        {
+           "Image": "user-02.jpg",
+           "Employee": "Linda Ray", 
+           "Role": "Finance",
+           "LeaveType": "Medical Leave",
+           "From": "20/05/2024",
+           "To": "21/05/2024",
+           "NoOfDays": "2 Days"
+        },
+        {
+           "Image": "user-35.jpg",
+           "Employee": "Elliot Murray",
+           "Role": "Developer",
+           "LeaveType": "Casual Leave",
+           "From": "06/07/2024",
+           "To": "06/07/2024",
+           "NoOfDays": "1 Day"
+        },
+        {
+           "Image": "user-36.jpg",
+           "Employee": "Rebecca Smtih",
+           "Role": "Executive",
+           "LeaveType": "Medical Leave",
+           "From": "02/09/2024",
+           "To": "04/09/2024",
+           "NoOfDays": "3 Days"
+        },
+        {
+           "Image": "user-37.jpg",
+           "Employee": "Connie Waters",
+           "Role": "Developer",
+           "LeaveType": "Annual Leave",
+           "From": "15/11/2024",
+           "To": "15/11/2024",
+           "NoOfDays": "1 Day"
+        },
+        {
+           "Image": "user-38.jpg",
+           "Employee": "Lori Broaddus",
+           "Role": "Finance",
+           "LeaveType": "Casual Leave",
+           "From": "10/12/2024",
+           "To": "11/12/2024",
+           "NoOfDays": "2 Days"
+        }
+       ],
+    "totaldata":10
+}

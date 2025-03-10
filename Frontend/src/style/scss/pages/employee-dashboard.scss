@@ -1,0 +1,126 @@
+.edit-top {
+    background: $gray-700;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    &:hover {
+        color: $dark !important;
+    }
+}
+.attendance-bg {
+    background: linear-gradient(180deg, #FFF8F4 0%, #FFFFFF 100%);
+    position: relative;
+    z-index: 1;
+    &::after {
+        content: "";
+        background-image: url(../../../../public/assets/img/bg/card-bg-02.png);
+        background-position: right top;
+        background-repeat: no-repeat;
+        background-size: contain;
+        position: absolute;
+        width: 50%;
+        height: 60%;
+        right: 0;
+        top: 0;
+        z-index: -1;
+    }
+}
+.attendance-circle-progress.attendance-progress {
+    width: 130px;
+    height: 130px !important;
+    background: $white;
+    border-radius: 50%;
+    &::after {
+        border: 4px solid $gray-100;
+    }
+    .total-work-hours {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        line-height: normal;
+    }
+}
+.h-12 {
+    height: 12px;
+}
+.circle-progress.circle-progress-md {
+    width: 40px;
+    height: 40px !important;
+    .progress-value {
+        position: absolute;
+        top: 5%;
+        left: 5%;
+        width: 90%;
+        height: 90%;
+        font-size: 12px;
+        color: #515B73;
+        line-height: 38px;
+        text-align: center;
+    }
+}
+.active-time {
+    min-width: 80px;
+    position: relative;
+    z-index: 2;
+}
+.timeline-flow {
+    position: relative;
+    z-index: 1;
+    &::before {
+        content: "";
+        width: 1px;
+        height: 100%;
+        border-left: 1px dashed $gray-200;
+        position: absolute;
+        left: -11px;
+        top: 5px;
+        z-index: -1;
+    }
+}
+.schedule-timeline {
+    > div {
+        &:last-child {
+            .timeline-flow {
+                &::before {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+.activity-timeline {
+    .timeline-flow {
+        &::before {
+            left: -15px;
+        }
+    }
+    .avatar {
+        z-index: 2;
+    }
+}
+.card-bg-5 {
+    position: relative;
+    z-index: 1;
+    &::before {
+        content: "";
+        background-image: url(../../../../public/assets/img/bg/card-bg-05.png);
+        background-position: top;
+        background-repeat: no-repeat;
+        background-size: contain;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        right: 0;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+}
+.table.dashboard-table {
+    tr {
+        td {
+            padding: 9px 20px;
+        }
+    }
+}

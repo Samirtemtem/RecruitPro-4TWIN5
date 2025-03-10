@@ -1,0 +1,27 @@
+.swal2-actions .swal2-confirm.btn:active {
+    background-color: $primary;
+    border-color: $primary;
+}
+.swal2-confirm{
+    margin-right: 5px;
+}
+button.swal2-confirm {
+    background: $primary;
+    border: 1px solid $primary;
+    color: $white;
+    border-radius: 5px;
+    padding: 0.5rem 0.85rem;
+    font-size: 14px;
+    transition: all 0.5s;
+    font-weight: 500;
+}
+button.swal2-cancel {
+    background: $danger;
+    border: 1px solid $danger;
+    color: $white;
+    border-radius: 5px;
+    padding: 0.5rem 0.85rem;
+    font-size: 14px;
+    transition: all 0.5s;
+    font-weight: 500;
+}

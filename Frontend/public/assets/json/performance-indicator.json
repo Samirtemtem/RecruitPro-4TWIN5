@@ -1,0 +1,50 @@
+{
+    "data":[
+        {
+          "Designation": "Web Designer",
+          "Department": "Designing",
+          "Image": "user-34.jpg",
+          "ApprovedBy": "Doglas Martini",
+          "Role": "Manager",
+          "CreatedDate": "14/01/2024",
+          "Status": "Active"
+        },
+        {
+          "Designation": "Web Developer",
+          "Department": "Developer",
+          "Image": "user-34.jpg",
+          "ApprovedBy": "Doglas Martini",
+          "Role": "Manager",
+          "CreatedDate": "21/01/2024",
+          "Status": "Active"
+        },
+        {
+          "Designation": "IOS Developer",
+          "Department": "Developer",
+          "Image": "user-34.jpg",
+          "ApprovedBy": "Doglas Martini",
+          "Role": "Manager",
+          "CreatedDate": "18/02/2024",
+          "Status": "Active"
+        },
+        {
+          "Designation": "Android Developer",
+          "Department": "Developer",
+          "Image": "user-34.jpg",
+          "ApprovedBy": "Doglas Martini",
+          "Role": "Manager",
+          "CreatedDate": "24/02/2024",
+          "Status": "Active"
+        },
+        {
+          "Designation": "DevOps Engineer",
+          "Department": "DevOps",
+          "Image": "user-34.jpg",
+          "ApprovedBy": "Doglas Martini",
+          "Role": "Manager",
+          "CreatedDate": "11/03/2024",
+          "Status": "Active"
+        }
+       ],
+    "totaldata":5
+}

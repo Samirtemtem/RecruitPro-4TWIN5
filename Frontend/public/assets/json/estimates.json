@@ -1,0 +1,105 @@
+{
+  "data" : [
+    {
+      "Client_Name": "Michael Walker",
+      "Image": "user-09.jpg",
+      "Roll": "CEO",
+      "Company_Name": "BrightWave Innovations",
+      "Estimate_Date": "14/01/2024",
+      "Expiry_Date": "15/01/2024",
+      "Amount": "$3000",
+      "Status": "Accepted"
+    },
+    {
+      "Client_Name": "Sophie Headrick",
+      "Image": "user-40.jpg",
+      "Roll": "Manager",
+      "Company_Name": "Stellar Dynamics",
+      "Estimate_Date": "21/01/2024",
+      "Expiry_Date": "25/01/2024",
+      "Amount": "$2500",
+      "Status": "Sent"
+    },
+    {
+      "Client_Name": "Cameron Drake",
+      "Image": "user-41.jpg",
+      "Roll": "Director",
+      "Company_Name": "Quantum Nexus",
+      "Estimate_Date": "20/02/2024",
+      "Expiry_Date": "22/02/2024",
+      "Amount": "$2800",
+      "Status": "Expired"
+    },
+    {
+      "Client_Name": "Doris Crowley",
+      "Image": "user-42.jpg",
+      "Roll": "Consultant",
+      "Company_Name": "EcoVision Enterprises",
+      "Estimate_Date": "15/03/2024",
+      "Expiry_Date": "17/03/2024",
+      "Amount": "$3300",
+      "Status": "Accepted"
+    },
+    {
+      "Client_Name": "Thomas Bordelon",
+      "Image": "user-44.jpg",
+      "Roll": "Manager",
+      "Company_Name": "Aurora Technologies",
+      "Estimate_Date": "12/04/2024",
+      "Expiry_Date": "16/04/2024",
+      "Amount": "$3600",
+      "Status": "Declined"
+    },
+    {
+      "Client_Name": "Kathleen Gutierrez",
+      "Image": "user-45.jpg",
+      "Roll": "Director",
+      "Company_Name": "BlueSky Ventures",
+      "Estimate_Date": "20/05/2024",
+      "Expiry_Date": "21/05/2024",
+      "Amount": "$2000",
+      "Status": "Sent"
+    },
+    {
+      "Client_Name": "Bruce Wright",
+      "Image": "user-46.jpg",
+      "Roll": "CEO",
+      "Company_Name": "TerraFusion Energy",
+      "Estimate_Date": "06/07/2024",
+      "Expiry_Date": "06/07/2024",
+      "Amount": "$3400",
+      "Status": "Expired"
+    },
+    {
+      "Client_Name": "Estelle Morgan",
+      "Image": "user-47.jpg",
+      "Roll": "Manager",
+      "Company_Name": "UrbanPulse Design",
+      "Estimate_Date": "02/09/2024",
+      "Expiry_Date": "04/09/2024",
+      "Amount": "$4000",
+      "Status": "Declined"
+    },
+    {
+      "Client_Name": "Stephen Dias",
+      "Image": "user-48.jpg",
+      "Roll": "CEO",
+      "Company_Name": "Nimbus Networks",
+      "Estimate_Date": "15/11/2024",
+      "Expiry_Date": "15/11/2024",
+      "Amount": "$4500",
+      "Status": "Accepted"
+    },
+    {
+      "Client_Name": "Angela Thomas",
+      "Image": "user-43.jpg",
+      "Roll": "Consultant",
+      "Company_Name": "Epicurean Delights",
+      "Estimate_Date": "10/12/2024",
+      "Expiry_Date": "11/12/2024",
+      "Amount": "$3800",
+      "Status": "Sent"
+    }
+  ],
+  "totalData": 10
+}

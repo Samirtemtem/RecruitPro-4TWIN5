@@ -1,0 +1,249 @@
+.calendar-events {
+    border: 1px solid transparent;
+    cursor: move;
+	padding: 10px 15px;
+	&:hover {
+		border-color: $light-900;
+		background-color: $white;
+	}
+}
+.calendar-events i {
+    margin-right: 8px;
+}
+.calendar {
+	float: left;
+	margin-bottom: 0;
+}
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 6px;
+	flex-wrap: wrap;
+	.fc-toolbar-chunk {
+		margin-bottom: 10px;
+	}
+	.fc-left, .fc-right {
+		margin-bottom: 10px;
+	}
+}
+.fc-toolbar h2 {
+	font-size: $font-size-18;
+	font-weight: $font-weight-semibold;
+	line-height: 30px;
+}
+.fc-day-grid-event .fc-time {
+	font-family: 'Roboto', sans-serif;
+}
+.fc-day {
+	background: $white;
+}
+.fc-toolbar .fc-state-active,
+.fc-toolbar .ui-state-active,
+.fc-toolbar button:focus,
+.fc-toolbar button:hover,
+.fc-toolbar .ui-state-hover {
+	z-index: 0;
+}
+.fc th.fc-widget-header {
+	background: $light-500;
+	font-size: $font-size-14;
+	text-transform: uppercase;
+}
+.fc-unthemed th,
+.fc-unthemed td,
+.fc-unthemed thead,
+.fc-unthemed tbody,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-row,
+.fc-unthemed .fc-popover {
+	border-color: $light-900;
+}
+.fc-basic-view .fc-day-number, 
+.fc-basic-view .fc-week-number {
+    padding: 2px 5px;
+}
+.fc-button {
+	background: $light-500;
+	border: none;
+	color: $gray-700;
+	text-transform: capitalize;
+	box-shadow: none !important;
+	border-radius: 5px !important;
+	margin: 0 3px !important;
+	padding: 6px 12px !important;
+	height: auto !important;
+}
+.fc-text-arrow {
+	font-family: inherit;
+	font-size: $font-size-16;
+}
+.fc-state-hover {
+	background: $light-300;
+}
+.fc-state-highlight {
+	background: $light-300;
+}
+.fc-state-down,
+.fc-state-active,
+.fc-state-disabled {
+	background-color: $primary !important;
+	color: $white !important;
+	text-shadow: none !important;
+}
+.fc-cell-overlay {
+	background: $light-300;
+}
+.fc-unthemed .fc-today {
+	background: $white;
+}
+.fc-event {
+	border-radius: 2px;
+	border: none;
+	color: $white !important;
+	cursor: move;
+	font-size: 13px;
+	margin: 1px 7px;
+	padding: 5px 5px;
+	text-align: center;
+}
+.fc-basic-view td.fc-week-number span {
+	padding-right: 8px;
+	font-weight: $font-weight-bold;
+	font-family: 'Roboto', sans-serif;
+}
+.fc-basic-view td.fc-day-number {
+	padding-right: 8px;
+	font-weight: $font-weight-bold;
+	font-family: 'Roboto', sans-serif;
+}
+.event-form .input-group .form-control {
+	height: 40px;
+}
+.fc-theme-standard .fc-scrollgrid {
+    border: 1px solid $border-color;
+}
+.fc .fc-col-header-cell-cushion  {
+	color: $gray-900;
+	font-size: $font-size-14;
+	font-weight: $font-weight-medium;
+    padding: 0;
+}
+.fc {
+	th {
+		background: $white;
+		border-color: $border-color;
+		height: 40px;
+    	line-height: 40px;
+        &.columnheader {
+            &:last-child {
+                border-right: $border-color;
+            }
+        }
+	}
+	td {
+		border-color: $border-color;
+	}
+	.fc-daygrid-day-number {
+		color: $gray-900;
+		font-size: $font-size-14;
+	}
+	.fc-toolbar-title {
+		font-size: $font-size-18;
+		font-weight: $font-weight-semibold;
+		color: $gray-900;
+	}
+}
+.fc-event {
+	border: 1px solid $white;
+    @include rounded(5px);
+	background: $white;
+	color: $black;
+	padding: 5px;
+	font-weight: $font-weight-normal;
+    &.progress-danger {
+        border-color: $danger;
+    }
+    &.progress-info {
+        border-color: $info;
+    }
+    &.progress-pending {
+        border-color: $skyblue;
+    }
+    &.progress-success {
+        border-color: $success;
+    }
+}
+.fc-h-event .fc-event-main, .fc-event-main {
+	color: $gray-900;
+}
+.fc .fc-button-primary {
+    background-color: $light-500;
+    border-color: $light-500;
+    color: $gray-700;
+	font-size: $font-size-14;
+	height: 26px;
+	border-radius: 5px;
+    padding: 2px 5px !important;
+    text-transform: capitalize;
+	&:hover, &.active, &:active {
+        background-color: $primary;
+        border-color: $primary;
+        color: $white;
+	}
+	&:focus {
+		box-shadow:none;
+	}
+	&.fc-today-button {
+		background-color: $dark-transparent;
+		border-color: $dark-transparent;;
+		color: $dark;
+	}
+	&.fc-dayGridMonth-button, &:not(:disabled).fc-button-active {
+        background-color: $primary;
+        border-color: $primary;
+		color: $white;
+        font-size: $font-size-14;
+        font-weight: $font-weight-normal;
+        height: 26px;
+		border-radius: 0;
+		border-width: 1px 0;
+		padding: 0;
+		&:hover {
+			background-color: $primary;
+            border-color: $primary;
+            color: $white;
+		}
+		&:focus {
+			box-shadow:none;
+		}
+	}
+    &.fc-custombtn-button {
+        background-color: $primary;
+        border-color: $primary;
+		color: $white;
+        font-size: $font-size-15;
+        font-weight: $font-weight-medium;
+        position: relative; 
+        padding: 7px 20px 7px 40px  !important;
+        &::before {
+	    	position: absolute;
+			top: 50%;
+			left: 20px;
+	    	@include transform(translateY(-50%));
+	    	font-family: "Fontawesome";
+	 	    content: "\f055";
+	    }
+    }
+}
+.fc .fc-list-event:hover td {
+    background-color: transparent;
+}
+#external-events {
+	.fc-event {
+		color: $gray-900 !important;
+		font-weight: $font-weight-medium;
+		padding: 8px;
+		border: 0;
+		margin: 0;
+		font-size: $font-size-14;
+		text-align: left;
+	}
+}

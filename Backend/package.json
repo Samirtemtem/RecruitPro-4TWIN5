@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node dist/bin/www",
     "build": "tsc",
-    "dev": "ts-node src/bin/www"
+    "dev": "ts-node src/bin/www",
+    "test": "echo \"No tests specified\" && exit 0"  
   },
   "dependencies": {
     "@types/axios": "^0.14.4",

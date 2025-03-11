@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'node'  // Make sure the Node.js version matches the installed version in Jenkins
+    }
+
     stages {
         stage('Git Checkout') {
             steps {

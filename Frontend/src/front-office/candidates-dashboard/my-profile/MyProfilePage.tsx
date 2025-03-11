@@ -7,10 +7,11 @@ import CopyrightFooter from "../../../common/CopyrightFooter";
 
 import MenuToggler from '../../../common/MenuToggler';
 import TopCardBlock from '../dashboard/components/TopCardBlock';
-import { BreadCrumb } from "../common/BreadCrumb";
+import  BreadCrumb  from "../../../common/Breadcrumb";
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
-import { MobileMenu } from "../common";
+import MobileMenu from "../../../common/MobileMenu";
+import Header from "../../../common/Header";
 const MyProfilePage: React.FC = () => {
   const { userData, isLoading, error } = useUserProfile();
 
@@ -23,7 +24,9 @@ const MyProfilePage: React.FC = () => {
       {/*<LoginPopup />
        End Login Popup Modal */}
       <MobileMenu/>
-      <DashboardCandidatesHeader />
+      <Header />
+      {/*<DashboardCandidatesHeader />*/}
+
       {/* End Header */}
 
       {/*<MobileMenu />
@@ -43,6 +46,11 @@ const MyProfilePage: React.FC = () => {
         <div className="dashboard-outer">
           
     <MenuToggler />
+    <div
+        style={{
+          height: "55px", // Adjust this to match your header's height
+        }}
+      ></div>
         <BreadCrumb title="My Profile!" />
     {/* breadCrumb */}    
 

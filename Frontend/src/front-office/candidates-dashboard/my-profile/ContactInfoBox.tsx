@@ -1,5 +1,5 @@
 import React from "react";
-import { Map } from "../common/Map";
+import {Map} from "../../../common/Map";
 import { UserProfileData } from "../hooks/useUserProfile";
 
 interface ContactInfoBoxProps {

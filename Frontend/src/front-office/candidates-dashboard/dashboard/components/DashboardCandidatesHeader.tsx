@@ -8,7 +8,8 @@ import {
   homeItems,
   pageItems,
   shopItems,
-} from "../../../../index/data/mainMenuData";
+} from "../../../../common/data/mainMenuData";
+import {all_routes} from "../../../../routing-module/router/all_routes";
 import { isActiveParent, isActiveLink } from "../../../../common/utils/linkActiveChecker";
 // Import the necessary hooks for handeling logout //////////////////
 import { useNavigate } from "react-router-dom";
@@ -32,7 +33,7 @@ interface NavItemProps {
   items: MenuItem[];
   currentPath: string;
 }
-import {all_routes} from "../../../../routing-module/router/all_routes";
+
 
 
 const DashboardCandidatesHeader = () => {
@@ -132,33 +133,7 @@ const DashboardCandidatesHeader = () => {
                 <span className="name">My Account</span>
               </a>
 
-              {/* 
-              <ul className="dropdown-menu">
-                {candidatesMenuData.map((item) => (
-                  <li className={`${isActiveLink(item.routePath, location.pathname) ? "active" : ""} mb-1`} key={item.id}>
-                    <Link to={item.routePath}>
-                      <i className={`la ${item.icon}`}></i> {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul> 
-               */}
-               {/* 
-              <ul className="dropdown-menu">
-                {candidatesMenuData.map((item) => (
-                  <li className={`${isActiveLink(item.routePath, location.pathname) ? "active" : ""} mb-1`} key={item.id}>
-                    {item.action ? (
-                      <button onClick={item.action} className="btn btn-link">
-                        <i className={`la ${item.icon}`}></i> {item.name}
-                      </button>
-                    ) : (
-                      <Link to={item.routePath || "#"}>  Fallback to "#" if routePath is undefined 
-                        <i className={`la ${item.icon}`}></i> {item.name}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul> */}
+              
               <ul className="dropdown-menu">
                 {candidatesMenuData.map((item) => (
                   <li className={`${isActiveLink(item.routePath, location.pathname) ? "active" : ""} mb-1`} key={item.id}>

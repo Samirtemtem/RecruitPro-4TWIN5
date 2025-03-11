@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 //import candidatesuData from "../../data/candidatesMenuData";
-import candidatesuData from "../../../../index/data/candidatesMenuData";
+import candidatesuData from "../../../../common/data/candidatesMenuData";
 import { useDispatch, useSelector } from "react-redux";
 import { menuToggle } from "../../../../common/utils/toggleSlice";
 import { isActiveLink } from "../../../../common/utils/linkActiveChecker";

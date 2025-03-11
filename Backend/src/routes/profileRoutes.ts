@@ -256,7 +256,7 @@ router.put('/update', asyncHandler(profileController.updateProfile));
  *       500:
  *         description: Server error
  */
-router.post('/education', asyncHandler(profileController.getEducation));
+router.post('/education', asyncHandler(profileController.addEducation));
 
 /**
  * @swagger
@@ -356,7 +356,7 @@ router.delete('/education/:id', asyncHandler(profileController.deleteEducation))
  *       500:
  *         description: Server error
  */
-router.post('/experience', asyncHandler(profileController.getExperience));
+router.post('/experience', asyncHandler(profileController.addExperience));
 
 /**
  * @swagger
@@ -456,7 +456,7 @@ router.delete('/experience/:id', asyncHandler(profileController.deleteExperience
  *       500:
  *         description: Server error
  */
-router.post('/skills', asyncHandler(profileController.getSkills));
+router.post('/skills', asyncHandler(profileController.addSkills));
 
 /**
  * @swagger
@@ -556,7 +556,7 @@ router.delete('/skills/:id', asyncHandler(profileController.deleteSkill));
  *       500:
  *         description: Server error
  */
-router.post('/social', asyncHandler(profileController.getSocialLinks));
+router.post('/social', asyncHandler(profileController.addSocialLinks));
 
 /**
  * @swagger

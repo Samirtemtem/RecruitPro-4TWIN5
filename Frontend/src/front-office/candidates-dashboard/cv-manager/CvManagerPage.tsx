@@ -5,11 +5,13 @@ import { useUserProfile, UserProfileData } from '../hooks/useUserProfile';
 
 import MenuToggler from '../../../common/MenuToggler';
 import TopCardBlock from '../dashboard/components/TopCardBlock';
-import { BreadCrumb } from "../common/BreadCrumb";
-import { CopyrightFooter, MobileMenu } from "../common";
+import  BreadCrumb  from "../../../common/Breadcrumb";
+import  CopyrightFooter from "../../../common/CopyrightFooter";
+import MobileMenu from "../../../common/MobileMenu";
 
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
+import Header from '../../../common/Header';
 interface ICvHistory {
   id?: string;
   fileName: string;
@@ -100,7 +102,8 @@ const CvManagerPage: React.FC = () => {
 {/*<LoginPopup />
  End Login Popup Modal */}
 <MobileMenu />
-<DashboardCandidatesHeader />
+<Header />
+      {/*<DashboardCandidatesHeader />*/}
 {/* End Header */}
 
 {/*<MobileMenu />
@@ -115,6 +118,11 @@ const CvManagerPage: React.FC = () => {
     {/* breadCrumb */}
 
     <MenuToggler />
+    <div
+        style={{
+          height: "55px", // Adjust this to match your header's height
+        }}
+      ></div>
     
     <BreadCrumb title="Check your resumes!" />
     {/* Collapsible sidebar button */}

@@ -13,6 +13,8 @@ import { Role, Socials } from '../../models/types';
 import * as Yup from 'yup';
 import { parseCV, ParsedCVData } from '../../services/cv-parser.service';
 
+import DefaulHeader2 from "../../common/Header";
+import FooterDefault from "../../common/Footer";
 import { toast } from 'react-hot-toast';
 
 type FormSection = 'personal' | 'education' | 'experience' | 'skills' | 'socialLinks' | 'terms';
@@ -249,6 +251,51 @@ const RequiredLabel: React.FC<{ text: string }> = ({ text }) => (
     {text} <span className="text-danger">*</span>
   </label>
 );
+
+// Add this style block at the top of the component to override any conflicting styles
+const inputStyles = `
+  .wizard .form-control {
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    padding: 10px 15px !important;
+    height: auto !important;
+    transition: all 0.3s ease !important;
+    background-color: #fff !important;
+  }
+
+  .wizard .form-control:hover {
+    border-color: #aaa !important;
+  }
+
+  .wizard .form-control:focus {
+    border-color: #3490dc !important;
+    box-shadow: 0 0 0 0.2rem rgba(52, 144, 220, 0.25) !important;
+    outline: none !important;
+  }
+
+  .wizard .form-control.is-invalid {
+    border-color: #e3342f !important;
+  }
+
+  .wizard .form-label {
+    font-weight: 500 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+  }
+
+  /* Ensure all inputs in the form have the styling */
+  .wizard input[type="text"],
+  .wizard input[type="email"],
+  .wizard input[type="password"],
+  .wizard input[type="tel"],
+  .wizard select,
+  .wizard textarea {
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    width: 100% !important;
+    padding: 10px 15px !important;
+  }
+`;
 
 const RegisterWizard: React.FC = () => {
   const [activeStep, setActiveStep] = useState(1);
@@ -869,8 +916,8 @@ const RegisterWizard: React.FC = () => {
                 id: crypto.randomUUID(),
               institution: edu.institution,
               diploma: edu.diploma,
-              startDate: edu.startDate,
-              endDate: edu.endDate,
+              startDate: edu.startDate ? new Date(edu.startDate + '-01').toISOString().split('T')[0] : '', // Convert YYYY-MM to YYYY-MM-DD
+              endDate: edu.endDate ? new Date(edu.endDate + '-01').toISOString().split('T')[0] : '', // Convert YYYY-MM to YYYY-MM-DD
               description: edu.description,
               location: edu.location
             }));
@@ -883,8 +930,8 @@ const RegisterWizard: React.FC = () => {
                 id: crypto.randomUUID(),
               position: exp.position,
               enterprise: exp.enterprise,
-              startDate: exp.startDate,
-              endDate: exp.endDate,
+              startDate: exp.startDate ? new Date(exp.startDate + '-01').toISOString().split('T')[0] : '',// Extract YYYY-MM format
+              endDate: exp.endDate ? new Date(exp.endDate + '-01').toISOString().split('T')[0] : '', // Convert YYYY-MM to YYYY-MM-DD
               description: exp.description,
               location: exp.location
             }));
@@ -921,584 +968,592 @@ const RegisterWizard: React.FC = () => {
   ];
 
   return (
-    <div className="container-fuild">
-      <div className="w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
-        <div className="row">
-          {/* Left Side - Image */}
-          <div className="col-lg-5">
-            <div className="d-lg-flex align-items-center justify-content-center d-none flex-wrap vh-100 ">
-              <div>
-                <ImageWithBasePath src="assets/img/bg/download.svg" alt="Registration" />
+    <>
+      <style>{inputStyles}</style>
+      <DefaulHeader2 />
+      <div className="container-fuild bg-white" style={{ 
+            marginTop: "80px",  /* Space after the header */
+            paddingTop: "30px", /* Internal padding inside the container */
+            position: "relative", /* Ensure proper stacking context */
+            zIndex: 1 }} >
+        <div className="w-100 position-relative flex-wrap d-block vh-100">
+          <div className="row">
+            {/* Left Side - Image */}
+            <div className="col-lg-5">
+              <div className="d-lg-flex align-items-center justify-content-center d-none flex-wrap vh-100 ">
+                <div>
+                  <ImageWithBasePath src="assets/img/bg/download.svg" alt="Registration" />
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Side - Form */}
-          <div className="col-lg-7 col-md-12 col-sm-12">
-            <div className="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
-              <div className="col-md-10 mx-auto">
-                <div className="card border-0 shadow-none">
-                  <div className="card-body">
-                    {/* Logo */}
-                    <div className="text-center mb-4">
-                      <ImageWithBasePath src="assets/img/logo.svg" className="img-fluid" alt="Logo" />
-                    </div>
-
-                    {/* Form Title */}
-                    <div className="text-center mb-4">
-                      <h2 className="mb-2">Registration Form</h2>
-                      <p className="text-muted">Please complete all steps to create your account</p>
-                    </div>
-
-                    {/* Loading Overlay */}
-                    {isLoading && (
-                      <div className="position-absolute w-100 h-100 top-0 left-0 d-flex justify-content-center align-items-center" style={{ background: 'rgba(255, 255, 255, 0.8)', zIndex: 1000 }}>
-                        <div className="spinner-border text-primary" role="status">
-                          <span className="visually-hidden">Loading...</span>
-                        </div>
+            {/* Right Side - Form */}
+            <div className="col-lg-7 col-md-12 col-sm-12">
+              <div className="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
+                <div className="col-md-10 mx-auto">
+                  <div className="card border-0 shadow-none">
+                    <div className="card-body">
+                      {/* Logo */}
+                      <div className="text-center mb-4">
+                        <ImageWithBasePath src="assets/img/logo.svg" className="img-fluid" alt="Logo" />
                       </div>
-                    )}
 
-                    {/* Progress Steps */}
-                    <div className="wizard-steps mb-4">
-                      <ul className="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-                        {[
-                          { step: 1, icon: 'ti ti-user' },
-                          { step: 2, icon: 'ti ti-briefcase' },
-                          { step: 3, icon: 'ti ti-school' },
-                          { step: 4, icon: 'ti ti-building' },
-                          { step: 5, icon: 'ti ti-star' },
-                          { step: 6, icon: 'ti ti-check' }
-                        ].map(({ step, icon }) => (
-                          <li className="nav-item" key={step}>
-                            <button
-                              className={`nav-link ${activeStep === step ? 'active' : ''} ${activeStep > step ? 'completed' : ''}`}
-                              disabled
-                            >
-                              <span className="step-icon">
-                                <i className={icon}></i>
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                      {/* Form Title */}
+                      <div className="text-center mb-4">
+                        <h2 className="mb-2">Registration Form</h2>
+                        <p className="text-muted">Please complete all steps to create your account</p>
+                      </div>
 
-                    {/* Form Content */}
-                    <div className={`wizard ${direction}`}>
-                      <div className="tab-content">
-                        {/* Step 1: Personal Information */}
-                        <div className={`tab-pane ${activeStep === 1 ? 'active' : ''}`}>
-                          <div className="mb-4">
-                            <h4>Personal Information</h4>
-                          </div>
-                          <div className="row">
-                            <div className="col-lg-6">
-                              <div className="form-group">
-                                <label className="form-label">First Name <span className="text-danger">*</span></label>
-                                <input
-                                  type="text"
-                                  className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
-                                  value={formData.firstName}
-                                  onChange={(e) => handleInputChange('personal', 'firstName', e.target.value)}
-                                />
-                                {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
-                              </div>
-                            </div>
-                            <div className="col-lg-6">
-                              <div className="form-group">
-                                <label className="form-label">Last Name <span className="text-danger">*</span></label>
-                                <input
-                                  type="text"
-                                  className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
-                                  value={formData.lastName}
-                                  onChange={(e) => handleInputChange('personal', 'lastName', e.target.value)}
-                                />
-                                {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
-                              </div>
-                            </div>
-                            <div className="col-lg-6">
-                              <div className="form-group">
-                                <label className="form-label">Email <span className="text-danger">*</span></label>
-                                <input
-                                  type="email"
-                                  className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                                  value={formData.email}
-                                  onChange={(e) => handleInputChange('personal', 'email', e.target.value)}
-                                />
-                                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-                              </div>
-                            </div>
-                            <div className="col-lg-6">
-                              <div className="form-group">
-                                <label className="form-label">Password <span className="text-danger">*</span></label>
-                                <div className="pass-group">
-                                  <input
-                                    type="password"
-                                    className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                                    value={formData.password}
-                                    onChange={(e) => handleInputChange('personal', 'password', e.target.value)}
-                                  />
-                                  {errors.password && <div className="invalid-feedback">{errors.password}</div>}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-lg-6">
-                              <div className="form-group">
-                                <label className="form-label">Confirm Password <span className="text-danger">*</span></label>
-                                <div className="pass-group">
-                                  <input
-                                    type="password"
-                                    className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
-                                    value={formData.confirmPassword}
-                                    onChange={(e) => handleInputChange('personal', 'confirmPassword', e.target.value)}
-                                  />
-                                  {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-lg-6">
-                              <div className="form-group">
-                                <label className="form-label">Phone Number <span className="text-danger">*</span></label>
-                                <PhoneInput
-                                  country={'tn'}
-                                  value={formData.phoneNumber}
-                                  onChange={(value) => handleInputChange('personal', 'phoneNumber', value)}
-                                  inputClass={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
-                                  containerClass="phone-input-container"
-                                  specialLabel=""
-                                  countryCodeEditable={false}
-                                  preferredCountries={['tn']}
-                                  enableSearch={true}
-                                />
-                                {errors.phoneNumber && <div className="invalid-feedback d-block">{errors.phoneNumber}</div>}
-                              </div>
-                            </div>
-                            <div className="col-lg-12">
-                              <div className="form-group">
-                                <label className="form-label">Address <span className="text-danger">*</span></label>
-                                <input
-                                  type="text"
-                                  className={`form-control ${errors.address ? 'is-invalid' : ''}`}
-                                  value={formData.address}
-                                  onChange={(e) => handleInputChange('personal', 'address', e.target.value)}
-                                />
-                                {errors.address && <div className="invalid-feedback">{errors.address}</div>}
-                              </div>
-                            </div>
-                            <div className="col-lg-12">
-                              <div className="form-group">
-                                <label>Profile Image (Optional)</label>
-                                <input
-                                  type="file"
-                                  className="form-control"
-                                  accept="image/*"
-                                  onChange={(e) => handleInputChange('personal', 'profileImage', e.target.files?.[0])}
-                                />
-                              </div>
-                            </div>
+                      {/* Loading Overlay */}
+                      {isLoading && (
+                        <div className="position-absolute w-100 h-100 top-0 left-0 d-flex justify-content-center align-items-center" style={{ background: 'rgba(255, 255, 255, 0.8)', zIndex: 1000 }}>
+                          <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
                           </div>
                         </div>
+                      )}
 
-                        {/* Step 2: Professional Information */}
-                        <div className={`tab-pane ${activeStep === 2 ? 'active' : ''}`}>
-                          <div className="mb-4">
-                            <h4>Professional Information</h4>
+                      {/* Progress Steps */}
+                      <div className="wizard-steps mb-4">
+                        <ul className="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                          {[
+                            { step: 1, icon: 'ti ti-user' },
+                            { step: 2, icon: 'ti ti-briefcase' },
+                            { step: 3, icon: 'ti ti-school' },
+                            { step: 4, icon: 'ti ti-building' },
+                            { step: 5, icon: 'ti ti-star' },
+                            { step: 6, icon: 'ti ti-check' }
+                          ].map(({ step, icon }) => (
+                            <li className="nav-item" key={step}>
+                              <button
+                                className={`nav-link ${activeStep === step ? 'active' : ''} ${activeStep > step ? 'completed' : ''}`}
+                                disabled
+                              >
+                                <span className="step-icon">
+                                  <i className={icon}></i>
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Form Content */}
+                      <div className={`wizard ${direction}`}>
+                        <div className="tab-content">
+                          {/* Step 1: Personal Information */}
+                          <div className={`tab-pane ${activeStep === 1 ? 'active' : ''}`}>
+                            <div className="mb-4">
+                              <h4>Personal Information</h4>
+                            </div>
+                            <div className="row">
+                              <div className="col-lg-6">
+                                <div className="form-group">
+                                  <label className="form-label">First Name <span className="text-danger">*</span></label>
+                                  <input
+                                    type="text"
+                                    className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
+                                    value={formData.firstName}
+                                    onChange={(e) => handleInputChange('personal', 'firstName', e.target.value)}
+                                  />
+                                  {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
+                                </div>
+                              </div>
+                              <div className="col-lg-6">
+                                <div className="form-group">
+                                  <label className="form-label">Last Name <span className="text-danger">*</span></label>
+                                  <input
+                                    type="text"
+                                    className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
+                                    value={formData.lastName}
+                                    onChange={(e) => handleInputChange('personal', 'lastName', e.target.value)}
+                                  />
+                                  {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
+                                </div>
+                              </div>
+                              <div className="col-lg-6">
+                                <div className="form-group">
+                                  <label className="form-label">Email <span className="text-danger">*</span></label>
+                                  <input
+                                    type="email"
+                                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                    value={formData.email}
+                                    onChange={(e) => handleInputChange('personal', 'email', e.target.value)}
+                                  />
+                                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                                </div>
+                              </div>
+                              <div className="col-lg-6">
+                                <div className="form-group">
+                                  <label className="form-label">Password <span className="text-danger">*</span></label>
+                                  <div className="pass-group">
+                                    <input
+                                      type="password"
+                                      className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                      value={formData.password}
+                                      onChange={(e) => handleInputChange('personal', 'password', e.target.value)}
+                                    />
+                                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-lg-6">
+                                <div className="form-group">
+                                  <label className="form-label">Confirm Password <span className="text-danger">*</span></label>
+                                  <div className="pass-group">
+                                    <input
+                                      type="password"
+                                      className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                                      value={formData.confirmPassword}
+                                      onChange={(e) => handleInputChange('personal', 'confirmPassword', e.target.value)}
+                                    />
+                                    {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="col-lg-6">
+                                <div className="form-group">
+                                  <label className="form-label">Phone Number <span className="text-danger">*</span></label>
+                                  <PhoneInput
+                                    country={'tn'}
+                                    value={formData.phoneNumber}
+                                    onChange={(value) => handleInputChange('personal', 'phoneNumber', value)}
+                                    inputClass={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
+                                    containerClass="phone-input-container"
+                                    specialLabel=""
+                                    countryCodeEditable={false}
+                                    preferredCountries={['tn']}
+                                    enableSearch={true}
+                                  />
+                                  {errors.phoneNumber && <div className="invalid-feedback d-block">{errors.phoneNumber}</div>}
+                                </div>
+                              </div>
+                              <div className="col-lg-12">
+                                <div className="form-group">
+                                  <label className="form-label">Address <span className="text-danger">*</span></label>
+                                  <input
+                                    type="text"
+                                    className={`form-control ${errors.address ? 'is-invalid' : ''}`}
+                                    value={formData.address}
+                                    onChange={(e) => handleInputChange('personal', 'address', e.target.value)}
+                                  />
+                                  {errors.address && <div className="invalid-feedback">{errors.address}</div>}
+                                </div>
+                              </div>
+                              <div className="col-lg-12">
+                                <div className="form-group">
+                                  <label>Profile Image (Optional)</label>
+                                  <input
+                                    type="file"
+                                    className="form-control"
+                                    accept="image/*"
+                                    onChange={(e) => handleInputChange('personal', 'profileImage', e.target.files?.[0])}
+                                  />
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div className="row">
-                            <div className="col-lg-12">
-                              <div className="form-group">
-                                <label className="form-label">Current CV <span className="text-danger">*</span></label>
-                                <input
-                                  type="file"
-                                  className={`form-control ${errors.cv ? 'is-invalid' : ''}`}
-                                  accept=".pdf,.doc,.docx"
-                                  onChange={handleCVUpload}
-                                  disabled={isParsingCV}
-                                />
-                                {errors.cv && <div className="invalid-feedback">{errors.cv}</div>}
-                                {isParsingCV && (
-                                  <div className="parsing-status mt-2">
-                                    <div className="spinner-border text-primary spinner-border-sm me-2" role="status">
-                                      <span className="visually-hidden">Loading...</span>
+
+                          {/* Step 2: Professional Information */}
+                          <div className={`tab-pane ${activeStep === 2 ? 'active' : ''}`}>
+                            <div className="mb-4">
+                              <h4>Professional Information</h4>
+                            </div>
+                            <div className="row">
+                              <div className="col-lg-12">
+                                <div className="form-group">
+                                  <label className="form-label">Current CV <span className="text-danger">*</span></label>
+                                  <input
+                                    type="file"
+                                    className={`form-control ${errors.cv ? 'is-invalid' : ''}`}
+                                    accept=".pdf,.doc,.docx"
+                                    onChange={handleCVUpload}
+                                    disabled={isParsingCV}
+                                  />
+                                  {errors.cv && <div className="invalid-feedback">{errors.cv}</div>}
+                                  {isParsingCV && (
+                                    <div className="parsing-status mt-2">
+                                      <div className="spinner-border text-primary spinner-border-sm me-2" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                      </div>
+                                      <span className="text-primary">Resume parsing...</span>
                                     </div>
-                                    <span className="text-primary">Resume parsing...</span>
-                                  </div>
-                                )}
-                                {parsingFeedback && (
-                                  <div className={`parsing-feedback alert alert-${parsingFeedback.type} mt-2`}>
-                                    {parsingFeedback.message}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            <div className="col-lg-12">
-                              <div className="form-group">
-                                <label>Profile Image (Optional)</label>
-                                <input
-                                  type="file"
-                                  className={`form-control ${errors.profileImage ? 'is-invalid' : ''}`}
-                                  accept="image/*"
-                                  onChange={(e) => handleInputChange('personal', 'profileImage', e.target.files?.[0])}
-                                />
-                                {errors.profileImage && <div className="invalid-feedback">{errors.profileImage}</div>}
-                              </div>
-                            </div>
-                            <div className="col-12">
-                              <h5 className="mb-3">Social Links</h5>
-                              <div className="row">
-                                {/* LinkedIn Profile */}
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                    <label>LinkedIn Profile</label>
-                                    <input
-                                      type="text"
-                                      className={`form-control ${errors.socialLinks_0 ? 'is-invalid' : ''}`}
-                                      value={formData.socialLinks[0].link}
-                                      onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, 0)}
-                                      placeholder="https://linkedin.com/in/your-profile"
-                                    />
-                                    {errors.socialLinks_0 && <div className="invalid-feedback">{errors.socialLinks_0}</div>}
-                                  </div>
+                                  )}
+                                  {parsingFeedback && (
+                                    <div className={`parsing-feedback alert alert-${parsingFeedback.type} mt-2`}>
+                                      {parsingFeedback.message}
+                                    </div>
+                                  )}
                                 </div>
-
-                                {/* GitHub Profile */}
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                    <label>GitHub Profile</label>
-                                    <input
-                                      type="text"
-                                      className={`form-control ${errors.socialLinks_1 ? 'is-invalid' : ''}`}
-                                      value={formData.socialLinks[1].link}
-                                      onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, 1)}
-                                      placeholder="https://github.com/your-username"
-                                    />
-                                    {errors.socialLinks_1 && <div className="invalid-feedback">{errors.socialLinks_1}</div>}
-                                  </div>
+                              </div>
+                              <div className="col-lg-12">
+                                <div className="form-group">
+                                  <label>Profile Image (Optional)</label>
+                                  <input
+                                    type="file"
+                                    className={`form-control ${errors.profileImage ? 'is-invalid' : ''}`}
+                                    accept="image/*"
+                                    onChange={(e) => handleInputChange('personal', 'profileImage', e.target.files?.[0])}
+                                  />
+                                  {errors.profileImage && <div className="invalid-feedback">{errors.profileImage}</div>}
                                 </div>
+                              </div>
+                              <div className="col-12">
+                                <h5 className="mb-3">Social Links</h5>
+                                <div className="row">
+                                  {/* LinkedIn Profile */}
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                      <label>LinkedIn Profile</label>
+                                      <input
+                                        type="text"
+                                        className={`form-control ${errors.socialLinks_0 ? 'is-invalid' : ''}`}
+                                        value={formData.socialLinks[0].link}
+                                        onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, 0)}
+                                        placeholder="https://linkedin.com/in/your-profile"
+                                      />
+                                      {errors.socialLinks_0 && <div className="invalid-feedback">{errors.socialLinks_0}</div>}
+                                    </div>
+                                  </div>
 
-                                {/* Additional Social Links */}
-                                {formData.socialLinks.slice(2).map((link, index) => (
-                                  <div className="col-12" key={index + 2}>
-                                    <div className="repeatable-section">
-                                      <div className="row">
-                                        <div className="col-lg-6">
-                                          <div className="form-group">
-                                            <label>Platform</label>
-                                            <select
-                                              className={`form-control ${errors[`socialLinks_${index + 2}`] ? 'is-invalid' : ''}`}
-                                              value={link.type}
-                                              onChange={(e) => handleInputChange('socialLinks', 'type', e.target.value, index + 2)}
-                                            >
-                                              {Object.values(Socials).map(platform => (
-                                                <option key={platform} value={platform}>{platform}</option>
-                                              ))}
-                                            </select>
-                                            {errors[`socialLinks_${index + 2}`] && (
-                                              <div className="invalid-feedback">{errors[`socialLinks_${index + 2}`]}</div>
-                                            )}
+                                  {/* GitHub Profile */}
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                      <label>GitHub Profile</label>
+                                      <input
+                                        type="text"
+                                        className={`form-control ${errors.socialLinks_1 ? 'is-invalid' : ''}`}
+                                        value={formData.socialLinks[1].link}
+                                        onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, 1)}
+                                        placeholder="https://github.com/your-username"
+                                      />
+                                      {errors.socialLinks_1 && <div className="invalid-feedback">{errors.socialLinks_1}</div>}
+                                    </div>
+                                  </div>
+
+                                  {/* Additional Social Links */}
+                                  {formData.socialLinks.slice(2).map((link, index) => (
+                                    <div className="col-12" key={index + 2}>
+                                      <div className="repeatable-section">
+                                        <div className="row">
+                                          <div className="col-lg-6">
+                                            <div className="form-group">
+                                              <label>Platform</label>
+                                              <select
+                                                className={`form-control ${errors[`socialLinks_${index + 2}`] ? 'is-invalid' : ''}`}
+                                                value={link.type}
+                                                onChange={(e) => handleInputChange('socialLinks', 'type', e.target.value, index + 2)}
+                                              >
+                                                {Object.values(Socials).map(platform => (
+                                                  <option key={platform} value={platform}>{platform}</option>
+                                                ))}
+                                              </select>
+                                              {errors[`socialLinks_${index + 2}`] && (
+                                                <div className="invalid-feedback">{errors[`socialLinks_${index + 2}`]}</div>
+                                              )}
+                                            </div>
                                           </div>
-                                        </div>
-                                        <div className="col-lg-6">
-                                          <div className="form-group">
-                                            <label>Link</label>
-                                            <input
-                                              type="url"
-                                              className={`form-control ${errors[`socialLinks_${index + 2}`] ? 'is-invalid' : ''}`}
-                                              value={link.link}
-                                              onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, index + 2)}
-                                              placeholder="https://"
-                                            />
-                                            {errors[`socialLinks_${index + 2}`] && (
-                                              <div className="invalid-feedback">{errors[`socialLinks_${index + 2}`]}</div>
-                                            )}
+                                          <div className="col-lg-6">
+                                            <div className="form-group">
+                                              <label>Link</label>
+                                              <input
+                                                type="url"
+                                                className={`form-control ${errors[`socialLinks_${index + 2}`] ? 'is-invalid' : ''}`}
+                                                value={link.link}
+                                                onChange={(e) => handleInputChange('socialLinks', 'link', e.target.value, index + 2)}
+                                                placeholder="https://"
+                                              />
+                                              {errors[`socialLinks_${index + 2}`] && (
+                                                <div className="invalid-feedback">{errors[`socialLinks_${index + 2}`]}</div>
+                                              )}
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
-                                ))}
-                              </div>
+                                  ))}
+                                </div>
 
-                              {/* Add Social Link Button */}
-                              <div className="row mt-3">
-                                <div className="col-12">
+                                {/* Add Social Link Button */}
+                                <div className="row mt-3">
+                                  <div className="col-12">
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary"
+                                      onClick={() => handleInputChange('socialLinks', 'link', '', formData.socialLinks.length)}
+                                    >
+                                      Add Another Social Link
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Step 3: Education History */}
+                          <div className={`tab-pane ${activeStep === 3 ? 'active' : ''}`}>
+                            <div className="mb-4">
+                              <h4>Education History</h4>
+                            </div>
+                            <div className="row">
+                              {formData.education.map((edu, index) => (
+                                <div key={edu.id} className="education-form-group mb-4 p-3 border rounded position-relative">
+                                  <div className="remove-btn" onClick={() => handleRemoveEducation(index)}>
+                                    <i className="fas fa-times"></i>
+                                  </div>
+                                  <h5 className="mb-3">Education #{index + 1}</h5>
+                                  <div className="row">
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label>Institution</label>
+                                      <input
+                                        type="text"
+                                          className="form-control"
+                                        value={edu.institution}
+                                          onChange={(e) => handleInputChange('education', 'institution', e.target.value, index)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label>Diploma</label>
+                                      <input
+                                        type="text"
+                                          className="form-control"
+                                        value={edu.diploma}
+                                          onChange={(e) => handleInputChange('education', 'diploma', e.target.value, index)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label>Start Date</label>
+                                      <input
+                                        type="date"
+                                          className="form-control"
+                                        value={edu.startDate}
+                                          onChange={(e) => handleInputChange('education', 'startDate', e.target.value, index)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label>End Date</label>
+                                      <input
+                                        type="date"
+                                          className="form-control"
+                                        value={edu.endDate}
+                                          onChange={(e) => handleInputChange('education', 'endDate', e.target.value, index)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-12">
+                                    <div className="form-group">
+                                      <label>Description</label>
+                                      <textarea
+                                          className="form-control"
+                                        value={edu.description}
+                                          onChange={(e) => handleInputChange('education', 'description', e.target.value, index)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-12">
+                                    <div className="form-group">
+                                      <label>Location</label>
+                                      <input
+                                        type="text"
+                                          className="form-control"
+                                        value={edu.location}
+                                          onChange={(e) => handleInputChange('education', 'location', e.target.value, index)}
+                                      />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                              <div className="row">
+                                <div className="col-lg-12">
                                   <button
                                     type="button"
                                     className="btn btn-primary"
-                                    onClick={() => handleInputChange('socialLinks', 'link', '', formData.socialLinks.length)}
+                                    onClick={() => handleInputChange('education', '', '', formData.education.length)}
                                   >
-                                    Add Another Social Link
+                                    Add Another Education
                                   </button>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
 
-                        {/* Step 3: Education History */}
-                        <div className={`tab-pane ${activeStep === 3 ? 'active' : ''}`}>
-                          <div className="mb-4">
-                            <h4>Education History</h4>
-                          </div>
-                          <div className="row">
-                            {formData.education.map((edu, index) => (
-                              <div key={edu.id} className="education-form-group mb-4 p-3 border rounded position-relative">
-                                <div className="remove-btn" onClick={() => handleRemoveEducation(index)}>
-                                  <i className="fas fa-times"></i>
-                                </div>
-                                <h5 className="mb-3">Education #{index + 1}</h5>
-                                <div className="row">
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                      <label>Institution</label>
-                                    <input
-                                      type="text"
-                                        className="form-control"
-                                      value={edu.institution}
-                                        onChange={(e) => handleInputChange('education', 'institution', e.target.value, index)}
-                                    />
+                          {/* Step 4: Work Experience */}
+                          <div className={`tab-pane ${activeStep === 4 ? 'active' : ''}`}>
+                            <div className="mb-4">
+                              <h4>Work Experience</h4>
+                            </div>
+                            <div className="row">
+                              {formData.experience.map((work, index) => (
+                                <>
+                                  <div key={work.id} className="row position-relative mb-3">
+                                  <div className="remove-btn" onClick={() => handleRemoveExperience(index)}>
+                                    <i className="fas fa-times"></i>
                                   </div>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                      <label>Diploma</label>
-                                    <input
-                                      type="text"
-                                        className="form-control"
-                                      value={edu.diploma}
-                                        onChange={(e) => handleInputChange('education', 'diploma', e.target.value, index)}
-                                    />
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label>Position</label>
+                                      <input
+                                        type="text"
+                                          className="form-control"
+                                        value={work.position}
+                                          onChange={(e) => handleInputChange('experience', 'position', e.target.value, index)}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                      <label>Start Date</label>
-                                    <input
-                                      type="date"
-                                        className="form-control"
-                                      value={edu.startDate}
-                                        onChange={(e) => handleInputChange('education', 'startDate', e.target.value, index)}
-                                    />
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label>Enterprise</label>
+                                      <input
+                                        type="text"
+                                          className="form-control"
+                                        value={work.enterprise}
+                                          onChange={(e) => handleInputChange('experience', 'enterprise', e.target.value, index)}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                      <label>End Date</label>
-                                    <input
-                                      type="date"
-                                        className="form-control"
-                                      value={edu.endDate}
-                                        onChange={(e) => handleInputChange('education', 'endDate', e.target.value, index)}
-                                    />
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label>Start Date</label>
+                                      <input
+                                        type="date"
+                                          className="form-control"
+                                        value={work.startDate}
+                                          onChange={(e) => handleInputChange('experience', 'startDate', e.target.value, index)}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="col-lg-12">
-                                  <div className="form-group">
-                                    <label>Description</label>
-                                    <textarea
-                                        className="form-control"
-                                      value={edu.description}
-                                        onChange={(e) => handleInputChange('education', 'description', e.target.value, index)}
-                                    />
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label>End Date</label>
+                                      <input
+                                        type="date"
+                                          className="form-control"
+                                        value={work.endDate}
+                                          onChange={(e) => handleInputChange('experience', 'endDate', e.target.value, index)}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="col-lg-12">
-                                  <div className="form-group">
-                                    <label>Location</label>
-                                    <input
-                                      type="text"
-                                        className="form-control"
-                                      value={edu.location}
-                                        onChange={(e) => handleInputChange('education', 'location', e.target.value, index)}
-                                    />
+                                  <div className="col-lg-12">
+                                    <div className="form-group">
+                                      <label>Description</label>
+                                      <textarea
+                                          className="form-control"
+                                        value={work.description}
+                                          onChange={(e) => handleInputChange('experience', 'description', e.target.value, index)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-12">
+                                    <div className="form-group">
+                                      <label>Location</label>
+                                      <input
+                                        type="text"
+                                          className="form-control"
+                                        value={work.location}
+                                          onChange={(e) => handleInputChange('experience', 'location', e.target.value, index)}
+                                      />
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
-                            <div className="row">
-                              <div className="col-lg-12">
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  onClick={() => handleInputChange('education', '', '', formData.education.length)}
-                                >
-                                  Add Another Education
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Step 4: Work Experience */}
-                        <div className={`tab-pane ${activeStep === 4 ? 'active' : ''}`}>
-                          <div className="mb-4">
-                            <h4>Work Experience</h4>
-                          </div>
-                          <div className="row">
-                            {formData.experience.map((work, index) => (
-                              <>
-                                <div key={work.id} className="row position-relative mb-3">
-                                <div className="remove-btn" onClick={() => handleRemoveExperience(index)}>
-                                  <i className="fas fa-times"></i>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                      <label>Position</label>
-                                    <input
-                                      type="text"
-                                        className="form-control"
-                                      value={work.position}
-                                        onChange={(e) => handleInputChange('experience', 'position', e.target.value, index)}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                      <label>Enterprise</label>
-                                    <input
-                                      type="text"
-                                        className="form-control"
-                                      value={work.enterprise}
-                                        onChange={(e) => handleInputChange('experience', 'enterprise', e.target.value, index)}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                      <label>Start Date</label>
-                                    <input
-                                      type="date"
-                                        className="form-control"
-                                      value={work.startDate}
-                                        onChange={(e) => handleInputChange('experience', 'startDate', e.target.value, index)}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                      <label>End Date</label>
-                                    <input
-                                      type="date"
-                                        className="form-control"
-                                      value={work.endDate}
-                                        onChange={(e) => handleInputChange('experience', 'endDate', e.target.value, index)}
-                                    />
-                                  </div>
-                                </div>
+                                  {index < formData.experience.length - 1 && (
+                                    <div className="col-12">
+                                      <div style={{ height: '3px', backgroundColor: '#f0f0f0', margin: '1rem 0' }} />
+                                    </div>
+                                  )}
+                                </>
+                              ))}
+                              <div className="row">
                                 <div className="col-lg-12">
-                                  <div className="form-group">
-                                    <label>Description</label>
-                                    <textarea
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={() => handleInputChange('experience', '', '', formData.experience.length)}
+                                  >
+                                    Add Another Work Experience
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Step 5: Skills */}
+                          <div className={`tab-pane ${activeStep === 5 ? 'active' : ''}`}>
+                            <div className="mb-4">
+                              <h4>Skills</h4>
+                            </div>
+                            <div className="row">
+                              {formData.skills.map((skill, index) => (
+                                <div key={skill.id} className="row position-relative mb-3">
+                                  <div className="remove-btn" onClick={() => handleRemoveSkill(index)}>
+                                    <i className="fas fa-times"></i>
+                                  </div>
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                      <label>Skill Name</label>
+                                      <input
+                                        type="text"
                                         className="form-control"
-                                      value={work.description}
-                                        onChange={(e) => handleInputChange('experience', 'description', e.target.value, index)}
-                                    />
+                                        value={skill.name}
+                                        onChange={(e) => handleInputChange('skills', 'name', e.target.value, index)}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-6">
+                                    <div className="form-group">
+                                      <label>Degree</label>
+                                      <select
+                                        className="form-control"
+                                        value={skill.degree}
+                                        onChange={(e) => handleInputChange('skills', 'degree', e.target.value, index)}
+                                      >
+                                        <option value="">Select Degree</option>
+                                        <option value="NOVICE">NOVICE</option>
+                                        <option value="BEGINNER">BEGINNER</option>
+                                        <option value="INTERMEDIATE">INTERMEDIATE</option>
+                                        <option value="ADVANCED">ADVANCED</option>
+                                        <option value="EXPERT">EXPERT</option>
+                                      </select>
+                                    </div>
                                   </div>
                                 </div>
+                              ))}
+                              <div className="row">
                                 <div className="col-lg-12">
-                                  <div className="form-group">
-                                    <label>Location</label>
-                                    <input
-                                      type="text"
-                                        className="form-control"
-                                      value={work.location}
-                                        onChange={(e) => handleInputChange('experience', 'location', e.target.value, index)}
-                                    />
-                                  </div>
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={() => handleInputChange('skills', '', '', formData.skills.length)}
+                                  >
+                                    Add Another Skill
+                                  </button>
                                 </div>
-                              </div>
-                                {index < formData.experience.length - 1 && (
-                                  <div className="col-12">
-                                    <div style={{ height: '3px', backgroundColor: '#f0f0f0', margin: '1rem 0' }} />
-                                  </div>
-                                )}
-                              </>
-                            ))}
-                            <div className="row">
-                              <div className="col-lg-12">
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  onClick={() => handleInputChange('experience', '', '', formData.experience.length)}
-                                >
-                                  Add Another Work Experience
-                                </button>
                               </div>
                             </div>
                           </div>
-                        </div>
 
-                        {/* Step 5: Skills */}
-                        <div className={`tab-pane ${activeStep === 5 ? 'active' : ''}`}>
-                          <div className="mb-4">
-                            <h4>Skills</h4>
-                          </div>
-                          <div className="row">
-                            {formData.skills.map((skill, index) => (
-                              <div key={skill.id} className="row position-relative mb-3">
-                                <div className="remove-btn" onClick={() => handleRemoveSkill(index)}>
-                                  <i className="fas fa-times"></i>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                    <label>Skill Name</label>
-                                    <input
-                                      type="text"
-                                      className="form-control"
-                                      value={skill.name}
-                                      onChange={(e) => handleInputChange('skills', 'name', e.target.value, index)}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-lg-6">
-                                  <div className="form-group">
-                                    <label>Degree</label>
-                                    <select
-                                      className="form-control"
-                                      value={skill.degree}
-                                      onChange={(e) => handleInputChange('skills', 'degree', e.target.value, index)}
-                                    >
-                                      <option value="">Select Degree</option>
-                                      <option value="NOVICE">NOVICE</option>
-                                      <option value="BEGINNER">BEGINNER</option>
-                                      <option value="INTERMEDIATE">INTERMEDIATE</option>
-                                      <option value="ADVANCED">ADVANCED</option>
-                                      <option value="EXPERT">EXPERT</option>
-                                    </select>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                            <div className="row">
-                              <div className="col-lg-12">
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  onClick={() => handleInputChange('skills', '', '', formData.skills.length)}
-                                >
-                                  Add Another Skill
-                                </button>
-                              </div>
+                          {/* Step 6: Terms */}
+                          <div className={`tab-pane ${activeStep === 6 ? 'active' : ''}`}>
+                            <div className="mb-4">
+                              <h4>Terms</h4>
                             </div>
-                          </div>
-                        </div>
-
-                        {/* Step 6: Terms */}
-                        <div className={`tab-pane ${activeStep === 6 ? 'active' : ''}`}>
-                          <div className="mb-4">
-                            <h4>Terms</h4>
-                          </div>
-                          <div className="form-group">
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={formData.agreeToTerms}
-                                onChange={(e) => handleInputChange('terms', 'agreeToTerms', e.target.checked)}
-                              />
-                              I agree to the terms and conditions
-                            </label>
+                            <div className="form-group">
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={formData.agreeToTerms}
+                                  onChange={(e) => handleInputChange('terms', 'agreeToTerms', e.target.checked)}
+                                />
+                                I agree to the terms and conditions
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1543,7 +1598,8 @@ const RegisterWizard: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+      <FooterDefault />
+    </>
   );
 };
 

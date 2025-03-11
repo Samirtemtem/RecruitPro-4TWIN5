@@ -6,11 +6,15 @@ import SkillsMultiple from './components/SkillsMultiple';
 
 import MenuToggler from '../../../common/MenuToggler';
 import TopCardBlock from '../dashboard/components/TopCardBlock';
-import { BreadCrumb } from "../common/BreadCrumb";
-import { CopyrightFooter, MobileMenu } from "../common";
+import  BreadCrumb  from "../../../common/Breadcrumb";
+import  CopyrightFooter from "../../../common/CopyrightFooter";
+import MobileMenu from "../../../common/MobileMenu";
 
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
+import Header from '../../../common/Header';
+import ResumeForm, { AddCV } from './components';
+
 const MyResumePage: React.FC = () => {
   const { userData, isLoading, error } = useUserProfile();
 
@@ -25,7 +29,8 @@ const MyResumePage: React.FC = () => {
 {/*<LoginPopup />
  End Login Popup Modal */}
 
-<DashboardCandidatesHeader />
+<Header />
+      {/*<DashboardCandidatesHeader />*/}
 {/* End Header */}
 
 {/*<MobileMenu />
@@ -40,7 +45,11 @@ const MyResumePage: React.FC = () => {
     {/* breadCrumb */}
 
     <MenuToggler />
-    
+    <div
+        style={{
+          height: "55px", // Adjust this to match your header's height
+        }}
+      ></div>
     <BreadCrumb title="My Resume!" />
     {/* Collapsible sidebar button */}
 
@@ -53,6 +62,9 @@ const MyResumePage: React.FC = () => {
             <div className="widget-title">
               <h4>My Resume</h4>
             </div>
+            <div className="widget-content">
+                <AddCV />
+              </div>
             <div className="widget-content">
               <Education />
               <div className="mt-5">

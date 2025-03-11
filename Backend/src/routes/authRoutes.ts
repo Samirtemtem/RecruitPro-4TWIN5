@@ -8,15 +8,10 @@ import {
   sendOTP,
   verifyOTP,
   login,
-  // forgotPassword, 
-  // resetPassword, 
-  // createAdmin, 
-  // getall 
   changePassword,
   forgotPassword, 
-  resetPassword, 
- // createAdmin, 
- // getall 
+  resetPassword,
+  update2FASettings
 } from '../controllers/authController';
 import { generateToken } from '../utils/generateToken';
 import { upload } from '../utils/cloudinary';
@@ -259,6 +254,37 @@ router.get('/linkedin/callback', passport.authenticate('linkedin', {
 
 // Get user by email route
 router.get('/user/:token', getUserByEmail);
+
+// Add the new route for updating 2FA settings
+/**
+ * @swagger
+ * /api/auth/update2fa:
+ *   post:
+ *     tags: [Authentication]
+ *     summary: Update two-factor authentication settings
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - enabled
+ *             properties:
+ *               enabled:
+ *                 type: boolean
+ *                 description: Whether to enable or disable 2FA
+ *     responses:
+ *       200:
+ *         description: 2FA settings updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
+ */
+router.post('/update2fa', update2FASettings);
 
 export default router;
 

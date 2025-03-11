@@ -1,4 +1,4 @@
-import jobCatContent from "../data/job-catergories";
+import jobCatContent from "../../common/data/job-catergories";
 
 const JobCategorie = () => {
   return (

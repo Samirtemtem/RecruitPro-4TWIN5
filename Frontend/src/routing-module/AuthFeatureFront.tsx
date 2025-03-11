@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import "./AuthFeautureFront.scss"; // Import separate styles
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { useLocation , useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react"; // Add useContext to the import statement
 // Import AuthProvider for managing authentication

@@ -11,6 +11,7 @@ export interface User {
   createDate: Date;
   lastLogin: Date;
   image: string;
+  is2FAEnabled: boolean;
   profileId?: string;  // Reference to Profile
   applications?: string[];  // References to Applications
   interviews?: string[];  // References to Interviews

@@ -1,5 +1,7 @@
 import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useUserProfile, UserProfileData } from '../../hooks/useUserProfile';
+import ExperiencesModal from './ExperiencesModal';
+import './Modal.css';
 
 interface IExperience {
   _id?: string;
@@ -162,106 +164,16 @@ const Experiences: React.FC = () => {
         </div>
       )}
       
-      {/* Experience Form */}
-      {showForm && (
-        <div className="form-container">
-          <form onSubmit={handleSubmit}>
-            <div className="row">
-              <div className="form-group col-lg-6 col-md-12">
-                <label>Position <span className="required">*</span></label>
-                <input 
-                  type="text"
-                  name="position"
-                  value={currentExperience.position}
-                  onChange={handleChange}
-                  placeholder="Position or job title"
-                  required
-                  disabled={saving}
-                />
-              </div>
-              
-              <div className="form-group col-lg-6 col-md-12">
-                <label>Company/Enterprise <span className="required">*</span></label>
-                <input 
-                  type="text"
-                  name="enterprise"
-                  value={currentExperience.enterprise}
-                  onChange={handleChange}
-                  placeholder="Company name"
-                  required
-                  disabled={saving}
-                />
-              </div>
-              
-              <div className="form-group col-lg-6 col-md-12">
-                <label>Start Date <span className="required">*</span></label>
-                <input 
-                  type="date"
-                  name="startDate"
-                  value={currentExperience.startDate}
-                  onChange={handleChange}
-                  required
-                  disabled={saving}
-                />
-              </div>
-              
-              <div className="form-group col-lg-6 col-md-12">
-                <label>End Date <span className="required">*</span></label>
-                <input 
-                  type="date"
-                  name="endDate"
-                  value={currentExperience.endDate}
-                  onChange={handleChange}
-                  required
-                  disabled={saving}
-                />
-              </div>
-              
-              <div className="form-group col-lg-6 col-md-12">
-                <label>Location <span className="required">*</span></label>
-                <input 
-                  type="text"
-                  name="location"
-                  value={currentExperience.location}
-                  onChange={handleChange}
-                  placeholder="Job location"
-                  required
-                  disabled={saving}
-                />
-              </div>
-              
-              <div className="form-group col-lg-12 col-md-12">
-                <label>Description</label>
-                <textarea 
-                  name="description"
-                  value={currentExperience.description}
-                  onChange={handleChange}
-                  placeholder="Describe your role and responsibilities"
-                  disabled={saving}
-                ></textarea>
-              </div>
-              
-              <div className="form-group col-lg-12 col-md-12">
-                <button 
-                  type="submit" 
-                  className="theme-btn btn-style-one"
-                  disabled={saving}
-                >
-                  {saving ? 'Saving...' : (editIndex !== null ? 'Update Experience' : 'Add Experience')}
-                </button>
-                <button 
-                  type="button" 
-                  className="theme-btn btn-style-two ml-2" 
-                  onClick={resetForm}
-                  disabled={saving}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      )}
+      {/* Experience Modal */}
+      <ExperiencesModal
+        show={showForm}
+        onClose={resetForm}
+        onSubmit={handleSubmit}
+        currentExperience={currentExperience}
+        handleChange={handleChange}
+        saving={saving}
+        editIndex={editIndex}
+      />
       
       {/* Display Experience Items */}
       {experienceItems.length === 0 ? (

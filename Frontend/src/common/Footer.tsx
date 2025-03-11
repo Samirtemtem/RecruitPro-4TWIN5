@@ -93,14 +93,8 @@ const Footer = ({ footerStyle = "" }) => {
         <div className="auto-container">
           <div className="outer-box">
             <div className="copyright-text" style={{ color: '#FFFFFF' }}>
-              © {new Date().getFullYear()} Superio by{" "}
-              <a
-                href="https://themeforest.net/user/ib-themes"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                ib-themes
-              </a>
+              © {new Date().getFullYear()} RecruitPro by{" "}
+                InfiniteLoopers
               . All Rights Reserved.
             </div>
             <div className="social-links">

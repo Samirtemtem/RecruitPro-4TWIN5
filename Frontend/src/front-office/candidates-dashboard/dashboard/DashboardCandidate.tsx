@@ -11,7 +11,7 @@ import JobApplied from "./components/JobApplied";
 import TopCardBlock from "./components/TopCardBlock";
 import ProfileChart from "./components/ProfileChart";
 import Notification from "./components/Notification";
-import { MobileMenu } from "../common";
+import MobileMenu from "../../../common/MobileMenu";
 import Header from "../../../common/Header";
 import DefaultEditor from "react-simple-wysiwyg";
 const DashboardCandidate = () => {
@@ -24,6 +24,7 @@ const DashboardCandidate = () => {
        End Login Popup Modal */}
 
       <Header />
+      {/*<DashboardCandidatesHeader />*/}
       {/* End Header */}
 
       <MobileMenu />

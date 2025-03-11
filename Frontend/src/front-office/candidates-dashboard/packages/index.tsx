@@ -1,13 +1,15 @@
 import React from "react";
-import { BreadCrumb } from "../common/BreadCrumb";
+import  BreadCrumb  from "../../../common/Breadcrumb";
 import PackageDataTable from "./components/PackageDataTable";
-import { CopyrightFooter, MobileMenu } from "../common";
+import  CopyrightFooter from "../../../common/CopyrightFooter";
+import MobileMenu from "../../../common/MobileMenu";
 
 
 import MenuToggler from '../../../common/MenuToggler';
 import TopCardBlock from '../dashboard/components/TopCardBlock';
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
+import Header from "../../../common/Header";
 const PackagesPage: React.FC = () => {
   return (
     
@@ -20,7 +22,8 @@ const PackagesPage: React.FC = () => {
 {/*<LoginPopup />
  End Login Popup Modal */}
 
-<DashboardCandidatesHeader />
+<Header />
+      {/*<DashboardCandidatesHeader />*/}
 {/* End Header */}
 
 {/*<MobileMenu />
@@ -33,7 +36,11 @@ const PackagesPage: React.FC = () => {
 <section className="user-dashboard">
   <div className="dashboard-outer">
     <MenuToggler />
-    
+    <div
+        style={{
+          height: "55px", // Adjust this to match your header's height
+        }}
+      ></div>
     <BreadCrumb title="My Packages!" />
     {/* breadCrumb */}
 

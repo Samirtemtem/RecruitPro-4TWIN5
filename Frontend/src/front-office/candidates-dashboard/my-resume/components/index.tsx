@@ -1,5 +1,5 @@
 import React, { FormEvent } from 'react';
-import AddPortfolio from "./AddPortfolio";
+import AddCV from "./AddCV";
 import Awards from "./Awards";
 import Education from "./Education";
 import Experiences from "./Experiences";
@@ -15,12 +15,14 @@ const ResumeForm: React.FC = () => {
     <form className="default-form" onSubmit={handleSubmit}>
       <div className="row">
         <div className="form-group col-lg-6 col-md-12">
-          <label>Select Your CV</label>
-          <select className="chosen-single form-select">
-            <option>My CV</option>
-          </select>
+          <label>Upload Your CV(This will start the resume parsing process and override your current resume)</label>
+          <div className="form-group col-lg-6 col-md-12">
+          <AddCV />
+        </div>
         </div>
         {/* <!-- Input --> */}
+     
+        {/* <!-- End more portfolio upload --> */}
 
         <div className="form-group col-lg-12 col-md-12">
           <label>Description</label>
@@ -39,11 +41,7 @@ const ResumeForm: React.FC = () => {
         </div>
         {/* <!--  education and word-experiences --> */}
 
-        <div className="form-group col-lg-6 col-md-12">
-          <AddPortfolio />
-        </div>
-        {/* <!-- End more portfolio upload --> */}
-
+      
         <div className="form-group col-lg-12 col-md-12">
           {/* <!-- Resume / Awards --> */}
           <Awards />
@@ -71,7 +69,7 @@ const ResumeForm: React.FC = () => {
 export default ResumeForm;
 
 export {
-  AddPortfolio,
+  AddCV,
   Awards,
   Education,
   Experiences,

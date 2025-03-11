@@ -1,4 +1,4 @@
-import jobFeatured from "../data/job-featured";
+import jobFeatured from "../../common/data/job-featured";
 
 const JobFeatured = () => {
   return (

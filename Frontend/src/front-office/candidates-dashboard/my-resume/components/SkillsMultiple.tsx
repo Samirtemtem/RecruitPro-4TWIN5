@@ -1,5 +1,7 @@
 import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useUserProfile, UserProfileData } from '../../hooks/useUserProfile';
+import SkillsMultipleModal from './SkillsMultipleModal';
+import './Modal.css';
 
 interface ISkill {
   _id?: string;
@@ -50,18 +52,23 @@ const SkillsMultiple: React.FC = () => {
           )
         : [...skillItems, { ...currentSkill }];
 
-      await fetch('http://localhost:5000/api/profile/skill', {
+      const response = await fetch('http://localhost:5000/api/profile/skills', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
           userId: userData.id,
-          skills: updatedSkills 
+          skills: updatedSkills
         })
       });
 
-      setSkillItems(updatedSkills);
+      if (!response.ok) {
+        throw new Error('Failed to save skill');
+      }
+
+      const responseData = await response.json();
+      setSkillItems(responseData);
       setSubmitMessage({ type: 'success', text: editIndex !== null ? 'Skill updated successfully' : 'Skill added successfully' });
       resetForm();
     } catch (error) {
@@ -88,13 +95,17 @@ const SkillsMultiple: React.FC = () => {
       const itemToDelete = skillItems[index];
       const updatedItems = skillItems.filter((_, i) => i !== index);
 
-      await fetch(`http://localhost:5000/api/profile/skill/${itemToDelete._id}`, {
+      const response = await fetch(`http://localhost:5000/api/profile/skills/${itemToDelete._id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userId: userData.id })
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete skill');
+      }
 
       setSkillItems(updatedItems);
       setSubmitMessage({ type: 'success', text: 'Skill entry deleted successfully' });
@@ -141,61 +152,16 @@ const SkillsMultiple: React.FC = () => {
         </div>
       )}
       
-      {/* Skill Form */}
-      {showForm && (
-        <div className="form-container">
-          <form onSubmit={handleSubmit}>
-            <div className="row">
-              <div className="form-group col-lg-6 col-md-12">
-                <label>Skill Name <span className="required">*</span></label>
-                <input 
-                  type="text"
-                  name="name"
-                  value={currentSkill.name}
-                  onChange={handleChange}
-                  placeholder="Enter skill name"
-                  required
-                  disabled={saving}
-                />
-              </div>
-              
-              <div className="form-group col-lg-6 col-md-12">
-                <label>Proficiency Level <span className="required">*</span></label>
-                <select
-                  name="degree"
-                  value={currentSkill.degree}
-                  onChange={handleChange}
-                  required
-                  disabled={saving}
-                >
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                  <option value="Expert">Expert</option>
-                </select>
-              </div>
-              
-              <div className="form-group col-lg-12 col-md-12">
-                <button 
-                  type="submit" 
-                  className="theme-btn btn-style-one"
-                  disabled={saving}
-                >
-                  {saving ? 'Saving...' : (editIndex !== null ? 'Update Skill' : 'Add Skill')}
-                </button>
-                <button 
-                  type="button" 
-                  className="theme-btn btn-style-two ml-2" 
-                  onClick={resetForm}
-                  disabled={saving}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      )}
+      {/* Skills Modal */}
+      <SkillsMultipleModal
+        show={showForm}
+        onClose={resetForm}
+        onSubmit={handleSubmit}
+        currentSkill={currentSkill}
+        handleChange={handleChange}
+        saving={saving}
+        editIndex={editIndex}
+      />
       
       {/* Display Skill Items */}
       {skillItems.length === 0 ? (

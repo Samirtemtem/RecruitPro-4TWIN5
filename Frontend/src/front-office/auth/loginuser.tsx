@@ -46,11 +46,52 @@ const LoginUser = () => {
     }
   }, [errorlogin]);
   ////////////////////////////// auto redirect if user is already logged in////////////////////////////////////////////////////////
-  const { token, setToken, setRole } = useContext(AuthContext); // Use context inside the component
+  const { token, setToken, setRole, setUserId, fetchProfileData, updateProfileData, setUser } = useContext(AuthContext); // Use context inside the component
   useEffect(() => {
     // Check if the user is already authenticated
     const token = sessionStorage.getItem("token");
     if (token) {
+      // Check if we have a userId (needed for profile data)
+      const userId = sessionStorage.getItem("userId");
+      
+      // Check if profile data exists in session storage
+      const profileData = sessionStorage.getItem("profileData");
+      
+      // If we have a token and userId but no profile data, fetch it (this handles social login cases)
+      if (userId && !profileData) {
+        console.log("Social login detected - Fetching profile data for user:", userId);
+        
+        const fetchSocialLoginProfile = async () => {
+          try {
+            // Make POST request to /api/profile/me with userId
+            const profileResponse = await axios.post('http://localhost:5000/api/profile/me', {
+              userId
+            });
+            
+            console.log("Social login - Profile API response:", profileResponse.data);
+            
+            // Add the userId to the profile data for consistency
+            const profileData = {
+              ...profileResponse.data,
+              id: userId,
+              _id: profileResponse.data._id || userId
+            };
+            
+            // Save profile data in context and session storage
+            sessionStorage.setItem("profileData", JSON.stringify(profileData));
+            
+            // Update the profile data in AuthContext
+            updateProfileData(profileData);
+            
+            console.log("Social login - Profile data fetched and stored successfully");
+          } catch (error) {
+            console.error("Error fetching profile data after social login:", error);
+          }
+        };
+        
+        fetchSocialLoginProfile();
+      }
+      
       // If token exists, redirect to the appropriate dashboard based on the role
       const userRole = sessionStorage.getItem("userRole");
       if (userRole === "ADMIN") {
@@ -61,7 +102,7 @@ const LoginUser = () => {
         navigate(all_routes.LoginUser); // Adjust default route as needed
       }
     }
-  }, [token, navigate]);
+  }, [token, navigate, updateProfileData]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
@@ -93,13 +134,82 @@ const LoginUser = () => {
       }
       const { token, user } = response.data;
   
-      // Store token & role in AuthContext
+      // Extract the correct user ID (might be _id instead of id)
+      const userId = user._id || user.id;
+      
+      if (!userId) {
+        console.error("No user ID found in response!", user);
+      } else {
+        console.log("Using user ID:", userId);
+      }
+  
+      // Store the complete user object in AuthContext
+      const userObject = {
+        id: userId,
+        _id: user._id || user.id,
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email,
+        role: user.role,
+        phoneNumber: user.phoneNumber || "",
+        is2FAEnabled: user.is2FAEnabled || false,
+        image: user.image || "",
+        createDate: user.createDate,
+        lastLogin: user.lastLogin,
+        isVerified: user.isVerified
+      };
+  
+      // Store token, role, userId and the complete user object in AuthContext
       setToken(token);
       setRole(user.role); 
-
-      // Also persist in sessionStorage (optional)
+      setUserId(userId);
+      setUser(userObject);
+  
+      // Also persist in sessionStorage
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("userRole", user.role);
+      sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("user", JSON.stringify(userObject));
+      
+      console.log("Auth data stored:", { 
+        token: token ? "Set" : "Not set", 
+        role: user.role,
+        userId,
+        user: userObject
+      });
+
+      // Directly fetch profile data from the API instead of using AuthContext method
+      try {
+        console.log("Directly fetching profile data after login");
+        
+        // Make POST request to /api/profile/me with userId
+        const profileResponse = await axios.post('http://localhost:5000/api/profile/me', {
+          userId: userId
+        });
+        
+        console.log("Profile API response:", profileResponse.data);
+                alert("Profile API response:" + profileResponse.data);
+
+        // Add the userId to the profile data for consistency
+        const profileData = {
+          ...profileResponse.data,
+          id: userId,
+          _id: profileResponse.data._id || userId
+        };
+        
+        // Save profile data in context and session storage
+        sessionStorage.setItem("profileData", JSON.stringify(profileData));
+        
+        // If AuthContext has an updateProfileData method, use it
+        if (typeof updateProfileData === 'function') {
+          updateProfileData(profileData);
+        }
+        
+        console.log("Profile data fetched and stored successfully");
+      } catch (profileError) {
+        console.error("Error fetching profile data:", profileError);
+        // Continue with login even if profile fetch fails
+      }
 
       // Redirect based on role
       if (user.role === "ADMIN") {
@@ -188,7 +298,7 @@ const LoginUser = () => {
                     {/* Logo */}
                     <div className="mx-auto mb-5 text-center">
                       <ImageWithBasePath
-                        src="assets/img/Logooo.png"
+                        src="assets/img/LogoEsprit2.png"
                         className="img-fluid"
                         id="LogoLogin"
                         alt="Logo"

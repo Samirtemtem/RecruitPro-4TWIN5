@@ -4,8 +4,6 @@ import LoginUser from "../../front-office/auth/loginuser";
 import RegisterWizard from "../../front-office/auth/register-wizard";
 import VerifyEmail from "../../front-office/auth/VerifyEmail";
 import UserHome from "../../front-office/userhome";
-import Profile from "../../front-office/profile/profile";
-import Profilesettings from "../../front-office/profile/profile2";
 import SocialAuthHandler from "../../front-office/auth/SocialAuthHandler";
 import ForgotPassword from "../../front-office/auth/forgotPassword";
 import ResetPasswordSuccess from "../../front-office/auth/resetPasswordSuccess";
@@ -36,13 +34,13 @@ import {
 import Home from "../../index/Home";
 import AppSection from "../../index/components/AppSection";
 import AuthModal from "../../index/components/AuthModal";
-import Funfact from "../../index/components/Funfact";
-import Header from "../../common/Header";
+import Funfact from "../../common/Funfact";
+//import Header from "../../common/Header";
 import JobCategorie from "../../index/components/JobCategorie";
 import JobFeatured from "../../index/components/JobFeatured";
 import JobSearchBanner from "../../index/components/JobSearchBanner";
 import PartnerSlider from "../../index/components/PartnerSlider";
-import Testimonial from "../../index/components/Testimonial";
+import Testimonial from "../../common/Testimonial";
 import About from "../../index/components/About";
 import Blog from "../../index/components/Blog";
 
@@ -67,6 +65,11 @@ import SearchBox from "../../front-office/job-listing/components/SearchBox";
 import Tag from "../../front-office/job-listing/components/Tag";
 import DashboardCandidate from "../../front-office/candidates-dashboard/dashboard/DashboardCandidate";
 
+/////////////// home menu pages ///////////////////////
+
+import AboutUs from "../../pages-menu/about/AboutUs";
+import Contact from "../../pages-menu/contact/Cantact";
+import Terms from "../../pages-menu/terms/Terms";
 
 const routes = all_routes;
 
@@ -78,12 +81,6 @@ export const publicRoutes = [
     route: Route,
   },
   
-  {
-    path: "/register",
-    name: "Register",
-    element: <RegisterWizard  />,
-    route: Route,
-  },
     
   
   {
@@ -122,6 +119,12 @@ export const publicRoutesFront = [
     route: Route,
   },
   {
+    path: "/register",
+    name: "Register",
+    element: <RegisterWizard  />,
+    route: Route,
+  },
+  {
     path: "/index",
     name: "Root",
     element: <Home />,
@@ -137,7 +140,7 @@ export const publicRoutesFront = [
  { path: "/call-to-action", name: "Call To Action", element: <CallToAction />,route: Route, },
  { path: "/footer", name: "Footer", element: <Footer /> ,route: Route,},
  { path: "/funfact", name: "Funfact", element: <Funfact />,route: Route, },
- { path: "/header", name: "Header", element: <Header />,route: Route, },
+ //{ path: "/header", name: "Header", element: <Header />,route: Route, },
  { path: "/job-categorie", name: "Job Categorie", element: <JobCategorie /> ,route: Route,},
  { path: "/job-featured", name: "Job Featured", element: <JobFeatured />,route: Route,},
  { path: "/job-search-banner", name: "Job Search Banner", element: <JobSearchBanner />,route: Route, },
@@ -146,6 +149,31 @@ export const publicRoutesFront = [
 
  ///////////////////////////////////////////////////////////////////
 
+ {
+  path: "/JobListFront",
+  name: "Root", 
+  element: <JobListFront />,
+  route: Route,
+  },
+  {
+    path: "/Contact",
+    name: "Root", 
+    element: <Contact />,
+    route: Route,
+  },
+  {
+    path: "/AboutUs",
+    name: "Root", 
+    element: <AboutUs />,
+    route: Route,
+  },
+  {
+    path: "/Terms",
+    name: "Root", 
+    element: <Terms />,
+    route: Route,
+  },
+  
 ]
 
 export const authRoutesfront = [
@@ -155,12 +183,7 @@ export const authRoutesfront = [
     element: <Navigate to="/index" />,
     route: Route,
   },
-  {
-    path: "/JobListFront",
-    name: "Root", 
-    element: <JobListFront />,
-    route: Route,
-  },
+  
   {
     path: "/DashboardCandidate",
     name: "Root", 

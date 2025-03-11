@@ -6,6 +6,11 @@ export const all_routes = {
   // main page
   IndexPage: "/index",
 
+  // home page menu 
+  AboutUs: "/AboutUs",
+  Contact: "/Contact",
+  Terms: "/Terms",
+
   // Other sections for the front for landing page
   Home: "/home",
   About: "/about",

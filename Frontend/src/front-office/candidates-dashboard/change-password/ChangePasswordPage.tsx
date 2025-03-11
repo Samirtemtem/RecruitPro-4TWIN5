@@ -4,11 +4,12 @@ import React from 'react';
 import { Form } from './components';
 import MenuToggler from '../../../common/MenuToggler';
 import TopCardBlock from '../dashboard/components/TopCardBlock';
-import { BreadCrumb } from "../common/BreadCrumb";
-import { CopyrightFooter } from "../common";
-import { MobileMenu } from '../common';
+import  BreadCrumb  from "../../../common/Breadcrumb";
+import  CopyrightFooter from "../../../common/CopyrightFooter";
+import MobileMenu from "../../../common/MobileMenu";
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
+import Header from '../../../common/Header';
 const ChangePasswordPage: React.FC = () => {
   return (
 
@@ -20,7 +21,8 @@ const ChangePasswordPage: React.FC = () => {
       {/*<LoginPopup />
        End Login Popup Modal */}
 
-      <DashboardCandidatesHeader />
+<Header />
+{/*<DashboardCandidatesHeader />*/}
       {/* End Header */}
 
       {/*<MobileMenu />
@@ -37,7 +39,13 @@ const ChangePasswordPage: React.FC = () => {
         
           {/* breadCrumb */}
 
-          <MenuToggler />  <BreadCrumb title="Change your password!" />
+          <MenuToggler /> 
+          <div
+        style={{
+          height: "55px", // Adjust this to match your header's height
+        }}
+      ></div>
+           <BreadCrumb title="Change your password!" />
           {/* Collapsible sidebar button */}
 
           {/* End .row top card block */}

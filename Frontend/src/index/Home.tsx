@@ -8,16 +8,17 @@ import CallToAction from "../common/CallToAction";
 import AuthModal from "./components/AuthModal";
 import PartnerSlider from "./components/PartnerSlider";
 import FooterDefault from "../common/Footer";
-import Funfact from "./components/Funfact";
+import Funfact from "../common/Funfact";
 import DefaulHeader2 from "../common/Header";
-// import MobileMenu from "./components/MobileMenu";
+import MobileMenu from "../common/MobileMenu";
 import JobSearchBanner from "./components/JobSearchBanner";
 import JobCategorie1 from "./components/JobCategorie";
 import JobFeatured1 from "./components/JobFeatured";
-import Testimonial from "./components/Testimonial";
+import Testimonial from "../common/Testimonial";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import ScrollToTop from "../common/ScrollTop";
 
 const Home = () => {
   useEffect(() => {
@@ -34,7 +35,7 @@ const Home = () => {
       <DefaulHeader2 />
       {/* End Header with upload cv btn */}
 
-      {/* <MobileMenu /> */}
+       <MobileMenu /> 
       {/* End MobileMenu */}
 
       <JobSearchBanner />
@@ -167,7 +168,8 @@ const Home = () => {
 
       <CallToAction />
       {/* End Call To Action */}
-
+      
+      <ScrollToTop />
       <FooterDefault />
       {/* End Main Footer */}
     </>

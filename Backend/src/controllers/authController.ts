@@ -794,6 +794,87 @@ export const changePassword = async (req: Request, res: Response): Promise<any> 
   }
 };
 
+// Add the new controller function for updating 2FA settings
+export const update2FASettings = async (req: Request, res: Response): Promise<any> => {
+  try {
+    // Get the enabled value from the request body
+    const { enabled } = req.body;
+    
+    if (typeof enabled !== 'boolean') {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'The enabled parameter must be a boolean value' 
+      });
+    }
+    
+    // Get the user ID from the token
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Authentication token is required' 
+      });
+    }
+    
+    // Verify the token and get the user ID
+    try {
+      console.log('Token received:', token);
+      
+      // Verify token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+      console.log('Verified token payload:', decoded);
+      
+      // Token specifically uses the 'userId' property based on our generateToken function
+      const userId = (decoded as any).userId;
+      
+      if (!userId) {
+        console.error('Could not extract userId from token payload:', decoded);
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid token format: user ID not found in payload'
+        });
+      }
+      
+      console.log('Using userId:', userId);
+      
+      // Update the user's 2FA settings
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { is2FAEnabled: enabled },
+        { new: true }
+      );
+      
+      if (!updatedUser) {
+        console.error(`User not found with ID: ${userId}`);
+        return res.status(404).json({ 
+          success: false, 
+          message: 'User not found' 
+        });
+      }
+      
+      // Return success response
+      return res.status(200).json({
+        success: true,
+        message: `Two-factor authentication ${enabled ? 'enabled' : 'disabled'} successfully`,
+        is2FAEnabled: updatedUser.is2FAEnabled
+      });
+    } catch (jwtError) {
+      console.error('JWT verification error:', jwtError);
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid or expired token' 
+      });
+    }
+    
+  } catch (error) {
+    console.error('Error updating 2FA settings:', error);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'An error occurred while updating 2FA settings' 
+    });
+  }
+};
+
 /*
 /////////////////////////////////////////////////////////// Forgot Password //////////////////////////////////////////////////
 

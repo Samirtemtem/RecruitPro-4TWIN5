@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
-import Profile, { IProfile } from '../models/Profile';
+import Profile from '../models/Profile';
 import Education, { IEducation } from '../models/Education';
 import Experience, { IExperience } from '../models/Experience';
 import Skill, { ISkill } from '../models/Skill';
 import SocialLinks, { ISocialLinks } from '../models/SocialLinks';
 import { Socials } from '../models/types';
 import { uploadToCloudinary } from '../utils/cloudinary';
-import { Document } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 import { User } from '../models/User';
+
 // Extend Express Request type to include user
 interface AuthenticatedRequest extends Request {
   user: {
@@ -81,6 +82,8 @@ export const getProfile = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const { userId, firstName, lastName, email, phoneNumber, address } = req.body;
+    
+    // First, update the Profile document
     const profile = await Profile.findOneAndUpdate(
       { user: userId },
       { firstName, lastName, email, phoneNumber, address },
@@ -91,6 +94,29 @@ export const updateProfile = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Profile not found' });
     }
 
+    // Now, also update the corresponding User document with the same information
+    // Use the already imported User model
+    
+    // Update only the fields that should be synced between User and Profile
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { 
+        firstName, 
+        lastName, 
+        email,
+        phoneNumber
+        // Note: We don't update address in User as it's only in the Profile model
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      console.warn(`Updated profile for userId ${userId}, but couldn't find corresponding user to update`);
+    } else {
+      console.log(`Successfully updated both profile and user for userId ${userId}`);
+    }
+
+    // Return the updated profile data
     res.json(profile);
   } catch (error) {
     console.error('Error updating profile:', error);
@@ -111,6 +137,42 @@ export const getEducation = async (req: Request, res: Response) => {
     res.json(profile.education);
   } catch (error) {
     console.error('Error fetching education:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const addEducation = async (req: Request, res: Response) => {
+  try {
+    const { userId, education } = req.body;
+    
+    // Find the user's profile
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    // Create new education entry
+    const newEducation = await Education.create({
+      institution: education.institution,
+      diploma: education.diploma,
+      startDate: education.startDate,
+      endDate: education.endDate,
+      description: education.description,
+      location: education.location
+    });
+
+    // Add the new education to the profile's education array
+    profile.education.push(newEducation._id as unknown as Schema.Types.ObjectId);
+    await profile.save();
+
+    // Return the newly created education entry
+    const populatedProfile = await Profile.findOne({ user: userId })
+      .populate('education')
+      .select('education');
+
+    res.json(populatedProfile?.education);
+  } catch (error) {
+    console.error('Error adding education:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -183,17 +245,31 @@ export const getExperience = async (req: Request, res: Response) => {
 export const updateExperience = async (req: Request, res: Response) => {
   try {
     const { userId, experience } = req.body;
-    const profile = await Profile.findOneAndUpdate(
-      { user: userId },
-      { experience },
-      { new: true }
-    ).populate('experience');
-
+    const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found' });
     }
 
-    res.json(profile.experience);
+    // Delete existing experience entries
+    await Experience.deleteMany({ _id: { $in: profile.experience } });
+
+    // Create new experience entries
+    const experienceDocs = await Experience.create(experience);
+    
+    // Handle both single and multiple experience entries
+    const experienceIds = Array.isArray(experienceDocs) 
+      ? experienceDocs.map(doc => doc._id)
+      : [experienceDocs._id];
+
+    // Update profile with new experience IDs
+    await Profile.findOneAndUpdate(
+      { user: userId },
+      { experience: experienceIds },
+      { new: true }
+    );
+
+    // Return the newly created experience entries
+    res.json(Array.isArray(experienceDocs) ? experienceDocs : [experienceDocs]);
   } catch (error) {
     console.error('Error updating experience:', error);
     res.status(500).json({ message: 'Server error' });
@@ -240,17 +316,30 @@ export const getSkills = async (req: Request, res: Response) => {
 export const updateSkills = async (req: Request, res: Response) => {
   try {
     const { userId, skills } = req.body;
-    const profile = await Profile.findOneAndUpdate(
-      { user: userId },
-      { skills },
-      { new: true }
-    ).populate('skills');
-
+    const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found' });
     }
 
-    res.json(profile.skills);
+    // Delete existing skills entries
+    await Skill.deleteMany({ _id: { $in: profile.skills } });
+
+    // Create new skills entries
+    const skillDocs = await Skill.create(skills);
+    const skillIds = Array.isArray(skillDocs) 
+      ? skillDocs.map(doc => doc._id)
+      : [skillDocs._id];
+    
+    // Update profile with new skill IDs
+    profile.skills = skillIds;
+    await profile.save();
+
+    // Return the newly created skills
+    const populatedProfile = await Profile.findOne({ user: userId })
+      .populate('skills')
+      .select('skills');
+
+    res.json(populatedProfile?.skills);
   } catch (error) {
     console.error('Error updating skills:', error);
     res.status(500).json({ message: 'Server error' });
@@ -267,7 +356,14 @@ export const deleteSkill = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Profile not found' });
     }
 
-    profile.skills = profile.skills.filter(skill => skill.toString() !== id);
+    // First delete the skill document
+    const deletedSkill = await Skill.findByIdAndDelete(id);
+    if (!deletedSkill) {
+      return res.status(404).json({ message: 'Skill not found' });
+    }
+
+    // Then remove the reference from the profile
+    profile.skills = profile.skills.filter(skillId => skillId.toString() !== id);
     await profile.save();
 
     res.json({ message: 'Skill deleted successfully' });
@@ -432,6 +528,166 @@ export const uploadProfileImage = async (req: Request, res: Response) => {
     res.json({ message: 'Profile image uploaded successfully', imageUrl: file.path });
   } catch (error) {
     console.error('Error uploading profile image:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Add the new controller function for updating 2FA settings
+export const update2FASettings = async (req: Request, res: Response) => {
+  try {
+    // Get the enabled value from the request body
+    const { enabled } = req.body;
+    
+    if (typeof enabled !== 'boolean') {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'The enabled parameter must be a boolean value' 
+      });
+    }
+    
+    // Get the user ID from the token
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Authentication token is required' 
+      });
+    }
+    
+    // Verify the token and get the user ID
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    
+    // Update the user's 2FA settings
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { is2FAEnabled: enabled },
+      { new: true }
+    );
+    
+    if (!updatedUser) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'User not found' 
+      });
+    }
+    
+    // Return success response
+    return res.status(200).json({
+      success: true,
+      message: `Two-factor authentication ${enabled ? 'enabled' : 'disabled'} successfully`,
+      is2FAEnabled: updatedUser.is2FAEnabled
+    });
+    
+  } catch (error) {
+    console.error('Error updating 2FA settings:', error);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'An error occurred while updating 2FA settings' 
+    });
+  }
+};
+
+// Add Experience
+export const addExperience = async (req: Request, res: Response) => {
+  try {
+    const { userId, experience } = req.body;
+    
+    // Find the user's profile
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    // Create new experience entry
+    const newExperience = await Experience.create({
+      position: experience.position,
+      enterprise: experience.enterprise,
+      startDate: experience.startDate,
+      endDate: experience.endDate,
+      description: experience.description,
+      location: experience.location
+    });
+
+    // Add the new experience to the profile's experience array
+    profile.experience.push(newExperience._id as unknown as Schema.Types.ObjectId);
+    await profile.save();
+
+    // Return the newly created experience entry
+    const populatedProfile = await Profile.findOne({ user: userId })
+      .populate('experience')
+      .select('experience');
+
+    res.json(populatedProfile?.experience);
+  } catch (error) {
+    console.error('Error adding experience:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Add Skills
+export const addSkills = async (req: Request, res: Response) => {
+  try {
+    const { userId, skill } = req.body;
+    
+    // Find the user's profile
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    // Create new skill entry
+    const newSkill = await Skill.create({
+      name: skill.name,
+      degree: skill.degree
+    });
+
+    // Add the new skill to the profile's skills array
+    profile.skills.push(newSkill._id as unknown as Schema.Types.ObjectId);
+    await profile.save();
+
+    // Return the newly created skill entry
+    const populatedProfile = await Profile.findOne({ user: userId })
+      .populate('skills')
+      .select('skills');
+
+    res.json(populatedProfile?.skills);
+  } catch (error) {
+    console.error('Error adding skill:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Add Social Links
+export const addSocialLinks = async (req: Request, res: Response) => {
+  try {
+    const { userId, socialLink } = req.body;
+    
+    // Find the user's profile
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    // Create new social link entry
+    const newSocialLink = await SocialLinks.create({
+      type: socialLink.type,
+      link: socialLink.link
+    });
+
+    // Add the new social link to the profile's socialLinks array
+    profile.socialLinks.push(newSocialLink._id as unknown as Schema.Types.ObjectId);
+    await profile.save();
+
+    // Return the newly created social link entry
+    const populatedProfile = await Profile.findOne({ user: userId })
+      .populate('socialLinks')
+      .select('socialLinks');
+
+    res.json(populatedProfile?.socialLinks);
+  } catch (error) {
+    console.error('Error adding social link:', error);
     res.status(500).json({ message: 'Server error' });
   }
 }; 

@@ -10,8 +10,9 @@ import DashboardCandidatesHeader from "../candidates-dashboard/dashboard/compone
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { MobileMenu } from "../candidates-dashboard/common";
-import {MenuToggler} from "../candidates-dashboard/common/MenuToggler";
+import MobileMenu from "../../common/MobileMenu";
+import MenuToggler from "../../common/MenuToggler";
+import ScrollToTop from "../../common/ScrollTop";
 const JobListFront: React.FC = () => {
     useEffect(() => {
       AOS.init({
@@ -27,9 +28,9 @@ const JobListFront: React.FC = () => {
       {/*<LoginPopup />
        End Login Popup Modal */}
 
-      {/*<DefaulHeader2 />
-       End Header with upload cv btn */}
-       <DashboardCandidatesHeader />
+      <DefaulHeader2 />
+      {/* End Header with upload cv btn 
+       <DashboardCandidatesHeader />*/}
        <MobileMenu />
 
       {/* <MobileMenu />
@@ -75,6 +76,7 @@ const JobListFront: React.FC = () => {
       </section>
       {/* <!--End Listing Page Section --> */}
 
+      <ScrollToTop />
       <FooterDefault footerStyle="alternate5" />
       {/* <!-- End Main Footer --> */}
     </>

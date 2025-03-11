@@ -20,6 +20,8 @@ import "../src/style/icon/ionic/ionicons.css";
 import "../src/style/icon/tabler-icons/webfont/tabler-icons.css";
 import ALLRoutes from "./routing-module/router/router";
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

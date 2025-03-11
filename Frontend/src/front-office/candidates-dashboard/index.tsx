@@ -1,6 +1,6 @@
 import * as MyProfile from './my-profile';
 import * as Dashboard from './dashboard/DashboardCandidate';
-import * as Common from './common';
+import * as Common from  '../../common';
 import * as AppliedJobs from './applied-jobs';
 import * as ChangePassword from './change-password';
 import * as CvManager from './cv-manager';

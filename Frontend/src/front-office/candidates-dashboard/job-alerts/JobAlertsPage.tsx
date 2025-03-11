@@ -1,15 +1,16 @@
 import React from 'react';
 // import { AuthFeatureFront } from '../common';
 import { JobAlertsTable } from './components';
-import { CopyrightFooter } from "../common";
+import  CopyrightFooter from "../../../common/CopyrightFooter";
 
 import MenuToggler from '../../../common/MenuToggler';
 import TopCardBlock from '../dashboard/components/TopCardBlock';
-import { BreadCrumb } from "../common/BreadCrumb";
-import { MobileMenu } from "../common";
+import  BreadCrumb  from "../../../common/Breadcrumb";
+import MobileMenu from "../../../common/MobileMenu";
 
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
+import Header from '../../../common/Header';
 const JobAlertsPage: React.FC = () => {
   return (
     
@@ -22,7 +23,8 @@ const JobAlertsPage: React.FC = () => {
 {/*<LoginPopup />
  End Login Popup Modal */}
 
-<DashboardCandidatesHeader />
+<Header />
+      {/*<DashboardCandidatesHeader />*/}
 {/* End Header */}
 <MobileMenu />
 {/*<MobileMenu />
@@ -35,7 +37,13 @@ const JobAlertsPage: React.FC = () => {
 <section className="user-dashboard">
   <div className="dashboard-outer">
 
-    <MenuToggler />    <BreadCrumb title="Howdy, Jerome!!" />
+    <MenuToggler /> 
+    <div
+        style={{
+          height: "55px", // Adjust this to match your header's height
+        }}
+      ></div>
+       <BreadCrumb title="Howdy, Jerome!!" />
     {/* breadCrumb */}
 
     {/* Collapsible sidebar button */}

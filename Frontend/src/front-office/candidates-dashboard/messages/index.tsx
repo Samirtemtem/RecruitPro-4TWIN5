@@ -1,13 +1,14 @@
 import React from "react";
-import { BreadCrumb } from "../common/BreadCrumb";
+import  BreadCrumb  from "../../../common/Breadcrumb";
 import ChatBox from "./components";
 
-import { CopyrightFooter, MobileMenu } from "../common";
-
+import  CopyrightFooter from "../../../common/CopyrightFooter";
+import MobileMenu from "../../../common/MobileMenu";
 import MenuToggler from '../../../common/MenuToggler';
 import TopCardBlock from '../dashboard/components/TopCardBlock';
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
+import Header from "../../../common/Header";
 const MessagesPage: React.FC = () => {
   return (
     
@@ -20,7 +21,8 @@ const MessagesPage: React.FC = () => {
 {/*<LoginPopup />
  End Login Popup Modal */}
 
-<DashboardCandidatesHeader />
+<Header />
+      {/*<DashboardCandidatesHeader />*/}
 {/* End Header */}
 
 {/*<MobileMenu />
@@ -36,6 +38,11 @@ const MessagesPage: React.FC = () => {
     {/* breadCrumb */}
 
     <MenuToggler />
+    <div
+        style={{
+          height: "55px", // Adjust this to match your header's height
+        }}
+      ></div>
     
     <BreadCrumb title="Your messages!" />
     {/* Collapsible sidebar button */}
@@ -45,8 +52,7 @@ const MessagesPage: React.FC = () => {
         {/* <!-- Dashboard --> */}
         <div className="row g-0">
       <div className="col-lg-12">
-        {/* BreadCrumb */}
-        <BreadCrumb title="Messages" />
+        
 
         {/* Chat Widget */}
         <div className="chat-widget">

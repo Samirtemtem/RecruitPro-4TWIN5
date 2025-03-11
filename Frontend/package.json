@@ -95,6 +95,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-select": "^5.0.1",
     "@types/react-slick": "^0.23.13",
+    "autoprefixer": "^10.4.21",
     "browserify-zlib": "^0.2.0",
     "https-browserify": "^1.0.0",
     "react-app-rewired": "^2.2.1",

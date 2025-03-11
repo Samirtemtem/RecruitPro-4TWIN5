@@ -3,10 +3,13 @@ import JobFavouriteTable from "./components/JobFavouriteTable";
 
 import MenuToggler from '../../../common/MenuToggler';
 import TopCardBlock from '../dashboard/components/TopCardBlock';
-import { BreadCrumb } from "../common/BreadCrumb";
-import { CopyrightFooter, MobileMenu } from "../common";
+import BreadCrumb from "../../../common/Breadcrumb";
+import  CopyrightFooter from "../../../common/CopyrightFooter";
+
+import MobileMenu from "../../../common/MobileMenu";
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
+import Header from "../../../common/Header";
 const ShortlistedJobsPage: React.FC = () => {
   return (
     
@@ -20,7 +23,8 @@ const ShortlistedJobsPage: React.FC = () => {
 {/*<LoginPopup />
  End Login Popup Modal */}
 
-<DashboardCandidatesHeader />
+<Header />
+      {/*<DashboardCandidatesHeader />*/}
 {/* End Header */}
 
 {/*<MobileMenu />
@@ -36,6 +40,11 @@ const ShortlistedJobsPage: React.FC = () => {
       <div className="col-lg-12">
         {/* BreadCrumb */}
         <MenuToggler />
+        <div
+        style={{
+          height: "55px", // Adjust this to match your header's height
+        }}
+      ></div>
         
         <BreadCrumb title="Shortlisted Jobs" />
 

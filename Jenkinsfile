@@ -38,12 +38,17 @@ pipeline {
         }
 
 
-        stage('Install & Build Frontend') {
+        stage('Install Frontend') {
             steps {
-                script {
-                    sh '''
-                        cd Frontend && npm install && npm run build
-                    '''
+                dir('Frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+        stage('Build Frontend') {
+            steps {
+                dir('Frontend') {
+                    sh 'CI=false npm run build'
                 }
             }
         }

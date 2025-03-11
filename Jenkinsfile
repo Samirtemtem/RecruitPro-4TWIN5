@@ -10,7 +10,7 @@ pipeline {
                         branches: [[name: 'CI/CD_setup']], // Branch name
                         userRemoteConfigs: [[
                             url: 'https://github.com/Samirtemtem/RecruitPro-4TWIN5.git', // GitHub repo URL
-                            credentialsId: 'gitt'  // Jenkins credentials ID for GitHub
+                            credentialsId: 'AhmedBnHmida-GIT'  // Jenkins credentials ID for GitHub
                         ]]
                     ])
                 }

@@ -77,7 +77,7 @@ pipeline {
                     }
                 }
             }
-/*
+
             stage('Frontend SonarQube Analysis') {
                 steps {
                     script {
@@ -90,19 +90,19 @@ pipeline {
                     }
                 }
             }
-*/
+
             stage('Build Docker Backend Images') {
                 steps {
                     sh 'docker build -t ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ./Backend'
                 }
             }
-/*
+
             stage('Build Docker Frontend Images') {
                 steps {
                     sh 'docker build -t ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ./Frontend'
                 }
             }
-*/            
+           
              stage('Docker Login') {
                 steps {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
@@ -120,7 +120,7 @@ pipeline {
                     '''
                 }
             }
-/*
+
             stage('Docker Push Frontend') {
                 steps {
                     sh '''
@@ -128,8 +128,10 @@ pipeline {
                     '''
                 }
             }
-*/
 
+
+//deploying the backend and frontend
+/*
             stage('Deploy Backend') {
                 steps {
                     sshagent(['recruitpro-ssh']) {
@@ -156,7 +158,6 @@ pipeline {
                 }
             }
 
-/*
             stage('Deploy Frontend') {
                 steps {
                     sshagent(['your-server-ssh-credentials']) {

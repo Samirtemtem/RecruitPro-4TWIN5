@@ -134,27 +134,28 @@ pipeline {
                 steps {
                     sshagent(['RecruitPro']) {
                         sh '''
-                        ssh user@your-server << 'EOF'
-                            echo "Pulling latest backend Docker image..."
-                            docker pull ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
+                            ssh user@your-server << 'EOF'
+                                echo "Pulling latest backend Docker image..."
+                                docker pull ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} || { echo "Docker pull failed"; exit 1; }
 
-                            # Check if backend container exists
-                            if docker ps -q --filter "name=backend-container"; then
-                                echo "Stopping and removing existing backend container..."
-                                docker stop backend-container && docker rm backend-container
-                            else
-                                echo "No backend-container to remove."
-                            fi
+                                # Check if backend container exists
+                                if docker ps -q --filter "name=backend-container"; then
+                                    echo "Stopping and removing existing backend container..."
+                                    docker stop backend-container && docker rm backend-container || { echo "Failed to stop/remove backend container"; exit 1; }
+                                else
+                                    echo "No backend-container to remove."
+                                fi
 
-                            echo "Starting new backend container..."
-                            docker run -d -p 5000:5000 --name backend-container --restart=always ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
+                                echo "Starting new backend container..."
+                                docker run -d -p 5000:5000 --name backend-container --restart=always ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} || { echo "Docker run failed"; exit 1; }
 
-                            echo "Backend deployment completed successfully!"
-                        EOF
+                                echo "Backend deployment completed successfully!"
+                            EOF
                         '''
                     }
                 }
             }
+
 /*
             stage('Deploy Frontend') {
                 steps {

@@ -5,6 +5,12 @@ pipeline {
         nodejs 'node'  // Make sure the Node.js version matches the installed version in Jenkins
     }
 
+    environment {
+        DOCKER_IMAGE_BACKEND = "ahmedbenhmida/recruitpro-backend"
+        DOCKER_IMAGE_FRONTEND = "ahmedbenhmida/recruitpro-frontend"
+        DOCKER_TAG = "latest"
+    }
+
     stages {
         stage('Git Checkout') {
             steps {

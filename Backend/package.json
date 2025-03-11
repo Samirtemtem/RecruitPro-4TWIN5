@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "ts-node src/bin/www",
     "test": "echo \"No tests specified\" && exit 0",
-    "sonar": "sonar-scanner -Dsonar.projectKey=your-backend-project-key -Dsonar.sources=src -Dsonar.host.url=http://localhost:9000"
+    "sonar": "sonar-scanner -Dsonar.projectKey=RecruitPro-backend -Dsonar.sources=src -Dsonar.host.url=http://localhost:9000"
   },
   "dependencies": {
     "@types/axios": "^0.14.4",

@@ -21,6 +21,20 @@ pipeline {
             }
         }
 
+        stage('Build Artifact') {
+            steps {
+                script {
+                    // Build backend and frontend artifacts
+                    // For example, if backend is Java, run Maven or Gradle build
+                    // Adjust the build commands for your specific project
+                    sh '''
+                        cd Backend && npm install && npm run build
+                        cd ../Frontend && npm install && npm run build
+                    '''
+                }
+            }
+        }
+/*
         stage('Install Dependencies') {
             steps {
                 script {
@@ -31,7 +45,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Run Unit Tests') {
             steps {
                 script {
@@ -39,6 +53,20 @@ pipeline {
                         sh '''
                             cd Backend && npm test
                             cd ../Frontend && npm test
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Run SonarQube analysis
+                    withSonarQubeEnv(Kaddem-sq) {
+                        sh '''
+                            cd Backend && npm run sonar
+                            cd ../Frontend && npm run sonar
                         '''
                     }
                 }

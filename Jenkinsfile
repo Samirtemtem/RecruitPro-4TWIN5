@@ -37,8 +37,7 @@ pipeline {
             }
         }
 
-//Some issues with the frontend build
-/*
+
         stage('Install & Build Frontend') {
             steps {
                 script {
@@ -48,7 +47,7 @@ pipeline {
                 }
             }
         }
-*/
+
 
 //we have to add the tests
 /*

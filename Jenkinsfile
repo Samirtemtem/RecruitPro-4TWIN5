@@ -132,7 +132,7 @@ pipeline {
 
             stage('Deploy Backend') {
                 steps {
-                    sshagent(['your-server-ssh-credentials']) {
+                    sshagent(['RecruitPro']) {
                         sh '''
                         ssh user@your-server << 'EOF'
                             echo "Pulling latest backend Docker image..."

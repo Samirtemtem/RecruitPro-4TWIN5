@@ -129,6 +129,7 @@
 
 
 "sonar": "sonar-scanner -Dsonar.projectKey=RecruitPro-Frontend -Dsonar.sources=src -Dsonar.host.url=http://localhost:9000"
+
   
 
 

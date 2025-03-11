@@ -59,14 +59,26 @@ pipeline {
             }
         }
 */
-            stage('SonarQube Analysis') {
+            stage('Backend SonarQube Analysis') {
                 steps {
                     script {
-                        // Run SonarQube analysis
+                        // Run SonarQube analysis for Backend
                         withSonarQubeEnv('Kaddem-sq') {
                             sh '''
                                 cd Backend && npm run sonar
-                                cd ../Frontend && npm run sonar
+                            '''
+                        }
+                    }
+                }
+            }
+
+            stage('Frontend SonarQube Analysis') {
+                steps {
+                    script {
+                        // Run SonarQube analysis for Frontend
+                        withSonarQubeEnv('Kaddem-sq') {
+                            sh '''
+                                cd Frontend && npm run sonar
                             '''
                         }
                     }

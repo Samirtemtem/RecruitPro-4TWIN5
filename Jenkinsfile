@@ -21,15 +21,21 @@ pipeline {
             }
         }
 
-        stage('Build Artifact') {
+        stage('Install & Build Backend') {
             steps {
                 script {
-                    // Build backend and frontend artifacts
-                    // For example, if backend is Java, run Maven or Gradle build
-                    // Adjust the build commands for your specific project
                     sh '''
                         cd Backend && npm install && npm run build
-                        cd ../Frontend && npm install && npm run build
+                    '''
+                }
+            }
+        }
+
+        stage('Install & Build Frontend') {
+            steps {
+                script {
+                    sh '''
+                        cd Frontend && npm install && npm run build
                     '''
                 }
             }

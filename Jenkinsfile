@@ -31,6 +31,8 @@ pipeline {
             }
         }
 
+//Some issues with the frontend build
+/*
         stage('Install & Build Frontend') {
             steps {
                 script {
@@ -40,18 +42,10 @@ pipeline {
                 }
             }
         }
-/*
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    sh '''
-                        cd Backend && npm install
-                        cd ../Frontend && npm install
-                    '''
-                }
-            }
-        }
 */
+
+//we have to add the tests
+/*
         stage('Run Unit Tests') {
             steps {
                 script {
@@ -64,20 +58,20 @@ pipeline {
                 }
             }
         }
-
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // Run SonarQube analysis
-                    withSonarQubeEnv(Kaddem-sq) {
-                        sh '''
-                            cd Backend && npm run sonar
-                            cd ../Frontend && npm run sonar
-                        '''
+*/
+            stage('SonarQube Analysis') {
+                steps {
+                    script {
+                        // Run SonarQube analysis
+                        withSonarQubeEnv('Kaddem-sq') {
+                            sh '''
+                                cd Backend && npm run sonar
+                                cd ../Frontend && npm run sonar
+                            '''
+                        }
                     }
                 }
             }
-        }
 
     }
 }

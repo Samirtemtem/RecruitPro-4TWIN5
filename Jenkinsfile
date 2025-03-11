@@ -7,7 +7,7 @@ pipeline {
                 script {
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: 'main']], // Branch name
+                        branches: [[name: 'CI/CD_setup']], // Branch name
                         userRemoteConfigs: [[
                             url: 'https://github.com/Samirtemtem/RecruitPro-4TWIN5.git', // GitHub repo URL
                             credentialsId: 'gitt'  // Jenkins credentials ID for GitHub

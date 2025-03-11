@@ -134,7 +134,7 @@ pipeline {
                 steps {
                     sshagent(['recruitpro-ssh']) {
                         sh '''
-                            ssh user@192.168.33.10 << 'EOF'
+                            ssh user@localhost << 'EOF'
                                 echo "Pulling latest backend Docker image..."
                                 docker pull ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} || { echo "Docker pull failed"; exit 1; }
 

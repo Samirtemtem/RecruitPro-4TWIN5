@@ -71,7 +71,7 @@ pipeline {
                     }
                 }
             }
-
+/*
             stage('Frontend SonarQube Analysis') {
                 steps {
                     script {
@@ -84,6 +84,100 @@ pipeline {
                     }
                 }
             }
+*/
+            stage('Build Docker Backend Images') {
+                steps {
+                    sh 'docker build -t ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ./Backend'
+                }
+            }
+/*
+            stage('Build Docker Frontend Images') {
+                steps {
+                    sh 'docker build -t ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ./Frontend'
+                }
+            }
+*/            
+             stage('Docker Login') {
+                steps {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        '''
+                    }
+                }
+            }
+
+            stage('Docker Push Backend') {
+                steps {
+                    sh '''
+                        docker push ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
+                    '''
+                }
+            }
+/*
+            stage('Docker Push Frontend') {
+                steps {
+                    sh '''
+                        docker push ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
+                    '''
+                }
+            }
+*/
+
+            stage('Deploy Backend') {
+                steps {
+                    sshagent(['your-server-ssh-credentials']) {
+                        sh '''
+                        ssh user@your-server << 'EOF'
+                            echo "Pulling latest backend Docker image..."
+                            docker pull ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
+
+                            # Check if backend container exists
+                            if docker ps -q --filter "name=backend-container"; then
+                                echo "Stopping and removing existing backend container..."
+                                docker stop backend-container && docker rm backend-container
+                            else
+                                echo "No backend-container to remove."
+                            fi
+
+                            echo "Starting new backend container..."
+                            docker run -d -p 5000:5000 --name backend-container --restart=always ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
+
+                            echo "Backend deployment completed successfully!"
+                        EOF
+                        '''
+                    }
+                }
+            }
+/*
+            stage('Deploy Frontend') {
+                steps {
+                    sshagent(['your-server-ssh-credentials']) {
+                        sh '''
+                        ssh user@your-server << 'EOF'
+                            echo "Pulling latest frontend Docker image..."
+                            docker pull ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
+
+                            # Check if frontend container exists
+                            if docker ps -q --filter "name=frontend-container"; then
+                                echo "Stopping and removing existing frontend container..."
+                                docker stop frontend-container && docker rm frontend-container
+                            else
+                                echo "No frontend-container to remove."
+                            fi
+
+                            echo "Starting new frontend container..."
+                            docker run -d -p 3000:3000 --name frontend-container --restart=always ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
+
+                            echo "Frontend deployment completed successfully!"
+                        EOF
+                        '''
+                    }
+                }
+            }
+*/
+
+
 
     }
 }

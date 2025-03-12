@@ -141,7 +141,7 @@ pipeline {
             stage('Docker Push Frontend') {
                 steps {
                     sh '''
-                        timeout 10m docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
+                        timeout 30m docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
                     '''
                 }
             }

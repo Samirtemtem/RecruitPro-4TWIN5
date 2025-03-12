@@ -37,7 +37,7 @@ pipeline {
                     dir('Frontend') {
                         sh 'npm install'
                     }
-                }
+                },
                 backend: {
                     dir('Backend') {
                         sh 'npm install'
@@ -233,7 +233,7 @@ pipeline {
                     sh "docker run -d -p 3000:3000 --name frontend-container --restart=always ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}"
                 }
             }
-        }
+            }
 
 /*
             stage('Build Docker Backend Images') {

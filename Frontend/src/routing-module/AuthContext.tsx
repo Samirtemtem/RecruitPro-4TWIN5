@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from 'axios';
 
 // Import the UserProfileData interface from useUserProfile
@@ -104,9 +104,9 @@ export const AuthContext = createContext<AuthContextType>({
 });
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(sessionStorage.getItem("token"));
-  const [role, setRole] = useState<string | null>(sessionStorage.getItem("role"));
-  const [userId, setUserId] = useState<string | null>(sessionStorage.getItem("userId"));
+  const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+  const [role, setRole] = useState<string | null>(localStorage.getItem("role"));
+  const [userId, setUserId] = useState<string | null>(localStorage.getItem("userId"));
   const [user, setUser] = useState<User | null>(null); // Add user state
   const [profileData, setProfileData] = useState<UserProfileData | null>(null);
   const [isProfileLoaded, setIsProfileLoaded] = useState<boolean>(false);
@@ -124,12 +124,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   }, [token, role, userId, user, isProfileLoaded, profileData]);
 
   useEffect(() => {
-    const storedToken = sessionStorage.getItem("token");
-    const storedRole = sessionStorage.getItem("role");
-    const storedUserId = sessionStorage.getItem("userId");
-    const storedUser = sessionStorage.getItem("user"); // Get stored user
+    const storedToken = localStorage.getItem("token");
+    const storedRole = localStorage.getItem("role");
+    const storedUserId = localStorage.getItem("userId");
+    const storedUser = localStorage.getItem("user"); // Get stored user
     
-    console.log("📱 AuthContext - Initializing from sessionStorage:", {
+    console.log("📱 AuthContext - Initializing from localStorage:", {
       hasToken: !!storedToken,
       hasRole: !!storedRole,
       hasUserId: !!storedUserId,
@@ -140,58 +140,58 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     setRole(storedRole);
     setUserId(storedUserId);
 
-    // Try to load user data from sessionStorage if it exists
+    // Try to load user data from localStorage if it exists
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
       } catch (error) {
         console.error("Failed to parse stored user data:", error);
-        sessionStorage.removeItem("user");
+        localStorage.removeItem("user");
       }
     }
     
-    // Try to load profile data from sessionStorage if it exists
-    const storedProfileData = sessionStorage.getItem("profileData");
+    // Try to load profile data from localStorage if it exists
+    const storedProfileData = localStorage.getItem("profileData");
     if (storedProfileData) {
       try {
-        console.log("📂 AuthContext - Found profile data in sessionStorage");
+        console.log("📂 AuthContext - Found profile data in localStorage");
         const parsedData = JSON.parse(storedProfileData);
         setProfileData(parsedData);
         setIsProfileLoaded(true);
-        console.log("✅ AuthContext - Successfully loaded profile from sessionStorage");
+        console.log("✅ AuthContext - Successfully loaded profile from localStorage");
       } catch (error) {
         console.error("❌ AuthContext - Failed to parse stored profile data:", error);
-        sessionStorage.removeItem("profileData");
+        localStorage.removeItem("profileData");
       }
     } else {
-      console.log("ℹ️ AuthContext - No profile data found in sessionStorage");
+      console.log("ℹ️ AuthContext - No profile data found in localStorage");
     }
   }, []);
 
   const handleSetToken = (newToken: string | null) => {
     setToken(newToken);
     if (newToken) {
-      sessionStorage.setItem("token", newToken);
+      localStorage.setItem("token", newToken);
     } else {
-      sessionStorage.removeItem("token");
+      localStorage.removeItem("token");
     }
   };
 
   const handleSetRole = (newRole: string | null) => {
     setRole(newRole);
     if (newRole) {
-      sessionStorage.setItem("role", newRole);
+      localStorage.setItem("role", newRole);
     } else {
-      sessionStorage.removeItem("role");
+      localStorage.removeItem("role");
     }
   };
 
   const handleSetUserId = (newUserId: string | null) => {
     setUserId(newUserId);
     if (newUserId) {
-      sessionStorage.setItem("userId", newUserId);
+      localStorage.setItem("userId", newUserId);
     } else {
-      sessionStorage.removeItem("userId");
+      localStorage.removeItem("userId");
     }
   };
 
@@ -199,9 +199,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const handleSetUser = (newUser: User | null) => {
     setUser(newUser);
     if (newUser) {
-      sessionStorage.setItem("user", JSON.stringify(newUser));
+      localStorage.setItem("user", JSON.stringify(newUser));
     } else {
-      sessionStorage.removeItem("user");
+      localStorage.removeItem("user");
     }
   };
 
@@ -214,7 +214,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       if (!userId || !token) {
         console.log("⚠️ AuthContext - Profile fetch skipped: No user ID or token available yet");
         console.log("Current userId in context:", userId);
-        console.log("SessionStorage userId:", sessionStorage.getItem("userId"));
+        console.log("localStorage userId:", localStorage.getItem("userId"));
         setIsProfileLoaded(true); // Still mark as loaded to prevent continuous retries
         return null;
       }
@@ -239,8 +239,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       setIsProfileLoaded(true);
       
       // Store in session storage for persistence
-      sessionStorage.setItem("profileData", JSON.stringify(profileWithId));
-      console.log("💾 AuthContext - Profile data saved to sessionStorage");
+      localStorage.setItem("profileData", JSON.stringify(profileWithId));
+      console.log("💾 AuthContext - Profile data saved to localStorage");
       
       return profileWithId;
     } catch (error) {
@@ -255,7 +255,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     
     const newProfileData = { ...profileData, ...updatedData };
     setProfileData(newProfileData);
-    sessionStorage.setItem("profileData", JSON.stringify(newProfileData));
+    localStorage.setItem("profileData", JSON.stringify(newProfileData));
   };
 
   const logout = () => {
@@ -265,11 +265,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     setUser(null); // Clear user data
     setProfileData(null);
     setIsProfileLoaded(false);
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("role");
-    sessionStorage.removeItem("userId");
-    sessionStorage.removeItem("user"); // Remove user from sessionStorage
-    sessionStorage.removeItem("profileData");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("user"); // Remove user from localStorage
+    localStorage.removeItem("profileData");
   };
 
   return (
@@ -296,4 +296,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   );
 };
 
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 export default AuthProvider;

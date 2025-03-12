@@ -2,7 +2,8 @@ import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import EducationModal from './EducationModal';
 import './Modal.css';
-
+import { AuthContext } from '../../../../routing-module/AuthContext';
+import { useContext } from 'react';
 interface IEducation {
   _id?: string;
   institution: string;
@@ -17,6 +18,7 @@ const Education: React.FC = () => {
   const { userData, isLoading, error } = useUserProfile();
   const [educationItems, setEducationItems] = useState<IEducation[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const {updateProfileData}  = useContext(AuthContext);  
   const [currentEducation, setCurrentEducation] = useState<IEducation>({
     institution: '',
     diploma: '',
@@ -116,6 +118,7 @@ const Education: React.FC = () => {
       });
 
       setEducationItems(updatedItems);
+      updateProfileData(userData);
       setSubmitMessage({ type: 'success', text: 'Education entry deleted successfully' });
     } catch (error) {
       console.error('Failed to delete education:', error);

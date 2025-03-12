@@ -62,6 +62,7 @@ const MyResumePage: React.FC = () => {
             <div className="widget-title">
               <h4>My Resume</h4>
             </div>
+            
             <div className="widget-content">
                 <AddCV />
               </div>

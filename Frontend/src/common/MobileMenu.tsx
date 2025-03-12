@@ -11,7 +11,7 @@ const MobileMenu = () => {
             <div className="logo-box">
               <div className="logo">
                 <a href="/">
-                  <img src="/images/logo.svg" alt="brand" />
+                  <img src="LogoEsprit2.png" alt="brand" />
                 </a>
               </div>
             </div>
@@ -25,10 +25,7 @@ const MobileMenu = () => {
           <div className="outer-box">
             <div className="login-box">
               <a
-                href="#"
-                className="call-modal"
-                data-bs-toggle="modal"
-                data-bs-target="#loginPopupModal"
+                href="/DashboardCandidate"
               >
                 <span className="icon icon-user"></span>
               </a>

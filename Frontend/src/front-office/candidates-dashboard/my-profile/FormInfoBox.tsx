@@ -147,7 +147,7 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
   //  setToggling2FA(true);
     
     try {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       if (!token) throw new Error('No authentication token found');
       
       console.log("Toggling 2FA to:", newValue);
@@ -181,8 +181,8 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
           // Use the setUser from the component scope
           setUser(updatedUser);
           
-          // Also update sessionStorage
-          sessionStorage.setItem('user', JSON.stringify(updatedUser));
+          // Also update localStorage
+          localStorage.setItem('user', JSON.stringify(updatedUser));
         }
         
         setSubmitMessage({ type: 'success', text: `Two-factor authentication ${newValue ? 'enabled' : 'disabled'} successfully` });

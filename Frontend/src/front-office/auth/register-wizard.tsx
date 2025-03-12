@@ -1553,6 +1553,18 @@ const RegisterWizard: React.FC = () => {
                                 />
                                 I agree to the terms and conditions
                               </label>
+                              
+                            </div>
+                            
+                            <div className="form-group">
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={formData.agreeToTerms}
+                                  onChange={(e) => handleInputChange('terms', 'agreeToTerms', e.target.checked)}
+                                />
+                                Subscribe to the newsletter
+                              </label>
                             </div>
                           </div>
                         </div>

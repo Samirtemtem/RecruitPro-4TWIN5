@@ -48,8 +48,8 @@ const DashboardCandidatesHeader = () => {
   // Call the logout function from AuthContext to clear token and role
   logout();
   // clear the token and role from localStorage
-  sessionStorage.removeItem('token'); // Clear token
-  sessionStorage.removeItem('userRole'); // Clear token
+  localStorage.removeItem('token'); // Clear token
+  localStorage.removeItem('userRole'); // Clear token
 
     navigate('/LoginUser', { replace: true }); // Redirect to login page
   };

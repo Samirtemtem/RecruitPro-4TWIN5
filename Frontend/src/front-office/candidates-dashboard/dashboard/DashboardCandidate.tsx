@@ -14,6 +14,7 @@ import Notification from "./components/Notification";
 import MobileMenu from "../../../common/MobileMenu";
 import Header from "../../../common/Header";
 import DefaultEditor from "react-simple-wysiwyg";
+import ProfileCompletionAlert from "./ProfileCompletionAlert";
 const DashboardCandidate = () => {
   return (
     <div className="page-wrapper dashboard">
@@ -38,8 +39,9 @@ const DashboardCandidate = () => {
        
           <MenuToggler />
           {/* Collapsible sidebar button */}
-          <BreadCrumb title="Howdy, Jerome!!" />
+          <BreadCrumb title="" />
           {/* breadCrumb */}
+<ProfileCompletionAlert/>
 
           <div className="row">
             <TopCardBlock />

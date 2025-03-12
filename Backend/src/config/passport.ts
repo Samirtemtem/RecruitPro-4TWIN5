@@ -6,6 +6,8 @@ import { User } from '../models/User';
 import { sendWelcomeEmail } from '../utils/emailService';
 import axios from 'axios';
 import { Role } from '../models/types';
+import { Strategy as GitHubStrategy } from 'passport-github2';
+
 
 // Google Strategy
 passport.use(
@@ -102,6 +104,79 @@ passport.use(
 );
 
 
+
+// GitHub Strategy
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+      callbackURL: 'http://localhost:5000/api/auth/github/callback',
+      scope: ['user:email']
+    },
+    async (accessToken: string, refreshToken: string, profile: any, done: Function) => {
+      try {
+        console.log("GitHub profile:", JSON.stringify(profile, null, 2));
+        
+        // Get primary email from GitHub profile
+        const primaryEmail = profile.emails && profile.emails.length > 0 
+          ? profile.emails[0].value 
+          : null;
+
+        if (!primaryEmail) {
+          return done(new Error('No email found in GitHub profile'), false);
+        }
+
+        // Check if user already exists
+        let user = await User.findOne({ email: primaryEmail });
+
+        if (user) {
+          // If the user already exists but doesn't have a githubId, update it
+          if (!user.githubId) {
+            user.githubId = profile.id;
+            await user.save();
+          }
+        } else {
+          // Handle displayName safely
+          let firstName = 'GitHub';
+          let lastName = 'User';
+          
+          if (profile.displayName) {
+            const nameParts = profile.displayName.split(' ');
+            firstName = nameParts[0] || 'GitHub';
+            lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'User';
+          } else if (profile.username) {
+            firstName = profile.username;
+          }
+          
+          // Create a new user document directly without using discriminators
+          user = new User({
+            githubId: profile.id,
+            firstName: firstName,
+            lastName: lastName,
+            image: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : '',
+            email: primaryEmail,
+            provider: 'github',
+            isVerified: true,
+            role: Role.CANDIDATE,
+            phoneNumber: '0000000000',
+            password: 'SUPERSECRET' // This will be hashed by the pre-save middleware
+          });
+          
+          await user.save();
+          
+          // Send welcome email
+          await sendWelcomeEmail(user.email, firstName);
+        }
+
+        done(null, user);
+      } catch (error) {
+        console.error('GitHub Auth Error:', error);
+        done(error, false);
+      }
+    }
+  )
+);
 
 // Serialize and Deserialize User
 passport.serializeUser((user: any, done) => {

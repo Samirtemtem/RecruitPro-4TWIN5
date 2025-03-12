@@ -27,8 +27,8 @@ const Sidebar = () => {
     if (currentRole === "ADMIN") {
       const { SidebarDataTest } = await import("../../back-office/sidebarMenuAdmin");
       setSidebarData(SidebarDataTest);
-    } else if (currentRole === "CANDIDATE") {
-      const { SidebarDataTest } = await import("../../front-office/sidebarMenuCandidate");
+    } else if (currentRole === "HR-MANAGER") {
+      const { SidebarDataTest } = await import("../../back-office/sidebarMenuAdmin");
       setSidebarData(SidebarDataTest);
     }
   };
@@ -41,7 +41,7 @@ const Sidebar = () => {
 
     // Function to handle role changes and update the sidebar
     const handleRoleChange = () => {
-      const updatedUserRole = sessionStorage.getItem("userRole") || "CANDIDATE";
+      const updatedUserRole = localStorage.getItem("userRole") || "CANDIDATE";
       if (updatedUserRole !== role) {
         setRole(updatedUserRole); // Update role in AuthContext
         loadSidebarData(updatedUserRole); // Reload sidebar data
@@ -51,7 +51,7 @@ const Sidebar = () => {
     // Listen to storage changes (for other tabs)
     window.addEventListener("storage", handleRoleChange);
 
-    // Trigger role change handler when sessionStorage updates
+    // Trigger role change handler when localStorage updates
     handleRoleChange();
 
     // Cleanup event listener on component unmount

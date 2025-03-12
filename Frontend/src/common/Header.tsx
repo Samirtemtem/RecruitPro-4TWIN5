@@ -51,8 +51,8 @@ const Header = () => {
     // Call the logout function from AuthContext to clear token and role
     logout();
     // clear the token and role from localStorage
-    sessionStorage.removeItem('token'); // Clear token
-    sessionStorage.removeItem('userRole'); // Clear token
+    localStorage.removeItem('token'); // Clear token
+    localStorage.removeItem('userRole'); // Clear token
   
       navigate('/LoginUser', { replace: true }); // Redirect to login page
     };
@@ -86,17 +86,15 @@ const Header = () => {
 
   
 
+ 
   const menuGroups = [
-    { title: "Home", path: "/" },
-    { title: "Find Jobs", path: "/JobListFront" },
-   // { title: "Employers", path: "/employers" },
-   // { title: "Candidates", path: "/candidates" },
-    { title: "Abouts Us", path: "/AboutUs" },
-    { title: "Contact", path: "/Contact" },
-    { title: "Terms", path: "/Terms" },
-    
-  ];
+    { title: "RECRUITPRO", path: "/" },
+    { title: "JOB POSTS", path: "/JobListFront" },
 
+  { title: "ABOUT US", path: "/AboutUs" },
+  { title: "CONTACT", path: "/Contact" },
+  { title: "TERMS", path: "/Terms" },
+  ];
     // Function to determine the home path based on role
     const getHomePath = () => {
       switch (role) {
@@ -112,8 +110,8 @@ const Header = () => {
 
   return (
     <>
-    <header className={`main-header ${navbar ? "fixed-header animated slideInDown" : ""}`} /*style={{ background: 'linear-gradient(to right, #D50000, #A00000)', color: '#FFFFFF' }}*/
-      style={{background:'FFFFFF', color:'#FFFFFF'}}> 
+    <header className={`d-none d-md-block main-header ${navbar ? "fixed-header animated slideInDown" : ""}`} /*style={{ background: 'linear-gradient(to right, #D50000, #A00000)', color: '#FFFFFF' }}*/
+      style={{background:'#FFFFFF', color:'#FFFFFF'}}> 
 
       {/* Red Top Bar */}
       <div style={{ 
@@ -135,13 +133,13 @@ const Header = () => {
         </div>
       </div>
       {/* Main Box with Logo and Navigation */}
-      <div className="main-box" style={{background:'FFFFFF', color:'#FFFFFF'}}>
+      <div className="main-box" style={{background:'#FFFFFF', color:'#FFFFFF'}}>
         {/* Left Section (Logo and Navigation) */}
         <div className="nav-outer">
           <div className="logo-box">
             <a href="/" className="logo">
              {/*  <img src="/LogoEsprit2.png" alt="brand" /> */}
-             <img src="/RecruitPro.png" width={154}
+             <img src="/LogoEsprit2.png" width={154}
                       height={50} alt="brand" />
             </a>
           </div>

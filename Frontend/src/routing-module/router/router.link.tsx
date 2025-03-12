@@ -70,6 +70,9 @@ import DashboardCandidate from "../../front-office/candidates-dashboard/dashboar
 import AboutUs from "../../pages-menu/about/AboutUs";
 import Contact from "../../pages-menu/contact/Cantact";
 import Terms from "../../pages-menu/terms/Terms";
+import EmployeeDashboard from "../../back-office/employeeDashboard/employee-dashboard";
+import UserSelect from "../../Face-Recog/UserSelect";
+import Login from "../../Face-Recog/Login";
 
 const routes = all_routes;
 
@@ -80,7 +83,24 @@ export const publicRoutes = [
     element: <Navigate to="/index" />,
     route: Route,
   },
-  
+  {
+    path: "/SocialAuthHandler",
+    name: "Root",
+    element: <SocialAuthHandler  />,
+    route: Route,
+  },
+  {
+    path: "/face-recogn",
+    name: "Root",
+    element: <UserSelect  />,
+    route: Route,
+  },
+  {
+    path: "/login",
+    name: "Root",
+    element: <Login  />,
+    route: Route,
+  },
     
   
   {
@@ -183,7 +203,6 @@ export const authRoutesfront = [
     element: <Navigate to="/index" />,
     route: Route,
   },
-  
   {
     path: "/DashboardCandidate",
     name: "Root", 
@@ -271,17 +290,18 @@ export const authRoutes = [
   
 
   
-  {
-    path: "/SocialAuthHandler",
-    name: "Root",
-    element: <SocialAuthHandler  />,
-    route: Route,
-  },
+
 
   // Admin Routes
   {
     path: "/adminDashboard",
     element: <AdminDashboard />,
+    route: Route,
+  },
+  
+  {
+    path: "/employeeDashboard",
+    element: <EmployeeDashboard />,
     route: Route,
   },
   {

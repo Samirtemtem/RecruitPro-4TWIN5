@@ -3,7 +3,7 @@ const SidebarHeader = () => {
   return (
     <div className="pro-header">
       <a href="/">
-        <img src="/images/logo.svg" alt="brand" />
+        <img src="LogoEsprit2.png" alt="brand" />
       </a>
       {/* End logo */}
 

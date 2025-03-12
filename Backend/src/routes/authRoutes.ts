@@ -104,10 +104,12 @@ const socialAuthCallback = async (req: Request, res: Response): Promise<any> => 
       console.error('No user found in social auth callback');
       return res.status(401).json({ error: 'Unauthorized' });
     }
-
+    console.log("req.user", req.user);
+    console.log("generating token");
     const token = generateToken((req.user as any)._id); // Type assertion for user ID
     const userRole = (req.user as any).role; // Type assertion for role
-
+    console.log("token", token);
+    console.log("userRole", userRole);
     //res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}`);
     //res.redirect(`${process.env.FRONTEND_URL}/SocialAuthHandler?token=${token}&role=${encodeURIComponent(userRole)}`);
     // redirect to SocialAuthHandler page
@@ -285,6 +287,19 @@ router.get('/user/:token', getUserByEmail);
  *         description: Server error
  */
 router.post('/update2fa', update2FASettings);
+
+// GitHub Auth route
+router.get('/github', (req, res, next) => {
+  console.log('GitHub authentication route hit');
+  passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
+});
+router.get('/github/callback', (req, res, next) => {
+  console.log('GitHub callback route hit');
+  passport.authenticate('github', {
+    session: false,
+    failureRedirect: `${process.env.FRONTEND_URL}/loginuser`,
+  })(req, res, next);
+}, socialAuthCallback);
 
 export default router;
 

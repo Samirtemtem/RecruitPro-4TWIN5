@@ -43,7 +43,7 @@ const JobAlertsPage: React.FC = () => {
           height: "55px", // Adjust this to match your header's height
         }}
       ></div>
-       <BreadCrumb title="Howdy, Jerome!!" />
+       <BreadCrumb title="" />
     {/* breadCrumb */}
 
     {/* Collapsible sidebar button */}

@@ -128,15 +128,21 @@ const SocialAuthHandler = () => {
 
         // Delay the navigation and show loading spinner
         setTimeout(() => {
-          if (userRole === "ADMIN") {
-            navigate(all_routes.adminDashboard);
-          } else if (userRole === "CANDIDATE") {
-            navigate(all_routes.DashboardCandidate);
-          } else {
-            navigate(all_routes.LoginUser);
+          switch (userRole) {
+            case "ADMIN":
+              navigate(all_routes.adminDashboard);
+              break;
+            case "CANDIDATE":
+              navigate(all_routes.DashboardCandidate);
+              break;
+            case "HR-MANAGER":
+              navigate(all_routes.employeeDashboard);
+              break;
+            default:
+              navigate(all_routes.LoginUser);
           }
           setLoading(false);
-        }, 1000); // 1 second delay for user experience
+        }, 0); // 1 second delay for user experience
       } catch (err) {
         console.error("Error in social authentication:", err);
         setError("Authentication failed. Please try again.");

@@ -6,7 +6,10 @@ import {
   updateUser,
   deleteUser,
   getLatestUsers ,
-  getCandidates
+  getCandidates,
+  getLastCandidates,
+  getCandidateCountPerYear,
+  countEmployeesByDepartment
 } from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
@@ -85,6 +88,9 @@ router.get('/users/:id', getUserById);
 router.put('/update/:id', updateUser);
 router.delete('/delete/:id', deleteUser);
 router.get('/get/candidates', getCandidates);
-
+router.get('/get/Lastcandidates', getLastCandidates);
+router.get('/count-per-year', getCandidateCountPerYear);
+// Define the route for counting employees by department
+router.get('/count-employees-by-department', countEmployeesByDepartment);
 // Export the router
 export default router;

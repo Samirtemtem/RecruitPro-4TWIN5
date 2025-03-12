@@ -141,7 +141,7 @@ pipeline {
             stage('Docker Push Frontend') {
                 steps {
                     sh '''
-                        docker push ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
+                        docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
                     '''
                 }
             }

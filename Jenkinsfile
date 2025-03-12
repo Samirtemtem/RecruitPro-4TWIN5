@@ -141,32 +141,31 @@ pipeline {
             stage('Docker Push Frontend') {
                 steps {
                     sh '''
-                        docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
+                        timeout 10m docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
                     '''
                 }
             }
 
 
-//deploying the backend and frontend
-/*
+
             stage('Deploy Backend') {
                 steps {
                     sshagent(['recruitpro-ssh']) {
                         sh '''
-                            ssh user@localhost << 'EOF'
+                            ssh user@your-server << 'EOF'
                                 echo "Pulling latest backend Docker image..."
-                                docker pull ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} || { echo "Docker pull failed"; exit 1; }
+                                docker pull ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
 
-                                # Check if backend container exists
-                                if docker ps -q --filter "name=backend-container"; then
+                                # Stop and remove the existing backend container if it exists
+                                if docker ps -a --format '{{.Names}}' | grep -q '^backend-container$'; then
                                     echo "Stopping and removing existing backend container..."
-                                    docker stop backend-container && docker rm backend-container || { echo "Failed to stop/remove backend container"; exit 1; }
+                                    docker stop backend-container && docker rm backend-container
                                 else
                                     echo "No backend-container to remove."
                                 fi
 
                                 echo "Starting new backend container..."
-                                docker run -d -p 5000:5000 --name backend-container --restart=always ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} || { echo "Docker run failed"; exit 1; }
+                                docker run -d -p 5000:5000 --name backend-container --restart=always ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
 
                                 echo "Backend deployment completed successfully!"
                             EOF
@@ -177,30 +176,30 @@ pipeline {
 
             stage('Deploy Frontend') {
                 steps {
-                    sshagent(['your-server-ssh-credentials']) {
+                    sshagent(['recruitpro-ssh']) {
                         sh '''
-                        ssh user@your-server << 'EOF'
-                            echo "Pulling latest frontend Docker image..."
-                            docker pull ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
+                            ssh user@your-server << 'EOF'
+                                echo "Pulling latest frontend Docker image..."
+                                docker pull ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
 
-                            # Check if frontend container exists
-                            if docker ps -q --filter "name=frontend-container"; then
-                                echo "Stopping and removing existing frontend container..."
-                                docker stop frontend-container && docker rm frontend-container
-                            else
-                                echo "No frontend-container to remove."
-                            fi
+                                # Stop and remove the existing frontend container if it exists
+                                if docker ps -a --format '{{.Names}}' | grep -q '^frontend-container$'; then
+                                    echo "Stopping and removing existing frontend container..."
+                                    docker stop frontend-container && docker rm frontend-container
+                                else
+                                    echo "No frontend-container to remove."
+                                fi
 
-                            echo "Starting new frontend container..."
-                            docker run -d -p 3000:3000 --name frontend-container --restart=always ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
+                                echo "Starting new frontend container..."
+                                docker run -d -p 3000:3000 --name frontend-container --restart=always ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
 
-                            echo "Frontend deployment completed successfully!"
-                        EOF
+                                echo "Frontend deployment completed successfully!"
+                            EOF
                         '''
                     }
                 }
             }
-*/
+
 
 
 

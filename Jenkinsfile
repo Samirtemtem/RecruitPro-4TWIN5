@@ -31,21 +31,18 @@ pipeline {
             }
         }
 
-        stage('Install Frontend & Backend Dependencies') {
-            parallel {
-                frontend: {
-                    steps {
-                        dir('Frontend') {
-                            sh 'npm install'
-                        }
-                    }
-                },
-                backend: {
-                    steps {
-                        dir('Backend') {
-                            sh 'npm install'
-                        }
-                    }
+        stage('Install Frontend Dependencies') {
+            steps {
+                dir('Frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Install Backend Dependencies') {
+            steps {
+                dir('Backend') {
+                    sh 'npm install'
                 }
             }
         }

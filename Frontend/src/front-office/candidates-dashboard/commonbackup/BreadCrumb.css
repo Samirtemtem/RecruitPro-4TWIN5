@@ -1,0 +1,19 @@
+/* BreadCrumb styling with optimized spacing */
+.upper-title-box {
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.upper-title-box h3 {
+  font-size: 22px;
+  color: #202124;
+  font-weight: 500;
+  line-height: 1.2em;
+  margin-bottom: 5px;
+}
+
+.upper-title-box .text {
+  font-size: 14px;
+  color: #696969;
+  font-weight: 400;
+} 

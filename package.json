@@ -1,0 +1,48 @@
+{
+    "name": "mern-project",
+    "version": "1.0.0",
+    "scripts": {
+        "start:frontend": "cd frontend && npm start",
+        "start:backend": "cd backend && npm run dev",
+        "dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^5.0.2",
+        "@types/cors": "^2.8.17",
+        "@types/react": "^19.0.10",
+        "browser-process-hrtime": "^1.0.0",
+        "concurrently": "^7.6.0",
+        "process": "^0.11.10",
+        "ts-node": "^10.9.2"
+    },
+    "dependencies": {
+        "@emotion/styled": "^11.14.0",
+        "@mui/x-data-grid": "^7.27.0",
+        "@types/express-session": "^1.18.1",
+        "@types/passport-google-oauth20": "^2.0.16",
+        "axios": "^1.7.9",
+        "bcrypt": "^5.1.1",
+        "bootstrap": "^5.3.3",
+        "cloudinary": "^2.5.1",
+        "cors": "^2.8.5",
+        "express-session": "^1.18.1",
+        "form-data": "^4.0.2",
+        "franc-min": "^6.2.0",
+        "https": "^1.0.0",
+        "https-browserify": "^1.0.0",
+        "lucide-react": "^0.479.0",
+        "mammoth": "^1.9.0",
+        "mern-project": "file:",
+        "multer": "^1.4.5-lts.1",
+        "passport-google-oauth20": "^2.0.0",
+        "quill": "^2.0.3",
+        "react-apexcharts": "^1.7.0",
+        "react-bootstrap": "^2.10.9",
+        "react-hot-toast": "^2.5.2",
+        "react-icons": "^5.5.0",
+        "react-scripts": "^5.0.1",
+        "sass": "^1.85.0",
+        "slick-carousel": "^1.8.1",
+        "url": "^0.11.4"
+    }
+}

@@ -1,0 +1,82 @@
+{
+  "data": [
+    {
+      "Title": "We scheduled a meeting for next week",
+      "Activity_Type": "Meeting",
+      "Due_Date": "16/01/2024",
+      "Owner": "Hendry",
+      "Created_Date": "14/01/2024"
+    },
+    {
+      "Title": "Had conversation with Fred regarding task",
+      "Activity_Type": "Calls",
+      "Due_Date": "24/01/2024",
+      "Owner": "Guilory",
+      "Created_Date": "21/01/2024"
+    },
+    {
+      "Title": "Analysing latest time estimation for new project",
+      "Activity_Type": "Tasks",
+      "Due_Date": "23/02/2024",
+      "Owner": "Jami",
+      "Created_Date": "20/02/2024"
+    },
+    {
+      "Title": "Store and manage contact data",
+      "Activity_Type": "Email",
+      "Due_Date": "18/03/2024",
+      "Owner": "Theresa",
+      "Created_Date": "15/03/2024"
+    },
+    {
+      "Title": "Call John and discuss about project",
+      "Activity_Type": "Calls",
+      "Due_Date": "14/04/2024",
+      "Owner": "Smith",
+      "Created_Date": "12/04/2024"
+    },
+    {
+      "Title": "Will have a meeting before project start",
+      "Activity_Type": "Meeting",
+      "Due_Date": "22/05/2024",
+      "Owner": "Martin",
+      "Created_Date": "20/05/2024"
+    },
+    {
+      "Title": "Will have a meeting before project start",
+      "Activity_Type": "Meeting",
+      "Due_Date": "22/05/2024",
+      "Owner": "Martin",
+      "Created_Date": "20/05/2024"
+    },
+    {
+      "Title": "Built landing pages",
+      "Activity_Type": "Email",
+      "Due_Date": "08/07/2024",
+      "Owner": "Newell",
+      "Created_Date": "06/07/2024"
+    },
+    {
+      "Title": "Discussed budget proposal with Edwin",
+      "Activity_Type": "Calls",
+      "Due_Date": "05/09/2024",
+      "Owner": "Janet",
+      "Created_Date": "02/09/2024"
+    },
+    {
+      "Title": "Attach final proposal for upcoming project",
+      "Activity_Type": "Tasks",
+      "Due_Date": "18/11/2024",
+      "Owner": "Craig",
+      "Created_Date": "15/11/2024"
+    },
+    {
+      "Title": "Regarding latest updates in project",
+      "Activity_Type": "Meeting",
+      "Due_Date": "12/12/2024",
+      "Owner": "Daniel",
+      "Created_Date": "10/12/2024"
+    }
+  ],
+  "totalData": 10
+}

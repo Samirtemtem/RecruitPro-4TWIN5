@@ -1,0 +1,25 @@
+.main-header-mobile .menu-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-header-mobile .mobile-nav-outer {
+  flex-grow: 1;
+}
+
+.main-header-mobile .dashboard-icon {
+  margin-left: 20px;
+}
+
+.main-header-mobile .dashboard-icon a {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  color: #333; /* Adjust color as needed */
+  text-decoration: none;
+}
+
+.main-header-mobile .dashboard-icon a:hover {
+  color: #007bff; /* Adjust hover color as needed */
+}

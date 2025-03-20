@@ -1,0 +1,102 @@
+.custom-file-container {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+
+    .custom-file-container__custom-file {
+        box-sizing: border-box;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: calc(2.25rem + 2px);
+        margin-bottom: 0;
+        margin-top: 5px;
+    }
+
+    input[type="file"] {
+        height: auto;
+        min-height: calc(1.5em + 0.75rem + 2px);
+    }
+
+    .custom-file-container__custom-file__custom-file-input {
+        box-sizing: border-box;
+        min-width: 14rem;
+        max-width: 100%;
+        height: calc(2.25rem + 2px);
+        margin: 0;
+        opacity: 0;
+    }
+
+    .custom-file-container__custom-file__custom-file-control {
+        box-sizing: border-box;
+        z-index: 1;
+        height: auto;
+        overflow: hidden;
+        line-height: 1.5;
+        user-select: none;
+        background-clip: padding-box;
+        border-radius: 0.25rem;
+        height: auto;
+        border: 1px solid $gray-100;
+        color: $text-color;
+        font-size: 15px;
+        padding: 8px 10px;
+        letter-spacing: 1px;
+        background-color: $gray-100;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+    }
+
+    .custom-file-container__custom-file__custom-file-control__button {
+        box-sizing: border-box;
+        z-index: 6;
+        display: block;
+        height: auto;
+        padding: 10px 16px;
+        line-height: 1.25;
+        background-color: $primary;
+        color: $white;
+        border-left: 1px solid $primary;
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .custom-file-container__image-preview {
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+        margin-top: 50px;
+        margin-bottom: 40px;
+        height: 250px;
+        width: 100%;
+        border-radius: 4px;
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-color: $white;
+        overflow: auto;
+        padding: 15px;
+    }
+
+    .custom-file-container__image-multi-preview {
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+        margin-top: 50px;
+        margin-bottom: 40px;
+        height: 250px;
+        width: 100%;
+        border-radius: 4px;
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-color: $white;
+        overflow: auto;
+        padding: 15px;
+    }
+}
+.node-editor.card {
+    margin-bottom: 16px;
+}

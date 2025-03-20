@@ -1,0 +1,221 @@
+{
+  "data": [
+    {
+      "Company_Name": "BrightWave Innovations",
+      "Image": "company-01.svg",
+      "Image2":"company-12.svg",
+      "Email": "michael@example.com",
+      "Phone": "(163) 2459 315",
+      "Location": "Germany",
+      "Rating": "4.2",
+      "Owner": "Hendry",
+      "Status": "Active",
+      "share": [
+        "avatar-30.jpg",
+        "avatar-31.jpg",
+        "avatar-05.jpg",
+        "avatar-09.jpg",
+        "avatar-11.jpg"
+      ]
+    },
+    {
+      "Company_Name": "Stellar Dynamics",
+      "Image": "company-02.svg",
+      "Image2":"company-13.svg",
+      "Email": "sophie@example.com",
+      "Phone": "(146) 1249 296",
+      "Location": "USA",
+      "Rating": "5",
+      "Owner": "Guilory",
+      "Status": "Active",
+      "share": [
+        "avatar-20.jpg",
+        "avatar-21.jpg",
+        "avatar-23.jpg",
+        "avatar-22.jpg",
+        "avatar-05.jpg"
+      ]
+    },
+    {
+      "Company_Name": "Quantum Nexus",
+      "Image": "company-14.svg",
+      "Image2":"company-12.svg",
+      "Email": "cameron@example.com",
+      "Phone": "(135) 3489 516",
+      "Location": "Canada",
+      "Rating": "3.5",
+      "Owner": "Jami",
+      "Status": "Active",
+      "share": [
+        "avatar-21.jpg",
+        "avatar-30.jpg",
+        "avatar-05.jpg",
+        "avatar-10.jpg",
+        "avatar-12.jpg"
+      ]
+    },
+    {
+      "Company_Name": "EcoVision Enterprises",
+      "Image": "company-04.svg",
+      "Image2":"company-15.svg",
+      "Email": "doris@example.com",
+      "Phone": "(158) 3459 596",
+      "Location": "India",
+      "Rating": "4.5",
+      "Owner": "Theresa",
+      "Status": "Active",
+      "share": [
+        "avatar-20.jpg",
+        "avatar-23.jpg",
+        "avatar-25.jpg",
+        "avatar-13.jpg",
+        "avatar-14.jpg"
+      ]
+    },
+    {
+      "Company_Name": "Aurora Technologies",
+      "Image": "company-05.svg",
+      "Image2":"company-16.svg",
+      "Email": "thomas@example.com",
+      "Phone": "(196) 4862 196",
+      "Location": "China",
+      "Rating": "4.7",
+      "Owner": "Smith",
+      "Status": "Active",
+      "share": [
+        "avatar-25.jpg",
+        "avatar-16.jpg",
+        "avatar-17.jpg",
+        "avatar-09.jpg",
+        "avatar-01.jpg"
+      ]
+    },
+    {
+      "Company_Name": "BlueSky Ventures",
+      "Image": "company-06.svg",
+      "Image2":"company-17.svg",
+      "Email": "kathleen@example.com",
+      "Phone": "(163) 6498 256",
+      "Location": "Japan",
+      "Rating": "5",
+      "Owner": "Martin",
+      "Status": "Active",
+      "share": [
+        "avatar-10.jpg",
+        "avatar-11.jpg",
+        "avatar-12.jpg",
+        "avatar-18.jpg",
+        "avatar-09.jpg"
+      ]
+    },
+    {
+      "Company_Name": "TerraFusion Energy",
+      "Image": "company-07.svg",
+      "Image2":"company-18.svg",
+      "Email": "bruce@example.com",
+      "Phone": "(154) 6481 075",
+      "Location": "Indonesia",
+      "Rating": "3.1",
+      "Owner": "Newell",
+      "Status": "Active",
+      "share": [
+        "avatar-08.jpg",
+        "avatar-13.jpg",
+        "avatar-15.jpg",
+        "avatar-21.jpg",
+        "avatar-16.jpg"
+      ]
+    },
+    {
+      "Company_Name": "UrbanPulse Design",
+      "Image": "company-08.svg",
+      "Image2":"company-19.svg",
+      "Email": "estelle@example.com",
+      "Phone": "(184) 6348 195",
+      "Location": "Janet",
+      "Rating": "5",
+      "Owner": "Janet",
+      "Status": "Inactive",
+      "share": [
+        "avatar-23.jpg",
+        "avatar-21.jpg",
+        "avatar-22.jpg",
+        "avatar-24.jpg",
+        "avatar-25.jpg"
+      ]
+    },
+    {
+      "Company_Name": "Nimbus Networks",
+      "Image": "company-09.svg",
+      "Image2":"company-20.svg",
+      "Email": "stephen@example.com",
+      "Phone": "(175) 2496 125",
+      "Location": "Israel",
+      "Rating": "2.7",
+      "Owner": "Craig",
+      "Status": "Active",
+      "share": [
+        "avatar-27.jpg",
+        "avatar-25.jpg",
+        "avatar-26.jpg",
+        "avatar-24.jpg",
+        "avatar-11.jpg"
+      ]
+    },
+    {
+      "Company_Name": "Epicurean Delights",
+      "Image": "company-10.svg",
+      "Image2":"company-21.svg",
+      "Email": "angela@example.com",
+      "Phone": "(132) 3145 977",
+      "Location": "Colombia",
+      "Rating": "3",
+      "Owner": "Daniel",
+      "Status": "Active",
+      "share": [
+        "avatar-30.jpg",
+        "avatar-31.jpg",
+        "avatar-05.jpg",
+        "avatar-09.jpg",
+        "avatar-11.jpg"
+      ]
+    },
+    {
+      "Company_Name": "Hermann Groups",
+      "Image": "company-11.svg",
+      "Image2":"company-22.svg",
+      "Email": "patricia@example.com",
+      "Phone": "(175) 2496 125",
+      "Location": "Colombia",
+      "Rating": "4.7",
+      "Owner": "Craig",
+      "Status": "Active",
+      "share": [
+        "avatar-12.jpg",
+        "avatar-11.jpg",
+        "avatar-14.jpg",
+        "avatar-19.jpg",
+        "avatar-05.jpg"
+      ]
+    },
+    {
+      "Company_Name": "Beacon Softwares",
+      "Image": "company-10.svg",
+      "Image2":"company-23.svg",
+      "Email": "angela@example.com",
+      "Phone": "(132) 3145 977",
+      "Location": "gloria",
+      "Rating": "4.2",
+      "Owner": "Daniel",
+      "Status": "Active",
+      "share": [
+        "avatar-12.jpg",
+        "avatar-13.jpg",
+        "avatar-14.jpg",
+        "avatar-15.jpg",
+        "avatar-16.jpg"
+      ]
+    }
+  ],
+  "totalData": 12
+}

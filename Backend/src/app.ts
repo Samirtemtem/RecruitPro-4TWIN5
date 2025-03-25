@@ -27,6 +27,9 @@ var logger = require('morgan');
 
 import userRoutes from './routes/User';
 import jobRoutes from './routes/JobPosts';
+import {  getUsers, getUserByEmail } from './routes/FaceRecologin';
+import faceRoutes from "./routes/FaceRecologin";
+import skillRoutes from "./routes/skillRoutes";
 
 // Allow requests from your frontend (e.g., localhost:3000)
 const corsOptions = {
@@ -46,7 +49,6 @@ const corsOptions = {
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 
 
@@ -81,10 +83,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter); 
 app.use('/api/auth', authRoutes);
 app.use('/api/cv', cvRoutes);
 
+app.use('/api/skills', skillRoutes);
+app.get("/getUsers", getUsers);
+app.get('/getUserByEmail', getUserByEmail);
+app.use("/faceRecog",faceRoutes);
 
 console.log('Client ID:', process.env.CLIENT_ID);
 console.log('Client Secret:', process.env.CLIENT_SECRET);

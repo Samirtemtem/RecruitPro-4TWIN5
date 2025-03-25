@@ -90,8 +90,9 @@ const Header = () => {
 	// Call the logout function from AuthContext to clear token and role
 	logout();
 	// clear the token and role from localStorage
-	sessionStorage.removeItem('token'); // Clear token
-	sessionStorage.removeItem('userRole'); // Clear token
+	localStorage.removeItem('token'); // Clear token
+	localStorage.removeItem('userRole'); // Clear token
+	localStorage.clear();
 
     navigate('/LoginUser', { replace: true }); // Redirect to login page
   };
@@ -433,8 +434,8 @@ const Header = () => {
 													<ImageWithBasePath src="assets/img/profiles/avatar-12.jpg" alt="img"/>
 												</span>
 												<div>
-													<h5 className="mb-0">Kevin Larry</h5>
-													<p className="fs-12 fw-medium mb-0">warren@example.com</p>
+													<h5 className="mb-0">Username</h5>
+													<p className="fs-12 fw-medium mb-0"></p>
 												</div>
 											</div>
 										</div>

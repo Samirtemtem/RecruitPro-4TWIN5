@@ -153,7 +153,7 @@ const CvUploader: React.FC<CvUploaderProps> = ({ onUpload, onDelete, userData })
                 To upload file size is (Max 5Mb) and allowed file
                 types are (.doc, .docx, .pdf)
               </span>
-              <span className="theme-btn btn-style-one">
+              <span className="btn btn-primary">
                 Upload Resume
               </span>
             </label>
@@ -186,7 +186,7 @@ const CvUploader: React.FC<CvUploaderProps> = ({ onUpload, onDelete, userData })
             <div className="mt-3">
               <button 
                 type="submit" 
-                className="theme-btn btn-style-one"
+                className="btn btn-primary"
                 disabled={uploading}
               >
                 {uploading ? 'Uploading...' : 'Upload Selected Files'}

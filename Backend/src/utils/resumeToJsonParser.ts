@@ -183,12 +183,12 @@ export const resumeToJsonParser = async (text: string) => {
     const response = await axios.post(
       `https://api-inference.huggingface.co/models/${MODEL_NAME}`,
       {
-        inputs: prompt + "\n\nResume Text: " + text.substring(0, 2000),
+        inputs: prompt + "\n\nResume Text: " + text.substring(0, 3000),
         parameters: {
           max_new_tokens: MAX_NEW_TOKENS,
           return_full_text: false,
           temperature: 0.3,
-          max_length: 2000,
+          max_length: 3000,
         },
       },
       {

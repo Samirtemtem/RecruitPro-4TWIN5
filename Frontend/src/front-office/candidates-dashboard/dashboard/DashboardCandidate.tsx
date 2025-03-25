@@ -14,10 +14,12 @@ import Notification from "./components/Notification";
 import MobileMenu from "../../../common/MobileMenu";
 import Header from "../../../common/Header";
 import DefaultEditor from "react-simple-wysiwyg";
+import ProfileCompletionAlert from "./ProfileCompletionAlert";
+import Seo from '../../../common/Seo';
 const DashboardCandidate = () => {
   return (
     <div className="page-wrapper dashboard">
-      <span className="header-span"></span>
+      <Seo pageTitle="Dashboard" />
       {/* <!-- Header Span for hight --> */}
 
       {/*<LoginPopup />
@@ -38,8 +40,9 @@ const DashboardCandidate = () => {
        
           <MenuToggler />
           {/* Collapsible sidebar button */}
-          <BreadCrumb title="Howdy, Jerome!!" />
+          <BreadCrumb title="" />
           {/* breadCrumb */}
+<ProfileCompletionAlert/>
 
           <div className="row">
             <TopCardBlock />

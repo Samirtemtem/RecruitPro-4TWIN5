@@ -18,7 +18,6 @@ const AuthFeatureFront: React.FC<AuthFeatureFrontProps> = ({
 }) => {
   return (
     <div className="page-wrapper dashboard">
-      <span className="header-span"></span>
       
       {/* Main Header */}
       <Header />

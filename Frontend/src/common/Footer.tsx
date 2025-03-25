@@ -93,8 +93,12 @@ const Footer = ({ footerStyle = "" }) => {
         <div className="auto-container">
           <div className="outer-box">
             <div className="copyright-text" style={{ color: '#FFFFFF' }}>
-              © {new Date().getFullYear()} RecruitPro by{" "}
-                InfiniteLoopers
+              © {new Date().getFullYear()} RECRUITPRO by{" "}
+              <span
+            
+              >
+                Infinite Loopers
+              </span>
               . All Rights Reserved.
             </div>
             <div className="social-links">

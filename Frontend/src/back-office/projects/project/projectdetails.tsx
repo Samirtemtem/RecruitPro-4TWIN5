@@ -237,6 +237,18 @@ const ProjectDetails = () => {
                                     </button>
                                 </div>
 
+
+       <div className="ms-2">
+            <Link to="/candidates-grid" className="btn btn-secondary">
+                <i className="ti ti-user me-1" />
+                Candidates
+            </Link>
+        </div>
+
+
+
+                              
+
                                 <div className="head-icons ms-2 text-end">
                                     <CollapseHeader />
                                 </div>

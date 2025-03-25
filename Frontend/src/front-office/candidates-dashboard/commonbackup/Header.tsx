@@ -31,7 +31,6 @@ const Header: React.FC = () => {
   return (
     <>
       {/* Header Span for spacing */}
-      <span className="header-span"></span>
       
       {/* Main Header */}
       <header

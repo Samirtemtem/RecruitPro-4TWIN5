@@ -5,14 +5,14 @@ import "./AuthFeautureFront.scss"; // Import separate styles
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { useLocation , useNavigate } from "react-router";
+import { Navigate, useLocation , useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react"; // Add useContext to the import statement
 // Import AuthProvider for managing authentication
-import { AuthContext } from "./AuthContext";
+import { AuthContext, useAuth } from "./AuthContext";
 
 const AuthFeatureFront: React.FC = () => {
 
-  const { token } = useContext(AuthContext); // Use token from AuthContext
+/*  const { token } = useContext(AuthContext); // Use token from AuthContext
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,17 +29,15 @@ const AuthFeatureFront: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
-
+*/
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const { token } = useAuth();
+  //const { user } = useAuth();
+  return token ?  <div className="auth-feature-front">
+      
+  <Outlet />
 
-  
-  return (
-    <div className="auth-feature-front">
-      
-        <Outlet />
-      
-    </div>
-  );
+</div> : <Navigate to="/loginuser" />;
 };
 
 export default AuthFeatureFront;

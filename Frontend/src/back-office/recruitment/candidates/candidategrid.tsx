@@ -100,11 +100,7 @@ const CandidateGrid = () => {
                                                         data-bs-toggle="offcanvas"
                                                         data-bs-target="#candidate_details"
                                                     >
-                                                        <ImageWithBasePath
-                                                            src={candidate.image || 'assets/img/users/default.jpg'} // Default image if none
-                                                            className="img-fluid h-auto w-auto"
-                                                            alt="img"
-                                                        />
+                                                        <img src={candidate.image || "assets/img/users/user-01.jpg"} alt="User Image" className="img-fluid" />
                                                     </Link>
                                                     <div className="d-flex flex-column">
                                                         <div className="d-flex flex-wrap mb-1">

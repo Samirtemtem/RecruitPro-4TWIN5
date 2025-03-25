@@ -12,6 +12,7 @@ import MobileMenu from "../../../common/MobileMenu";
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
 import Header from '../../../common/Header';
+import Seo from '../../../common/Seo';
 interface ICvHistory {
   id?: string;
   fileName: string;
@@ -96,7 +97,7 @@ const CvManagerPage: React.FC = () => {
     
     
 <div className="page-wrapper dashboard">
-<span className="header-span"></span>
+  <Seo pageTitle="CV Manager" />
 {/* <!-- Header Span for hight --> */}
 
 {/*<LoginPopup />

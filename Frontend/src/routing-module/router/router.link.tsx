@@ -51,18 +51,6 @@ import Footer from "../../common/Footer";
 ///////////////////////////////////////////////////////////
 import JobListFront from "../../front-office/job-listing/JobListFront";
 //import CallToAction from "../../job-listing/components/CallToActions";
-import Categories from "../../front-office/job-listing/components/Categories";
-import DatePosted from "../../front-office/job-listing/components/DatePosted";
-import DestinationRangeSlider from "../../front-office/job-listing/components/DestinationRangeSlider";
-import ExperienceLevel from "../../front-office/job-listing/components/ExperienceLevel";
-import JobSelect from "../../front-office/job-listing/components/JobSelect";
-import JobType from "../../front-office/job-listing/components/JobType";
-import ListingShowing from "../../front-office/job-listing/components/ListingShowing";
-import LocationBox from "../../front-office/job-listing/components/LocationBox";
-import Pagination from "../../front-office/job-listing/components/Pagination";
-import SalaryRangeSlider from "../../front-office/job-listing/components/SalaryRangeSlider";
-import SearchBox from "../../front-office/job-listing/components/SearchBox";
-import Tag from "../../front-office/job-listing/components/Tag";
 import DashboardCandidate from "../../front-office/candidates-dashboard/dashboard/DashboardCandidate";
 
 /////////////// home menu pages ///////////////////////
@@ -70,17 +58,47 @@ import DashboardCandidate from "../../front-office/candidates-dashboard/dashboar
 import AboutUs from "../../pages-menu/about/AboutUs";
 import Contact from "../../pages-menu/contact/Cantact";
 import Terms from "../../pages-menu/terms/Terms";
+import EmployeeDashboard from "../../back-office/employeeDashboard/employee-dashboard";
+import UserSelect from "../../Face-Recog/UserSelect";
+import Login from "../../Face-Recog/Login";
+import { AuthContext, useAuth } from "../AuthContext";
+import NotAuthorized from "../../common/NotAuthorized";
+import { useContext } from "react";
+
 
 const routes = all_routes;
 
+const ProtectedCandidateRoute = ({ children }: { children: React.ReactNode }) => {
+//  const { user } = useAuth();
+  const context = useContext(AuthContext);
+
+  console.log(context);
+  //console.log(user);
+  if (context?.role != "CANDIDATE") {
+    return <Navigate to="/NotAuthorized" />;
+  }
+  return <>{children}</>;
+};
 export const publicRoutes = [
+
   {
-    path: "/",
+    path: "/SocialAuthHandler",
     name: "Root",
-    element: <Navigate to="/index" />,
+    element: <SocialAuthHandler  />,
     route: Route,
   },
-  
+  {
+    path: "/face-recogn",
+    name: "Root",
+    element: <UserSelect  />,
+    route: Route,
+  },
+  {
+    path: "/login",
+    name: "Root",
+    element: <Login  />,
+    route: Route,
+  },
     
   
   {
@@ -130,9 +148,14 @@ export const publicRoutesFront = [
     element: <Home />,
     route: Route,
   },
+  {
+    path: "/NotAuthorized",
+    element: <NotAuthorized />,
+    route: Route,
+  },
 
  //   landing page components     /////////////////////////////////////////////////////
-
+/*
  { path: "/about", name: "About", element: <About /> , route: Route,},
  { path: "/app-section", name: "App Section", element: <AppSection />, route: Route,},
  { path: "/auth-modal", name: "Auth Modal", element: <AuthModal /> ,route: Route,},
@@ -146,7 +169,7 @@ export const publicRoutesFront = [
  { path: "/job-search-banner", name: "Job Search Banner", element: <JobSearchBanner />,route: Route, },
  { path: "/partner-slider", name: "Partner Slider", element: <PartnerSlider />,route: Route, },
  { path: "/testimonial", name: "Testimonial", element: <Testimonial /> ,route: Route,},
-
+*/
  ///////////////////////////////////////////////////////////////////
 
  {
@@ -176,89 +199,78 @@ export const publicRoutesFront = [
   
 ]
 
+
+
 export const authRoutesfront = [
   {
-    path: "/",
-    name: "Root",
-    element: <Navigate to="/index" />,
-    route: Route,
-  },
-  
-  {
     path: "/DashboardCandidate",
-    name: "Root", 
-    element: <DashboardCandidate />,
+    name: "Root",
+    element: <ProtectedCandidateRoute><DashboardCandidate /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesMyProfile,
-    name: "My Profile",
-    element: <MyProfile.MyProfilePage />,
+    name: "My Profile", 
+    element: <ProtectedCandidateRoute><MyProfile.MyProfilePage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesMyResume,
     name: "My Resume",
-    element: <MyResume.MyResumePage />,
+    element: <ProtectedCandidateRoute><MyResume.MyResumePage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesAppliedJobs,
     name: "Applied Jobs",
-    element: <AppliedJobs.AppliedJobsPage />,
+    element: <ProtectedCandidateRoute><AppliedJobs.AppliedJobsPage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesJobAlerts,
     name: "Job Alerts",
-    element: <JobAlerts.JobAlertsPage />,
+    element: <ProtectedCandidateRoute><JobAlerts.JobAlertsPage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesCvManager,
     name: "CV Manager",
-    element: <CvManager.CvManagerPage />,
+    element: <ProtectedCandidateRoute><CvManager.CvManagerPage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesShortlistedJobs,
     name: "Shortlisted Jobs",
-    element: <ShortlistedJobs.ShortlistedJobsPage />,
+    element: <ProtectedCandidateRoute><ShortlistedJobs.ShortlistedJobsPage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesPackages,
     name: "Packages",
-    element: <Packages.PackagesPage />,
+    element: <ProtectedCandidateRoute><Packages.PackagesPage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesMessages,
     name: "Messages",
-    element: <Messages.MessagesPage />,
+    element: <ProtectedCandidateRoute><Messages.MessagesPage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: routes.candidatesChangePassword,
     name: "Change Password",
-    element: <ChangePassword.ChangePasswordPage />,
+    element: <ProtectedCandidateRoute><ChangePassword.ChangePasswordPage /></ProtectedCandidateRoute>,
     route: Route,
   },
   {
     path: "/profile",
     name: "My Profile",
-    element: <MyProfile.MyProfilePage />,
+    element: <ProtectedCandidateRoute><MyProfile.MyProfilePage /></ProtectedCandidateRoute>,
     route: Route,
   },
-
 ]
+
 export const authRoutes = [
-  {
-    path: "/",
-    name: "Root",
-    element: <Navigate to="/index" />,
-    route: Route,
-  },
 
   {
     path: "/VerifyEmail",
@@ -266,22 +278,16 @@ export const authRoutes = [
     element: <VerifyEmail  />,
     route: Route,
   },
-  
-
-  
-
-  
-  {
-    path: "/SocialAuthHandler",
-    name: "Root",
-    element: <SocialAuthHandler  />,
-    route: Route,
-  },
-
   // Admin Routes
   {
     path: "/adminDashboard",
     element: <AdminDashboard />,
+    route: Route,
+  },
+  
+  {
+    path: "/employeeDashboard",
+    element: <EmployeeDashboard />,
     route: Route,
   },
   {

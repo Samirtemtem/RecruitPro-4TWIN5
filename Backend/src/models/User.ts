@@ -15,6 +15,7 @@ export interface IUser extends Document {
   createDate: Date;
   lastLogin: Date;
   image: string;
+  githubId: string;
   googleId: string;
   linkedinId: string;
   is2FAEnabled?: boolean;
@@ -25,7 +26,7 @@ export interface IUser extends Document {
   applications: Schema.Types.ObjectId[];  // References to Applications
   interviews: Schema.Types.ObjectId[];  // References to Interviews
   jobPosts: Schema.Types.ObjectId[];  // References to JobPosts
-  provider?: 'local' | 'google' | 'linkedin';
+  provider?: 'local' | 'google' | 'linkedin' | 'github';
   isVerified: boolean;
   verificationToken?: string;
 
@@ -86,6 +87,7 @@ const userSchema = new Schema<IUser>({
   OneTimePassword: { type: Number },
   is2FAEnabled: {type: Boolean},
   resetToken: { type: String },
+  githubId: { type: String },
   profile: { type: Schema.Types.ObjectId, ref: 'Profile' },
   applications: [{ type: Schema.Types.ObjectId, ref: 'Application' }],
   interviews: [{ type: Schema.Types.ObjectId, ref: 'Interview' }],

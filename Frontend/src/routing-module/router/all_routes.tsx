@@ -84,7 +84,7 @@ export const all_routes = {
 
 
   /// dump
-  employeeDashboard: "/employee-dashboard",
+  employeeDashboard: "/employeeDashboard",
   leadsDashboard: "/leads-dashboard",
   dealsDashboard: "/deals-dashboard",
 

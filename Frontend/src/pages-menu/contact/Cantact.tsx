@@ -14,7 +14,6 @@ const Contact = () => {
   return (
     <>
       {/* <!-- Header Span --> */}
-      <span className="header-span"></span>
 
      {/* <LoginPopup />
        End Login Popup Modal */}
@@ -32,7 +31,7 @@ const Contact = () => {
       </section>
       {/* <!-- End Map Section --> */}
 
-      <section className="contact-section">
+      <section className="contact-section job-categories ui-job-categories" style={{ backgroundColor: '#FFFFFF' , margin:'-40px' }}>
         <div className="auto-container">
           <div className="upper-box">
             <div className="row">

@@ -14,6 +14,53 @@ import TodoModal from "../core/modals/todoModal";
 import CollapseHeader from "../core/common/collapse-header/collapse-header";
 import { ApexOptions } from 'apexcharts';
 
+
+interface DepartmentCount {
+  department: string;
+  count: number;
+}
+
+interface EmpDepartmentState {
+  series: { name: string; data: number[] }[];
+  options: {
+      chart: {
+          type: 'bar'; // Change this to 'bar' explicitly
+          height: number;
+      };
+      plotOptions: {
+          bar: {
+              horizontal: boolean;
+              endingShape: string;
+          };
+      };
+      dataLabels: {
+          enabled: boolean;
+      };
+      xaxis: {
+          categories: string[];
+      };
+      title: {
+          text: string;
+      };
+  };
+}
+
+
+
+
+interface Candidate {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  appliedDate: string; // Adjust the type if needed
+  status: string;
+  image?: string; // Optional
+  createDate?:string;
+  phoneNumber?:string;
+}
+
 interface JobPost {
   _id: string;
   title: string;
@@ -82,61 +129,7 @@ const AdminDashboard = () => {
 
   const [date, setDate] = useState(new Date());
 
-  //New Chart
-  const [empDepartment] = useState<any>({
-    chart: {
-      height: 280,
-      type: 'bar',
-      padding: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-      },
-      toolbar: {
-        show: false,
-      }
-    },
-    fill: {
-      colors: ['#F26522'], // Fill color for the bars
-      opacity: 1, // Adjust opacity (1 is fully opaque)
-    },
-    colors: ['#F26522'],
-    grid: {
-      borderColor: '#E5E7EB',
-      strokeDashArray: 5,
-      padding: {
-        top: -20,
-        left: 0,
-        right: 0,
-        bottom: 0
-      }
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 5,
-        horizontal: true,
-        barHeight: '35%',
-        endingShape: 'rounded'
-      }
-    },
-    dataLabels: {
-      enabled: false
-    },
-    series: [{
-      data: [80, 110, 80],
-      name: 'Employee'
-    }],
-    xaxis: {
-      categories: ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC'] ,
-      labels: {
-        style: {
-          colors: '#111827',
-          fontSize: '13px',
-        }
-      }
-    }
-  })
+ 
 
   const [salesIncome] = useState<any>({
     chart: {
@@ -382,6 +375,146 @@ useEffect(() => {
 
 
 
+
+
+
+const [candidates, setCandidates] = useState<any[]>([]); // Adjust the type as per your data structure
+
+useEffect(() => {
+  const fetchCandidates = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/user/get/Lastcandidates'); // Adjust the API endpoint
+      const data = await response.json();
+      setCandidates(data);
+    } catch (error) {
+      console.error('Error fetching candidates:', error);
+    }
+  };
+
+  fetchCandidates();
+}, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+const [userData, setUserData] = useState<any>(null); 
+
+useEffect(() => {
+  const fetchUserData = async () => {
+    const token = localStorage.getItem('token'); // Replace 'token' with the actual key if different
+
+    if (!token) {
+      console.error('No token found in session storage.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/auth/user/${token}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+
+      const data = await response.json();
+      console.log('API Response:', data); // Log the API response
+      setUserData(data.user); // Accessing the nested user object
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  fetchUserData();
+}, []);
+
+useEffect(() => {
+  console.log('User Data:', userData); // Log userData whenever it changes
+}, [userData]);
+const imageUrl = userData?.image;
+console.log('Image URL:', imageUrl);
+
+
+
+
+
+
+
+const [empDepartment, setEmpDepartment] = useState<EmpDepartmentState>({
+  series: [],
+  options: {
+      chart: {
+          type: 'bar',
+          height: 220,
+      },
+      plotOptions: {
+          bar: {
+              horizontal: false,
+              endingShape: 'rounded',
+          },
+      },
+      dataLabels: {
+          enabled: false,
+      },
+      xaxis: {
+          categories: [],
+      },
+      title: {
+          text: '',
+      },
+  },
+});
+
+const [employeeGrowthPercentage, setEmployeeGrowthPercentage] = useState<number>(0);
+const [totalEmployees, setTotalEmployees] = useState<number>(0); // New state for total employees
+
+
+useEffect(() => {
+  const fetchEmployeeData = async () => {
+      try {
+          const response = await axios.get('http://localhost:5000/api/user/count-employees-by-department');
+          const { totalEmployees: total, percentageChange: change, departmentCounts }: { totalEmployees: number; percentageChange: number; departmentCounts: DepartmentCount[] } = response.data;
+
+          // Prepare data for the chart
+          const categories = departmentCounts.map((department: DepartmentCount) => department.department);
+          const seriesData = departmentCounts.map((department: DepartmentCount) => department.count);
+
+          setEmpDepartment(prevState => ({
+              ...prevState,
+              series: [{ name: 'Employees', data: seriesData }],
+              options: {
+                  ...prevState.options,
+                  xaxis: {
+                      categories,
+                  },
+              },
+          }));
+
+          setEmployeeGrowthPercentage(change);
+          setTotalEmployees(total); // Set the total employees
+      } catch (error) {
+          console.error('Error fetching employee data:', error);
+      }
+  };
+
+  fetchEmployeeData();
+}, []);
+
+
+
+
   return (
     <>
       {/* Page Wrapper */}
@@ -456,15 +589,11 @@ useEffect(() => {
             <div className="card-body d-flex align-items-center justify-content-between flex-wrap pb-1">
               <div className="d-flex align-items-center mb-3">
                 <span className="avatar avatar-xl flex-shrink-0">
-                  <ImageWithBasePath
-                    src="assets/img/profiles/avatar-31.jpg"
-                    className="rounded-circle"
-                    alt="img"
-                  />
+                <img src={imageUrl || "assets/img/users/user-01.jpg"} alt="User Image" className="img-fluid" />
                 </span>
                 <div className="ms-3">
                   <h3 className="mb-2">
-                    Welcome Back, Maliik{" "}
+                    Welcome Back {userData ? `${userData.firstName} ${userData.lastName}` : 'Loading...'}
                     <Link to="#" className="edit-icon">
                       <i className="ti ti-edit fs-14" />
                     </Link>
@@ -680,62 +809,72 @@ useEffect(() => {
               </div>
             </div>
             {/* /Widget Info */}
+
+
+
             {/* Employees By Department */}
             <div className="col-xxl-4 d-flex">
-              <div className="card flex-fill">
+            <div className="card flex-fill">
                 <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-                  <h5 className="mb-2">Employees By Department</h5>
-                  <div className="dropdown mb-2">
-                    <Link to="#"
-                      className="btn btn-white border btn-sm d-inline-flex align-items-center"
-                      data-bs-toggle="dropdown"
-                    >
-                      <i className="ti ti-calendar me-1" />
-                      This Week
-                    </Link>
-                    <ul className="dropdown-menu  dropdown-menu-end p-3">
-                      <li>
+                    <h5 className="mb-2">Employees By Department</h5>
+                    <div className="dropdown mb-2">
                         <Link to="#"
-                          className="dropdown-item rounded-1"
+                            className="btn btn-white border btn-sm d-inline-flex align-items-center"
+                            data-bs-toggle="dropdown"
                         >
-                          This Month
+                            <i className="ti ti-calendar me-1" />
+                            This Week
                         </Link>
-                      </li>
-                      <li>
-                        <Link to="#"
-                          className="dropdown-item rounded-1"
-                        >
-                          This Week
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="#"
-                          className="dropdown-item rounded-1"
-                        >
-                          Last Week
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
+                        <ul className="dropdown-menu dropdown-menu-end p-3">
+                            <li>
+                                <Link to="#"
+                                    className="dropdown-item rounded-1"
+                                >
+                                    This Month
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="#"
+                                    className="dropdown-item rounded-1"
+                                >
+                                    This Week
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="#"
+                                    className="dropdown-item rounded-1"
+                                >
+                                    Last Week
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div className="card-body">
-                  <ReactApexChart
-                    id="emp-department"
-                    options={empDepartment}
-                    series={empDepartment.series}
-                    type="bar"
-                    height={220}
-                  />
-                  <p className="fs-13">
-                    <i className="ti ti-circle-filled me-2 fs-8 text-primary" />
-                    No of Employees increased by{" "}
-                    <span className="text-success fw-bold">+20%</span> from last
-                    Week
-                  </p>
+                    <ReactApexChart
+                        id="emp-department"
+                        options={empDepartment.options}
+                        series={empDepartment.series}
+                        type="bar"
+                        height={220}
+                    />
+                     <p className="fs-13">
+                        <i className="ti ti-circle-filled me-2 fs-8 text-primary" />
+                        Total Employees: <span className="text-primary fw-bold">{totalEmployees}</span>
+                    </p>
+                    <p className="fs-13">
+                        <i className="ti ti-circle-filled me-2 fs-8 text-primary" />
+                        No of Employees increased by{" "}
+                        <span className="text-success fw-bold">+{employeeGrowthPercentage}%</span> from last Year
+                    </p>
                 </div>
-              </div>
             </div>
+        </div>
             {/* /Employees By Department */}
+
+
+
+
           </div>
           <div className="row">
              {/* Jobs Applicants */}
@@ -823,54 +962,50 @@ useEffect(() => {
             <table className="table table-nowrap mb-0">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Department</th>
-                  <th>Status</th>
+                  <th> Name</th>
+                  <th>email</th>
+                  <th>Phone Number</th>
                 </tr>
               </thead>
               <tbody>
-                {jobPosts.length > 0 ? (
-                  jobPosts.map((job) => (
-                    <tr key={job._id}> {/* Assuming job has a unique _id */}
+                {candidates.length > 0 ? (
+                  candidates.map((candidate) => (
+                    <tr key={candidate._id}> {/* Assuming candidate has a unique _id */}
                       <td>
                         <div className="d-flex align-items-center">
                           <Link to="/jobgrid" className="avatar">
-                            <ImageWithBasePath
-                              src="assets/img/icons/logo.png" // Placeholder image
-                              className="img-fluid  w-auto h-auto"
-                              alt="Job Icon"
-                            />
+                          <img src={candidate.image || "assets/img/users/user-01.jpg"} alt="User Image" className="img-fluid" />
                           </Link>
                           <div className="ms-2">
                             <h6 className="fw-medium">
-                              <Link to="#">{job.title}</Link>
+                              <Link to="#">{candidate.firstName} {candidate.lastName}</Link> {/* Adjust title field as necessary */}
                             </h6>
                           </div>
                         </div>
                       </td>
                       <td>
                         <span className="badge badge-secondary-transparent badge-xs">
-                          {job.department}
+                          {candidate.email} {/* Adjust department field as necessary */}
                         </span>
                       </td>
                       <td>
-                      <span
+                        <span
                           className={`badge badge-${
-                            job.status === 'OPEN'
+                            candidate.status === 'OPEN'
                               ? 'success'
-                              : job.status === 'CLOSED'
+                              : candidate.status === 'CLOSED'
                               ? 'danger'
                               : 'warning' // For PENDING status
                           }-transparent badge-xs`}
                         >
-                          {job.status}
+                          {candidate.phoneNumber} {/* Adjust status field as necessary */}
                         </span>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={3}>No job posts available</td>
+                    <td colSpan={3}>No candidates available</td>
                   </tr>
                 )}
               </tbody>

@@ -35,10 +35,6 @@ Buttons Styles
   padding: 18px 35px 15px 35px;
 }
 
-.btn-style-one:hover {
-  color: #ffffff;
-  background-color: var(--primary-hover-bg-color);
-}
 
 /* Btn Style Two */
 .btn-style-two {
@@ -47,16 +43,11 @@ Buttons Styles
   white-space: nowrap;
   color: #202124;
   background-color: var(--primary-2nd-color);
-  font-size: 15px;
+  font-size: 15px;  
   line-height: 20px;
   border-radius: 8px;
   font-weight: 400;
   padding: 18px 35px 15px 35px;
-}
-
-.btn-style-two:hover {
-  color: #202124;
-  background-color: var(--primary-2nd-hover-bg-color);
 }
 
 /* Btn Style Three */
@@ -73,10 +64,6 @@ Buttons Styles
   padding: 18px 35px 15px 35px;
 }
 
-.btn-style-three:hover {
-  color: #ffffff;
-  background-color: var(--primary-hover-bg-color);
-}
 
 /* Btn Style Four */
 .btn-style-four {

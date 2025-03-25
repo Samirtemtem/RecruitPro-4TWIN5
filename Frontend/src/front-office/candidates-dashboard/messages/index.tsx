@@ -15,7 +15,6 @@ const MessagesPage: React.FC = () => {
 
     
 <div className="page-wrapper dashboard">
-<span className="header-span"></span>
 {/* <!-- Header Span for hight --> */}
 
 {/*<LoginPopup />

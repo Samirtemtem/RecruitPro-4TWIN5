@@ -59,7 +59,7 @@ const LoginForm = () => {
         </div>
         <div className="form-group">
           <button 
-            className="theme-btn btn-style-one" 
+            className="btn btn-primary" 
             type="submit"
             style={{ 
               backgroundColor: '#D50000', 

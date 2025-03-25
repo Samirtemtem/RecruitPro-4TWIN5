@@ -63,9 +63,9 @@ export const useUserProfile = () => {
       setIsLoading(true);
       setError(null);
       
-      // Get the user ID and token from sessionStorage to check if they're available
-      const token = sessionStorage.getItem("token");
-      const userId = sessionStorage.getItem("userId");
+      // Get the user ID and token from localStorage to check if they're available
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
       
       console.log("🔑 useUserProfile - Auth credentials:", { 
         hasToken: !!token, 
@@ -97,7 +97,7 @@ export const useUserProfile = () => {
 
   // Fetch profile data if it's not already loaded
   useEffect(() => {
-    const hasAuthCredentials = sessionStorage.getItem("token") && sessionStorage.getItem("userId");
+    const hasAuthCredentials = localStorage.getItem("token") && localStorage.getItem("userId");
     
     console.log("🔍 useUserProfile - Checking if profile should be loaded:", {
       isProfileLoaded,

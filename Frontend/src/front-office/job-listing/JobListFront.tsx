@@ -23,7 +23,6 @@ const JobListFront: React.FC = () => {
   return (
     <>
       {/* <!-- Header Span --> */}
-      <span className="header-span"></span>
 
       {/*<LoginPopup />
        End Login Popup Modal */}

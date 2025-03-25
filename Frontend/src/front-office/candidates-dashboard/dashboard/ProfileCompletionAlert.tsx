@@ -2,10 +2,12 @@ import { useContext, useMemo } from 'react';
 import { AuthContext } from '../../../routing-module/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+
 const Alert = () => {
   const { profileData } = useContext(AuthContext);
   const navigate = useNavigate();
   const { isProfileLoaded } = useContext(AuthContext);
+  
   const { completionPercentage, missingItems } = useMemo(() => {
     if (!profileData) {
       return { completionPercentage: 0, missingItems: ['education', 'experience', 'skills'] };
@@ -31,22 +33,10 @@ const Alert = () => {
     };
   }, [profileData]);
 
-    console.log("isProfileLoaded", isProfileLoaded);
-    console.log("profileData", profileData);
-    console.log("completionPercentage", completionPercentage);
-    
-    useEffect(() => {
-      if(isProfileLoaded == false) {
-        return;
-      }
-      if (completionPercentage === 100) {
-        console.log("profile is complete");
-        return;
-      }
-      if (!isProfileLoaded || completionPercentage === 100) {
-        return;
-      }
-    }, [isProfileLoaded, completionPercentage]);
+  // Return null if profile is not loaded or is 100% complete
+  if (!isProfileLoaded || completionPercentage === 100) {
+    return null;
+  }
 
   const formatMissingItems = (items: string[]): string => {
     if (items.length === 0) return '';

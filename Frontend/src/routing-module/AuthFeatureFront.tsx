@@ -32,7 +32,7 @@ const AuthFeatureFront: React.FC = () => {
 */
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const { token } = useAuth();
-  
+  //const { user } = useAuth();
   return token ?  <div className="auth-feature-front">
       
   <Outlet />

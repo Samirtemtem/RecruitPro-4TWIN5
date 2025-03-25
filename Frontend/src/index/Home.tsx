@@ -74,7 +74,7 @@ const Home = () => {
 
           <div className="btn-box">
             <Link
-              to="/job-list/job-list-v1"
+              to="/JobListFront"
               className="theme-btn btn-style-one"
               style={{ 
                 backgroundColor: '#D50000', 

@@ -1,5 +1,6 @@
 import React, { useState, FormEvent } from 'react';
 import { useUserProfile } from '../../hooks/useUserProfile';
+import { toast, Toaster } from 'react-hot-toast';
 
 interface PasswordForm {
   oldPassword: string;
@@ -24,7 +25,7 @@ const Form: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<Partial<PasswordForm>>({});
-  const [loading, setLoading] = useState<boolean>(false);
+  const [saving, setSaving] = useState<boolean>(false);
   const [validation, setValidation] = useState<PasswordValidation>({
     hasMinLength: false,
     hasUpperCase: false,
@@ -32,7 +33,6 @@ const Form: React.FC = () => {
     hasNumber: false,
     hasSpecialChar: false
   });
-  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   const validatePassword = (password: string): PasswordValidation => {
     return {
@@ -97,72 +97,122 @@ const Form: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      setLoading(true);
-      setSubmitMessage(null);
-      try {
-        if (!userData?.id) {
-          throw new Error('User ID not found');
-        }
+    setSaving(true);
+    const loadingToast = toast.loading('Changing password...');
 
-        const response = await fetch('http://localhost:5000/api/auth/change-password', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: userData.id,
-            oldPassword: formData.oldPassword,
-            newPassword: formData.newPassword
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to change password');
-        }
-
-        setSubmitMessage({ type: 'success', text: 'Password changed successfully' });
-        
-        // Reset form after successful submission
-        setFormData({
-          oldPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        });
-        
-        setValidation({
-          hasMinLength: false,
-          hasUpperCase: false,
-          hasLowerCase: false,
-          hasNumber: false,
-          hasSpecialChar: false
-        });
-      } catch (error) {
-        console.error('Failed to change password:', error);
-        setSubmitMessage({ 
-          type: 'error', 
-          text: error instanceof Error ? error.message : 'Failed to change password' 
-        });
-        if (error instanceof Error && error.message.includes('current password')) {
-          setErrors({
-            oldPassword: 'Current password is incorrect'
-          });
-        }
-      } finally {
-        setLoading(false);
+    try {
+      if (!userData?.id) {
+        throw new Error('User ID not found');
       }
+
+      if (formData.newPassword !== formData.confirmPassword) {
+        toast.dismiss(loadingToast);
+        toast.error('New password and confirmation do not match');
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/auth/change-password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userData.id,
+          oldPassword: formData.oldPassword,
+          newPassword: formData.newPassword
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to change password');
+      }
+
+      toast.dismiss(loadingToast);
+      toast.success('Password changed successfully!');
+      
+      // Reset form after successful submission
+      setFormData({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+      
+      setValidation({
+        hasMinLength: false,
+        hasUpperCase: false,
+        hasLowerCase: false,
+        hasNumber: false,
+        hasSpecialChar: false
+      });
+    } catch (error) {
+      console.error('Failed to change password:', error);
+      toast.dismiss(loadingToast);
+      toast.error(error instanceof Error ? error.message : 'Failed to change password. Please try again.');
+      if (error instanceof Error && error.message.includes('current password')) {
+        setErrors({
+          oldPassword: 'Current password is incorrect'
+        });
+      }
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
     <form className="default-form" onSubmit={handleSubmit}>
-      {submitMessage && (
-        <div className={`alert ${submitMessage.type === 'success' ? 'alert-success' : 'alert-danger'} mb-3`}>
-          {submitMessage.text}
-        </div>
-      )}
+      <Toaster 
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={12}
+        containerStyle={{
+          bottom: 20,
+          right: 20,
+        }}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+            padding: '16px 24px',
+            fontSize: '16px',
+            maxWidth: '400px',
+            minWidth: '300px'
+          },
+          success: {
+            duration: 3000,
+            style: {
+              background: '#22c55e',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+          error: {
+            duration: 4000,
+            style: {
+              background: '#ef4444',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+          loading: {
+            style: {
+              background: '#363636',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+        }}
+      />
       <div className="row">
         {/* Current Password */}
         <div className="form-group col-lg-7 col-md-12">
@@ -172,7 +222,7 @@ const Form: React.FC = () => {
             name="oldPassword" 
             value={formData.oldPassword}
             onChange={handleChange}
-            disabled={loading}
+            disabled={saving}
             required 
           />
           {errors.oldPassword && <div className="error text-danger">{errors.oldPassword}</div>}
@@ -186,7 +236,7 @@ const Form: React.FC = () => {
             name="newPassword" 
             value={formData.newPassword}
             onChange={handleChange}
-            disabled={loading}
+            disabled={saving}
             required 
           />
           {errors.newPassword && <div className="error text-danger">{errors.newPassword}</div>}
@@ -227,7 +277,7 @@ const Form: React.FC = () => {
             name="confirmPassword" 
             value={formData.confirmPassword}
             onChange={handleChange}
-            disabled={loading}
+            disabled={saving}
             required 
           />
           {errors.confirmPassword && <div className="error text-danger">{errors.confirmPassword}</div>}
@@ -237,10 +287,10 @@ const Form: React.FC = () => {
         <div className="form-group col-lg-6 col-md-12">
           <button 
             type="submit" 
-            className="theme-btn btn-style-one"
-            disabled={loading}
+            className="btn btn-primary"
+            disabled={saving}
           >
-            {loading ? 'Updating...' : 'Update Password'}
+            {saving ? 'Saving...' : 'Update Password'}
           </button>
         </div>
       </div>

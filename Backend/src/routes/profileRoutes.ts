@@ -527,7 +527,7 @@ router.delete('/skills/:id', asyncHandler(profileController.deleteSkill));
 /**
  * @swagger
  * /api/profile/social:
- *   post:
+ *   get:
  *     tags: [Profile]
  *     summary: Get user social links
  *     requestBody:
@@ -551,6 +551,36 @@ router.delete('/skills/:id', asyncHandler(profileController.deleteSkill));
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/SocialLink'
+ *       404:
+ *         description: Profile not found
+ *       500:
+ *         description: Server error
+ */
+router.get('/social', asyncHandler(profileController.getSocialLinks));
+
+/**
+ * @swagger
+ * /api/profile/social:
+ *   post:
+ *     tags: [Profile]
+ *     summary: Add a new social link
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - socialLink
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               socialLink:
+ *                 $ref: '#/components/schemas/SocialLink'
+ *     responses:
+ *       200:
+ *         description: Social link added successfully
  *       404:
  *         description: Profile not found
  *       500:
@@ -764,5 +794,43 @@ router.delete('/cv/:id', asyncHandler(profileController.deleteCV));
  *         description: Server error
  */
 router.post('/image/upload', upload.single('image'), asyncHandler(profileController.uploadProfileImage));
+
+/**
+ * @swagger
+ * /api/profile/cv/parsed:
+ *   post:
+ *     tags: [Profile]
+ *     summary: Update profile with parsed CV data and file
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - parsedData
+ *               - cv
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               parsedData:
+ *                 type: object
+ *                 description: Parsed CV data containing education, experience, and skills
+ *               cv:
+ *                 type: string
+ *                 format: binary
+ *                 description: CV file to upload
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully with parsed CV data
+ *       400:
+ *         description: No file uploaded or invalid data
+ *       404:
+ *         description: Profile not found
+ *       500:
+ *         description: Server error
+ */
+router.post('/cv/parsed', upload.single('cv'), asyncHandler(profileController.updateProfileWithParsedCV));
 
 export default router; 

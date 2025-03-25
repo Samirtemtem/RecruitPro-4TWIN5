@@ -11,14 +11,15 @@ import MobileMenu from "../../../common/MobileMenu";
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
 import Header from '../../../common/Header';
+import Seo from '../../../common/Seo';
 const JobAlertsPage: React.FC = () => {
   return (
     
 
     
 <div className="page-wrapper dashboard">
-<span className="header-span"></span>
 {/* <!-- Header Span for hight --> */}
+<Seo pageTitle="Job Alerts" />
 
 {/*<LoginPopup />
  End Login Popup Modal */}

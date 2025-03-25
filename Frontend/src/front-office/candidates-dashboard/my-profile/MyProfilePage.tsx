@@ -12,13 +12,13 @@ import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidat
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
 import MobileMenu from "../../../common/MobileMenu";
 import Header from "../../../common/Header";
+import Seo from "../../../common/Seo";
 const MyProfilePage: React.FC = () => {
   const { userData, isLoading, error } = useUserProfile();
 
   return (
     <div className="page-wrapper dashboard">
-      <span className="header-span">  
-      </span>
+      <Seo pageTitle="My Profile" />    
       {/* <!-- Header Span for hight --> */}
 
       {/*<LoginPopup />

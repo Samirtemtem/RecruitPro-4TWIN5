@@ -2,6 +2,7 @@ import React, { useState, FormEvent, ChangeEvent, useEffect, useContext } from "
 import { useUserProfile } from "../hooks/useUserProfile";
 import { AuthContext, UserProfileData } from "../../../routing-module/AuthContext";
 import axios from "axios";
+import { toast, Toaster } from 'react-hot-toast';
 
 interface ProfileFormData {
   firstName: string;
@@ -39,7 +40,6 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
 
   const [errors, setErrors] = useState<Partial<ProfileFormData>>({});
   const [saving, setSaving] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   // Update form data when user data is loaded
   useEffect(() => {
@@ -98,44 +98,43 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
-    if (validateForm()) {
-      setSaving(true);
-      try {
-        if (!userData?.id) {
-          throw new Error('User ID not found');
-        }
+    setSaving(true);
+    const loadingToast = toast.loading('Updating profile...');
 
-        const response = await fetch('http://localhost:5000/api/profile/update', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ...formData,
-            userId: userData.id
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to update profile');
-        }
-
-        const updatedData = await response.json();
-        
-        // Update the profile data in the AuthContext
-        updateProfileData({
-          ...userData,
-          ...formData
-        });
-
-        setSubmitMessage({ type: 'success', text: 'Profile updated successfully' });
-      } catch (error) {
-        console.error('Failed to update profile:', error);
-        setSubmitMessage({ type: 'error', text: 'Failed to update profile. Please try again.' });
-      } finally {
-        setSaving(false);
+    try {
+      if (!userData?.id) {
+        throw new Error('User ID not found');
       }
+
+      const response = await fetch('http://localhost:5000/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: userData.id,
+          ...formData
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+
+      toast.dismiss(loadingToast);
+      toast.success('Profile updated successfully!');
+
+      // Update the profile data in the AuthContext
+      updateProfileData({
+        ...userData,
+        ...formData
+      });
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      toast.dismiss(loadingToast);
+      toast.error('Failed to update profile. Please try again.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -185,7 +184,7 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
           localStorage.setItem('user', JSON.stringify(updatedUser));
         }
         
-        setSubmitMessage({ type: 'success', text: `Two-factor authentication ${newValue ? 'enabled' : 'disabled'} successfully` });
+        toast.success(`Two-factor authentication ${newValue ? 'enabled' : 'disabled'} successfully`);
       } else {
         throw new Error('Failed to update 2FA status');
       }
@@ -200,7 +199,7 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
         });
       }
       
-      setSubmitMessage({ type: 'error', text: 'Failed to update two-factor authentication settings' });
+      toast.error('Failed to update two-factor authentication settings');
       // Revert UI state on error
       setIs2FAEnabled(!newValue);
     } finally {
@@ -226,11 +225,58 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
 
   return (
     <form action="#" className="default-form" onSubmit={handleSubmit}>
-      {submitMessage && (
-        <div className={`alert ${submitMessage.type === 'success' ? 'alert-success' : 'alert-danger'} mb-3`}>
-          {submitMessage.text}
-        </div>
-      )}
+      <Toaster 
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={12}
+        containerStyle={{
+          bottom: 20,
+          right: 20,
+        }}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+            padding: '16px 24px',
+            fontSize: '16px',
+            maxWidth: '400px',
+            minWidth: '300px'
+          },
+          success: {
+            duration: 3000,
+            style: {
+              background: '#22c55e',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+          error: {
+            duration: 4000,
+            style: {
+              background: '#ef4444',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+          loading: {
+            style: {
+              background: '#363636',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+        }}
+      />
       <div className="row">
         {/* <!-- First Name --> */}
         <div className="form-group col-lg-6 col-md-12">
@@ -318,7 +364,7 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
         <div className="form-group col-lg-6 col-md-12">
           <button 
             type="submit" 
-            className="theme-btn btn-style-one"
+            className="btn btn-primary"
             disabled={saving}
           >
             {saving ? 'Saving...' : 'Save'}

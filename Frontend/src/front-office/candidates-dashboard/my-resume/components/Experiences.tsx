@@ -1,6 +1,7 @@
 import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useUserProfile, UserProfileData } from '../../hooks/useUserProfile';
 import ExperiencesModal from './ExperiencesModal';
+import { toast, Toaster } from 'react-hot-toast';
 import './Modal.css';
 
 interface IExperience {
@@ -20,14 +21,13 @@ const Experiences: React.FC = () => {
   const [currentExperience, setCurrentExperience] = useState<IExperience>({
     position: '',
     enterprise: '',
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date().toISOString().split('T')[0],
+    startDate: '',
+    endDate: '',
     description: '',
     location: ''
   });
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   // Load experience data when user data is available
   useEffect(() => {
@@ -56,7 +56,7 @@ const Experiences: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setSubmitMessage(null);
+    const loadingToast = toast.loading(editIndex !== null ? 'Updating experience...' : 'Adding experience...');
     
     try {
       if (!userData?.id) {
@@ -69,23 +69,30 @@ const Experiences: React.FC = () => {
           )
         : [...experienceItems, { ...currentExperience }];
 
-      await fetch('http://localhost:5000/api/profile/experience', {
+      const response = await fetch('http://localhost:5000/api/profile/experience', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
           userId: userData.id,
-          experience: updatedExperience 
+          experience: updatedExperience
         })
       });
 
-      setExperienceItems(updatedExperience);
-      setSubmitMessage({ type: 'success', text: editIndex !== null ? 'Experience updated successfully' : 'Experience added successfully' });
+      if (!response.ok) {
+        throw new Error('Failed to save experience');
+      }
+
+      const responseData = await response.json();
+      setExperienceItems(responseData);
+      toast.dismiss(loadingToast);
+      toast.success(editIndex !== null ? 'Experience updated successfully!' : 'Experience added successfully!');
       resetForm();
     } catch (error) {
       console.error('Failed to save experience:', error);
-      setSubmitMessage({ type: 'error', text: 'Failed to save experience. Please try again.' });
+      toast.dismiss(loadingToast);
+      toast.error('Failed to save experience. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -98,16 +105,16 @@ const Experiences: React.FC = () => {
   };
 
   const handleDelete = async (index: number) => {
-    setSubmitMessage(null);
     try {
       if (!userData?.id) {
         throw new Error('User ID not found');
       }
 
+      const loadingToast = toast.loading('Deleting experience...');
       const itemToDelete = experienceItems[index];
       const updatedItems = experienceItems.filter((_, i) => i !== index);
 
-      await fetch(`http://localhost:5000/api/profile/experience/${itemToDelete._id}`, {
+      const response = await fetch(`http://localhost:5000/api/profile/experience/${itemToDelete._id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -115,11 +122,16 @@ const Experiences: React.FC = () => {
         body: JSON.stringify({ userId: userData.id })
       });
 
+      if (!response.ok) {
+        throw new Error('Failed to delete experience');
+      }
+
       setExperienceItems(updatedItems);
-      setSubmitMessage({ type: 'success', text: 'Experience entry deleted successfully' });
+      toast.dismiss(loadingToast);
+      toast.success('Experience deleted successfully!');
     } catch (error) {
       console.error('Failed to delete experience:', error);
-      setSubmitMessage({ type: 'error', text: 'Failed to delete experience. Please try again.' });
+      toast.error('Failed to delete experience. Please try again.');
     }
   };
 
@@ -127,8 +139,8 @@ const Experiences: React.FC = () => {
     setCurrentExperience({
       position: '',
       enterprise: '',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
+      startDate: '',
+      endDate: '',
       description: '',
       location: ''
     });
@@ -146,23 +158,69 @@ const Experiences: React.FC = () => {
 
   return (
     <div className="resume-outer theme-blue">
+      <Toaster 
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={12}
+        containerStyle={{
+          bottom: 20,
+          right: 20,
+        }}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+            padding: '16px 24px',
+            fontSize: '16px',
+            maxWidth: '400px',
+            minWidth: '300px'
+          },
+          success: {
+            duration: 3000,
+            style: {
+              background: '#22c55e',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+          error: {
+            duration: 4000,
+            style: {
+              background: '#ef4444',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+          loading: {
+            style: {
+              background: '#363636',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+        }}
+      />
       <div className="upper-title">
-        <h4>Work & Experience</h4>
+        <h4>Experience</h4>
         <button 
           type="button" 
           className="add-info-btn"
           onClick={() => { resetForm(); setShowForm(true); }}
           disabled={saving}
         >
-          <span className="icon flaticon-plus"></span> Add Work
+          <span className="icon flaticon-plus"></span> Add Experience
         </button>
       </div>
-      
-      {submitMessage && (
-        <div className={`alert ${submitMessage.type === 'success' ? 'alert-success' : 'alert-danger'} mb-3`}>
-          {submitMessage.text}
-        </div>
-      )}
       
       {/* Experience Modal */}
       <ExperiencesModal

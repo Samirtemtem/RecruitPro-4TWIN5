@@ -1,6 +1,7 @@
 import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useUserProfile } from '../../hooks/useUserProfile';
 import EducationModal from './EducationModal';
+import { toast, Toaster } from 'react-hot-toast';
 import './Modal.css';
 import { AuthContext } from '../../../../routing-module/AuthContext';
 import { useContext } from 'react';
@@ -29,7 +30,6 @@ const Education: React.FC = () => {
   });
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   // Load education data when user data is available
   useEffect(() => {
@@ -58,7 +58,7 @@ const Education: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setSubmitMessage(null);
+    const loadingToast = toast.loading(editIndex !== null ? 'Updating education...' : 'Adding education...');
     
     try {
       if (!userData?.id) {
@@ -71,23 +71,30 @@ const Education: React.FC = () => {
           )
         : [...educationItems, { ...currentEducation }];
 
-      await fetch('http://localhost:5000/api/profile/education', {
+      const response = await fetch('http://localhost:5000/api/profile/education', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
           userId: userData.id,
-          education: updatedEducation 
+          education: updatedEducation
         })
       });
 
-      setEducationItems(updatedEducation);
-      setSubmitMessage({ type: 'success', text: editIndex !== null ? 'Education updated successfully' : 'Education added successfully' });
+      if (!response.ok) {
+        throw new Error('Failed to save education');
+      }
+
+      const responseData = await response.json();
+      setEducationItems(responseData);
+      toast.dismiss(loadingToast);
+      toast.success(editIndex !== null ? 'Education updated successfully!' : 'Education added successfully!');
       resetForm();
     } catch (error) {
       console.error('Failed to save education:', error);
-      setSubmitMessage({ type: 'error', text: 'Failed to save education. Please try again.' });
+      toast.dismiss(loadingToast);
+      toast.error('Failed to save education. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -100,16 +107,16 @@ const Education: React.FC = () => {
   };
 
   const handleDelete = async (index: number) => {
-    setSubmitMessage(null);
     try {
       if (!userData?.id) {
         throw new Error('User ID not found');
       }
 
+      const loadingToast = toast.loading('Deleting education...');
       const itemToDelete = educationItems[index];
       const updatedItems = educationItems.filter((_, i) => i !== index);
 
-      await fetch(`http://localhost:5000/api/profile/education/${itemToDelete._id}`, {
+      const response = await fetch(`http://localhost:5000/api/profile/education/${itemToDelete._id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -117,12 +124,17 @@ const Education: React.FC = () => {
         body: JSON.stringify({ userId: userData.id })
       });
 
+      if (!response.ok) {
+        throw new Error('Failed to delete education');
+      }
+
       setEducationItems(updatedItems);
       updateProfileData(userData);
-      setSubmitMessage({ type: 'success', text: 'Education entry deleted successfully' });
+      toast.dismiss(loadingToast);
+      toast.success('Education deleted successfully!');
     } catch (error) {
       console.error('Failed to delete education:', error);
-      setSubmitMessage({ type: 'error', text: 'Failed to delete education. Please try again.' });
+      toast.error('Failed to delete education. Please try again.');
     }
   };
 
@@ -149,6 +161,58 @@ const Education: React.FC = () => {
 
   return (
     <div className="resume-outer theme-blue">
+      <Toaster 
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={12}
+        containerStyle={{
+          bottom: 20,
+          right: 20,
+        }}
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+            padding: '16px 24px',
+            fontSize: '16px',
+            maxWidth: '400px',
+            minWidth: '300px'
+          },
+          success: {
+            duration: 3000,
+            style: {
+              background: '#22c55e',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+          error: {
+            duration: 4000,
+            style: {
+              background: '#ef4444',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+          loading: {
+            style: {
+              background: '#363636',
+              color: '#fff',
+              padding: '16px 24px',
+              fontSize: '16px',
+              maxWidth: '400px',
+              minWidth: '300px'
+            },
+          },
+        }}
+      />
       <div className="upper-title">
         <h4>Education</h4>
         <button 
@@ -160,12 +224,6 @@ const Education: React.FC = () => {
           <span className="icon flaticon-plus"></span> Add Education
         </button>
       </div>
-      
-      {submitMessage && (
-        <div className={`alert ${submitMessage.type === 'success' ? 'alert-success' : 'alert-danger'} mb-3`}>
-          {submitMessage.text}
-        </div>
-      )}
       
       {/* Education Modal */}
       <EducationModal

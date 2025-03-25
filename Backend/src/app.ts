@@ -49,7 +49,6 @@ const corsOptions = {
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 
 
@@ -84,7 +83,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter); 
 app.use('/api/auth', authRoutes);
 app.use('/api/cv', cvRoutes);
 

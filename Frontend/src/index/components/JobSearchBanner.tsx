@@ -1,10 +1,10 @@
 import React from "react";
-
+ 
 const JobSearchBanner = () => {
 const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
-
+ 
   return (
     <section className="banner-section">
       <div className="auto-container">
@@ -17,25 +17,25 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   </h1>
   <br />
   <div className="logo-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '40px' }}>
-
+ 
     <img src="/images/resource/logoremovebg.png" alt="Recruit Pro Logo" style={{ height: '100px', maxWidth: '100%', marginTop: '-15px' }} />
   </div>
 </div>
 <br />
-
-              
+ 
+ 
               {/* Job Search Form */}
               <form onSubmit={handleSubmit} className="job-search-form" style={{ textAlign: 'center', margin: '0 0 0 -50px' }}>
                 <div className="row">
-                  <div className="form-group col-lg-5 col-md-12 col-sm-12">
+                  <div className="form-groupp col-lg-5 col-md-12 col-sm-12" style={{ textAlign: 'center', margin: '10px 0 0 0' }}>
                     <span className="icon flaticon-search-1"></span>
                     <input type="text" placeholder="Job title, keywords, or company" />
                   </div>
-                  <div className="form-group col-lg-4 col-md-12 col-sm-12 location">
+                  <div className="form-groupp col-lg-4 col-md-12 col-sm-12 location" style={{ textAlign: 'center', margin: '10px 0 0 0' }}>
                     <span className="icon flaticon-map-locator"></span>
                     <input type="text" placeholder="City or postcode" />
                   </div>
-                  <div className="form-group col-lg-3 col-md-12 col-sm-12 btn-box">
+                  <div className="form-groupp col-lg-3 col-md-12 col-sm-12 btn-box">
                     <button 
                       type="submit" 
                       className="theme-btn btn-style-one" 
@@ -58,9 +58,9 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
                   </div>
                 </div>
               </form>
-
+ 
               <br />
-              
+ 
               {/* Popular Search */}
               <div className="popular-searches" data-aos="fade-up" data-aos-delay="1000">
                 <span className="title">Popular Searches : </span>
@@ -76,7 +76,7 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
               <figure className="main-image" data-aos="fade-in" data-aos-delay="500">
                 <img src="/images/resource/hero.jpg" alt="hero image" />
               </figure>
-              
+ 
               <div className="info_block_two" data-aos="fade-in" data-aos-delay="2000">
                 <p>10k+ Candidates</p>
                 <div className="image">
@@ -103,5 +103,6 @@ const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     </section>
   );
 };
-
+ 
 export default JobSearchBanner;
+ 

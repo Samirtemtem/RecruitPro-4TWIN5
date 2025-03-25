@@ -95,18 +95,17 @@ const Header = () => {
   { title: "CONTACT", path: "/Contact" },
   { title: "TERMS", path: "/Terms" },
   ];
+  /*
     // Function to determine the home path based on role
     const getHomePath = () => {
       switch (role) {
-        case "RH":
-          return "/DashboardRH";
         case "CANDIDATE":
           return "/DashboardCandidate";
         default:
           return "/";
       }
     };
-
+*/
 
   return (
     <>
@@ -180,7 +179,7 @@ const Header = () => {
                 width={60}
                 height={60}
                 style={{ cursor: "pointer", marginRight: "10px" }}
-                onClick={() => navigate(getHomePath())}
+                onClick={() => navigate(all_routes.DashboardCandidate)}
               />            
 
               {/* Profile Image (Dropdown Toggle) */}

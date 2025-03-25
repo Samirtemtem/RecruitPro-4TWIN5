@@ -4,6 +4,7 @@ import './register-wizard.scss';
 import ImageWithBasePath from '../../core/common/imageWithBasePath';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import Seo from '../../common/Seo';
 import { register as registerUser } from '../../services/auth.service';
 import { Education, EducationInput } from '../../models/Education';
 import { Experience, ExperienceInput } from '../../models/Experience';
@@ -16,6 +17,7 @@ import { parseCV, ParsedCVData } from '../../services/cv-parser.service';
 import DefaulHeader2 from "../../common/Header";
 import FooterDefault from "../../common/Footer";
 import { toast } from 'react-hot-toast';
+import MobileMenu from '../../common/MobileMenu';
 
 type FormSection = 'personal' | 'education' | 'experience' | 'skills' | 'socialLinks' | 'terms';
 
@@ -73,6 +75,8 @@ interface FormData {
   skills: SkillFormData[];
   socialLinks: SocialLinkFormData[];
   agreeToTerms: boolean;
+  
+  //newsletter: boolean;
 }
 
 interface ValidationError {
@@ -971,31 +975,32 @@ const RegisterWizard: React.FC = () => {
     <>
       <style>{inputStyles}</style>
       <DefaulHeader2 />
-      <div className="container-fuild bg-white" style={{ 
-            marginTop: "80px",  /* Space after the header */
-            paddingTop: "30px", /* Internal padding inside the container */
-            position: "relative", /* Ensure proper stacking context */
-            zIndex: 1 }} >
-        <div className="w-100 position-relative flex-wrap d-block vh-100">
-          <div className="row">
-            {/* Left Side - Image */}
-            <div className="col-lg-5">
-              <div className="d-lg-flex align-items-center justify-content-center d-none flex-wrap vh-100 ">
-                <div>
-                  <ImageWithBasePath src="assets/img/bg/download.svg" alt="Registration" />
-                </div>
-              </div>
-            </div>
+      <Seo pageTitle="Register" />
+      {/* <MobileMenu /> */}
+      <MobileMenu />
+      {/* End MobileMenu */}
+      <section className="job-categories ui-job-categories" style={{ backgroundColor: '#FFFFFF' , margin:'-40px' }}>
+      <div className="auto-container">
+      <div className="container-fuild bg-white" >
+        <div className="w-100  d-flex align-items-center justify-content-center vh-100">
+           
 
             {/* Right Side - Form */}
-            <div className="col-lg-7 col-md-12 col-sm-12">
-              <div className="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
+            <div className="col-lg-8 col-md-10 col-sm-12 ps-0">
+              <div className="row justify-content-center align-items-center vh-100  flex-wrap">
                 <div className="col-md-10 mx-auto">
-                  <div className="card border-0 shadow-none">
+                  <div className="">
                     <div className="card-body">
                       {/* Logo */}
                       <div className="text-center mb-4">
                         <ImageWithBasePath src="assets/img/logo.svg" className="img-fluid" alt="Logo" />
+                      </div>
+
+                      {/* Back to Login Button */}
+                      <div className="text-start mb-4">
+                        <Link to="/LoginUser" className="btn btn-outline-primary btn-sm rounded-pill">
+                          <i className="ti ti-arrow-left me-1"></i>Back to Login
+                        </Link>
                       </div>
 
                       {/* Form Title */}
@@ -1048,7 +1053,7 @@ const RegisterWizard: React.FC = () => {
                             </div>
                             <div className="row">
                               <div className="col-lg-6">
-                                <div className="form-group">
+                                <div className="f">
                                   <label className="form-label">First Name <span className="text-danger">*</span></label>
                                   <input
                                     type="text"
@@ -1060,7 +1065,7 @@ const RegisterWizard: React.FC = () => {
                                 </div>
                               </div>
                               <div className="col-lg-6">
-                                <div className="form-group">
+                                <div className="f">
                                   <label className="form-label">Last Name <span className="text-danger">*</span></label>
                                   <input
                                     type="text"
@@ -1072,7 +1077,7 @@ const RegisterWizard: React.FC = () => {
                                 </div>
                               </div>
                               <div className="col-lg-6">
-                                <div className="form-group">
+                                <div className="f">
                                   <label className="form-label">Email <span className="text-danger">*</span></label>
                                   <input
                                     type="email"
@@ -1084,7 +1089,7 @@ const RegisterWizard: React.FC = () => {
                                 </div>
                               </div>
                               <div className="col-lg-6">
-                                <div className="form-group">
+                                <div className="f">
                                   <label className="form-label">Password <span className="text-danger">*</span></label>
                                   <div className="pass-group">
                                     <input
@@ -1098,7 +1103,7 @@ const RegisterWizard: React.FC = () => {
                                 </div>
                               </div>
                               <div className="col-lg-6">
-                                <div className="form-group">
+                                <div className="f">
                                   <label className="form-label">Confirm Password <span className="text-danger">*</span></label>
                                   <div className="pass-group">
                                     <input
@@ -1112,7 +1117,7 @@ const RegisterWizard: React.FC = () => {
                                 </div>
                               </div>
                               <div className="col-lg-6">
-                                <div className="form-group">
+                                <div className="f">
                                   <label className="form-label">Phone Number <span className="text-danger">*</span></label>
                                   <PhoneInput
                                     country={'tn'}
@@ -1129,7 +1134,7 @@ const RegisterWizard: React.FC = () => {
                                 </div>
                               </div>
                               <div className="col-lg-12">
-                                <div className="form-group">
+                                <div className="f">
                                   <label className="form-label">Address <span className="text-danger">*</span></label>
                                   <input
                                     type="text"
@@ -1141,7 +1146,7 @@ const RegisterWizard: React.FC = () => {
                                 </div>
                               </div>
                               <div className="col-lg-12">
-                                <div className="form-group">
+                                <div className="f">
                                   <label>Profile Image (Optional)</label>
                                   <input
                                     type="file"
@@ -1161,7 +1166,7 @@ const RegisterWizard: React.FC = () => {
                             </div>
                             <div className="row">
                               <div className="col-lg-12">
-                                <div className="form-group">
+                                <div className="f">
                                   <label className="form-label">Current CV <span className="text-danger">*</span></label>
                                   <input
                                     type="file"
@@ -1187,23 +1192,14 @@ const RegisterWizard: React.FC = () => {
                                 </div>
                               </div>
                               <div className="col-lg-12">
-                                <div className="form-group">
-                                  <label>Profile Image (Optional)</label>
-                                  <input
-                                    type="file"
-                                    className={`form-control ${errors.profileImage ? 'is-invalid' : ''}`}
-                                    accept="image/*"
-                                    onChange={(e) => handleInputChange('personal', 'profileImage', e.target.files?.[0])}
-                                  />
-                                  {errors.profileImage && <div className="invalid-feedback">{errors.profileImage}</div>}
-                                </div>
+                            
                               </div>
                               <div className="col-12">
                                 <h5 className="mb-3">Social Links</h5>
                                 <div className="row">
                                   {/* LinkedIn Profile */}
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                       <label>LinkedIn Profile</label>
                                       <input
                                         type="text"
@@ -1218,7 +1214,7 @@ const RegisterWizard: React.FC = () => {
 
                                   {/* GitHub Profile */}
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                       <label>GitHub Profile</label>
                                       <input
                                         type="text"
@@ -1237,7 +1233,7 @@ const RegisterWizard: React.FC = () => {
                                       <div className="repeatable-section">
                                         <div className="row">
                                           <div className="col-lg-6">
-                                            <div className="form-group">
+                                            <div className="f">
                                               <label>Platform</label>
                                               <select
                                                 className={`form-control ${errors[`socialLinks_${index + 2}`] ? 'is-invalid' : ''}`}
@@ -1254,7 +1250,7 @@ const RegisterWizard: React.FC = () => {
                                             </div>
                                           </div>
                                           <div className="col-lg-6">
-                                            <div className="form-group">
+                                            <div className="f">
                                               <label>Link</label>
                                               <input
                                                 type="url"
@@ -1297,14 +1293,14 @@ const RegisterWizard: React.FC = () => {
                             </div>
                             <div className="row">
                               {formData.education.map((edu, index) => (
-                                <div key={edu.id} className="education-form-group mb-4 p-3 border rounded position-relative">
+                                <div key={edu.id} className="education-f mb-4 p-3 border rounded position-relative">
                                   <div className="remove-btn" onClick={() => handleRemoveEducation(index)}>
                                     <i className="fas fa-times"></i>
                                   </div>
                                   <h5 className="mb-3">Education #{index + 1}</h5>
                                   <div className="row">
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                         <label>Institution</label>
                                       <input
                                         type="text"
@@ -1315,7 +1311,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                         <label>Diploma</label>
                                       <input
                                         type="text"
@@ -1326,7 +1322,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                         <label>Start Date</label>
                                       <input
                                         type="date"
@@ -1337,7 +1333,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                         <label>End Date</label>
                                       <input
                                         type="date"
@@ -1348,7 +1344,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-12">
-                                    <div className="form-group">
+                                    <div className="f">
                                       <label>Description</label>
                                       <textarea
                                           className="form-control"
@@ -1358,7 +1354,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-12">
-                                    <div className="form-group">
+                                    <div className="f">
                                       <label>Location</label>
                                       <input
                                         type="text"
@@ -1398,7 +1394,7 @@ const RegisterWizard: React.FC = () => {
                                     <i className="fas fa-times"></i>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                         <label>Position</label>
                                       <input
                                         type="text"
@@ -1409,7 +1405,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                         <label>Enterprise</label>
                                       <input
                                         type="text"
@@ -1420,7 +1416,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                         <label>Start Date</label>
                                       <input
                                         type="date"
@@ -1431,7 +1427,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                         <label>End Date</label>
                                       <input
                                         type="date"
@@ -1442,7 +1438,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-12">
-                                    <div className="form-group">
+                                    <div className="f">
                                       <label>Description</label>
                                       <textarea
                                           className="form-control"
@@ -1452,7 +1448,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-12">
-                                    <div className="form-group">
+                                    <div className="f">
                                       <label>Location</label>
                                       <input
                                         type="text"
@@ -1496,7 +1492,7 @@ const RegisterWizard: React.FC = () => {
                                     <i className="fas fa-times"></i>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                       <label>Skill Name</label>
                                       <input
                                         type="text"
@@ -1507,7 +1503,7 @@ const RegisterWizard: React.FC = () => {
                                     </div>
                                   </div>
                                   <div className="col-lg-6">
-                                    <div className="form-group">
+                                    <div className="f">
                                       <label>Degree</label>
                                       <select
                                         className="form-control"
@@ -1542,29 +1538,52 @@ const RegisterWizard: React.FC = () => {
                           {/* Step 6: Terms */}
                           <div className={`tab-pane ${activeStep === 6 ? 'active' : ''}`}>
                             <div className="mb-4">
-                              <h4>Terms</h4>
+                              <h4>Terms and Conditions</h4>
+                              <p className="text-muted">Please read and accept our terms and conditions to complete registration</p>
                             </div>
-                            <div className="form-group">
-                              <label>
+
+                            <div className="terms-content mb-4 p-3 border rounded" style={{height: '200px'}}>
+                              <h5>1. User Agreement</h5>
+                              <p>By using our service, you agree to comply with and be bound by these terms and conditions.</p>
+
+                              <h5>2. Privacy Policy</h5>
+                              <p>We respect your privacy and protect your personal information according to our privacy policy.</p>
+
+                              <h5>3. Account Security</h5>
+                              <p>You are responsible for maintaining the confidentiality of your account credentials.</p>
+
+                              <h5>4. User Conduct</h5>
+                              <p>Users must not engage in any unlawful or prohibited activities on our platform.</p>
+                            </div>
+
+                            <div className="f mb-4">
+                              <div className="form-check">
                                 <input
                                   type="checkbox"
+                                  className="form-check-input"
+                                  id="agreeTerms"
                                   checked={formData.agreeToTerms}
                                   onChange={(e) => handleInputChange('terms', 'agreeToTerms', e.target.checked)}
                                 />
-                                I agree to the terms and conditions
-                              </label>
-                              
+                                <label className="form-check-label" htmlFor="agreeTerms">
+                                  I have read and agree to the terms and conditions <span className="text-danger">*</span>
+                                </label>
+                              </div>
                             </div>
                             
-                            <div className="form-group">
-                              <label>
+                            <div className="f">
+                              <div className="form-check">
                                 <input
                                   type="checkbox"
-                                  checked={formData.agreeToTerms}
-                                  onChange={(e) => handleInputChange('terms', 'agreeToTerms', e.target.checked)}
+                                  className="form-check-input"
+                                  id="newsletter"
+                                //  checked={formData.newsletter}
+                              //    onChange={(e) => handleInputChange('terms', 'newsletter', e.target.checked)}
                                 />
-                                Subscribe to the newsletter
-                              </label>
+                                <label className="form-check-label" htmlFor="newsletter">
+                                  Subscribe to our newsletter to receive job alerts and career tips
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1610,6 +1629,7 @@ const RegisterWizard: React.FC = () => {
           </div>
         </div>
       </div>
+      </section>
       <FooterDefault />
     </>
   );

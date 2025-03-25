@@ -10,12 +10,13 @@ import  BreadCrumb  from "../../../common/Breadcrumb";
 import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
 import Header from '../../../common/Header';
+import Seo from '../../../common/Seo';
 const AppliedJobsPage: React.FC = () => {
   return (
 
-    
     <div className="page-wrapper dashboard">
-      <span className="header-span"></span>
+          <Seo pageTitle="Applied Jobs" />
+
       {/* <!-- Header Span for hight --> */}
       <Header />
       {/*<DashboardCandidatesHeader />*/}

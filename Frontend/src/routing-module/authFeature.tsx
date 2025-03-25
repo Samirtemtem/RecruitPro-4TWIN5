@@ -25,8 +25,6 @@ const AuthFeature = () => {
 
   const [showLoader, setShowLoader] = useState(true);
 
-  // Redirect to login if no token is found
-
   // Theme and layout settings logic (unchanged)
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -85,6 +83,13 @@ const AuthFeature = () => {
     );
   };
   const { token } = useAuth();
+ // const { user } = useAuth();
+  const context = useContext(AuthContext);
+  console.log(context);
+  //console.log(user);
+  if(context?.role === "CANDIDATE"){
+    return <Navigate to="/DashboardCandidate" />;
+  }
   return token ?    <>
   <style>
      {`

@@ -60,19 +60,6 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-/**
- * @swagger
- * /api/users:
- *   get:
- *     tags: [Users]
- *     summary: Get all users
- *     description: Retrieves a list of all users
- *     responses:
- *       200:
- *         description: List of users retrieved successfully
- *       500:
- *         description: Server error
- */
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await User.find();
@@ -82,19 +69,6 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-/**
- * @swagger
- * /api/users/latest:
- *   get:
- *     tags: [Users]
- *     summary: Get latest users
- *     description: Retrieves the last 5 users added to the system
- *     responses:
- *       200:
- *         description: Latest users retrieved successfully
- *       500:
- *         description: Server error
- */
 export const getLatestUsers = async (req: Request, res: Response): Promise<void> => {
   try {
     const users = await User.find()
@@ -105,29 +79,6 @@ export const getLatestUsers = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ error: error.message });
   }
 };
-
-/**
- * @swagger
- * /api/users/{id}:
- *   get:
- *     tags: [Users]
- *     summary: Get user by ID
- *     description: Retrieves a specific user by their ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: User ID
- *     responses:
- *       200:
- *         description: User retrieved successfully
- *       404:
- *         description: User not found
- *       500:
- *         description: Server error
- */
 export const getUserById = async (req: Request, res: Response): Promise<any> => {
   try {
     const user = await User.findById(req.params.id);
@@ -138,63 +89,6 @@ export const getUserById = async (req: Request, res: Response): Promise<any> => 
   }
 };
 
-/**
- * @swagger
- * /api/users/{id}:
- *   put:
- *     tags: [Users]
- *     summary: Update user
- *     description: Updates a user's information
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: User ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               firstName:
- *                 type: string
- *                 description: User's first name
- *               lastName:
- *                 type: string
- *                 description: User's last name
- *               email:
- *                 type: string
- *                 format: email
- *                 description: User's email address
- *               phoneNumber:
- *                 type: string
- *                 description: User's phone number
- *               address:
- *                 type: string
- *                 description: User's address
- *               role:
- *                 type: string
- *                 enum: [CANDIDATE, RECRUITER, ADMIN]
- *                 description: User's role
- *               department:
- *                 type: string
- *                 description: User's department
- *               privilege:
- *                 type: string
- *                 description: User's privilege level
- *     responses:
- *       200:
- *         description: User updated successfully
- *       404:
- *         description: User not found
- *       400:
- *         description: Invalid input
- *       500:
- *         description: Server error
- */
 export const updateUser = async (req: Request, res: Response): Promise<any> => {
   console.log("ENTERED UPDATE");
   try {
@@ -206,28 +100,6 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-/**
- * @swagger
- * /api/users/{id}:
- *   delete:
- *     tags: [Users]
- *     summary: Delete user
- *     description: Deletes a user from the system
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: User ID
- *     responses:
- *       200:
- *         description: User deleted successfully
- *       404:
- *         description: User not found
- *       500:
- *         description: Server error
- */
 export const deleteUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -238,19 +110,6 @@ export const deleteUser = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-/**
- * @swagger
- * /api/users/candidates:
- *   get:
- *     tags: [Users]
- *     summary: Get all candidates
- *     description: Retrieves all users with the role 'CANDIDATE'
- *     responses:
- *       200:
- *         description: Candidates retrieved successfully
- *       500:
- *         description: Server error
- */
 export const getCandidates = async (req: Request, res: Response): Promise<void> => {
   try {
     const candidates = await User.find({ role: Role.CANDIDATE });

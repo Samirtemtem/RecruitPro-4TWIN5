@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useUserProfile, UserProfileData } from "../hooks/useUserProfile";
 import { LogoUpload } from "./LogoUpload";
 import { FormInfoBox } from "./FormInfoBox";
+import { SocialNetworkBox } from "./SocialNetworkBox";
+import { ContactInfoBox } from "./ContactInfoBox";
 
 const MyProfile: React.FC = () => {
   const { userData, isLoading, error } = useUserProfile();
@@ -41,6 +43,10 @@ const MyProfile: React.FC = () => {
 
       <FormInfoBox userData={userData} />
       {/* End form info box */}
+
+
+      <SocialNetworkBox  />
+      {/* End social network box */}
     </div>
   );
 };

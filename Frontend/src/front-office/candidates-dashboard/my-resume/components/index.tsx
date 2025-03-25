@@ -1,14 +1,35 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import AddCV from "./AddCV";
 import Awards from "./Awards";
 import Education from "./Education";
 import Experiences from "./Experiences";
 import SkillsMultiple from "./SkillsMultiple";
+import { parseCV } from '../../../../services/cv-parser.service';
+import { toast } from 'react-hot-toast';
 
 const ResumeForm: React.FC = () => {
+  const [isParsingCV, setIsParsingCV] = useState(false);
+  const [showParsedData, setShowParsedData] = useState(false);
+  const [parsedData, setParsedData] = useState<any>(null);
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log("Resume form submitted");
+  };
+
+  const handleCVUpload = async (file: File) => {
+    try {
+      setIsParsingCV(true);
+      const parsedData = await parseCV(file);
+      setParsedData(parsedData);
+      setShowParsedData(true);
+      toast.success('CV uploaded and parsed successfully!');
+    } catch (error) {
+      console.error('Error parsing CV:', error);
+      toast.error('Failed to parse CV. Please try again.');
+    } finally {
+      setIsParsingCV(false);
+    }
   };
 
   return (
@@ -17,8 +38,15 @@ const ResumeForm: React.FC = () => {
         <div className="form-group col-lg-6 col-md-12">
           <label>Upload Your CV(This will start the resume parsing process and override your current resume)</label>
           <div className="form-group col-lg-6 col-md-12">
-          <AddCV />
-        </div>
+            <AddCV 
+              onUpload={handleCVUpload} 
+              isLoading={isParsingCV}
+              showParsedData={showParsedData}
+              setShowParsedData={setShowParsedData}
+              parsedData={parsedData}
+              setParsedData={setParsedData}
+            />
+          </div>
         </div>
         {/* <!-- Input --> */}
      
@@ -55,7 +83,7 @@ const ResumeForm: React.FC = () => {
         {/* <!-- Multi Selectbox --> */}
 
         <div className="form-group col-lg-12 col-md-12">
-          <button type="submit" className="theme-btn btn-style-one">
+          <button type="submit" className="btn btn-primary">
             Save
           </button>
         </div>

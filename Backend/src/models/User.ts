@@ -26,7 +26,7 @@ export interface IUser extends Document {
   applications: Schema.Types.ObjectId[];  // References to Applications
   interviews: Schema.Types.ObjectId[];  // References to Interviews
   jobPosts: Schema.Types.ObjectId[];  // References to JobPosts
-  provider?: 'local' | 'google' | 'linkedin';
+  provider?: 'local' | 'google' | 'linkedin' | 'github';
   isVerified: boolean;
   verificationToken?: string;
 

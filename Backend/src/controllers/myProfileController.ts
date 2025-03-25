@@ -8,6 +8,7 @@ import { Socials } from '../models/types';
 import { uploadToCloudinary } from '../utils/cloudinary';
 import { Document, Schema } from 'mongoose';
 import { User } from '../models/User';
+import mongoose from 'mongoose';
 
 // Extend Express Request type to include user
 interface AuthenticatedRequest extends Request {
@@ -393,17 +394,52 @@ export const getSocialLinks = async (req: Request, res: Response) => {
 export const updateSocialLinks = async (req: Request, res: Response) => {
   try {
     const { userId, socialLinks } = req.body;
-    const profile = await Profile.findOneAndUpdate(
-      { user: userId },
-      { socialLinks },
-      { new: true }
-    ).populate('socialLinks');
+    
+    // Validate input
+    if (!Array.isArray(socialLinks)) {
+      return res.status(400).json({ message: 'socialLinks must be an array' });
+    }
 
+    const profile = await Profile.findOne({ user: userId });
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found' });
     }
 
-    res.json(profile.socialLinks);
+    // Delete existing social links if they exist
+    if (profile.socialLinks.length > 0) {
+      await SocialLinks.deleteMany({ _id: { $in: profile.socialLinks } });
+    }
+
+    // If socialLinks array is empty, just update profile and return
+    if (socialLinks.length === 0) {
+      profile.socialLinks = [];
+      await profile.save();
+      return res.json([]);
+    }
+
+    // Create new social links with proper type checking
+    const socialLinkPromises = socialLinks.map(link => {
+      // Create a new ObjectId for each social link
+      const socialLinkId = new mongoose.Types.ObjectId();
+      return new SocialLinks({
+        _id: socialLinkId,
+        type: link.type || '',
+        link: link.link || ''
+      }).save();
+    });
+
+    const savedLinks = await Promise.all(socialLinkPromises);
+    
+    // Update profile with new social link IDs using Schema.Types.ObjectId
+    profile.socialLinks = savedLinks.map(link => link._id) as mongoose.Schema.Types.ObjectId[];
+    await profile.save();
+
+    // Return the newly created social links
+    const updatedProfile = await Profile.findOne({ user: userId })
+      .populate('socialLinks')
+      .select('socialLinks');
+
+    res.json(updatedProfile?.socialLinks);
   } catch (error) {
     console.error('Error updating social links:', error);
     res.status(500).json({ message: 'Server error' });
@@ -452,6 +488,164 @@ export const uploadCV = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error uploading CV:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// New function to handle updating profile with parsed CV data
+export const updateProfileWithParsedCV = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body;
+    const parsedData = JSON.parse(req.body.parsedData);
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'No CV file uploaded' });
+    }
+
+    const cvFile = req.file;
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    
+    if (!allowedTypes.includes(cvFile.mimetype)) {
+      return res.status(400).json({ message: 'Only PDF and Word documents are allowed for CV' });
+    }
+    
+    if (cvFile.size > 5 * 1024 * 1024) {
+      return res.status(400).json({ message: 'CV file size must be less than 5MB' });
+    }
+
+    // Find the profile first
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    // Create a snapshot of current profile data for history
+    const currentEducation = await Education.find({ _id: { $in: profile.education } });
+    const currentExperience = await Experience.find({ _id: { $in: profile.experience } });
+    const currentSkills = await Skill.find({ _id: { $in: profile.skills } });
+    const currentSocialLinks = await SocialLinks.find({ _id: { $in: profile.socialLinks } });
+
+    const profileSnapshot = {
+      timestamp: new Date(),
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      email: profile.email,
+      phoneNumber: profile.phoneNumber,
+      address: profile.address,
+      profileImage: profile.profileImage,
+      cv: profile.cv,
+      education: currentEducation.map(edu => ({
+        institution: edu.institution,
+        diploma: edu.diploma,
+        startDate: edu.startDate,
+        endDate: edu.endDate,
+        description: edu.description,
+        location: edu.location
+      })),
+      experience: currentExperience.map(exp => ({
+        position: exp.position,
+        enterprise: exp.enterprise,
+        startDate: exp.startDate,
+        endDate: exp.endDate,
+        description: exp.description,
+        location: exp.location
+      })),
+      skills: currentSkills.map(skill => ({
+        name: skill.name,
+        degree: skill.degree
+      })),
+      socialLinks: currentSocialLinks.map(link => ({
+        type: link.type,
+        link: link.link || ''
+      }))
+    };
+
+    // Initialize profileHistory array if it doesn't exist
+    if (!profile.profileHistory) {
+      profile.profileHistory = [];
+    }
+    profile.profileHistory.push(profileSnapshot);
+
+    // Upload new CV to Cloudinary
+    cvFile.mimetype = 'application/pdf';
+    const uploadResult = await uploadToCloudinary(cvFile, 'cvs');
+    if (!uploadResult) {
+      throw new Error('Failed to upload CV to Cloudinary');
+    }
+
+    // Update CV URL
+    profile.cv = uploadResult;
+
+    // Helper function to validate and clean date
+    const validateDate = (dateStr: string): Date | null => {
+      try {
+        const date = new Date(dateStr);
+        return isNaN(date.getTime()) ? null : date;
+      } catch {
+        return null;
+      }
+    };
+
+    // Delete existing education entries and create new ones with validation
+    if (parsedData.education?.length > 0) {
+      await Education.deleteMany({ _id: { $in: profile.education } });
+      const cleanedEducation = parsedData.education.map((edu: any) => ({
+        institution: edu.institution || '',
+        diploma: edu.diploma || '',
+        startDate: validateDate(edu.startDate),
+        endDate: validateDate(edu.endDate),
+        description: edu.description || '',
+        location: edu.location || ''
+      }));
+      const educationDocs = await Education.create(cleanedEducation);
+      profile.education = Array.isArray(educationDocs) 
+        ? educationDocs.map(doc => doc._id)
+        : [educationDocs._id];
+    }
+
+    // Delete existing experience entries and create new ones with validation
+    if (parsedData.work_experience?.length > 0) {
+      await Experience.deleteMany({ _id: { $in: profile.experience } });
+      const cleanedExperience = parsedData.work_experience.map((exp: any) => ({
+        position: exp.position || '',
+        enterprise: exp.enterprise || '',
+        startDate: validateDate(exp.startDate),
+        endDate: validateDate(exp.endDate),
+        description: exp.description || '',
+        location: exp.location || ''
+      }));
+      const experienceDocs = await Experience.create(cleanedExperience);
+      profile.experience = Array.isArray(experienceDocs)
+        ? experienceDocs.map(doc => doc._id)
+        : [experienceDocs._id];
+    }
+
+    // Delete existing skills entries and create new ones with validation
+    if (parsedData.skills?.length > 0) {
+      await Skill.deleteMany({ _id: { $in: profile.skills } });
+      const cleanedSkills = parsedData.skills.map((skill: any) => ({
+        name: skill.name || '',
+        degree: skill.degree || 'BEGINNER'
+      }));
+      const skillDocs = await Skill.create(cleanedSkills);
+      profile.skills = Array.isArray(skillDocs)
+        ? skillDocs.map(doc => doc._id)
+        : [skillDocs._id];
+    }
+
+    // Save the updated profile
+    await profile.save();
+
+    // Return the updated profile data
+    const updatedProfile = await Profile.findOne({ user: userId })
+      .populate('education')
+      .populate('experience')
+      .populate('skills')
+      .populate('socialLinks');
+
+    return res.json(updatedProfile);
+  } catch (error) {
+    console.error('Error updating profile with parsed CV:', error);
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 

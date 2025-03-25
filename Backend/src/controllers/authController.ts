@@ -100,72 +100,6 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 
 /////////////////////////////////////////////////////////// Register //////////////////////////////////////////////////
 
-/**
- * @swagger
- * /api/auth/register:
- *   post:
- *     tags: [Authentication]
- *     summary: Register a new user
- *     description: Creates a new user account with the provided information
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             required:
- *               - firstName
- *               - lastName
- *               - email
- *               - password
- *               - phoneNumber
- *             properties:
- *               firstName:
- *                 type: string
- *                 description: User's first name
- *               lastName:
- *                 type: string
- *                 description: User's last name
- *               email:
- *                 type: string
- *                 format: email
- *                 description: User's email address
- *               password:
- *                 type: string
- *                 format: password
- *                 description: User's password
- *               phoneNumber:
- *                 type: string
- *                 description: User's phone number
- *               address:
- *                 type: string
- *                 description: User's address
- *               role:
- *                 type: string
- *                 enum: [CANDIDATE, RECRUITER, ADMIN]
- *                 description: User's role
- *               department:
- *                 type: string
- *                 description: User's department (if applicable)
- *               privilege:
- *                 type: string
- *                 description: User's privilege level
- *               profileImage:
- *                 type: string
- *                 format: binary
- *                 description: User's profile image
- *               cv:
- *                 type: string
- *                 format: binary
- *                 description: User's CV file
- *     responses:
- *       201:
- *         description: User registered successfully
- *       400:
- *         description: Invalid input or user already exists
- *       500:
- *         description: Server error
- */
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
   try {
     const {
@@ -662,11 +596,21 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
       return errorResponse(res, 401, 'User not found. Please register first.', 'USER_NOT_FOUND');
     }
 
-    if ((user.provider === 'linkedin' || user.provider === 'google')&& !user.password) {
+    if ((user.provider === 'linkedin' || user.provider === 'google' || user.provider === 'github')&& !user.password) {
       const randomPassword = generateRandomPassword();
       user.password = randomPassword;
       await user.save();
       await sendPasswordEmail(user.email, randomPassword);
+      const profile = new Profile(
+        {
+          user: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+          profileImage: user.image,
+        }
+      )
+      await profile.save();
      // return res.status(200).json({ message: "Please check your email for a new password." });
       return errorResponse(res, 403, 'You have not set a password yet. Please check your email. A new password will be sent to you.', 'USER_PASSWORD_EMAIL');
     }

@@ -18,6 +18,8 @@ import DefaulHeader2 from "../../common/Header";
 import FooterDefault from "../../common/Footer";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import MobileMenu from "../../common/MobileMenu";
+import Seo from "../../common/Seo";
 
 const LoginUser = () => {
     useEffect(() => {
@@ -278,6 +280,10 @@ const LoginUser = () => {
           {/* End Login Popup Modal */}
     
           <DefaulHeader2 />
+          <Seo pageTitle="Login" /> 
+      <MobileMenu />
+      {/* End MobileMenu */}
+      
           {/* End Header with upload cv btn */}
 <section className="job-categories ui-job-categories" style={{ backgroundColor: '#FFFFFF' , margin:'-40px' }}>
   <div className="auto-container">

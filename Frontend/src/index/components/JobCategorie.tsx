@@ -25,7 +25,7 @@ const JobCategorie = () => {
                   {item.catTitle}
                 </a>
               </h4>
-              <p style={{ color: '#777' }}>({item.jobNumber} open positions)</p>
+              <p style={{ color: '#777' }}>{item.jobNumber} </p>
             </div>
           </div>
         </div>

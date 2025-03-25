@@ -3,7 +3,7 @@ import CallToActions from "../../common/CallToActions";
 import Categories from "./components/Categories";
 import DatePosted from "./components/DatePosted";
 import DestinationRangeSlider from "./components/DestinationRangeSlider";
-import ExperienceLevel from "./components/ExperienceLevel";
+
 import JobType from "./components/JobType";
 import LocationBox from "./components/LocationBox";
 import SalaryRangeSlider from "./components/SalaryRangeSlider";
@@ -41,10 +41,7 @@ const FilterSidebar: React.FC = () => {
         </div>
         {/* <!-- Filter Block --> */}
 
-        <div className="switchbox-outer">
-          <h4>Job type</h4>
-          <JobType />
-        </div>
+        
         {/* <!-- Switchbox Outer --> */}
 
         <div className="checkbox-outer">
@@ -53,19 +50,13 @@ const FilterSidebar: React.FC = () => {
         </div>
         {/* <!-- Checkboxes Outer --> */}
 
-        <div className="checkbox-outer">
-          <h4>Experience Level</h4>
-          <ExperienceLevel />
-        </div>
+        
         {/* <!-- Checkboxes Outer --> */}
 
      
         {/* <!-- Filter Block --> */}
 
-        <div className="filter-block">
-          <h4>Tags</h4>
-          <Tag />
-        </div>
+        
         {/* <!-- Filter Block --> */}
       </div>
       {/* Filter Outer */}

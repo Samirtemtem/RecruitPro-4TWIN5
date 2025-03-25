@@ -50,19 +50,7 @@ import Footer from "../../common/Footer";
 
 ///////////////////////////////////////////////////////////
 import JobListFront from "../../front-office/job-listing/JobListFront";
-//import CallToAction from "../../job-listing/components/CallToActions";
-import Categories from "../../front-office/job-listing/components/Categories";
-import DatePosted from "../../front-office/job-listing/components/DatePosted";
-import DestinationRangeSlider from "../../front-office/job-listing/components/DestinationRangeSlider";
-import ExperienceLevel from "../../front-office/job-listing/components/ExperienceLevel";
-import JobSelect from "../../front-office/job-listing/components/JobSelect";
-import JobType from "../../front-office/job-listing/components/JobType";
-import ListingShowing from "../../front-office/job-listing/components/ListingShowing";
-import LocationBox from "../../front-office/job-listing/components/LocationBox";
-import Pagination from "../../front-office/job-listing/components/Pagination";
-import SalaryRangeSlider from "../../front-office/job-listing/components/SalaryRangeSlider";
-import SearchBox from "../../front-office/job-listing/components/SearchBox";
-import Tag from "../../front-office/job-listing/components/Tag";
+
 import DashboardCandidate from "../../front-office/candidates-dashboard/dashboard/DashboardCandidate";
 
 /////////////// home menu pages ///////////////////////
@@ -73,6 +61,8 @@ import Terms from "../../pages-menu/terms/Terms";
 import EmployeeDashboard from "../../back-office/employeeDashboard/employee-dashboard";
 import UserSelect from "../../Face-Recog/UserSelect";
 import Login from "../../Face-Recog/Login";
+import Single from "../../front-office/job-single-v1/Single";
+import JobSingleDynamicV1 from "../../front-office/job-single-v1/Single";
 
 const routes = all_routes;
 
@@ -175,6 +165,13 @@ export const publicRoutesFront = [
   element: <JobListFront />,
   route: Route,
   },
+
+  {
+    path: "/job-single-v1/:id",
+    name: "JobSingle",
+    element: <JobSingleDynamicV1 />,
+  },
+
   {
     path: "/Contact",
     name: "Root", 

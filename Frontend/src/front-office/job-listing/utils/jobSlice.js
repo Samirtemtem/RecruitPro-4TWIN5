@@ -53,12 +53,7 @@ const initialState = {
     datePost: [
         { id: 1, name: "All", value: "all", isChecked: false },
         { id: 2, name: "Last Hour", value: "last-hour", isChecked: false },
-        {
-            id: 3,
-            name: "Last 24 Hour",
-            value: "last-24-hour",
-            isChecked: false,
-        },
+        
         { id: 4, name: "Last 7 Days", value: "last-7-days", isChecked: false },
         {
             id: 5,

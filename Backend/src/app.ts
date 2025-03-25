@@ -30,6 +30,7 @@ import jobRoutes from './routes/JobPosts';
 import {  getUsers, getUserByEmail } from './routes/FaceRecologin';
 import faceRoutes from "./routes/FaceRecologin";
 import skillRoutes from "./routes/skillRoutes";
+import contactRoutes from "./routes/contactRoutes";
 
 // Allow requests from your frontend (e.g., localhost:3000)
 const corsOptions = {
@@ -50,6 +51,7 @@ const corsOptions = {
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
 
 
 
@@ -102,6 +104,7 @@ app.use("/api/user", userRoutes);
 
 app.use('/api/profile', profileRoutes);
 app.use('/api/test', testRoutes);
+app.use('/api/contact',contactRoutes);
 
 
 // Error handling

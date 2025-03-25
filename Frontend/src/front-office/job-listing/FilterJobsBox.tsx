@@ -35,7 +35,7 @@ interface JobItem {
   department?: string; 
   destination?: { min: number; max: number };
   publishDate?: string; 
-  experience?: string;
+  experience?: number; // Ensure this is a number
   totalSalary?: { min: number; max: number };
   tag?: string;
 }
@@ -49,12 +49,12 @@ interface FilterState {
     category: string; 
     jobType: string[];
     datePosted: string; 
-    experience: string[];
+    experience: number[]; // This will hold the selected experience levels as numbers
     salary: { min: number; max: number };
     tag: string;
   };
   jobSort: {
-    sort: string;
+    sort: string; // This will hold "asc" or "des"
     perPage: { start: number; end: number };
   };
 }
@@ -71,13 +71,13 @@ const FilterJobsBox = () => {
   
   const { jobList, jobSort } = useSelector((state: RootState) => state.filter);
   const { keyword, location, destination, category, jobType, datePosted, experience, salary, tag } = jobList;
-  const { sort, perPage } = jobSort;
+  const { sort = "des", perPage } = jobSort; // Set default sort to "des"
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/jobs/latest");
+        const response = await fetch("http://localhost:5000/api/jobs/");
         if (!response.ok) {
           throw new Error("Failed to fetch jobs");
         }
@@ -93,35 +93,56 @@ const FilterJobsBox = () => {
 
   // Filter functions
   const filters = {
-    keywordFilter: (item: JobItem) => keyword ? item.title.toLowerCase().includes(keyword.toLowerCase()) : true,
-    locationFilter: (item: JobItem) => location && item.location ? item.location.toLowerCase().includes(location.toLowerCase()) : true,
-    destinationFilter: (item: JobItem) => item.destination ? item.destination.min >= destination.min && item.destination.max <= destination.max : true,
-    categoryFilter: (item: JobItem) => category ? item.department && item.department.toLowerCase() === category.toLowerCase() : true,
-    jobTypeFilter: (item: JobItem) => jobType.length > 0 && item.jobType && item.jobType.length > 0
-      ? jobType.includes(item.jobType[0].type.toLowerCase().replace(/\s+/g, "-"))
-      : true,
+    keywordFilter: (item: JobItem) => 
+      keyword ? item.title.toLowerCase().includes(keyword.toLowerCase()) : true,
+    locationFilter: (item: JobItem) => 
+      location && item.location ? item.location.toLowerCase().includes(location.toLowerCase()) : true,
+    destinationFilter: (item: JobItem) => 
+      item.destination ? item.destination.min >= destination.min && item.destination.max <= destination.max : true,
+    categoryFilter: (item: JobItem) => 
+      category ? item.department && item.department.toLowerCase() === category.toLowerCase() : true,
+    jobTypeFilter: (item: JobItem) => 
+      jobType.length > 0 && item.jobType && item.jobType.length > 0
+        ? jobType.includes(item.jobType[0].type.toLowerCase().replace(/\s+/g, "-"))
+        : true,
     datePostedFilter: (item: JobItem) => {
       if (datePosted && datePosted !== "all" && item.publishDate) {
         const publishDate = new Date(item.publishDate);
         const now = new Date();
-        const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
-        
-        if (datePosted === "last-30-days") {
-          return publishDate >= thirtyDaysAgo; // Check if publishDate is within the last 30 days
+
+        switch (datePosted) {
+          case "last-hour":
+            return publishDate >= new Date(now.getTime() - 60 * 60 * 1000);
+          case "last-7-days":
+            return publishDate >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          case "last-14-days":
+            return publishDate >= new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+          case "last-30-days":
+            return publishDate >= new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          default:
+            return true; // Include all items if no valid date filter is applied
         }
       }
       return true; // If no date filter is applied, include all items
     },
-    experienceFilter: (item: JobItem) => experience.length > 0 && item.experience
-      ? experience.includes(item.experience.toLowerCase().replace(/\s+/g, "-"))
-      : true,
-    salaryFilter: (item: JobItem) => item.totalSalary ? item.totalSalary.min >= salary.min && item.totalSalary.max <= salary.max : true,
-    tagFilter: (item: JobItem) => tag && item.tag ? item.tag === tag : true,
+    experienceFilter: (item: JobItem) => {
+      if (experience.length > 0 && item.experience != null) {
+        return experience.includes(item.experience);
+      }
+      return true; // If no experience filter is applied, include all items
+    },
+    salaryFilter: (item: JobItem) => 
+      item.totalSalary ? item.totalSalary.min >= salary.min && item.totalSalary.max <= salary.max : true,
+    tagFilter: (item: JobItem) => 
+      tag && item.tag ? item.tag === tag : true,
   };
 
   const sortFilter = (a: JobItem, b: JobItem) => {
-    if (sort === "des") return b._id - a._id; // Newest first
-    if (sort === "asc") return a._id - b._id; // Oldest first
+    const dateA = new Date(a.publishDate || 0).getTime();
+    const dateB = new Date(b.publishDate || 0).getTime();
+    
+    if (sort === "des") return dateB - dateA; // Newest first
+    if (sort === "asc") return dateA - dateB; // Oldest first
     return 0; // Default
   };
 
@@ -212,11 +233,6 @@ const FilterJobsBox = () => {
     dispatch(addSort(e.target.value));
   };
 
-  const perPageHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const pageData = JSON.parse(e.target.value) as { start: number; end: number };
-    dispatch(addPerPage(pageData));
-  };
-
   const clearAll = () => {
     dispatch(addKeyword(""));
     dispatch(addLocation(""));
@@ -224,13 +240,13 @@ const FilterJobsBox = () => {
     dispatch(addCategory(""));
     dispatch(clearJobType());
     dispatch(clearJobTypeToggle());
-    dispatch(addDatePosted(""));
+    dispatch(addDatePosted("all")); // Reset to "all" by default
     dispatch(clearDatePostToggle());
     dispatch(clearExperience());
     dispatch(clearExperienceToggle());
     dispatch(addSalary({ min: 0, max: 20000 }));
     dispatch(addTag(""));
-    dispatch(addSort(""));
+    dispatch(addSort("des")); // Default to "Newest"
     dispatch(addPerPage({ start: 0, end: 0 }));
   };
 
@@ -276,18 +292,13 @@ const FilterJobsBox = () => {
             </button>
           )}
           <select value={sort} className="chosen-single form-select" onChange={sortHandler}>
-            <option value="">Sort by (default)</option>
-            <option value="asc">Newest</option>
-            <option value="des">Oldest</option>
-          </select>
-          <select onChange={perPageHandler} className="chosen-single form-select ms-3" value={JSON.stringify(perPage)}>
-            <option value={JSON.stringify({ start: 0, end: 0 })}>All</option>
-            <option value={JSON.stringify({ start: 0, end: 10 })}>10 per page</option>
-            <option value={JSON.stringify({ start: 0, end: 20 })}>20 per page</option>
-            <option value={JSON.stringify({ start: 0, end: 30 })}>30 per page</option>
+            <option value="">Sort by</option>
+            <option value="asc">Oldest</option>
+            <option value="des">Newest</option>
           </select>
         </div>
       </div>
+
       {content}
       <div className="ls-show-more">
         <p>Show {filteredJobs.length} of {jobs.length} Jobs</p>

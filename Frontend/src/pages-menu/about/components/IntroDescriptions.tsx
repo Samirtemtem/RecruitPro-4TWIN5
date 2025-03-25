@@ -20,7 +20,7 @@ const IntroDescriptions = () => {
           color: "#202124", // Optional: Set text color for heading
         }}
       >
-        About Superio
+        About RECRUIT PRO
       </h4>
       <p
         style={{
@@ -30,31 +30,13 @@ const IntroDescriptions = () => {
           color: "#696969", 
         }}
       >
-        Far much that one rank beheld bluebird after outside ignobly allegedly
-        more when oh arrogantly vehement irresistibly fussy penguin insect
-        additionally wow absolutely crud meretriciously hastily dalmatian a
-        glowered inset one echidna cassowary some parrot and much as goodness
-        some froze the sullen much connected bat wonderfully on instantaneously
-        eel valiantly petted this along across highhandedly much.
+       Recruit Pro is an innovative platform designed to transform the recruitment process by automating hiring tasks and enhancing the experience for both employers and candidates. With Recruit Pro, employers can effortlessly post job listings, manage applications, and track candidates through a streamlined interface, significantly reducing time and effort in recruitment. <br /> <br />
+
+Candidates enjoy a dedicated dashboard that allows real-time monitoring of their application status, providing transparency and keeping them informed throughout their journey. The intuitive design ensures easy navigation for both recruiters and job seekers, making the process more engaging. <br /> <br />
+
+Integrated communication tools facilitate seamless interaction, ensuring important messages and updates are never missed. Additionally, Recruit Pro offers data-driven insights through analytics and reporting, empowering recruiters to make informed decisions based on candidate performance.
       </p>
-      <p
-        style={{
-          fontSize: "15px",
-          lineHeight: "26px",
-          marginBottom: "26px",
-          color: "#696969", 
-          
-        }}
-      >
-        Repeatedly dreamed alas opossum but dramatically despite expeditiously
-        that jeepers loosely yikes that as or eel underneath kept and slept
-        compactly far purred sure abidingly up above fitting to strident wiped
-        set waywardly far the and pangolin horse approving paid chuckled
-        cassowary oh above a much opposite far much hypnotically more therefore
-        wasp less that hey apart well like while superbly orca and far hence
-        one.Far much that one rank beheld bluebird after outside ignobly
-        allegedly more when oh arrogantly vehement irresistibly fussy.
-      </p>
+   
     </div>
   );
 };

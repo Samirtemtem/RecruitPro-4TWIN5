@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import ScrollToTop from "../../common/ScrollTop";
+import PartnerSlider from "../../index/components/PartnerSlider";
 
 const AboutUs = () => {
   useEffect(() => {
@@ -113,11 +114,11 @@ const AboutUs = () => {
       </section>
       {/* <!-- End Work Section --> */}
 
-      <section className="clients-section">
+      <section className="clients-section" style={{ backgroundColor: '#F5F5F5', border: '1px solid #D50000' }}>
         <div className="sponsors-outer" data-aos="fade">
-          {/* <!--Sponsors Carousel--> */}
+          {/* Sponsors Carousel */}
           <ul className="sponsors-carousel">
-            <Partner />
+            <PartnerSlider />
           </ul>
         </div>
       </section>

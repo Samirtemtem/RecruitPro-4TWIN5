@@ -20,11 +20,15 @@ interface FilterState {
 }
 
 const DatePosted = () => {
+  // Select the datePost from the Redux store
   const { datePost } = useSelector((state: { job: JobState; filter: FilterState }) => state.job) || {};
   const dispatch = useDispatch();
 
+  // Handler for changing the date posted
   const datePostHandler = (e: React.ChangeEvent<HTMLInputElement>, id: string | number) => {
+    // Dispatch the selected date value
     dispatch(addDatePosted(e.target.value));
+    // Dispatch the id to mark the radio button as checked
     dispatch(datePostCheck(id));
   };
 

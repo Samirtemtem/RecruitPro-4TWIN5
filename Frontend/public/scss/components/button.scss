@@ -24,20 +24,19 @@ Buttons Styles
 /* Btn Style One */
 .btn-style-one {
   position: relative;
-  text-align: center;
-  white-space: nowrap;
-  color: #ffffff;
-  background-color: var(--primary-color);
-  font-size: 15px;
-  line-height: 20px;
-  border-radius: 8px;
-  font-weight: 400;
-  padding: 18px 35px 15px 35px;
+    text-align: center;
+    white-space: nowrap;
+    color: #ffffff;
+    background-color: #ed1c24;
+    font-size: 15px;
+    line-height: 20px;
+    /* border-radius: 8px; */
+    font-weight: 400;
 }
 
 .btn-style-one:hover {
-  color: #ffffff;
-  background-color: var(--primary-hover-bg-color);
+  color: #ed1c24;
+  background-color:#dcdcdc;
 }
 
 /* Btn Style Two */

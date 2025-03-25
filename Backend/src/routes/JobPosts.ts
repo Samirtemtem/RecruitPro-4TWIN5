@@ -109,4 +109,19 @@ router.get('/job-posts/statistics', async (req: Request, res: Response): Promise
     }
 });
 
+
+
+const countOpenJobPosts = async (req: Request, res: Response) : Promise<any> => {
+    try {
+        const count = await JobPost.countDocuments({ status: 'OPEN' });
+        return res.status(200).json({ count });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Route to count open job posts
+router.get('/job-posts/count/open', countOpenJobPosts);
+
 export default router;

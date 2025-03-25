@@ -18,6 +18,7 @@ import JobFeatured1 from "./components/JobFeatured";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import ScrollToTop from "../common/ScrollTop";
 
 const Home = () => {
   useEffect(() => {
@@ -44,8 +45,8 @@ const Home = () => {
       <section className="job-categories ui-job-categories" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2 style={{ color: '#D50000' }}>Popular Job Categories</h2>
-            <div className="text">2025 jobs live - 293 added today.</div>
+          <h2 style={{ color: '#D50000' }}>Popular Job Categories</h2>
+          <div className="text">Explore thousands of job opportunities available now!</div>
           </div>
 
           <div
@@ -74,7 +75,7 @@ const Home = () => {
 
           <div className="btn-box">
             <Link
-              to="/job-list/job-list-v1"
+              to="/JobListFront"
               className="theme-btn btn-style-one"
               style={{ 
                 backgroundColor: '#D50000', 
@@ -167,7 +168,7 @@ const Home = () => {
 
       
       {/* End Call To Action */}
-
+ <ScrollToTop />
       <FooterDefault />
       {/* End Main Footer */}
     </>

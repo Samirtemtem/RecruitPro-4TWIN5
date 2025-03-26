@@ -5,6 +5,28 @@ dotenv.config();
 
 const router = express.Router();
 
+
+// API endpoint to get job posts by search term
+router.get("/search", async (req, res) => {
+    const searchTerm = req.query.search || "";
+    
+    // Log the received search term
+    console.log("Search term:", searchTerm);
+
+    try {
+        const jobPosts = await JobPost.find({
+            $or: [
+                { title: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search in title
+                { description: { $regex: searchTerm, $options: "i" } } // Case-insensitive search in description
+            ]
+        });
+        res.json(jobPosts);
+    } catch (error) {
+        console.error("Error fetching job posts:", error); // Log the error
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 // ✅ CREATE a new job post
 router.post('/', async (req: Request, res: Response): Promise<void> => {
     try {
@@ -123,5 +145,8 @@ const countOpenJobPosts = async (req: Request, res: Response) : Promise<any> => 
 
 // Route to count open job posts
 router.get('/job-posts/count/open', countOpenJobPosts);
+
+
+
 
 export default router;

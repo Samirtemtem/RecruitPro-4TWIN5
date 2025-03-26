@@ -63,6 +63,7 @@ import UserSelect from "../../Face-Recog/UserSelect";
 import Login from "../../Face-Recog/Login";
 import Single from "../../front-office/job-single-v1/Single";
 import JobSingleDynamicV1 from "../../front-office/job-single-v1/Single";
+import ResultsPage from "../../index/components/ResultPage";
 
 const routes = all_routes;
 
@@ -159,6 +160,12 @@ export const publicRoutesFront = [
 
  ///////////////////////////////////////////////////////////////////
 
+{
+  path: "/results",
+  name: "Root", 
+  element: <ResultsPage />,
+  route: Route,
+  },
  {
   path: "/JobListFront",
   name: "Root", 

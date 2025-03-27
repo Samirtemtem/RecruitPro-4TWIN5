@@ -978,17 +978,9 @@ const RegisterWizard: React.FC = () => {
             zIndex: 1 }} >
         <div className="w-100 position-relative flex-wrap d-block vh-100">
           <div className="row">
-            {/* Left Side - Image */}
-            <div className="col-lg-5">
-              <div className="d-lg-flex align-items-center justify-content-center d-none flex-wrap vh-100 ">
-                <div>
-                  <ImageWithBasePath src="assets/img/bg/download.svg" alt="Registration" />
-                </div>
-              </div>
-            </div>
-
+           
             {/* Right Side - Form */}
-            <div className="col-lg-7 col-md-12 col-sm-12">
+            <div className="col-lg-12 col-md-12 col-sm-12">
               <div className="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
                 <div className="col-md-10 mx-auto">
                   <div className="card border-0 shadow-none">

@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import RelatedJobs from "./job-single-pages/related-jobs/RelatedJobs";
 import JobOverView from "./job-single-pages/job-overview/JobOverView";
-import JobSkills from "./job-single-pages/shared-components/JobSkills";
+import JobDetailsDescriptions from "./job-single-pages/shared-components/JobDetailsDescriptions";
+import DefaulHeader2 from "../../common/Header";
 import MapJobFinder from "./job-listing-pages/components/MapJobFinder";
 import SocialTwo from "./job-single-pages/social/SocialTwo";
-import JobDetailsDescriptions from "./job-single-pages/shared-components/JobDetailsDescriptions";
-import ApplyJobModalContent from "./job-single-pages/shared-components/ApplyJobModalContent";
-import DefaulHeader2 from "../../common/Header";
 
 const JobSingleDynamicV1 = () => {
   const { id: jobId } = useParams();
   const [job, setJob] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [applicationStatus, setApplicationStatus] = useState(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -34,11 +34,50 @@ const JobSingleDynamicV1 = () => {
     fetchJob();
   }, [jobId]);
 
+  const handleApplyJob = () => {
+    const candidateId = localStorage.getItem("userId");
+    if (!candidateId) {
+      setApplicationStatus("User not logged in.");
+      return;
+    }
+    setShowConfirmDialog(true);
+  };
+
+  const confirmApplication = async () => {
+    const candidateId = localStorage.getItem("userId");
+    const applicationData = {
+      jobPostId: jobId,
+      candidateId: candidateId,
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/app/api/applications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(applicationData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit application');
+      }
+
+      const result = await response.json();
+      setApplicationStatus("Application submitted successfully!");
+      // Automatically hide the success message after 1 second
+      setTimeout(() => setApplicationStatus(null), 1000);
+    } catch (error) {
+      setApplicationStatus(error.message);
+    } finally {
+      setShowConfirmDialog(false);
+    }
+  };
+
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>Error: {error}</h1>;
   if (!job.title) return <h1>No Job Found</h1>;
 
-  // Inline styles for the job overview widget
   const jobOverviewStyle = {
     width: "120%",
     padding: "20px",
@@ -47,17 +86,8 @@ const JobSingleDynamicV1 = () => {
     boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
   };
 
-  // Define muted background colors for skills
   const skillBackgroundColors = [
-    "#6c757d", // Gray
-    "#17a2b8", // Teal
-    "#5a6268", // Dark Gray
-    "#495057", // Charcoal
-    "#343a40", // Dark Charcoal
-    "#007bff", // Blue
-    "#28a745", // Green
-    "#ffc107", // Yellow
-   
+    "#6c757d", "#17a2b8", "#5a6268", "#495057", "#343a40", "#007bff", "#28a745", "#ffc107",
   ];
 
   return (
@@ -96,11 +126,11 @@ const JobSingleDynamicV1 = () => {
                     {job.requirements?.map((val, i) => (
                       <li key={i} className="job-skill" style={{
                         backgroundColor: skillBackgroundColors[i % skillBackgroundColors.length],
-                        color: "#fff", // Text color for better contrast
+                        color: "#fff",
                         padding: "5px 10px",
                         borderRadius: "5px",
-                        margin: "5px 10px 5px 0", // Margin to the right
-                        display: "inline-block", // Make them inline-block
+                        margin: "5px 10px 5px 0",
+                        display: "inline-block",
                       }}>
                         {val}
                       </li>
@@ -112,8 +142,7 @@ const JobSingleDynamicV1 = () => {
                   <a
                     href="#"
                     className="theme-btn btn-style-one"
-                    data-bs-toggle="modal"
-                    data-bs-target="#applyJobModal"
+                    onClick={handleApplyJob}
                   >
                     Apply For Job
                   </a>
@@ -122,17 +151,6 @@ const JobSingleDynamicV1 = () => {
                   </button>
                 </div>
 
-                <div className="modal fade" id="applyJobModal" tabIndex="-1" aria-hidden="true">
-                  <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div className="apply-modal-content modal-content">
-                      <div className="text-center">
-                        <h3 className="title">Apply for this job</h3>
-                        <button type="button" className="closed-modal" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <ApplyJobModalContent />
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -185,6 +203,52 @@ const JobSingleDynamicV1 = () => {
           </div>
         </div>
       </section>
+
+      {/* Confirmation Dialog Instead of Modal */}
+      {showConfirmDialog && (
+        <div className="confirmation-dialog" style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: "1050",
+          backgroundColor: "#ffffff",
+          padding: "30px",
+          borderRadius: "10px",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+          width: "400px",
+          textAlign: "center"
+        }}>
+          <h5>Confirm Application</h5>
+          <p>Do you accept the terms and conditions to apply for this job?</p>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <button className="btn btn-secondary" onClick={() => setShowConfirmDialog(false)}>Cancel</button>
+            <button className="btn btn-primary" onClick={confirmApplication}>Accept</button>
+          </div>
+        </div>
+      )}
+
+      {/* Success Message */}
+      {applicationStatus && (
+        <div className="alert" style={{
+          position: "fixed",
+          top: "20px",
+          left: "50%",
+          transform: "translate(-50%, 0)",
+          zIndex: "1000",
+          width: "80%",
+          maxWidth: "400px",
+          padding: "15px",
+          backgroundColor: "#d4edda",
+          color: "#155724",
+          border: "1px solid #c3e6cb",
+          borderRadius: "5px",
+          textAlign: "center",
+          transition: "opacity 0.5s ease",
+        }}>
+          {applicationStatus}
+        </div>
+      )}
     </>
   );
 };

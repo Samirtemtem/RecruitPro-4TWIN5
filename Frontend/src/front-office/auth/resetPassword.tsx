@@ -125,127 +125,112 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="container-fuild">
-      <div className="w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
-        <div className="row">
-          <div className="col-lg-5">
-            <div className="d-lg-flex align-items-center justify-content-center d-none flex-wrap vh-100">
-              <div>
-                <ImageWithBasePath src="assets/img/bg/rp.svg" alt="Img" />
+    
+    <div className="w-100 vh-100 d-flex justify-content-center align-items-center">
+  <div className="col-lg-7 col-md-10 col-sm-12">
+    <form onSubmit={handleSubmit} className="p-4 bg-light rounded shadow">
+      <div className="d-flex flex-column">
+        <div className="mx-auto mb-5 text-center">
+          <ImageWithBasePath
+            src="assets/img/logo.svg"
+            className="img-fluid"
+            alt="Logo"
+          />
+        </div>
+        <div>
+          <div className="text-center mb-3">
+            <h2 className="mb-2">Reset Password</h2>
+            <p className="mb-0">
+              Your new password must be different from previously used passwords.
+            </p>
+          </div>
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="alert alert-success" role="alert">
+              {success}
+            </div>
+          )}
+          <div className="input-block mb-3">
+            <div className="mb-3">
+              <label className="form-label">Password</label>
+              <div className="pass-group" id="passwordInput">
+                <input
+                  type={passwordVisibility.password ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => onChangePassword(e.target.value)}
+                  className="form-control pass-input"
+                  placeholder="Enter your password"
+                />
+                <span
+                  className={`ti toggle-passwords ${passwordVisibility.password ? "ti-eye" : "ti-eye-off"}`}
+                  onClick={() => togglePasswordVisibility("password")}
+                  style={{ cursor: "pointer" }}
+                ></span>
               </div>
+            </div>
+            <div
+              className={`password-strength d-flex ${
+                passwordResponse.passwordResponseKey === "0"
+                  ? "poor-active"
+                  : passwordResponse.passwordResponseKey === "1"
+                  ? "avg-active"
+                  : passwordResponse.passwordResponseKey === "2"
+                  ? "strong-active"
+                  : passwordResponse.passwordResponseKey === "3"
+                  ? "heavy-active"
+                  : ""
+              }`}
+              id="passwordStrength"
+            >
+              <span id="poor" className="active" />
+              <span id="weak" className="active" />
+              <span id="strong" className="active" />
+              <span id="heavy" className="active" />
             </div>
           </div>
-          <div className="col-lg-7 col-md-12 col-sm-12">
-            <div className="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap">
-              <div className="col-md-7 mx-auto vh-100">
-                <form className="vh-100" onSubmit={handleSubmit}>
-                  <div className="vh-100 d-flex flex-column justify-content-between p-4 pb-0">
-                    <div className="mx-auto mb-5 text-center">
-                      <ImageWithBasePath
-                        src="assets/img/logo.svg"
-                        className="img-fluid"
-                        alt="Logo"
-                      />
-                    </div>
-                    <div className="">
-                      <div className="text-center mb-3">
-                        <h2 className="mb-2">Reset Password</h2>
-                        <p className="mb-0">
-                          Your new password must be different from previous used
-                          passwords.
-                        </p>
-                      </div>
-                      {error && (
-                        <div className="alert alert-danger" role="alert">
-                          {error}
-                        </div>
-                      )}
-                      {success && (
-                        <div className="alert alert-success" role="alert">
-                          {success}
-                        </div>
-                      )}
-                      <div>
-                        <div className="input-block mb-3">
-                          <div className="mb-3">
-                            <label className="form-label">Password</label>
-                            <div className="pass-group" id="passwordInput">
-                              <input
-                                type={passwordVisibility.password ? "text" : "password"}
-                                value={formData.password}
-                                onChange={(e) => onChangePassword(e.target.value)}
-                                className="form-control pass-input"
-                                placeholder="Enter your password"
-                              />
-                              <span
-                                className={`ti toggle-passwords ${passwordVisibility.password ? "ti-eye" : "ti-eye-off"}`}
-                                onClick={() => togglePasswordVisibility("password")}
-                                style={{ cursor: "pointer" }}
-                              ></span>
-                            </div>
-                          </div>
-                          <div
-                            className={`password-strength d-flex ${
-                              passwordResponse.passwordResponseKey === "0"
-                                ? "poor-active"
-                                : passwordResponse.passwordResponseKey === "1"
-                                ? "avg-active"
-                                : passwordResponse.passwordResponseKey === "2"
-                                ? "strong-active"
-                                : passwordResponse.passwordResponseKey === "3"
-                                ? "heavy-active"
-                                : ""
-                            }`}
-                            id="passwordStrength"
-                          >
-                            <span id="poor" className="active" />
-                            <span id="weak" className="active" />
-                            <span id="strong" className="active" />
-                            <span id="heavy" className="active" />
-                          </div>
-                        </div>
-                        <p className="fs-12">{passwordResponse.passwordResponseText}</p>
-                        <div className="mb-3">
-                          <label className="form-label">Confirm Password</label>
-                          <div className="pass-group">
-                            <input
-                              type={passwordVisibility.confirmPassword ? "text" : "password"}
-                              value={formData.confirmPassword}
-                              onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                              className="pass-input form-control"
-                              placeholder="Confirm your password"
-                            />
-                            <span
-                              className={`ti toggle-passwords ${
-                                passwordVisibility.confirmPassword ? "ti-eye" : "ti-eye-off"
-                              }`}
-                              onClick={() => togglePasswordVisibility("confirmPassword")}
-                              style={{ cursor: "pointer" }}
-                            ></span>
-                          </div>
-                        </div>
-                        <div className="mb-3">
-                          <button 
-                            type="submit" 
-                            className="btn btn-primary w-100"
-                            disabled={isLoading}
-                          >
-                            {isLoading ? "Resetting Password..." : "Reset Password"}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-5 pb-4 text-center">
-                      <p className="mb-0 text-gray-9">Copyright © 2025 - RECRUITPRO</p>
-                    </div>
-                  </div>
-                </form>
-              </div>
+          <p className="fs-12">{passwordResponse.passwordResponseText}</p>
+          <div className="mb-3">
+            <label className="form-label">Confirm Password</label>
+            <div className="pass-group">
+              <input
+                type={passwordVisibility.confirmPassword ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                className="pass-input form-control"
+                placeholder="Confirm your password"
+              />
+              <span
+                className={`ti toggle-passwords ${
+                  passwordVisibility.confirmPassword ? "ti-eye" : "ti-eye-off"
+                }`}
+                onClick={() => togglePasswordVisibility("confirmPassword")}
+                style={{ cursor: "pointer" }}
+              ></span>
             </div>
+          </div>
+          <div className="mb-3">
+            <button 
+              type="submit" 
+              className="btn btn-primary w-100"
+              disabled={isLoading}
+            >
+              {isLoading ? "Resetting Password..." : "Reset Password"}
+            </button>
           </div>
         </div>
+        <div className="mt-5 pb-4 text-center">
+          <p className="mb-0 text-gray-9">Copyright © 2025 - RECRUITPRO</p>
+        </div>
       </div>
-    </div>
+    </form>
+  </div>
+</div>
+
+
   );
 };
 

@@ -31,6 +31,7 @@ import {  getUsers, getUserByEmail } from './routes/FaceRecologin';
 import faceRoutes from "./routes/FaceRecologin";
 import skillRoutes from "./routes/skillRoutes";
 import contactRoutes from "./routes/contactRoutes";
+import applicationRoutes from "./routes/applicationRoutes";
 
 // Allow requests from your frontend (e.g., localhost:3000)
 const corsOptions = {
@@ -106,6 +107,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/contact',contactRoutes);
 
+app.use('/app',applicationRoutes);
 
 // Error handling
 app.use(errorHandler);

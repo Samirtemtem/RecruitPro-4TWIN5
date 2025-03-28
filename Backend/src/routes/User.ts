@@ -9,7 +9,8 @@ import {
   getCandidates,
   getLastCandidates,
   getCandidateCountPerYear,
-  countEmployeesByDepartment
+  countEmployeesByDepartment,
+  getUserJobPosts 
 } from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
@@ -92,5 +93,10 @@ router.get('/get/Lastcandidates', getLastCandidates);
 router.get('/count-per-year', getCandidateCountPerYear);
 // Define the route for counting employees by department
 router.get('/count-employees-by-department', countEmployeesByDepartment);
+
+
+// Route to get job posts for a specific user
+router.get('/api/users/:userId/job-posts', getUserJobPosts);
+
 // Export the router
 export default router;

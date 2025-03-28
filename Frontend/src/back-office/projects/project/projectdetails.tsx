@@ -239,12 +239,12 @@ const ProjectDetails = () => {
                                 </div>
 
 
-       <div className="ms-2">
-            <Link to="/candidates-grid" className="btn btn-secondary">
-                <i className="ti ti-user me-1" />
-                Candidates
-            </Link>
-        </div>
+                                <div className="ms-2">
+    <Link to={`/candidates-grid/${id}`} className="btn btn-secondary">
+        <i className="ti ti-user me-1" />
+        Candidates
+    </Link>
+</div>
 
 
 

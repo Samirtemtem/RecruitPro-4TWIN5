@@ -9,6 +9,7 @@
     "devDependencies": {
         "@types/bcrypt": "^5.0.2",
         "@types/cors": "^2.8.17",
+        "@types/mongoose": "^5.11.97",
         "@types/react": "^19.0.10",
         "browser-process-hrtime": "^1.0.0",
         "concurrently": "^7.6.0",

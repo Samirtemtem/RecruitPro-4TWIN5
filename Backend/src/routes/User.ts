@@ -10,7 +10,8 @@ import {
   getLastCandidates,
   getCandidateCountPerYear,
   countEmployeesByDepartment,
-  getUserJobPosts 
+  getUserJobPosts ,
+  getCandidateById
 } from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
@@ -89,6 +90,8 @@ router.get('/users/:id', getUserById);
 router.put('/update/:id', updateUser);
 router.delete('/delete/:id', deleteUser);
 router.get('/get/candidates', getCandidates);
+// Route to get a candidate by ID
+router.get('/candidates/:id', getCandidateById);
 router.get('/get/Lastcandidates', getLastCandidates);
 router.get('/count-per-year', getCandidateCountPerYear);
 // Define the route for counting employees by department

@@ -5,6 +5,12 @@ import {User} from '../models/User';
 import cloudinary from 'cloudinary';
 import multer from 'multer';
 import { Role } from '../models/types';
+import Profile from '../models/Profile'; 
+import Education from '../models/Education'; // Adjust the import based on your file structure
+import Experience from '../models/Experience'; // Adjust the import based on your file structure
+import Skill from '../models/Skill'; // Adjust the import based on your file structure
+import JobPost from '../models/JobPost';
+
 
 // Initialize Cloudinary configuration (if not already done)
 cloudinary.v2.config({
@@ -260,8 +266,34 @@ export const getCandidates = async (req: Request, res: Response): Promise<void> 
   }
 };
 
+// Get candidate by ID
+export const getCandidateById = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params; // Get the ID from the request parameters
+  try {
+      // Find candidate by ID and populate applications, profile, education, experience, skills, and jobPosts
+      const candidate = await User.findById(id)
+          .populate('applications') // Populate the applications field
+          .populate({
+              path: 'profile', // Populate the profile
+              select: '-user', // Exclude the user reference if not needed
+              populate: [
+                  { path: 'education', model: Education }, // Populate education
+                  { path: 'experience', model: Experience }, // Populate experience
+                  { path: 'skills', model: Skill } // Populate skills
+              ]
+          })
+          .populate('jobPosts'); // Populate job posts directly from User
 
+      if (!candidate) {
+          res.status(404).json({ message: 'Candidate not found' });
+          return;
+      }
 
+      res.status(200).json(candidate);
+  } catch (error: any) {
+      res.status(500).json({ error: error.message });
+  }
+};
 
 
 

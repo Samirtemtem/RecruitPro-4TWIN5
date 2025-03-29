@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-interface JobType {
-  styleClass: string;
-  type: string;
-}
-
 interface JobItem {
   _id: string; // MongoDB ID
   image: string;
@@ -31,7 +26,11 @@ const JobListingsTable: React.FC = () => {
   const [jobs, setJobs] = useState<JobItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const defaultImage = 'LogoEsprit2.png'; 
+  const [selectedApplication, setSelectedApplication] = useState<JobApplicationStatus | null>(null);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  
+  const defaultImage = '/LogoEsprit2.png'; // Correct path for the public folder
+
   useEffect(() => {
     const userId = localStorage.getItem('userId'); // Retrieve userId from local storage
     if (!userId) {
@@ -47,10 +46,6 @@ const JobListingsTable: React.FC = () => {
           throw new Error('Failed to fetch job posts');
         }
         const data = await response.json();
-
-        // Log the fetched data to the console
-        console.log('Fetched job posts:', data);
-
         setJobs(data);
       } catch (err: any) {
         setError(err.message);
@@ -69,6 +64,22 @@ const JobListingsTable: React.FC = () => {
     { id: 3, dateApplied: "Nov 25, 2022", status: "Active" },
     { id: 4, dateApplied: "Nov 20, 2022", status: "Under Review" },
   ];
+
+  const handleViewApplication = (appId: number) => {
+    const application = applications.find(app => app.id === appId);
+    console.log("Selected Application:", application); // Debugging statement
+    if (application) {
+      setSelectedApplication(application);
+      setModalVisible(true);
+    } else {
+      console.error("Application not found for ID:", appId); // Debugging statement
+    }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedApplication(null);
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -95,7 +106,6 @@ const JobListingsTable: React.FC = () => {
               <tr>
                 <th>Job Title</th>
                 <th>Department</th>
-                
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -103,7 +113,7 @@ const JobListingsTable: React.FC = () => {
             <tbody>
               {jobs.map((item) => {
                 const application = applications.find(app => app.id === parseInt(item._id)) || 
-                  { dateApplied: "N/A", status: "Unknown" };
+                  { id: 0, dateApplied: "N/A", status: "Unknown" }; // Add id to the fallback object
 
                 return (
                   <tr key={item._id}>
@@ -111,10 +121,7 @@ const JobListingsTable: React.FC = () => {
                       <div className="job-block">
                         <div className="inner-box">
                           <div className="content">
-                            <span className="company-logo">
-                            <img src={item.logo || defaultImage} alt="Company logo" style={{ maxWidth: '120px' }} />
-                            </span>
-                            <h4>
+                            <h4 className="ml-0">
                               <a href={`/job-single-v1/${item._id}`}>
                                 {item.title}
                               </a>
@@ -139,7 +146,7 @@ const JobListingsTable: React.FC = () => {
                       <div className="option-box">
                         <ul className="option-list">
                           <li>
-                            <button data-text="View Application">
+                            <button onClick={() => handleViewApplication(application.id)} data-text="View Application">
                               <span className="la la-eye"></span>
                             </button>
                           </li>
@@ -158,6 +165,47 @@ const JobListingsTable: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {modalVisible && selectedApplication && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Application Details</h2>
+            <p>Date Applied: {selectedApplication.dateApplied}</p>
+            <p>Status: {selectedApplication.status}</p>
+            <button onClick={closeModal}>Close</button>
+          </div>
+        </div>
+      )}
+
+      <style>
+        {`
+          .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure it appears above other content */
+          }
+
+          .modal {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+          }
+
+          .modal button {
+            margin-top: 10px;
+          }
+        `}
+      </style>
     </div>
   );
 };

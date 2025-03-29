@@ -12,6 +12,7 @@ interface Candidate {
         email: string;
         role: string;
         image: string; // Add image property
+        id:String;
     };
     CV: string;
     status: string;
@@ -85,73 +86,61 @@ const CandidateGridPerJobPost = () => {
                     </div>
                     {/* Candidates Grid */}
                     <div className="row">
-                        {loading ? (
-                            <div className="col-md-12 text-center">
-                                <p>Loading candidates...</p>
-                            </div>
-                        ) : (
-                            candidates.map((candidate) => (
-                                <div key={candidate._id} className="col-xxl-3 col-xl-4 col-md-6">
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-start mb-3">
-                                                <div className="d-flex align-items-center flex-shrink-0">
-                                                    <Link
-                                                        to="#"
-                                                        className="avatar avatar-lg avatar rounded-circle me-2"
-                                                        data-bs-toggle="offcanvas"
-                                                        data-bs-target="#candidate_details"
-                                                    >
-                                                        <img 
-                                                            src={candidate.candidate.image || "assets/img/users/user-01.jpg"} 
-                                                            alt="User Image" 
-                                                            className="img-fluid rounded-circle" 
-                                                        />
-                                                    </Link>
-                                                    <div className="d-flex flex-column">
-                                                        <div className="d-flex flex-wrap mb-1">
-                                                            <h6 className="fs-16 fw-semibold me-1">
-                                                                <Link
-                                                                    to="#"
-                                                                    data-bs-toggle="offcanvas"
-                                                                    data-bs-target="#candidate_details"
-                                                                >
-                                                                    {candidate.candidate.firstName} {candidate.candidate.lastName}
-                                                                </Link>
-                                                            </h6>
-                                                            <span className="badge bg-primary-transparent">
-                                                                {candidate.candidate.role}
-                                                            </span>
-                                                        </div>
-                                                        <p className="text-gray fs-13 fw-normal">
-                                                            {candidate.candidate.email}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="bg-light rounder p-2">
-                                                <div className="d-flex align-items-center justify-content-between mb-2">
-                                                    <h6 className="text-gray fs-14 fw-normal">Applied Role</h6>
-                                                    <span className="text-dark fs-14 fw-medium">{candidate.candidate.role}</span>
-                                                </div>
-                                                <div className="d-flex align-items-center justify-content-between mb-2">
-                                                    <h6 className="text-gray fs-14 fw-normal">Submission Date</h6>
-                                                    <span className="text-dark fs-14 fw-medium">{new Date(candidate.submissionDate).toLocaleDateString()}</span>
-                                                </div>
-                                                <div className="d-flex align-items-center justify-content-between">
-                                                    <h6 className="text-gray fs-14 fw-normal">CV</h6>
-                                                    <a href={candidate.CV} target="_blank" rel="noopener noreferrer" className="text-primary">
-                                                        View CV
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+    {loading ? (
+        <div className="col-md-12 text-center">
+            <p>Loading candidates...</p>
+        </div>
+    ) : (
+        candidates.map((candidate) => (
+            <div key={candidate._id} className="col-xxl-3 col-xl-4 col-md-6">
+                <Link to={`/candidate-details2/${candidate.candidate.id}`} className="card"> {/* Wrap the card with Link */}
+                    <div className="card-body">
+                        <div className="d-flex justify-content-between align-items-start mb-3">
+                            <div className="d-flex align-items-center flex-shrink-0">
+                                <div className="avatar avatar-lg avatar rounded-circle me-2">
+                                    <img 
+                                        src={candidate.candidate.image || "assets/img/users/user-01.jpg"} 
+                                        alt="User Image" 
+                                        className="img-fluid rounded-circle" 
+                                    />
                                 </div>
-                            ))
-                        )}
-                        
+                                <div className="d-flex flex-column">
+                                    <div className="d-flex flex-wrap mb-1">
+                                        <h6 className="fs-16 fw-semibold me-1">
+                                            {candidate.candidate.firstName} {candidate.candidate.lastName} 
+                                        </h6>
+                                        <span className="badge bg-primary-transparent">
+                                            {candidate.candidate.role}
+                                        </span>
+                                    </div>
+                                    <p className="text-gray fs-13 fw-normal">
+                                        {candidate.candidate.email}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-light rounder p-2">
+                            <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h6 className="text-gray fs-14 fw-normal">Applied Role</h6>
+                                <span className="text-dark fs-14 fw-medium">{candidate.candidate.role}</span>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h6 className="text-gray fs-14 fw-normal">Submission Date</h6>
+                                <span className="text-dark fs-14 fw-medium">{new Date(candidate.submissionDate).toLocaleDateString()}</span>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between">
+                                <h6 className="text-gray fs-14 fw-normal">CV</h6>
+                                <a href={candidate.CV} target="_blank" rel="noopener noreferrer" className="text-primary">
+                                    View CV
+                                </a>
+                            </div>
+                        </div>
                     </div>
+                </Link>
+            </div>
+        ))
+    )}
+</div>
                     {/* /Candidates Grid */}
                 </div>
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">

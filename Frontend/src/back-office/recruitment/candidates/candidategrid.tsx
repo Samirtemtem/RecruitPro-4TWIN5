@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PredefinedDateRanges from '../../../core/common/datePicker';
-import ImageWithBasePath from '../../../core/common/imageWithBasePath';
-import { all_routes } from '../../../routing-module/router/all_routes';
 import CollapseHeader from '../../../core/common/collapse-header/collapse-header';
+import { all_routes } from '../../../routing-module/router/all_routes';
 
 interface Candidate {
-    _id: string;
+    id: string; // Update this to match the data structure
     firstName: string;
     lastName: string;
     email: string;
@@ -14,8 +13,8 @@ interface Candidate {
     appliedDate: string; // Adjust the type if needed
     status: string;
     image?: string; // Optional
-    createDate?:string;
-    phoneNumber?:string;
+    createDate?: string;
+    phoneNumber?: string;
 }
 
 const CandidateGrid = () => {
@@ -89,32 +88,21 @@ const CandidateGrid = () => {
                             </div>
                         ) : (
                             candidates.map((candidate) => (
-                                <div key={candidate._id} className="col-xxl-3 col-xl-4 col-md-6">
-                                    <div className="card">
+                                <div key={candidate.id} className="col-xxl-3 col-xl-4 col-md-6">
+                                    <Link to={`/candidate-details2/${candidate.id}`} className="card">
                                         <div className="card-body">
                                             <div className="d-flex justify-content-between align-items-start mb-3">
                                                 <div className="d-flex align-items-center flex-shrink-0">
-                                                    <Link
-                                                        to="#"
-                                                        className="avatar avatar-lg avatar rounded-circle me-2"
-                                                        data-bs-toggle="offcanvas"
-                                                        data-bs-target="#candidate_details"
-                                                    >
+                                                    <div className="avatar avatar-lg avatar rounded-circle me-2">
                                                         <img src={candidate.image || "assets/img/users/user-01.jpg"} alt="User Image" className="img-fluid" />
-                                                    </Link>
+                                                    </div>
                                                     <div className="d-flex flex-column">
                                                         <div className="d-flex flex-wrap mb-1">
                                                             <h6 className="fs-16 fw-semibold me-1">
-                                                                <Link
-                                                                    to="#"
-                                                                    data-bs-toggle="offcanvas"
-                                                                    data-bs-target="#candidate_details"
-                                                                >
-                                                                    {candidate.firstName} {candidate.lastName}
-                                                                </Link>
+                                                                {candidate.firstName} {candidate.lastName}
                                                             </h6>
                                                             <span className="badge bg-primary-transparent">
-                                                                {candidate._id}
+                                                                tt
                                                             </span>
                                                         </div>
                                                         <p className="text-gray fs-13 fw-normal">
@@ -140,7 +128,7 @@ const CandidateGrid = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 </div>
                             ))
                         )}
@@ -156,7 +144,7 @@ const CandidateGrid = () => {
                     {/* /Candidates Grid */}
                 </div>
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
-                    <p className="mb-0">2014 - 2025 © SmartHR.</p>
+                    <p className="mb-0">2025 © RECRUITPRO.</p>
                     <p>
                         Designed &amp; Developed By{" "}
                         <Link to="#" className="text-primary">

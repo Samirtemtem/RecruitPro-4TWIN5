@@ -50,8 +50,20 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 
 });
 
-// ✅ READ latest 5 job posts
+// ✅ READ latest 6 job posts
 router.get('/latest', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find()
+            .sort({ createdAt: -1 })  
+            .limit(6);                
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+// ✅ READ latest 5 job posts
+router.get('/latest-Five', async (req: Request, res: Response): Promise<void> => {
     try {
         const jobs = await JobPost.find()
             .sort({ createdAt: -1 })  
@@ -61,6 +73,8 @@ router.get('/latest', async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: (error as Error).message });
     }
 });
+
+
 
 // ✅ READ a single job post by ID
 router.get('/:id', async (req: Request, res: Response): Promise<any> => {

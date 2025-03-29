@@ -65,6 +65,8 @@ import Login from "../../Face-Recog/Login";
 import Single from "../../front-office/job-single-v1/Single";
 import JobSingleDynamicV1 from "../../front-office/job-single-v1/Single";
 import ResultsPage from "../../index/components/ResultPage";
+import CandidateDetails from "../../back-office/candidates/candidateDetails";
+import CandidateDetails2 from "../../back-office/candidates/candidateDetails2";
 
 const routes = all_routes;
 
@@ -339,5 +341,15 @@ export const authRoutes = [
     element: <EmployeeList />,
     route: Route,
   },  
+  {
+    path:"/candidate-details/:id",
+    element: <CandidateDetails />,
+    route: Route,
+  },
+  {
+    path:"/candidate-details2/:id",
+    element: <CandidateDetails2 />,
+    route: Route,
+  },
 
 ]

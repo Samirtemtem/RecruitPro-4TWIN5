@@ -12,9 +12,16 @@ const ProjectModals = () => {
     role: "Select",
     department: "Select",
     privilege: "Select",
-    image: null as File | null, // Explicitly define the type as File or null
+    image: null as File | null,
   });
-  
+
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+  });
 
   const clientChoose = [
     { value: "Select", label: "Select" },
@@ -22,6 +29,7 @@ const ProjectModals = () => {
     { value: "DEPARTMENT-MANAGER", label: "DEPARTMENT-MANAGER" },
     { value: "EMPLOYEE", label: "EMPLOYEE" },
   ];
+
   const departmentChoose = [
     { value: "Select", label: "Select" },
     { value: "ELECTROMECANIQUE", label: "ELECTROMECANIQUE" },
@@ -42,6 +50,12 @@ const ProjectModals = () => {
       ...formData,
       [name]: value,
     });
+
+    // Clear error for the specific field when user starts typing
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
   };
 
   // Handle file input change for the image
@@ -50,17 +64,66 @@ const ProjectModals = () => {
     if (file) {
       setFormData({
         ...formData,
-        image: file, // Store the file in the state
+        image: file,
       });
     }
   };
 
+  // Validate form fields
+  const validateForm = () => {
+    let tempErrors = { ...errors };
+    let isValid = true;
+
+    // Validation for first name
+    if (!formData.firstName) {
+      tempErrors.firstName = "First name is required.";
+      isValid = false;
+    }
+    
+    // Validation for last name
+    if (!formData.lastName) {
+      tempErrors.lastName = "Last name is required.";
+      isValid = false;
+    }
+    
+    // Validation for email
+    if (!formData.email) {
+      tempErrors.email = "Email is required.";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      tempErrors.email = "Email address is invalid.";
+      isValid = false;
+    }
+    
+    // Validation for password
+    if (!formData.password) {
+      tempErrors.password = "Password is required.";
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      tempErrors.password = "Password must be at least 6 characters.";
+      isValid = false;
+    } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(formData.password)) {
+      tempErrors.password = "Password must include both letters and numbers.";
+      isValid = false;
+    }
+    
+    // Validation for phone number
+    if (!formData.phoneNumber) {
+      tempErrors.phoneNumber = "Phone number is required.";
+      isValid = false;
+    } else if (!/^\d{8}$/.test(formData.phoneNumber)) {
+      tempErrors.phoneNumber = "Phone number must be exactly 8 digits.";
+      isValid = false;
+    }
+
+    setErrors(tempErrors);
+    return isValid;
+};
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Form validation (example)
-    if (formData.firstName && formData.lastName && formData.email && formData.password) {
+    if (validateForm()) {
       const formDataToSend = new FormData();
       formDataToSend.append("firstName", formData.firstName);
       formDataToSend.append("lastName", formData.lastName);
@@ -94,7 +157,6 @@ const ProjectModals = () => {
         const data = await response.json();
         console.log("Response data:", data);
 
-        // Success handling: reset form or close modal
         alert("Employee added successfully");
         setFormData({
           firstName: "",
@@ -106,10 +168,9 @@ const ProjectModals = () => {
           role: "Select",
           department: "Select",
           privilege: "Select",
-          image: null, // Reset image field
+          image: null,
         });
 
-        // Close modal if it's open
         const modal = document.getElementById("add_project");
         if (modal) {
           // Close modal logic here
@@ -118,8 +179,6 @@ const ProjectModals = () => {
         console.error("Error:", error);
         alert("An error occurred while adding the employee.");
       }
-    } else {
-      alert("Please fill in all required fields.");
     }
   };
 
@@ -127,37 +186,35 @@ const ProjectModals = () => {
     <>
       {/* Add Project */}
       <div className="modal fade" id="add_project" role="dialog">
-        <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-dialog modal-dialog-centered modal-fullheight">
           <div className="modal-content">
-            <div className="modal-header header-border align-items-center justify-content-between">
-              <div className="d-flex align-items-center">
-                <h5 className="modal-title me-2">Add Employee</h5>
-              </div>
+            <div className="modal-header align-items-center justify-content-between">
+              <h5 className="modal-title">Add Employee</h5>
               <button
                 type="button"
-                className="btn-close custom-btn-close"
+                className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               >
                 <i className="ti ti-x" />
               </button>
             </div>
-            <div className="add-info-fieldset">
-              <div className="add-details-wizard p-3 pb-0">
-                <ul className="progress-bar-wizard d-flex align-items-center border-bottom">
-                  <li className="p-2 pt-0">
-                    <h6 className="fw-medium">Informations</h6>
-                  </li>
-                </ul>
-              </div>
+            <div className="modal-body d-flex flex-column">
+              <div className="add-info-fieldset">
+                <div className="add-details-wizard p-3 pb-0">
+                  <ul className="progress-bar-wizard d-flex align-items-center border-bottom">
+                    <li className="p-2 pt-0">
+                      <h6 className="fw-medium">Informations</h6>
+                    </li>
+                  </ul>
+                </div>
 
-              <fieldset id="first-field-file">
-                <form onSubmit={handleSubmit}>
-                  <div className="modal-body">
-                    <div className="row">
+                <fieldset id="first-field-file">
+                  <form onSubmit={handleSubmit}>
+                    <div className="row mb-4">
                       <div className="col-md-12">
-                        <div className="d-flex align-items-center flex-wrap row-gap-3 bg-light w-100 rounded p-3 mb-4">
-                          <div className="d-flex align-items-center justify-content-center avatar avatar-xxl rounded-circle border border-dashed me-2 flex-shrink-0 text-dark frames">
+                        <div className="d-flex align-items-center flex-wrap bg-light w-100 rounded p-3 mb-4">
+                          <div className="avatar avatar-xxl rounded-circle border border-dashed me-2 flex-shrink-0">
                             {formData.image ? (
                               <img
                                 src={URL.createObjectURL(formData.image)}
@@ -209,6 +266,7 @@ const ProjectModals = () => {
                             value={formData.firstName}
                             onChange={handleInputChange}
                           />
+                          {errors.firstName && <div className="text-danger">{errors.firstName}</div>}
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -221,6 +279,7 @@ const ProjectModals = () => {
                             value={formData.lastName}
                             onChange={handleInputChange}
                           />
+                          {errors.lastName && <div className="text-danger">{errors.lastName}</div>}
                         </div>
                       </div>
 
@@ -234,6 +293,7 @@ const ProjectModals = () => {
                             value={formData.email}
                             onChange={handleInputChange}
                           />
+                          {errors.email && <div className="text-danger">{errors.email}</div>}
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -246,6 +306,7 @@ const ProjectModals = () => {
                             value={formData.password}
                             onChange={handleInputChange}
                           />
+                          {errors.password && <div className="text-danger">{errors.password}</div>}
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -270,6 +331,7 @@ const ProjectModals = () => {
                             value={formData.phoneNumber}
                             onChange={handleInputChange}
                           />
+                          {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
                         </div>
                       </div>
                       <div className="col-md-12">
@@ -325,33 +387,55 @@ const ProjectModals = () => {
                       </div>
                     </div>
 
+                    <div className="modal-footer">
+                      <div className="d-flex align-items-center justify-content-end">
+                        <Link
+                          type="button"
+                          to="#"
+                          className="btn btn-outline-light border me-2"
+                          data-bs-dismiss="modal"
+                        >
+                          Cancel
+                        </Link>
+                        <button
+                          type="submit"
+                          className="btn btn-primary"
+                        >
+                          Add Employee
+                        </button>
+                      </div>
                     </div>
-                 
-                  <div className="modal-footer">
-                    <div className="d-flex align-items-center justify-content-end">
-                      <Link
-                        type="button"
-                        to="#"
-                        className="btn btn-outline-light border me-2"
-                        data-bs-dismiss="modal"
-                      >
-                        Cancel
-                      </Link>
-                      <button
-                        type="submit"
-                        className="btn btn-primary wizard-next-btn"
-                      >
-                        Add Employee
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </fieldset>
+                  </form>
+                </fieldset>
+              </div>
             </div>
           </div>
         </div>
       </div>
       {/* /Add Project */}
+
+      <style>{`
+  .modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 1rem);
+  }
+
+  .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .modal-body {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .text-danger {
+    font-size: 0.875rem;
+  }
+`}</style>
     </>
   );
 };

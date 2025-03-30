@@ -668,7 +668,7 @@ useEffect(() => {
                           +2.1%
                         </span>
                       </h3>
-                      <Link to="projects.html" className="link-default">
+                      <Link to="/jobgrid" className="link-default">
                         View All
                       </Link>
                     </div>

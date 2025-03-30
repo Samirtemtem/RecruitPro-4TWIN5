@@ -20,6 +20,7 @@ interface Candidate {
     email: string; // Candidate's email address
     phoneNumber: string; // Candidate's phone number
     department:String;
+    cv:string;
     address: string; // Candidate's address
     role: string; // Candidate's role (e.g., "CANDIDATE")
     image?: string; // Optional profile image URL
@@ -45,6 +46,7 @@ interface Candidate {
         description: string; // Job description
         requirements: Array<string>; // List of required skills
         status: string; // Job status (e.g., "CLOSED")
+        experience:number;
         createdAt: string; // Date when the job post was created
         updatedAt: string; // Date when the job post was last updated
     }>;
@@ -181,64 +183,31 @@ const CandidateDetails2: React.FC = () => {
                                             </span>
                                         </div>
                                         <div>
-                                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                                <span className="d-inline-flex align-items-center">
-                                                    <i className="ti ti-id me-2" />
-                                                    Client ID
-                                                </span>
-                                                <p className="text-dark">CLT-0024</p>
-                                            </div>
-                                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                                <span className="d-inline-flex align-items-center">
-                                                    <i className="ti ti-star me-2" />
-                                                    Team
-                                                </span>
-                                                <p className="text-dark">UI/UX Design</p>
-                                            </div>
-                                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                                <span className="d-inline-flex align-items-center">
-                                                    <i className="ti ti-calendar-check me-2" />
-                                                    Date Of Join
-                                                </span>
-                                                <p className="text-dark">{candidate.createDate}</p>
-                                            </div>
-                                            <div className="d-flex align-items-center justify-content-between">
-                                                <span className="d-inline-flex align-items-center">
-                                                    <i className="ti ti-calendar-check me-2" />
-                                                    Report Office
-                                                </span>
-                                                <div className="d-flex align-items-center">
-                                                    <span className="avatar avatar-sm avatar-rounded me-2">
-                                                        <ImageWithBasePath
-                                                            src="assets/img/profiles/avatar-12.jpg"
-                                                            alt="Img"
-                                                        />
-                                                    </span>
-                                                    <p className="text-gray-9 mb-0">Doglas Martini</p>
-                                                </div>
-                                            </div>
+                                            
+                                       
                                             <div className="row gx-2 mt-3">
-                                                <div className="col-6">
-                                                    <div>
-                                                        <Link
-                                                            to="#"
-                                                            className="btn btn-dark w-100"
-                                                            data-bs-toggle="modal" data-inert={true}
-                                                            data-bs-target="#edit_employee"
-                                                        >
-                                                            <i className="ti ti-edit me-1" />
-                                                            Edit Info
-                                                        </Link>
-                                                    </div>
-                                                </div>
-                                                <div className="col-6">
-                                                    <div>
-                                                        <Link to={all_routes.chat} className="btn btn-primary w-100">
-                                                            <i className="ti ti-message-heart me-1" />
-                                                            Message
-                                                        </Link>
-                                                    </div>
-                                                </div>
+                                            <div className="col-6">
+    <div>
+        <Link
+            to="#"
+            className="btn btn-dark w-100"
+            data-bs-toggle="modal" 
+            data-inert={true}
+            data-bs-target="#edit_employee"
+        >
+            <i className="ti ti-phone me-1" />  {/* Updated icon for Call */}
+            Call
+        </Link>
+    </div>
+</div>
+<div className="col-6">
+    <div>
+        <Link to={all_routes.chat} className="btn btn-primary w-100">
+            <i className="ti ti-envelope me-1" />  {/* Updated icon for Send Mail */}
+            Send Mail
+        </Link>
+    </div>
+</div>
                                             </div>
                                         </div>
                                     </div>
@@ -286,68 +255,8 @@ const CandidateDetails2: React.FC = () => {
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="p-3 border-bottom">
-                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                            <h6>Personal Information</h6>
-                                            <Link
-                                                to="#"
-                                                className="btn btn-icon btn-sm"
-                                                data-bs-toggle="modal" data-inert={true}
-                                                data-bs-target="#edit_personal"
-                                            >
-                                                <i className="ti ti-edit" />
-                                            </Link>
-                                        </div>
-                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                            <span className="d-inline-flex align-items-center">
-                                                <i className="ti ti-e-passport me-2" />
-                                                Passport No
-                                            </span>
-                                            <p className="text-dark">QRET4566FGRT</p>
-                                        </div>
-                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                            <span className="d-inline-flex align-items-center">
-                                                <i className="ti ti-calendar-x me-2" />
-                                                Passport Exp Date
-                                            </span>
-                                            <p className="text-dark text-end">15 May 2029</p>
-                                        </div>
-                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                            <span className="d-inline-flex align-items-center">
-                                                <i className="ti ti-gender-male me-2" />
-                                                Nationality
-                                            </span>
-                                            <p className="text-dark text-end">Indian</p>
-                                        </div>
-                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                            <span className="d-inline-flex align-items-center">
-                                                <i className="ti ti-bookmark-plus me-2" />
-                                                Religion
-                                            </span>
-                                            <p className="text-dark text-end">Christianity</p>
-                                        </div>
-                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                            <span className="d-inline-flex align-items-center">
-                                                <i className="ti ti-hotel-service me-2" />
-                                                Marital status
-                                            </span>
-                                            <p className="text-dark text-end">Yes</p>
-                                        </div>
-                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                            <span className="d-inline-flex align-items-center">
-                                                <i className="ti ti-briefcase-2 me-2" />
-                                                Employment of spouse
-                                            </span>
-                                            <p className="text-dark text-end">No</p>
-                                        </div>
-                                        <div className="d-flex align-items-center justify-content-between">
-                                            <span className="d-inline-flex align-items-center">
-                                                <i className="ti ti-baby-bottle me-2" />
-                                                No. of children
-                                            </span>
-                                            <p className="text-dark text-end">2</p>
-                                        </div>
-                                    </div>
+                                   
+
                                 </div>
                             </div>
                           
@@ -382,7 +291,7 @@ const CandidateDetails2: React.FC = () => {
                                                                 to="#"
                                                                 className="d-flex align-items-center collapsed collapse-arrow"
                                                                 data-bs-toggle="collapse"
-                                                                data-bs-target="#primaryBorderOne"
+                                                                data-bs-target="#primaryBorderOne1"
                                                                 aria-expanded="false"
                                                                 aria-controls="primaryBorderOne"
                                                             >
@@ -392,7 +301,7 @@ const CandidateDetails2: React.FC = () => {
                                                     </div>
                                                 </div>
                                                 <div
-                                                    id="primaryBorderOne"
+                                                    id="primaryBorderOne1"
                                                     className="accordion-collapse collapse show border-top"
                                                     aria-labelledby="headingOne"
                                                     data-bs-parent="#accordionExample"
@@ -407,6 +316,62 @@ const CandidateDetails2: React.FC = () => {
                                                     </div>
                                                 </div>
                                             </div>
+
+
+
+                                            <div className="accordion-item">
+    <div className="accordion-header" id="headingOne">
+        <div className="accordion-button">
+            <div className="d-flex align-items-center flex-fill">
+                <h5>Skills</h5>
+                <Link
+                    to="#"
+                    className="btn btn-sm btn-icon ms-auto"
+                    data-bs-toggle="modal"
+                    data-inert={true}
+                    data-bs-target="#edit_employee"
+                >
+                    <i className="ti ti-edit" />
+                </Link>
+                <Link
+                    to="#"
+                    className="d-flex align-items-center collapsed collapse-arrow"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#primaryBorderOne"
+                    aria-expanded="false"
+                    aria-controls="primaryBorderOne"
+                >
+                    <i className="ti ti-chevron-down fs-18" />
+                </Link>
+            </div>
+        </div>
+    </div>
+    <div
+        id="primaryBorderOne"
+        className="accordion-collapse collapse show border-top"
+        aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample"
+    >
+        <div className="accordion-body mt-2">
+            {candidate.profile.skills.length > 0 ? (
+                <div className="row">
+                    {candidate.profile.skills.map((skill) => (
+                        <div key={skill._id} className="col-6 col-md-4 mb-3">
+                            <div className="card shadow-sm">
+                                <div className="card-body">
+                                    <h6 className="card-title">{skill.name}</h6>
+                                    <p className="card-text">Proficiency: {skill.degree}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p>No skills available.</p>
+            )}
+        </div>
+    </div>
+</div>
 
                                             {/*   <div className="accordion-item">
                                                 <div className="accordion-header" id="headingTwo">
@@ -769,18 +734,14 @@ const CandidateDetails2: React.FC = () => {
                             <div className="col-md-6">
                                 <div>
                                     <span className="mb-1 d-block">
-                                        Project Lead
+                                        Experience Needed
                                     </span>
                                     <Link
                                         to="#"
                                         className="fw-normal d-flex align-items-center"
                                     >
-                                        <ImageWithBasePath
-                                            className="avatar avatar-sm rounded-circle me-2"
-                                            src="assets/img/profiles/avatar-01.jpg" // Update this with a dynamic image source if available
-                                            alt="Img"
-                                        />
-                                        Leona {/* Update this with the actual project lead's name if available */}
+                                        
+                                        {job.experience} Years
                                     </Link>
                                 </div>
                             </div>
@@ -813,7 +774,7 @@ const CandidateDetails2: React.FC = () => {
                                         className="flex-shrink-0 me-2"
                                     >
                                         <ImageWithBasePath
-                                            src="assets/img/products/product-05.jpg" // Update this with a dynamic image source if available
+                                            src="job-application4.png" // Update this with a dynamic image source if available
                                             className="img-fluid rounded-circle"
                                             alt="img"
                                         />
@@ -847,7 +808,7 @@ const CandidateDetails2: React.FC = () => {
                                     >
                                         <ImageWithBasePath
                                             className="avatar avatar-sm rounded-circle me-2"
-                                            src="assets/img/profiles/avatar-01.jpg" // Update this with the actual image source if available
+                                            src="job-application.png" // Update this with the actual image source if available
                                             alt="Img"
                                         />
                                         <Link
@@ -874,11 +835,9 @@ const CandidateDetails2: React.FC = () => {
                                     <ul className="dropdown-menu dropdown-menu-end p-3">
                                         <li>
                                             <Link
-                                                to="#"
-                                                className="dropdown-item rounded-1"
-                                                data-bs-toggle="modal"
-                                                data-inert={true}
-                                                data-bs-target="#asset_info"
+                                                 to="#"
+                                                 data-bs-toggle="offcanvas"
+                                                 data-bs-target="#candidate_details"
                                             >
                                                 View Info
                                             </Link>
@@ -927,6 +886,384 @@ const CandidateDetails2: React.FC = () => {
                 </div>
             </div>
             {/* /Page Wrapper */}
+
+
+{/* Candidate Details */}
+<div
+                className="offcanvas offcanvas-end offcanvas-large"
+                tabIndex={-1}
+                id="candidate_details"
+            >
+                <div className="offcanvas-header border-bottom">
+                    <h4 className="d-flex align-items-center">
+                        Candidate Details
+                        <span className="badge bg-primary-transparent fw-medium ms-2">
+                            Cand-001
+                        </span>
+                    </h4>
+                    <button
+                        type="button"
+                        className="btn-close custom-btn-close"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Close"
+                    >
+                        <i className="ti ti-x" />
+                    </button>
+                </div>
+                <div className="offcanvas-body">
+                    <div className="card">
+                        <div className="card-body">
+                            <div className="d-flex align-items-center flex-wrap flex-md-nowrap row-gap-3">
+                                <span className="avatar avatar-xxxl candidate-img flex-shrink-0 me-3">
+                                    <img  src={candidate.image || "assets/img/users/user-13.jpg"} />
+                                </span>
+                                <div className="flex-fill border rounded p-3 pb-0">
+                                    <div className="row align-items-center">
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Candiate Name</p>
+                                                <h6 className="fw-normal">{candidate.firstName} {candidate.lastName}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Applied Role</p>
+                                                <h6 className="fw-normal">Accountant</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Applied Date</p>
+                                                <h6 className="fw-normal">12 Sep 2024</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Email</p>
+                                                <h6 className="fw-normal">{candidate.email}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Recruiter</p>
+                                                <h6 className="fw-normal d-flex align-items-center">
+                                                    <span className="avatar avatar-xs avatar-rounded me-1">
+                                                        <ImageWithBasePath src="assets/img/users/user-01.jpg" alt="Img" />
+                                                    </span>
+                                                    Anthony Lewis
+                                                </h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Recruiter</p>
+                                                <span className="badge badge-purple d-inline-flex align-items-center">
+                                                    <i className="ti ti-point-filled me-1" />
+                                                    New
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="contact-grids-tab p-0 mb-3">
+                        <ul className="nav nav-underline" id="myTab" role="tablist">
+                            <li className="nav-item" role="presentation">
+                                <button
+                                    className="nav-link active pt-0"
+                                    id="info-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#basic-info"
+                                    type="button"
+                                    role="tab"
+                                    aria-selected="true"
+                                >
+                                    Profile
+                                </button>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                                <button
+                                    className="nav-link pt-0"
+                                    id="address-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#address"
+                                    type="button"
+                                    role="tab"
+                                    aria-selected="false"
+                                >
+                                    Hiring Pipeline
+                                </button>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                                <button
+                                    className="nav-link pt-0"
+                                    id="address-tab2"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#address2"
+                                    type="button"
+                                    role="tab"
+                                    aria-selected="false"
+                                >
+                                    Notes
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="tab-content" id="myTabContent">
+                        <div
+                            className="tab-pane fade show active"
+                            id="basic-info"
+                            role="tabpanel"
+                            aria-labelledby="info-tab"
+                            tabIndex={0}
+                        >
+                            <div className="card">
+                                <div className="card-header">
+                                    <h5>Personal Information</h5>
+                                </div>
+                                <div className="card-body pb-0">
+                                    <div className="row align-items-center">
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Candiate Name</p>
+                                                <h6 className="fw-normal">{candidate.firstName} {candidate.lastName}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Phone</p>
+                                                <h6 className="fw-normal">{candidate.phoneNumber}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Gender</p>
+                                                <h6 className="fw-normal">Male</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Date of Birth</p>
+                                                <h6 className="fw-normal">23 Oct 2000</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Email</p>
+                                                <h6 className="fw-normal">{candidate.email}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Nationality</p>
+                                                <h6 className="fw-normal">Indian</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Religion</p>
+                                                <h6 className="fw-normal">Christianity</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Marital status</p>
+                                                <h6 className="fw-normal">No</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-header">
+                                    <h5>Address Information</h5>
+                                </div>
+                                <div className="card-body pb-0">
+                                    <div className="row align-items-center">
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Address</p>
+                                                <h6 className="fw-normal">{candidate.address}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">City</p>
+                                                <h6 className="fw-normal">New York</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">State</p>
+                                                <h6 className="fw-normal">New York</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Country</p>
+                                                <h6 className="fw-normal">United States Of America</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-header">
+                                    <h5>Resume</h5>
+                                </div>
+                                <div className="card-body pb-0">
+                                    <div className="row align-items-center">
+                                        <div className="col-md-6">
+                                            <div className="d-flex align-items-center mb-3">
+                                                <span className="avatar avatar-lg bg-light-500 border text-dark me-2">
+                                                    <i className="ti ti-file-description fs-24" />
+                                                </span>
+                                                <div>
+                                                    <h6 className="fw-medium">Resume.doc</h6>
+                                                    <span>120 KB</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="mb-3 text-md-end">
+                                                <Link
+                                                    to={candidate.cv}
+                                                    className="btn btn-dark d-inline-flex align-items-center"
+                                                >
+                                                    <i className="ti ti-download me-1" />
+                                                    Download
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            className="tab-pane fade"
+                            id="address"
+                            role="tabpanel"
+                            aria-labelledby="address-tab"
+                            tabIndex={0}
+                        >
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className="fw-medium mb-2">Candidate Pipeline Stage</h5>
+                                    <div className="pipeline-list candidates border-0 mb-0">
+                                        <ul className="mb-0">
+                                            <li>
+                                                <Link to="#" className="bg-purple">
+                                                    New
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="#" className="bg-gray-100">
+                                                    Scheduled
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="#" className="bg-grat-100">
+                                                    Interviewed
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="#" className="bg-gray-100">
+                                                    Offered
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link to="#" className="bg-gray-100">
+                                                    Hired / Rejected
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-header">
+                                    <h5>Details</h5>
+                                </div>
+                                <div className="card-body pb-0">
+                                    <div className="row align-items-center">
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Current Status</p>
+                                                <span className="badge badge-soft-purple d-inline-flex align-items-center">
+                                                    <i className="ti ti-point-filled me-1" />
+                                                    New
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Applied Role</p>
+                                                <h6 className="fw-normal">Accountant</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Applied Date</p>
+                                                <h6 className="fw-normal">12 Sep 2024</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Recruiter</p>
+                                                <div className="d-flex align-items-center">
+                                                    <Link
+                                                        to="#"
+                                                        className="avatar avatar-sm avatar-rounded me-2"
+                                                    >
+                                                        <ImageWithBasePath src="assets/img/users/user-01.jpg" alt="Img" />
+                                                    </Link>
+                                                    <h6>
+                                                        <Link to="#">Anthony Lewis</Link>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-footer">
+                                    <div className="d-flex align-items-center justify-content-end">
+                                        <Link to="#" className="btn btn-dark me-3">
+                                            Reject
+                                        </Link>
+                                        <Link to="#" className="btn btn-primary">
+                                            Move to Next Stage
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            className="tab-pane fade"
+                            id="address2"
+                            role="tabpanel"
+                            aria-labelledby="address-tab2"
+                            tabIndex={0}
+                        >
+                            <div className="card">
+                                <div className="card-header">
+                                    <h5>Notes</h5>
+                                </div>
+                                <div className="card-body">
+                                    <p>
+                                        Harold Gaynor is a detail-oriented and highly motivated
+                                        accountant with 4 years of experience in financial reporting,
+                                        auditing, and tax preparation.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Candidate Details */}
+
            
         </>
 

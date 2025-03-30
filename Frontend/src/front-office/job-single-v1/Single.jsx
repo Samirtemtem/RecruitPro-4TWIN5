@@ -49,7 +49,7 @@ const JobSingleDynamicV1 = () => {
       jobPostId: jobId,
       candidateId: candidateId,
     };
-
+  
     try {
       const response = await fetch("http://localhost:5000/app/api/applications", {
         method: "POST",
@@ -58,13 +58,16 @@ const JobSingleDynamicV1 = () => {
         },
         body: JSON.stringify(applicationData),
       });
-
+  
       if (!response.ok) {
-        throw new Error('Failed to submit application');
+        // Attempt to parse the error message from the response
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to submit application');
       }
-
+  
       const result = await response.json();
       setApplicationStatus("Application submitted successfully!");
+      
       // Automatically hide the success message after 1 second
       setTimeout(() => setApplicationStatus(null), 1000);
     } catch (error) {

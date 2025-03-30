@@ -145,7 +145,7 @@ const [jobPosts, setJobPosts] = useState<JobPost[]>([]); // Array of JobPost obj
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/jobs/latest");
+        const response = await axios.get("http://localhost:5000/api/jobs/latest-five");
         setJobPosts(response.data); // Assuming response contains an array of job posts
       } catch (error) {
         console.error("Error fetching job posts:", error);

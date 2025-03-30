@@ -367,9 +367,12 @@ const [jobs, setJobs] = useState([]);
                 </div>
             </div>
             {/* /Page Wrapper */}
+
+
+            
             {/* Add Post */}
             <div className="modal fade" id="add_post">
-            <div className="modal-dialog modal-dialog-centered modal-lg">
+            <div className="modal-dialog modal-dialog-centered ">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h4 className="modal-title">Post Job</h4>
@@ -487,6 +490,10 @@ const [jobs, setJobs] = useState([]);
             </div>
         </div>
             {/* /Post Job */}
+
+
+
+
             {/* Add Job Success */}
             <div className="modal fade" id="success_modal" role="dialog">
                 <div className="modal-dialog modal-dialog-centered modal-xm">

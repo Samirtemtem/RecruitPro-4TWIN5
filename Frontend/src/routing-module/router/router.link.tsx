@@ -67,6 +67,9 @@ import JobSingleDynamicV1 from "../../front-office/job-single-v1/Single";
 import ResultsPage from "../../index/components/ResultPage";
 import CandidateDetails from "../../back-office/candidates/candidateDetails";
 import CandidateDetails2 from "../../back-office/candidates/candidateDetails2";
+import ProgressBar from "../../Test/Progress";
+import { AppliedJobsPage } from "../../front-office/candidates-dashboard/applied-jobs";
+import { ApplicationPage } from "../../front-office/candidates-dashboard/application/ApplicationPage";
 
 const routes = all_routes;
 
@@ -106,6 +109,12 @@ export const publicRoutes = [
   {
     path: routes.resetPassword,
     element: <ResetPassword />,
+    route: Route,
+  },
+
+  {
+    path: "/Progress",
+    element: <ProgressBar />,
     route: Route,
   },
   {
@@ -232,6 +241,12 @@ export const authRoutesfront = [
     path: routes.candidatesAppliedJobs,
     name: "Applied Jobs",
     element: <AppliedJobs.AppliedJobsPage />,
+    route: Route,
+  },
+  {
+    path: "/candidates-dashboard/application/:id",
+    name: "Applied Jobs",
+    element: <ApplicationPage />,
     route: Route,
   },
   {

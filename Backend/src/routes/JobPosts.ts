@@ -76,6 +76,60 @@ router.get('/latest-Five', async (req: Request, res: Response): Promise<void> =>
 
 
 
+
+
+
+
+// ✅ READ all job posts with status OPEN
+router.get('/FrontOffice', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find({ status: 'OPEN' });
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+// ✅ READ latest 6 job posts with status OPEN
+router.get('/FrontOfficelatest', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find({ status: 'OPEN' })
+            .sort({ createdAt: -1 })  
+            .limit(6);                
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+// ✅ READ latest 5 job posts with status OPEN
+router.get('/FrontOfficelatest-Five', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find({ status: 'OPEN' })
+            .sort({ createdAt: -1 })  
+            .limit(5);                
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ✅ READ a single job post by ID
 router.get('/:id', async (req: Request, res: Response): Promise<any> => {
     try {

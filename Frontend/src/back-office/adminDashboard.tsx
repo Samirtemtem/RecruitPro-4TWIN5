@@ -13,7 +13,7 @@ import RequestModals from "../core/modals/requestModal";
 import TodoModal from "../core/modals/todoModal";
 import CollapseHeader from "../core/common/collapse-header/collapse-header";
 import { ApexOptions } from 'apexcharts';
-
+import CandidatesOverview from "./candidatesOverview";
 
 interface DepartmentCount {
   department: string;
@@ -87,38 +87,6 @@ const AdminDashboard = () => {
    // Define state with type User[]
    const [users, setUsers] = useState<User[]>([]);
 
-  const candidatesOverviewOptions: ApexOptions = {
-    chart: {
-      type: 'bar',
-      stacked: true,
-      toolbar: {
-        show: false,
-      },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-      },
-    },
-    dataLabels: {
-      enabled: true,
-    },
-    colors: ['#1E90FF', '#FF6347'], // Blue for total candidates, red for hired
-    xaxis: {
-      categories: ['2022', '2023', '2024', '2025'], // Last four years
-    },
-    series: [
-      {
-        name: 'Total Candidates',
-        data: [400, 500, 600, 700], // Example total candidates for each year
-      },
-      {
-        name: 'Hired Candidates',
-        data: [100, 150, 200, 250], // Example hired candidates for each year
-      },
-    ],
-  };
 
 
 
@@ -131,76 +99,7 @@ const AdminDashboard = () => {
 
  
 
-  const [salesIncome] = useState<any>({
-    chart: {
-      height: 290,
-      type: 'bar',
-      stacked: true,
-      toolbar: {
-        show: false,
-      }
-    },
-    colors: ['#FF6F28', '#F8F9FA'],
-    responsive: [{
-      breakpoint: 480,
-      options: {
-        legend: {
-          position: 'bottom',
-          offsetX: -10,
-          offsetY: 0
-        }
-      }
-    }],
-    plotOptions: {
-      bar: {
-        borderRadius: 5,
-        borderRadiusWhenStacked: 'all',
-        horizontal: false,
-        endingShape: 'rounded'
-      },
-    },
-    series: [{
-      name: 'Income',
-      data: [40, 30, 45, 80, 85, 90, 80, 80, 80, 85, 20, 80]
-    }, {
-      name: 'Expenses',
-      data: [60, 70, 55, 20, 15, 10, 20, 20, 20, 15, 80, 20]
-    }],
-    xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      labels: {
-        style: {
-          colors: '#6B7280',
-          fontSize: '13px',
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        offsetX: -15,
-        style: {
-          colors: '#6B7280',
-          fontSize: '13px',
-        }
-      }
-    },
-    grid: {
-      borderColor: '#E5E7EB',
-      strokeDashArray: 5,
-      padding: {
-        left: -8,
-      },
-    },
-    legend: {
-      show: false
-    },
-    dataLabels: {
-      enabled: false // Disable data labels
-    },
-    fill: {
-      opacity: 1
-    },
-  })
+ 
 
   //Attendance ChartJs
   const [chartData, setChartData] = useState({});
@@ -485,6 +384,7 @@ useEffect(() => {
   const fetchEmployeeData = async () => {
       try {
           const response = await axios.get('http://localhost:5000/api/user/count-employees-by-department');
+          console.log(response);
           const { totalEmployees: total, percentageChange: change, departmentCounts }: { totalEmployees: number; percentageChange: number; departmentCounts: DepartmentCount[] } = response.data;
 
           // Prepare data for the chart
@@ -1072,53 +972,7 @@ useEffect(() => {
           
           <div className="row">
            {/* Candidates Overview */}
-           <div className="col-xl-12 d-flex">
-      <div className="card flex-fill">
-        <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-          <h5 className="mb-2">Candidates Overview</h5>
-          <div className="d-flex align-items-center">
-            <div className="dropdown mb-2">
-              <Link
-                to="#"
-                className="dropdown-toggle btn btn-white border-0 btn-sm d-inline-flex align-items-center fs-13 me-2"
-                data-bs-toggle="dropdown"
-              >
-                Candidates by Year
-              </Link>
-              <ul className="dropdown-menu dropdown-menu-end p-3">
-                <li><Link to="#" className="dropdown-item rounded-1">2021</Link></li>
-                <li><Link to="#" className="dropdown-item rounded-1">2022</Link></li>
-                <li><Link to="#" className="dropdown-item rounded-1">2023</Link></li>
-                <li><Link to="#" className="dropdown-item rounded-1">2024</Link></li>
-                <li><Link to="#" className="dropdown-item rounded-1">2025</Link></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="card-body pb-0">
-          <div className="d-flex align-items-center justify-content-between flex-wrap">
-            <div className="d-flex align-items-center mb-1">
-              <p className="fs-13 text-gray-9 me-3 mb-0">
-                <i className="ti ti-square-filled me-2 text-primary" />
-                Total Candidates
-              </p>
-              <p className="fs-13 text-gray-9 mb-0">
-                <i className="ti ti-square-filled me-2 text-danger" />
-                Hired
-              </p>
-            </div>
-            <p className="fs-13 mb-1">Last Updated at 11:30PM</p>
-          </div>
-          <ReactApexChart
-            id="candidates-overview"
-            options={candidatesOverviewOptions}
-            series={candidatesOverviewOptions.series}
-            type="bar"
-            height={270}
-          />
-        </div>
-      </div>
-    </div>
+        <CandidatesOverview />
 {/* /Candidates Overview */}
            
           </div>

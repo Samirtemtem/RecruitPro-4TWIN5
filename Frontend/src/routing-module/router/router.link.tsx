@@ -70,10 +70,19 @@ import CandidateDetails2 from "../../back-office/candidates/candidateDetails2";
 import ProgressBar from "../../Test/Progress";
 import { AppliedJobsPage } from "../../front-office/candidates-dashboard/applied-jobs";
 import { ApplicationPage } from "../../front-office/candidates-dashboard/application/ApplicationPage";
+import CandidatesOverview from "../../back-office/candidatesOverview";
 
 const routes = all_routes;
 
 export const publicRoutes = [
+  
+
+  {
+    path: "/testt",
+    name: "Root",
+    element: <CandidatesOverview  />, 
+    route: Route,
+  },
   {
     path: "/",
     name: "Root",

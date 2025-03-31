@@ -20,6 +20,7 @@ export interface IUser extends Document {
   linkedinId: string;
   is2FAEnabled?: boolean;
   resetToken?:string;
+  department?:Department;
 
   OneTimePassword?: Number,
     profile: Schema.Types.ObjectId;  // Reference to Profile
@@ -78,6 +79,7 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true , default: 'SUPERSECRET'},
   role: { type: String, enum: Object.values(Role), default: Role.CANDIDATE },
+  department: { type: String, enum: Object.values(Department), default: Department.OTHER },
   phoneNumber: { type: String, required: true, default: '0000000000' },
   createDate: { type: Date, default: Date.now },
   lastLogin: { type: Date },

@@ -35,6 +35,7 @@ const ProjectModals = () => {
     { value: "ELECTROMECANIQUE", label: "ELECTROMECANIQUE" },
     { value: "GENIE-CIVIL", label: "GENIE-CIVIL" },
     { value: "TIC", label: "TIC" },
+    { value: "OTHER", label: "OTHER" },
   ];
 
   const privilegeChoose = [

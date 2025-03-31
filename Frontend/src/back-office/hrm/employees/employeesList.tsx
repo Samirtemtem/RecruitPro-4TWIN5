@@ -142,7 +142,7 @@ const EmployeeList = () => {
     { field: 'phoneNumber', headerName: 'Phone', width: 160 },
     { field: 'role', headerName: 'Role', width: 200 },
     { field: 'department', headerName: 'Department', width: 200 },
-    { field: 'privilege', headerName: 'Privilege', width: 200 },
+   
     {
       field: 'actions',
       headerName: 'Actions',

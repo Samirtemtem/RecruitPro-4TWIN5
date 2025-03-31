@@ -81,7 +81,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
  */
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await User.find();
+    const roles = ["HR-MANAGER", "DEPARTMENT-MANAGER", "EMPLOYEE"];
+    const users = await User.find({ role: { $in: roles } });
     res.status(200).json(users);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -355,61 +356,67 @@ export const getCandidateCountPerYear = async (req: Request, res: Response): Pro
 
 export const countEmployeesByDepartment = async (req: Request, res: Response): Promise<void> => {
   try {
-      const currentYear = new Date().getFullYear();
-      const lastYear = currentYear - 1;
+    const currentYear = new Date().getFullYear();
+    const lastYear = currentYear - 1;
 
-      // Get the count of employees per department
-      const departmentCounts = await User.aggregate([
-          {
-              $match: {
-                  role: 'EMPLOYEE', // Filter for employees
-              },
-          },
-          {
-              $group: {
-                  _id: '$department', // Group by department
-                  count: { $sum: 1 }, // Count the number of employees
-              },
-          },
-          {
-              $project: {
-                  department: '$_id', // Rename _id to department
-                  count: 1,
-                  _id: 0, // Exclude the default _id field
-              },
-          },
-      ]);
+    // Get the count of employees per department
+    const departmentCounts = await User.aggregate([
+      {
+        $match: {
+          role: { $in: ['EMPLOYEE', 'HR-MANAGER', 'DEPARTMENT-MANAGER'] },
+          // Ensure we are only counting departments that are not null or empty
+          department: { $exists: true, $ne: null }, // Exclude null and empty departments
+        },
+      },
+      {
+        $group: {
+          _id: '$department', // Group by department
+          count: { $sum: 1 }, // Count the number of employees
+        },
+      },
+      {
+        $project: {
+          department: '$_id', // Rename _id to department
+          count: 1,
+          _id: 0, // Exclude the default _id field
+        },
+      },
+    ]);
 
-      // Get total number of employees
-      const totalEmployees = await User.countDocuments({ role: 'EMPLOYEE' });
+    // Get total number of employees
+    const totalEmployees = await User.countDocuments({
+      role: { $in: ['EMPLOYEE', 'HR-MANAGER', 'DEPARTMENT-MANAGER'] } // Corrected closing brace
+    });
 
-      // Get the count of employees from the last year
-      const lastYearCount = await User.countDocuments({
-          role: 'EMPLOYEE',
-          createDate: {
-              $gte: new Date(`${lastYear}-01-01`),
-              $lt: new Date(`${currentYear}-01-01`),
-          },
-      });
+    // Get the count of employees from the last year
+    const lastYearCount = await User.countDocuments({
+      role: { $in: ['EMPLOYEE', 'HR-MANAGER', 'DEPARTMENT-MANAGER'] },
+      createDate: {
+        $gte: new Date(`${lastYear}-01-01`),
+        $lt: new Date(`${currentYear}-01-01`),
+      },
+    });
 
-      // Calculate percentage change
-      const percentageChange = lastYearCount > 0 
-          ? ((totalEmployees - lastYearCount) / lastYearCount) * 100 
-          : 0;
+    // Calculate percentage change
+    const percentageChange = lastYearCount > 0 
+      ? ((totalEmployees - lastYearCount) / lastYearCount) * 100 
+      : 0;
 
-      // Create the response object
-      const response = {
-          totalEmployees,
-          percentageChange,
-          departmentCounts,
-      };
+    // Create the response object
+    const response = {
+      totalEmployees,
+      percentageChange,
+      departmentCounts,
+    };
 
-      res.status(200).json(response); // Send the result as a response
+    res.status(200).json(response); // Send the result as a response
   } catch (error) {
-      console.error('Error counting employees by department:', error);
-      res.status(500).json({ message: 'Server error' });
+    console.error('Error counting employees by department:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
+
+
 
 
 
@@ -432,3 +439,6 @@ export const getUserJobPosts = async (req: Request, res: Response): Promise<void
     res.status(500).json({ message: errorMessage });
   }
 };
+
+
+

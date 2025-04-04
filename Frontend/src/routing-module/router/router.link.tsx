@@ -71,6 +71,7 @@ import ProgressBar from "../../Test/Progress";
 import { AppliedJobsPage } from "../../front-office/candidates-dashboard/applied-jobs";
 import { ApplicationPage } from "../../front-office/candidates-dashboard/application/ApplicationPage";
 import CandidatesOverview from "../../back-office/candidatesOverview";
+import UsersList from "../../back-office/hrm/users/usersList";
 
 const routes = all_routes;
 
@@ -365,6 +366,15 @@ export const authRoutes = [
     element: <EmployeeList />,
     route: Route,
   },  
+  {
+    path: routes.usersList,
+    element: <UsersList />,
+    route: Route,
+  },  
+
+
+  
+
   {
     path:"/candidate-details/:id",
     element: <CandidateDetails />,

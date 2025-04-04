@@ -3,7 +3,8 @@ export enum Role {
   DEPARTMENT_MANAGER = 'DEPARTMENT-MANAGER',
   ADMIN = 'ADMIN',
   CANDIDATE = 'CANDIDATE',
-  EMPLOYEE = 'EMPLOYEE'
+  EMPLOYEE = 'EMPLOYEE',
+  USER = 'USER'
 }
 
 export enum Privilege {

@@ -58,7 +58,7 @@ export const all_routes = {
   JobListFront:"/JobListFront",
 
   DashboardCandidate: "/DashboardCandidate",
-
+  usersList:"/UsersList",
 
   // dashboard routes
   adminDashboard: "/adminDashboard",

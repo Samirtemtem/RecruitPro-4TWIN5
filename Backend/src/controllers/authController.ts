@@ -142,7 +142,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
  *                 description: User's address
  *               role:
  *                 type: string
- *                 enum: [CANDIDATE, RECRUITER, ADMIN]
+ *                 enum: [CANDIDATE, RECRUITER, ADMIN,USER]
  *                 description: User's role
  *               department:
  *                 type: string
@@ -283,7 +283,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
       lastName,
       email,
       password,
-      role: Role.CANDIDATE, 
+      role: Role.USER,
       phoneNumber,
       createDate: new Date(),
       image: profileImageUrl,

@@ -52,10 +52,17 @@ export const SidebarDataTest = [
             base: 'employees',
             base2: 'employee-list',
           },
+          {
+            label: 'Users List',
+            link: routes.usersList,
+            base: 'users',
+            base2: 'users-list',
+          },
        
        
         ],
       },
+      
    
     
     

@@ -36,13 +36,14 @@ router.post('/api/applications', async (req: Request, res: Response): Promise<vo
       status: ApplicationStatus.SUBMITTED,
     });
 
-    // Save the application and update the user applications in parallel
+    // Save the application and update the user applications and role in parallel
     await Promise.all([
       application.save(),
       User.updateOne(
         { _id: candidateId },
         {
-          $push: { applications: application._id, jobPosts: jobPostId } // Use MongoDB update operators
+          $push: { applications: application._id, jobPosts: jobPostId }, // Use MongoDB update operators
+          $set: { role: 'CANDIDATE' } // Update the role to CANDIDATE
         }
       )
     ]);
@@ -54,7 +55,6 @@ router.post('/api/applications', async (req: Request, res: Response): Promise<vo
     res.status(500).json({ message: errorMessage });
   }
 });
-
 
 
 

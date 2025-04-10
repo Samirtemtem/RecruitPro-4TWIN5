@@ -1,0 +1,85 @@
+{
+    "data": [
+      {
+        "Pipeline_Name": "Sales",
+        "Total_Deal_Value": "$4,50,000",
+        "No_of_Deals": "315",
+        "Stages": "Won",
+        "Created_Date": "14/01/2024",
+        "Status": "Active"
+      },
+      {
+        "Pipeline_Name": "Marketing",
+        "Total_Deal_Value": "$3,15,000",
+        "No_of_Deals": "447",
+        "Stages": "In Pipeline",
+        "Created_Date": "21/01/2024",
+        "Status": "Active"
+      },
+      {
+        "Pipeline_Name": "Calls",
+        "Total_Deal_Value": "$8,40,000",
+        "No_of_Deals": "654",
+        "Stages": "Won",
+        "Created_Date": "20/02/2024",
+        "Status": "Active"
+      },
+      {
+        "Pipeline_Name": "Email",
+        "Total_Deal_Value": "$6,10,000",
+        "No_of_Deals": "545",
+        "Stages": "Conversation",
+        "Created_Date": "15/03/2024",
+        "Status": "Active"
+      },
+      {
+        "Pipeline_Name": "Chats",
+        "Total_Deal_Value": "$4,70,000",
+        "No_of_Deals": "787",
+        "Stages": "Won",
+        "Created_Date": "12/04/2024",
+        "Status": "Active"
+      },
+      {
+        "Pipeline_Name": "Operational",
+        "Total_Deal_Value": "$5,50,000",
+        "No_of_Deals": "787",
+        "Stages": "Follow Up",
+        "Created_Date": "20/05/2024",
+        "Status": "Active"
+      },
+      {
+        "Pipeline_Name": "Collabrative",
+        "Total_Deal_Value": "$5,00,000",
+        "No_of_Deals": "315",
+        "Stages": "Won",
+        "Created_Date": "06/07/2024",
+        "Status": "Inactive"
+      },
+      {
+        "Pipeline_Name": "Differentiate",
+        "Total_Deal_Value": "$4,50,000",
+        "No_of_Deals": "478",
+        "Stages": "Schedule servise",
+        "Created_Date": "02/09/2024",
+        "Status": "Active"
+      },
+      {
+        "Pipeline_Name": "Interact",
+        "Total_Deal_Value": "$6,20,000",
+        "No_of_Deals": "664",
+        "Stages": "Won",
+        "Created_Date": "15/11/2024",
+        "Status": "Active"
+      },
+      {
+        "Pipeline_Name": "Identify",
+        "Total_Deal_Value": "$7,40,000",
+        "No_of_Deals": "128",
+        "Stages": "Lost",
+        "Created_Date": "10/12/2024",
+        "Status": "Active"
+      }
+    ],
+    "totalData":10
+  }

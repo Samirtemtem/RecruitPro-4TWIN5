@@ -1,0 +1,99 @@
+{
+    "data": [
+        
+            {
+              "img":"assets/admin/img/users/user-01.jpg",
+              "name": "Aaryian Jose",
+              "emailAddress": "aaryian@example.com",
+              "phoneNumber": "514-245-98315",
+              "regDate": "02 Sep 2024, 10:00 AM",
+              "country": "United States",
+              "lastSeen": "10:00 AM"
+             
+            },
+            {
+              "img":"assets/admin/img/users/user-02.jpg",
+              "name": "Sarika Jain",
+              "emailAddress": "sarika@example.com",
+              "phoneNumber": "156-348-85496",
+              "regDate": "14 Sep 2024, 11:30 AM",
+              "country": "Canada",
+              "lastSeen": "11:30 AM"
+            },
+            {
+              "img":"assets/admin/img/users/user-03.jpg",
+              "name": "Clyde Smith",
+              "emailAddress": "clyde@example.com",
+              "phoneNumber": "315-975-31849",
+              "regDate": "28 Sep 2024, 08:15 AM",
+              "country": "United Kingdom",
+              "lastSeen": "08:15 AM"
+            },
+            {
+              "img":"assets/admin/img/users/user-04.jpg",
+              "name": "Carla Jenkins",
+              "emailAddress": "carla@example.com",
+              "phoneNumber": "325-859-20194",
+              "regDate": "12 Oct 2024, 06:40 PM",
+              "country": "Germany",
+              "lastSeen": "06:40 PM"
+            },
+            {
+              "img":"assets/admin/img/users/user-05.jpg",
+              "name": "Federico Wells",
+              "emailAddress": "federico@example.com",
+              "phoneNumber": "314-829-30175",
+              "regDate": "20 Oct 2024, 04:18 PM",
+              "country": "France",
+              "lastSeen": "04:18 PM"
+            },
+            {
+              "img":"assets/admin/img/users/user-06.jpg",
+              "name": "Edward Lietz",
+              "emailAddress": "edward@example.com",
+              "phoneNumber": "219-831-49521",
+              "regDate": "30 Oct 2024, 07:25 AM",
+              "country": "Argentina",
+              "lastSeen": "07:25 AM"
+            },
+            {
+              "img":"assets/admin/img/users/user-07.jpg",
+              "name": "Sharon Ford",
+              "emailAddress": "sharon@example.com",
+              "phoneNumber": "198-301-75341",
+              "regDate": "01 Nov 2024, 08:50 AM",
+              "country": "Italy",
+              "lastSeen": "08:50 AM"
+            },
+            {
+              "img":"assets/admin/img/users/user-08.jpg",
+              "name": "Thomas Rethman",
+              "emailAddress": "thomas@example.com",
+              "phoneNumber": "301-978-30986",
+              "regDate": "10 Nov 2024, 11:20 AM",
+              "country": "New Zealand",
+              "lastSeen": "11:20 AM"
+            },
+            {
+              "img":"assets/admin/img/users/user-09.jpg",
+              "name": "Wilbur Martinez",
+              "emailAddress": "wilbur@example.com",
+              "phoneNumber": "383-248-34968",
+              "regDate": "17 Nov 2024, 04:50 PM",
+              "country": "Australia",
+              "lastSeen": "04:50 PM"
+            },
+            {
+              "img":"assets/admin/img/users/user-10.jpg",
+              "name": "Danielle Baker",
+              "emailAddress": "danielle@example.com",
+              "phoneNumber": "736-795-34895",
+              "regDate": "12 Dec 2024, 09:30 AM",
+              "country": "Japan",
+              "lastSeen": "09:30 AM"
+            }
+          
+          
+    ],
+    "totalData": 10
+}

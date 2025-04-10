@@ -1,0 +1,148 @@
+/* Dashboard Responsive CSS */
+
+/* Hide nested dashboard wrappers */
+.page-wrapper.dashboard .page-wrapper.dashboard {
+  display: none !important;
+}
+
+/* Fix for duplicated elements */
+.page-wrapper.dashboard .user-dashboard .page-wrapper.dashboard,
+.page-wrapper.dashboard .user-dashboard .main-header,
+.page-wrapper.dashboard .user-dashboard .main-header-mobile,
+.page-wrapper.dashboard .user-dashboard .user-sidebar,
+.page-wrapper.dashboard .user-dashboard .sidebar-backdrop,
+.page-wrapper.dashboard .user-dashboard .copyright-text {
+  display: none !important;
+}
+
+/* Control visibility of desktop/mobile headers */
+.main-header-mobile {
+  display: none;
+}
+
+@media (max-width: 1266px) {
+  .main-header-mobile {
+    display: block;
+  }
+  
+  .main-header:not(.main-header-mobile) {
+    display: none;
+  }
+}
+
+/* Toggle elements for mobile display */
+.show-1023 {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .show-1023 {
+    display: block;
+  }
+}
+
+.hidden-1023 {
+  display: block;
+}
+
+@media (max-width: 1023px) {
+  .hidden-1023 {
+    display: none;
+  }
+}
+
+/* Sidebar backdrop for mobile */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.sidebar-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 1024px) {
+  .sidebar-backdrop {
+    display: none;
+  }
+}
+
+/* Mobile Menu specific styles */
+.main-header-mobile {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+}
+
+.main-header-mobile .inner-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.main-header-mobile .logo-box {
+  position: relative;
+}
+
+.main-header-mobile .logo-box img {
+  max-height: 40px;
+}
+
+.main-header-mobile .mobile-nav-outer {
+  display: none;
+}
+
+/* Mobile Sidebar Styles */
+.user-sidebar {
+  transform: translateX(-101%);
+}
+
+@media (max-width: 1023px) {
+  .user-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .user-sidebar.sidebar_open {
+    transform: translateX(0);
+    z-index: 100;
+  }
+}
+
+/* Fix for Mobile toggler button */
+.theme-btn.toggle-filters {
+  position: relative;
+  padding: 10px 20px;
+  line-height: 20px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 500;
+  display: inline-block;
+  background-color: #1967D2;
+  color: #ffffff;
+  text-align: center;
+}
+
+.theme-btn.toggle-filters span {
+  margin-right: 8px;
+  font-size: 16px;
+} 

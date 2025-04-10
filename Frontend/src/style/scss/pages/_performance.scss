@@ -1,0 +1,465 @@
+.appraisal-tab {
+    .nav-item {
+        .nav-link {
+            color: $gray-900;
+
+            &.active {
+                background-color: $secondary;
+                color: $white;
+            }
+        }
+
+    }
+}
+
+.appraisal-tab-content {
+    .card {
+        border: 1px solid $gray-200;
+        box-shadow: $box-shadow-xs;
+    }
+}
+
+.policy-upload {
+    padding: 20px;
+    border: 2px dashed $gray-200;
+    border-radius: 5px;
+
+    .policy-upload-bg {
+        width: 40px;
+        height: 40px;
+    }
+
+}
+
+.payroll-btns {
+    .btn {
+        &.btn-white {
+            &:hover {
+                background-color: $primary;
+                color: $white;
+            }
+
+            &.active {
+                background-color: $secondary;
+                color: $white;
+            }
+        }
+    }
+
+}
+
+.expense-report {
+    position: relative;
+
+    .expense-report-ribbone {
+        position: absolute;
+        bottom: 0;
+    }
+}
+
+.invoice-report {
+    position: relative;
+
+    .invoice-report-badge {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 0;
+            width: 5px;
+            height: 40px;
+            gap: 0px;
+            border-radius: 0px 5px 5px 0px;
+            opacity: 0px;
+            background-color: $pink;
+        }
+    }
+
+    .invoice-report-badge-warning {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 0;
+            width: 5px;
+            height: 40px;
+            gap: 0px;
+            border-radius: 0px 5px 5px 0px;
+            opacity: 0px;
+            background-color: $warning;
+        }
+    }
+
+    .invoice-report-badge-success {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 0;
+            width: 5px;
+            height: 40px;
+            gap: 0px;
+            border-radius: 0px 5px 5px 0px;
+            opacity: 0px;
+            background-color: $success;
+        }
+    }
+
+    .invoice-report-badge-purple {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 0;
+            width: 5px;
+            height: 40px;
+            gap: 0px;
+            border-radius: 0px 5px 5px 0px;
+            opacity: 0px;
+            background-color: $purple;
+        }
+    }
+
+    .invoice-report-badge-danger {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 0;
+            width: 5px;
+            height: 40px;
+            gap: 0px;
+            border-radius: 0px 5px 5px 0px;
+            opacity: 0px;
+            background-color: $danger;
+        }
+    }
+
+    .invoice-report-badge-skyblue {
+        &::after {
+            content: "";
+            position: absolute;
+            top: 30%;
+            left: 0;
+            width: 5px;
+            height: 40px;
+            gap: 0px;
+            border-radius: 0px 5px 5px 0px;
+            opacity: 0px;
+            background-color: $skyblue;
+        }
+    }
+}
+
+.payment-report-icon {
+    transform: rotate(45deg);
+
+    span {
+
+        transform: rotate(317deg);
+    }
+}
+
+.side-badge {
+    padding-left: 8px;
+    border-left: 4px solid $skyblue;
+}
+
+.side-badge-pink {
+    padding-left: 8px;
+    border-left: 4px solid $pink;
+}
+
+.side-badge-purple {
+    padding-left: 8px;
+    border-left: 4px solid $purple;
+}
+
+.side-badge-warning {
+    padding-left: 8px;
+    border-left: 4px solid $warning;
+}
+
+.payment-total {
+    .task-total-content {
+        position: absolute;
+        top: 38px;
+        left: 37%;
+
+        @include respond-below(md) {
+            top: 37%;
+            left: 42%;
+        }
+
+        @include respond-below(sm) {
+            top: 25%;
+            left: 22%;
+        }
+    }
+
+    .payment-total-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        text-align: center;
+        transform: translate(-50%,-50%);
+    }
+}
+
+.project-report-badge-blue {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &::before {
+        content: "";
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        position: absolute;
+        background-color: $skyblue;
+        left: -22px;
+
+    }
+}
+
+.project-report-badge-purple {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &::before {
+        content: "";
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        position: absolute;
+        background-color: $purple;
+        left: -22px;
+
+    }
+}
+
+.project-report-badge-warning {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &::before {
+        content: "";
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        position: absolute;
+        background-color: $warning;
+        left: -22px;
+
+    }
+}
+
+.project-report-badge-success {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &::before {
+        content: "";
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        position: absolute;
+        background-color: $success;
+        left: -22px;
+
+    }
+}
+
+.task-report-icons {
+    span {
+        width: 24px;
+        height: 24px;
+    }
+
+}
+
+.attendence-icon {
+    span {
+        width: 40px;
+        height: 40px;
+
+        i {
+            font-size: 40px;
+        }
+    }
+}
+
+.leave-report-icon {
+    span {
+        i {
+            font-size: 18px;
+        }
+    }
+}
+
+.contact-icon {
+    li {
+        margin-right: 4px;
+
+        &:hover {
+            .contact-icon-mail {
+                background-color: $primary-transparent;
+
+                span {
+                    i {
+                        color: $primary;
+                    }
+                }
+            }
+
+            .contact-icon-call {
+                background-color: $purple-transparent;
+
+                span {
+                    i {
+                        color: $purple;
+                    }
+                }
+            }
+
+            .contact-icon-msg {
+                background-color: $pink-transparent;
+
+                span {
+                    i {
+                        color: $pink;
+                    }
+                }
+            }
+
+            .contact-icon-skype {
+                background-color: $skyblue-transparent;
+
+                span {
+                    i {
+                        color: $skyblue;
+                    }
+                }
+            }
+
+            .contact-icon-facebook {
+                background-color: $info-transparent;
+
+                span {
+                    i {
+                        color: $info;
+                    }
+                }
+            }
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        a {
+            width: 24px;
+            height: 24px;
+        }
+
+    }
+}
+
+.contact-grids-tab {
+    padding: 20px 20px 16px 20px;
+
+    .nav-underline {
+        border-bottom: 1px solid $gray-200 ;
+
+        .nav-item {
+            .nav-link {
+                font-weight: $font-weight-medium;
+
+                &.active {
+                    background-color: $white;
+                    color: $primary;
+                    border-radius: 0;
+                    font-weight: $font-weight-medium;
+                }
+
+                &:hover {
+                    background-color: $white;
+                    color: $primary;
+                    border-radius: 0;
+                }
+            }
+        }
+    }
+
+
+}
+
+.kanban-list-items {
+    border: 1px solid #E8E8E8;
+    box-shadow: 0px 4px 4px 0px rgba(219, 219, 219, 0.2509803922);
+    border-radius: 5px;
+    margin: 0 20px 20px 0;
+    padding: 15px;
+    width: 100%;
+    min-width: 315px;
+}
+.access-tabs{
+    .access-person{
+        .person-content{
+            display: none;
+        }
+        &:checked{
+            .person-content{
+                display: block;
+            }
+        }
+    }
+}
+
+.access-item {
+    .radio-btn {
+        margin-right: 15px;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+.access-wrapper {
+    margin-top: 20px;
+}
+.activity-items{
+    a{
+        padding: 4px 16px;
+        border: 1px solid $gray-200;
+        &.active{
+            border: 1px solid $primary;
+            color: $primary;
+            i{
+                color: $primary;
+            }
+        }
+    }
+}
+.input-icon-start {
+    .input-icon-addon{
+        left: 0;
+        right: auto;
+    }
+}
+.pipeline-access-items{
+    max-height: 150px;
+    overflow: auto;
+    .access-content {
+        .form-check-input{
+            &:checked{
+                .access-content{
+                    background-color: $dark-transparent;
+                }
+            }
+        }
+    }
+}

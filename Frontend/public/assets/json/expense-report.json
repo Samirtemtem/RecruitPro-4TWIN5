@@ -1,0 +1,59 @@
+{
+    "data":[
+        {
+          "ExpenseName": "Online Course",
+          "Date": "14/01/2024",
+          "PaymentMethod": "Cash",
+          "Amount": "$3000"
+        },
+        {
+          "ExpenseName": "Travel",
+          "Date": "20/02/2024",
+          "PaymentMethod": "Cheque",
+          "Amount": "$2800"
+        },
+        {
+          "ExpenseName": "Office Supplies",
+          "Date": "15/03/2024",
+          "PaymentMethod": "Cash",
+          "Amount": "$3300"
+        },
+        {
+          "ExpenseName": "Welcome Kit",
+          "Date": "12/04/2024",
+          "PaymentMethod": "Cheque",
+          "Amount": "$3600"
+        },
+        {
+          "ExpenseName": "Equipment",
+          "Date": "20/05/2024",
+          "PaymentMethod": "Cheque",
+          "Amount": "$2000"
+        },
+        {
+          "ExpenseName": "Miscellaneous",
+          "Date": "06/07/2024",
+          "PaymentMethod": "Cash",
+          "Amount": "$3400"
+        },
+        {
+          "ExpenseName": "Payroll",
+          "Date": "02/09/2024",
+          "PaymentMethod": "Cheque",
+          "Amount": "$4000"
+        },
+        {
+          "ExpenseName": "Cafeteria",
+          "Date": "15/11/2024",
+          "PaymentMethod": "Cash",
+          "Amount": "$4500"
+        },
+        {
+          "ExpenseName": "Cleaning Supplies",
+          "Date": "10/12/2024",
+          "PaymentMethod": "Cheque",
+          "Amount": "$3800"
+        }
+       ],
+    "totaldata":9
+}

@@ -10,7 +10,6 @@ RecruitPro est une plateforme de recrutement de bout en bout qui connecte les ca
 - [Exécution du Backend](#exécution-du-backend)
 - [Configuration du Système de Suivi des Candidatures](#configuration-du-système-de-suivi-des-candidatures)
 - [Intégration](#intégration)
-- [Dépannage](#dépannage)
 
 ## Prérequis
 

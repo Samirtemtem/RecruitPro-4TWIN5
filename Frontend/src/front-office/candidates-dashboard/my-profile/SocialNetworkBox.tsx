@@ -1,6 +1,7 @@
 import React, { useState, FormEvent, ChangeEvent, useEffect } from "react";
 import { useUserProfile } from '../hooks/useUserProfile';
 import { Socials } from '../../../models/types';
+import "./SocialNetworkBox.css";
 
 interface SocialLink {
   id?: string;
@@ -144,7 +145,7 @@ const SocialNetworkBox: React.FC = () => {
   }
 
   return (
-    <form className="default-form" onSubmit={handleSubmit}>
+    <form className="default-form social-network-form" onSubmit={handleSubmit}>
       {submitMessage && (
         <div className={`alert ${submitMessage.type === 'success' ? 'alert-success' : 'alert-danger'} mb-3`}>
           {submitMessage.text}
@@ -153,10 +154,11 @@ const SocialNetworkBox: React.FC = () => {
       <div className="row">
         {socialLinks.map((social, index) => (
           <div key={index} className="form-group col-lg-6 col-md-12">
-            <label>{social.type.charAt(0) + social.type.slice(1).toLowerCase()}</label>
-            <div className="input-group">
+            <label className="social-label">{social.type.charAt(0) + social.type.slice(1).toLowerCase()}</label>
+            <div className="social-input-group">
               <input
                 type="text"
+                className="form-control social-input"
                 value={social.link}
                 onChange={(e) => handleLinkChange(index, e.target.value)}
                 placeholder={`Enter your ${social.type.toLowerCase()} profile link`}
@@ -164,9 +166,10 @@ const SocialNetworkBox: React.FC = () => {
               />
               <button 
                 type="button" 
-                className="btn btn-danger" 
+                className="btn btn-delete"
                 onClick={() => handleRemoveSocial(index)}
                 disabled={saving}
+                aria-label="Delete social link"
               >
                 <i className="la la-trash"></i>
               </button>
@@ -175,11 +178,11 @@ const SocialNetworkBox: React.FC = () => {
         ))}
 
         {/* Add new social link */}
-        <div className="form-group col-lg-12 col-md-12">
-          <label>Add Social Link</label>
-          <div className="input-group">
+        <div className="form-group col-lg-12 col-md-12 mt-3">
+          <label className="add-social-label">Add Social Link</label>
+          <div className="add-social-group">
             <select 
-              className="form-select"
+              className="form-select social-select"
               value={newSocialType}
               onChange={(e) => setNewSocialType(e.target.value as Socials)}
               disabled={saving}
@@ -192,6 +195,7 @@ const SocialNetworkBox: React.FC = () => {
             </select>
             <input
               type="text"
+              className="form-control social-input-new"
               value={newSocialLink}
               onChange={(e) => setNewSocialLink(e.target.value)}
               placeholder="Enter profile link"
@@ -199,7 +203,7 @@ const SocialNetworkBox: React.FC = () => {
             />
             <button 
               type="button" 
-              className="btn btn-primary" 
+              className="btn btn-add" 
               onClick={handleAddSocial}
               disabled={saving}
             >
@@ -208,10 +212,10 @@ const SocialNetworkBox: React.FC = () => {
           </div>
         </div>
         
-        <div className="form-group col-lg-6 col-md-12">
+        <div className="form-group col-lg-6 col-md-12 mt-4">
           <button 
             type="submit" 
-            className="theme-btn btn-style-one"
+            className="theme-btn btn-style-one save-btn"
             disabled={saving}
           >
             {saving ? 'Saving...' : 'Save'}

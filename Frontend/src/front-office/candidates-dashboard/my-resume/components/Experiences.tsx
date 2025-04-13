@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, ChangeEvent, useEffect } from 'react';
-import { useUserProfile, UserProfileData } from '../../hooks/useUserProfile';
+import { useUserProfile } from '../../hooks/useUserProfile';
 import ExperiencesModal from './ExperiencesModal';
 import { toast, Toaster } from 'react-hot-toast';
 import './Modal.css';
@@ -15,14 +15,21 @@ interface IExperience {
 }
 
 const Experiences: React.FC = () => {
-  const { userData, isLoading, error } = useUserProfile();
+  const { 
+    userData, 
+    isLoading, 
+    error, 
+    updateExperience, 
+    deleteExperience 
+  } = useUserProfile();
+  
   const [experienceItems, setExperienceItems] = useState<IExperience[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [currentExperience, setCurrentExperience] = useState<IExperience>({
     position: '',
     enterprise: '',
-    startDate: '',
-    endDate: '',
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
     description: '',
     location: ''
   });
@@ -68,27 +75,18 @@ const Experiences: React.FC = () => {
             index === editIndex ? { ...currentExperience, _id: item._id } : item
           )
         : [...experienceItems, { ...currentExperience }];
-
-      const response = await fetch('http://localhost:5000/api/profile/experience', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          userId: userData.id,
-          experience: updatedExperience
-        })
-      });
-
-      if (!response.ok) {
+      
+      // Use the enhanced updateExperience method
+      const result = await updateExperience(updatedExperience);
+      
+      if (result.success && result.data) {
+        setExperienceItems(Array.isArray(result.data) ? result.data : result.data.experience || updatedExperience);
+        toast.dismiss(loadingToast);
+        toast.success(editIndex !== null ? 'Experience updated successfully!' : 'Experience added successfully!');
+        resetForm();
+      } else {
         throw new Error('Failed to save experience');
       }
-
-      const responseData = await response.json();
-      setExperienceItems(responseData);
-      toast.dismiss(loadingToast);
-      toast.success(editIndex !== null ? 'Experience updated successfully!' : 'Experience added successfully!');
-      resetForm();
     } catch (error) {
       console.error('Failed to save experience:', error);
       toast.dismiss(loadingToast);
@@ -112,25 +110,22 @@ const Experiences: React.FC = () => {
 
       const loadingToast = toast.loading('Deleting experience...');
       const itemToDelete = experienceItems[index];
-      const updatedItems = experienceItems.filter((_, i) => i !== index);
-
-      const response = await fetch(`http://localhost:5000/api/profile/experience/${itemToDelete._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: userData.id })
-      });
-
-      if (!response.ok) {
+      
+      if (!itemToDelete._id) {
+        throw new Error('Experience ID not found');
+      }
+      
+      // Use the enhanced deleteExperience method
+      const result = await deleteExperience(itemToDelete._id);
+      
+      if (result.success) {
+        const updatedItems = experienceItems.filter((_, i) => i !== index);
+        setExperienceItems(updatedItems);
+        toast.dismiss(loadingToast);
+        toast.success('Experience deleted successfully!');
+      } else {
         throw new Error('Failed to delete experience');
       }
-
-      setExperienceItems(updatedItems);
-      toast.dismiss(loadingToast);
-      //updateProfileSection('experience', updatedItems);
-      toast.success('Experience deleted successfully!');
-      window.location.reload();
     } catch (error) {
       console.error('Failed to delete experience:', error);
       toast.error('Failed to delete experience. Please try again.');
@@ -141,8 +136,8 @@ const Experiences: React.FC = () => {
     setCurrentExperience({
       position: '',
       enterprise: '',
-      startDate: '',
-      endDate: '',
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date().toISOString().split('T')[0],
       description: '',
       location: ''
     });
@@ -240,7 +235,7 @@ const Experiences: React.FC = () => {
         <p>No experience entries yet. Add your first work experience above.</p>
       ) : (
         experienceItems.map((item, index) => (
-          <div className="resume-block" key={item._id}>
+          <div className="resume-block" key={item._id || index}>
             <div className="inner">
               <span className="name">{item.enterprise.charAt(0)}</span>
               <div className="title-box">
@@ -249,30 +244,29 @@ const Experiences: React.FC = () => {
                   <span>{item.enterprise}</span>
                 </div>
                 <div className="edit-box">
-                  <span className="year">
-                    {new Date(item.startDate).getFullYear()} - {new Date(item.endDate).getFullYear()}
-                  </span>
-                  <div className="edit-btns">
-                    <button 
-                      type="button" 
-                      onClick={() => handleEdit(index)}
-                      disabled={saving}
-                    >
-                      <span className="la la-pencil"></span>
-                    </button>
-                    <button 
-                      type="button" 
-                      onClick={() => handleDelete(index)}
-                      disabled={saving}
-                    >
-                      <span className="la la-trash"></span>
-                    </button>
-                  </div>
+                  <button 
+                    className="edit-btn"
+                    onClick={() => handleEdit(index)}
+                    disabled={saving}
+                  >
+                    <span className="la la-pencil"></span>
+                  </button>
+                  <button 
+                    className="delete-btn"
+                    onClick={() => handleDelete(index)}
+                    disabled={saving}
+                  >
+                    <span className="la la-trash"></span>
+                  </button>
                 </div>
               </div>
-              <div className="text">
-                <p><strong>Location:</strong> {item.location}</p>
-                <p>{item.description}</p>
+              <div className="text">{item.description}</div>
+              <div className="location">
+                <i className="la la-map-marker"></i> {item.location}
+              </div>
+              <div className="time-period">
+                <i className="la la-calendar"></i> {new Date(item.startDate).toLocaleDateString()} - 
+                {item.endDate ? new Date(item.endDate).toLocaleDateString() : 'Present'}
               </div>
             </div>
           </div>

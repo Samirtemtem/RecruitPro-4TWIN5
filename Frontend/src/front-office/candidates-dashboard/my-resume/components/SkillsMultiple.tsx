@@ -84,7 +84,14 @@ const getFailedIcons = (): Set<string> => {
 };
 
 const SkillsMultiple: React.FC = () => {
-  const { userData, isLoading, error } = useUserProfile();
+  const { 
+    userData, 
+    isLoading, 
+    error, 
+    updateSkills, 
+    deleteSkill 
+  } = useUserProfile();
+  
   const [skillItems, setSkillItems] = useState<ISkill[]>([]);
   const [skillIcons, setSkillIcons] = useState<SkillIconCache>({});
   const [showForm, setShowForm] = useState(false);
@@ -324,27 +331,26 @@ const SkillsMultiple: React.FC = () => {
             index === editIndex ? { ...currentSkill, _id: item._id } : item
           )
         : [...skillItems, { ...currentSkill }];
-
-      const response = await fetch('http://localhost:5000/api/profile/skills', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          userId: userData.id,
-          skills: updatedSkills
-        })
-      });
-
-      if (!response.ok) {
+      
+      // Use the enhanced updateSkills method
+      const result = await updateSkills(updatedSkills);
+      
+      if (result.success && result.data) {
+        // Update local state
+        const newSkills = Array.isArray(result.data) ? result.data : result.data.skills || updatedSkills;
+        setSkillItems(newSkills);
+        
+        // Fetch icons for new skills
+        if (editIndex === null) {
+          fetchSkillIcon(currentSkill.name);
+        }
+        
+        toast.dismiss(loadingToast);
+        toast.success(editIndex !== null ? 'Skill updated successfully!' : 'Skill added successfully!');
+        resetForm();
+      } else {
         throw new Error('Failed to save skill');
       }
-
-      const responseData = await response.json();
-      setSkillItems(responseData);
-      toast.dismiss(loadingToast);
-      toast.success(editIndex !== null ? 'Skill updated successfully!' : 'Skill added successfully!');
-      resetForm();
     } catch (error) {
       console.error('Failed to save skill:', error);
       toast.dismiss(loadingToast);
@@ -368,24 +374,22 @@ const SkillsMultiple: React.FC = () => {
 
       const loadingToast = toast.loading('Deleting skill...');
       const itemToDelete = skillItems[index];
-      const updatedItems = skillItems.filter((_, i) => i !== index);
-
-      const response = await fetch(`http://localhost:5000/api/profile/skills/${itemToDelete._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: userData.id })
-      });
-
-      if (!response.ok) {
+      
+      if (!itemToDelete._id) {
+        throw new Error('Skill ID not found');
+      }
+      
+      // Use the enhanced deleteSkill method
+      const result = await deleteSkill(itemToDelete._id);
+      
+      if (result.success) {
+        const updatedItems = skillItems.filter((_, i) => i !== index);
+        setSkillItems(updatedItems);
+        toast.dismiss(loadingToast);
+        toast.success('Skill deleted successfully!');
+      } else {
         throw new Error('Failed to delete skill');
       }
-
-      setSkillItems(updatedItems);
-      toast.dismiss(loadingToast);
-      toast.success('Skill deleted successfully!');
-      
     } catch (error) {
       console.error('Failed to delete skill:', error);
       toast.error('Failed to delete skill. Please try again.');

@@ -5,7 +5,8 @@
 require("dotenv").config();
 const axios = require("axios");
 
-const MODEL_NAME = process.env.MODEL_NAME;
+// Replace HuggingFace model with OpenRouter model
+const MODEL_NAME = "mistralai/mistral-small-3.1-24b-instruct:free";
 const MAX_NEW_TOKENS = 1500;
 
 // Add these interfaces at the top of the file
@@ -180,29 +181,32 @@ export const resumeToJsonParser = async (text: string) => {
       ]
     }`;
 
+    // Use OpenRouter API instead of HuggingFace
     const response = await axios.post(
-      `https://api-inference.huggingface.co/models/${MODEL_NAME}`,
+      "https://openrouter.ai/api/v1/chat/completions",
       {
-        inputs: prompt + "\n\nResume Text: " + text.substring(0, 2000),
-        parameters: {
-          max_new_tokens: MAX_NEW_TOKENS,
-          return_full_text: false,
-          temperature: 0.3,
-          max_length: 2000,
-        },
+        model: MODEL_NAME,
+        messages: [
+          { role: "system", content: prompt },
+          { role: "user", content: "Resume Text: " + text.substring(0, 2000) }
+        ],
+        max_tokens: MAX_NEW_TOKENS,
+        temperature: 0.3
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
+          "HTTP-Referer": process.env.APP_URL || "http://localhost:3000", // Required for OpenRouter
+          "X-Title": "Resume Parser" // Optional but recommended
         },
       }
     );
 
     console.log("Raw API response:", response.data);
 
-    // Extract the generated text from the response
-    const resultText = response.data[0]?.generated_text || "";
+    // Extract the generated text from the OpenRouter response
+    const resultText = response.data.choices[0]?.message?.content || "";
     console.log("Generated text:", resultText);
     
     return extractFields(resultText);

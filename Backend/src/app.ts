@@ -32,6 +32,8 @@ import faceRoutes from "./routes/FaceRecologin";
 import skillRoutes from "./routes/skillRoutes";
 import contactRoutes from "./routes/contactRoutes";
 import applicationRoutes from "./routes/applicationRoutes";
+// Import recommendation routes
+import recommendationRoutes from './routes/recommendationRoutes';
 
 // Allow requests from your frontend (e.g., localhost:3000)
 const corsOptions = {
@@ -108,6 +110,9 @@ app.use('/api/test', testRoutes);
 app.use('/api/contact',contactRoutes);
 
 app.use('/app',applicationRoutes);
+
+// Recommendation Routes
+app.use('/api/recommendations', recommendationRoutes);
 
 // Error handling
 app.use(errorHandler);

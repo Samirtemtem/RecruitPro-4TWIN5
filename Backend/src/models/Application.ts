@@ -11,6 +11,19 @@ export interface IApplication extends Document {
   interviews: Schema.Types.ObjectId[];  // References to Interviews
   feedback: Schema.Types.ObjectId[];  // References to Feedback
   employmentOffer: Schema.Types.ObjectId;  // Reference to EmploymentOffer
+  aiAnalysis: {
+    swot: {
+      strengths: string[];
+      weaknesses: string[];
+      opportunities: string[];
+      threats: string[];
+    };
+    matches: {
+      keywords: string[];
+      preferences: string[];
+    };
+    analyzedAt: Date;
+  };
 
   // Methods
   evaluateApplication(): Promise<void>;
@@ -26,7 +39,20 @@ const applicationSchema = new Schema<IApplication>({
   compatibilityScore: { type: Number, default: 0 },
   interviews: [{ type: Schema.Types.ObjectId, ref: 'Interview' }],
   feedback: [{ type: Schema.Types.ObjectId, ref: 'Feedback' }],
-  employmentOffer: { type: Schema.Types.ObjectId, ref: 'EmploymentOffer' }
+  employmentOffer: { type: Schema.Types.ObjectId, ref: 'EmploymentOffer' },
+  aiAnalysis: {
+    swot: {
+      strengths: [String],
+      weaknesses: [String],
+      opportunities: [String],
+      threats: [String]
+    },
+    matches: {
+      keywords: [String],
+      preferences: [String]
+    },
+    analyzedAt: { type: Date }
+  }
 }, {
   timestamps: true
 });

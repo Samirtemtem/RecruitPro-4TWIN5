@@ -1,6 +1,6 @@
 import React, { useState, FormEvent, ChangeEvent, useEffect, useContext } from "react";
 import { useUserProfile } from "../hooks/useUserProfile";
-import { AuthContext, UserProfileData } from "../../../routing-module/AuthContext";
+import { AuthContext } from "../../../routing-module/AuthContext";
 import axios from "axios";
 import { toast, Toaster } from 'react-hot-toast';
 
@@ -12,13 +12,10 @@ interface ProfileFormData {
   address: string;
 }
 
-interface FormInfoBoxProps {
-  userData: UserProfileData | null;
-}
 console.log("FormInfoBox component rendered");
-const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
+const FormInfoBox: React.FC = () => {
   const { updateProfileData, user, setUser } = useContext(AuthContext);
-  const { isLoading, error, refreshUserProfile } = useUserProfile();
+  const { userData, isLoading, error, refreshUserProfile } = useUserProfile();
   const [formData, setFormData] = useState<ProfileFormData>({
     firstName: "",
     lastName: "",
@@ -98,6 +95,12 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      toast.error('Please fix the form errors before submitting');
+      return;
+    }
+    
     setSaving(true);
     const loadingToast = toast.loading('Updating profile...');
 
@@ -199,59 +202,39 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
         });
       }
       
-      toast.error('Failed to update two-factor authentication settings');
-      // Revert UI state on error
+      // Reset the toggle to its previous state
       setIs2FAEnabled(!newValue);
+      toast.error('Failed to update two-factor authentication status. Please try again.');
     } finally {
       setToggling2FA(false);
     }
   };
 
   if (isLoading) {
-    return <div className="alert alert-info">Loading profile data...</div>;
+    return <div>Loading profile data...</div>;
   }
 
   if (error) {
     return <div className="alert alert-danger">{error}</div>;
   }
 
-  if (!userData) {
-    return (
-      <div className="alert alert-warning">
-        Profile information not available. Please try refreshing the page or login again.
-      </div>
-    );
-  }
-
   return (
-    <form action="#" className="default-form" onSubmit={handleSubmit}>
+    <form className="default-form" onSubmit={handleSubmit}>
       <Toaster 
         position="bottom-right"
         reverseOrder={false}
         gutter={12}
-        containerStyle={{
-          bottom: 20,
-          right: 20,
-        }}
         toastOptions={{
           duration: 3000,
           style: {
             background: '#363636',
             color: '#fff',
-            padding: '16px 24px',
-            fontSize: '16px',
-            maxWidth: '400px',
-            minWidth: '300px'
           },
           success: {
             duration: 3000,
             style: {
               background: '#22c55e',
               color: '#fff',
-              padding: '16px 24px',
-              fontSize: '16px',
-              maxWidth: '400px',
-              minWidth: '300px'
             },
           },
           error: {
@@ -259,115 +242,106 @@ const FormInfoBox: React.FC<FormInfoBoxProps> = ({ userData }) => {
             style: {
               background: '#ef4444',
               color: '#fff',
-              padding: '16px 24px',
-              fontSize: '16px',
-              maxWidth: '400px',
-              minWidth: '300px'
-            },
-          },
-          loading: {
-            style: {
-              background: '#363636',
-              color: '#fff',
-              padding: '16px 24px',
-              fontSize: '16px',
-              maxWidth: '400px',
-              minWidth: '300px'
             },
           },
         }}
       />
       <div className="row">
-        {/* <!-- First Name --> */}
+        {/* First Name */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>First Name <span className="required">*</span></label>
-          <input 
-            type="text" 
-            name="firstName" 
+          <label>First Name</label>
+          <input
+            type="text"
+            name="firstName"
+            placeholder="First Name"
             value={formData.firstName}
             onChange={handleChange}
-            placeholder="Enter first name" 
-            required 
             disabled={saving}
           />
-          {errors.firstName && <div className="error text-danger">{errors.firstName}</div>}
+          {errors.firstName && <div className="text-danger">{errors.firstName}</div>}
         </div>
 
-        {/* <!-- Last Name --> */}
+        {/* Last Name */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>Last Name <span className="required">*</span></label>
-          <input 
-            type="text" 
-            name="lastName" 
+          <label>Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Last Name"
             value={formData.lastName}
             onChange={handleChange}
-            placeholder="Enter last name" 
-            required 
             disabled={saving}
           />
-          {errors.lastName && <div className="error text-danger">{errors.lastName}</div>}
+          {errors.lastName && <div className="text-danger">{errors.lastName}</div>}
         </div>
 
-        {/* <!-- Email --> */}
+        {/* Email */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>Email <span className="required">*</span></label>
-          <input 
-            type="email" 
-            name="email" 
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter email" 
-            required 
-            disabled
-                   />
-          {errors.email && <div className="error text-danger">{errors.email}</div>}
+            disabled={saving}
+          />
+          {errors.email && <div className="text-danger">{errors.email}</div>}
         </div>
 
-        {/* <!-- Phone --> */}
+        {/* Phone */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>Phone <span className="required">*</span></label>
+          <label>Phone</label>
           <input
             type="text"
             name="phoneNumber"
+            placeholder="Phone Number"
             value={formData.phoneNumber}
             onChange={handleChange}
-            placeholder="Enter phone number"
-            required
             disabled={saving}
           />
-          {errors.phoneNumber && <div className="error text-danger">{errors.phoneNumber}</div>}
+          {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
         </div>
 
-        {/* <!-- Two-Factor Authentication Toggle --> */}
+        {/* Address */}
         <div className="form-group col-lg-12 col-md-12">
-          <div className="d-flex align-items-center">
-            <label className="switch">
-              <input 
-                type="checkbox" 
-                checked={is2FAEnabled}
-                onChange={handle2FAToggle}
-                disabled={toggling2FA}
-              />
-              <span className="slider round"></span>
-              <span className="title">Two-Factor Authentication</span>
+          <label>Address</label>
+          <input
+            type="text"
+            name="address"
+            placeholder="Address"
+            value={formData.address}
+            onChange={handleChange}
+            disabled={saving}
+          />
+          {errors.address && <div className="text-danger">{errors.address}</div>}
+        </div>
+
+        {/* Toggle switch for 2FA */}
+        <div className="form-group col-lg-6 col-md-12">
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="toggle2FA"
+              checked={is2FAEnabled}
+              onChange={handle2FAToggle}
+              disabled={toggling2FA}
+            />
+            <label className="form-check-label" htmlFor="toggle2FA">
+              Enable Two-Factor Authentication {toggling2FA && '(Updating...)'}
             </label>
           </div>
-          <div className="text-muted mt-2">
-            {is2FAEnabled 
-              ? "Two-factor authentication is enabled. You'll need to enter a verification code during login." 
-              : "Enable two-factor authentication to add an extra layer of security to your account."
-            }
-          </div>
         </div>
-     
-        {/* <!-- Submit Button --> */}
-        <div className="form-group col-lg-6 col-md-12">
-          <button 
-            type="submit" 
-            className="btn btn-primary"
+
+        {/* Submit Button */}
+        <div className="form-group col-lg-6 col-md-12 text-right">
+          <button
+            className="theme-btn btn-style-one"
+            type="submit"
             disabled={saving}
           >
-            {saving ? 'Saving...' : 'Save'}
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>

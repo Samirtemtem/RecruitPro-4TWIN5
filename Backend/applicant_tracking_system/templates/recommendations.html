@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendation Results</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .similarity-badge {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .job-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-right: 110px; /* Make room for the badge */
+        }
+        .job-description {
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .job-meta div {
+            display: flex;
+            align-items: center;
+        }
+        .meta-label {
+            font-weight: 600;
+            color: #34495e;
+            margin-right: 5px;
+        }
+        .skill-tag {
+            background-color: #e7f4fd;
+            color: #3498db;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .candidate-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            padding-right: 110px; /* Make room for the badge */
+        }
+        .back-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .no-results {
+            color: #7f8c8d;
+            font-style: italic;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .match-details {
+            margin-top: 20px;
+            border-top: 1px dashed #ddd;
+            padding-top: 20px;
+        }
+        .match-breakdown {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .match-component {
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            flex: 1 1 calc(33.333% - 20px);
+            min-width: 200px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .match-component h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #34495e;
+        }
+        .match-component-score {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .match-bar {
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .match-bar-fill {
+            height: 100%;
+            background-color: #3498db;
+        }
+        .match-list {
+            margin-top: 10px;
+        }
+        .match-item {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .matched-word {
+            background-color: #ffffcc;
+            padding: 2px 3px;
+            border-radius: 3px;
+        }
+        .skill-match {
+            background-color: #d4efdf; /* Green for exact match */
+            color: #27ae60;
+        }
+        .skill-partial {
+            background-color: #fdebd0; /* Orange for semantic match */
+            color: #e67e22;
+        }
+        .skill-nomatch {
+            background-color: #f2f4f6; /* Grey for no match */
+            color: #95a5a6;
+        }
+        .toggle-details {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: #495057;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .toggle-details:hover {
+            background-color: #e9ecef;
+        }
+        .hidden {
+            display: none;
+        }
+        .text-highlight {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Recommendation Results</h1>
+        
+        <div class="section">
+            <h2>Recommended Jobs</h2>
+            {% if jobs.empty %}
+                <p class="no-results">No job recommendations found.</p>
+            {% else %}
+                {% for _, job in jobs.iterrows() %}
+                <div class="card">
+                    <div class="similarity-badge">{{ "%.1f"|format(job['Similarity'] * 100) if job['Similarity'] > 0.0001 else "0.0" }}% Match</div>
+                    <h3 class="job-title">{{ job['JobTitle'] }}</h3>
+                    
+                    <div class="job-meta">
+                        {% if 'Experience' in job %}
+                        <div><span class="meta-label">Experience:</span> {{ job['Experience'] }} years</div>
+                        {% endif %}
+                        
+                        {% if 'Location' in job %}
+                        <div><span class="meta-label">Location:</span> {{ job['Location'] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if 'JobDescription' in job %}
+                    <div class="job-description">
+                        <p>{{ job['JobDescription']|truncate(200) }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if 'Skills' in job and job['Skills']|length > 0 %}
+                    <div style="margin-top: 15px;">
+                        <span class="meta-label">Skills:</span>
+                        <div style="margin-top: 5px;">
+                            {% for skill in job['Skills'] %}
+                                <span class="skill-tag">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Match Details Section -->
+                    <button class="toggle-details" onclick="toggleDetails(this)">Show Match Details</button>
+                    
+                    <div class="match-details hidden">
+                        <h4>Match Breakdown</h4>
+                        
+                        <div class="match-breakdown">
+                            <!-- Skills Component (50%) -->
+                            <div class="match-component">
+                                <h4>Skills</h4>
+                                <div class="match-component-score">
+                                    {{ "%.1f"|format(job.get('SkillsScore', job['Similarity'] * (1/3)) * 100) }}%
+                                </div>
+                                <div>Weight: 33.3%</div>
+                                {% set skills_percent = (job.get('SkillsScore', job['Similarity'] * (1/3)) / (1/3) * 100)|round|int %}
+                                <div class="match-bar">
+                                    <div class="match-bar-fill" style="width: {{ skills_percent }}%;"></div>
+                                </div>
+                                
+                                <div class="match-list">
+                                    <h5>Skill Matching:</h5>
+                                    <!-- Skills comparison -->
+                                    {% set job_id_str = job['JobID']|string %}
+                                    {% set details = none %}
+                                    
+                                    {% for detail in matching_details if not details %}
+                                        {% if detail.job_id|string == job_id_str|string %}
+                                            {% set details = detail %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if details %}
+                                        <div>
+                                            {% for skill in job['Skills'] %}
+                                                {% if skill in details.exact_skill_matches %}
+                                                    <span class="skill-tag skill-match">{{ skill }} ✓</span>
+                                                {% else %}
+                                                    {% set is_semantic = false %}
+                                                    {% for job_skill, candidate_skill in details.semantic_skill_matches if not is_semantic %}
+                                                        {% if job_skill == skill %}
+                                                            {% set is_semantic = true %}
+                                                            <span class="skill-tag skill-partial">{{ skill }} ≈</span>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    
+                                                    {% if not is_semantic %}
+                                                        <span class="skill-tag skill-nomatch">{{ skill }} ✗</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <!-- Fallback to session data if no detailed information available -->
+                                        <div>
+                                            {% for skill in job['Skills'] %}
+                                                {% if skill in session['candidate_skills'] %}
+                                                    <span class="skill-tag skill-match">{{ skill }} ✓</span>
+                                                {% elif skill|lower in session['candidate_semantic_skills']|map('lower')|list %}
+                                                    <span class="skill-tag skill-partial">{{ skill }} ≈</span>
+                                                {% else %}
+                                                    <span class="skill-tag skill-nomatch">{{ skill }} ✗</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Experience Component (30%) -->
+                            <div class="match-component">
+                                <h4>Experience</h4>
+                                <div class="match-component-score">
+                                    {{ "%.1f"|format(job.get('ExperienceScore', job['Similarity'] * (1/3)) * 100) }}%
+                                </div>
+                                <div>Weight: 33.3%</div>
+                                {% set exp_percent = (job.get('ExperienceScore', job['Similarity'] * (1/3)) / (1/3) * 100)|round|int %}
+                                <div class="match-bar">
+                                    <div class="match-bar-fill" style="width: {{ exp_percent }}%;"></div>
+                                </div>
+                                
+                                <!-- Text highlight for experience matching -->
+                                <div class="text-highlight">
+                                    {% set job_id_str = job['JobID']|string %}
+                                    {% set candidate_id = session.get('candidate_id', '')|string %}
+                                    {% set details = none %}
+                                    
+                                    {% for detail in matching_details if not details %}
+                                        {% if detail.job_id|string == job_id_str|string %}
+                                            {% set details = detail %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if details and details.experience_matching_words %}
+                                        <h5>Matching Experience Words:</h5>
+                                        <div style="margin-bottom: 10px;">
+                                            {% for word in details.experience_matching_words[:15] %}
+                                                <span class="matched-word">{{ word }}</span>{% if not loop.last %}, {% endif %}
+                                            {% endfor %}
+                                            {% if details.experience_matching_words|length > 15 %}...{% endif %}
+                                        </div>
+                                        
+                                        {% if details.semantic_experience_matches %}
+                                        <h5>Semantic Experience Matches:</h5>
+                                        <div style="margin-bottom: 10px;">
+                                            {% for match in details.semantic_experience_matches[:10] %}
+                                                <div class="skill-tag skill-partial">
+                                                    {{ match[0] }} ≈ {{ match[1] }}
+                                                </div>
+                                            {% endfor %}
+                                            {% if details.semantic_experience_matches|length > 10 %}...{% endif %}
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <h5>Job Description Text:</h5>
+                                        {% if 'JobDescription' in job and job['JobDescription'] %}
+                                            {% set job_text = job['JobDescription'] %}
+                                            {% set words = job_text.split() %}
+                                            {% set exp_match_words = details.experience_matching_words %}
+                                            
+                                            {% for word in words[:50] %}
+                                                {% set word_processed = word|lower|replace(',', '')|replace('.', '')|replace(';', '')|replace(':', '') %}
+                                                {% if word_processed in exp_match_words %}
+                                                    <span class="matched-word">{{ word }}</span>
+                                                {% else %}
+                                                    {{ word }}
+                                                {% endif %}
+                                                {{ ' ' }}
+                                            {% endfor %}
+                                            {% if words|length > 50 %}...{% endif %}
+                                        {% else %}
+                                            No job description available.
+                                        {% endif %}
+                                    {% else %}
+                                        No experience text available for comparison.
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Education Component (20%) -->
+                            <div class="match-component">
+                                <h4>Education</h4>
+                                <div class="match-component-score">
+                                    {{ "%.1f"|format(job.get('EducationScore', job['Similarity'] * (1/3)) * 100) }}%
+                                </div>
+                                <div>Weight: 33.3%</div>
+                                {% set edu_percent = (job.get('EducationScore', job['Similarity'] * (1/3)) / (1/3) * 100)|round|int %}
+                                <div class="match-bar">
+                                    <div class="match-bar-fill" style="width: {{ edu_percent }}%;"></div>
+                                </div>
+                                
+                                <!-- Text highlight for education matching -->
+                                <div class="text-highlight">
+                                    {% set job_id_str = job['JobID']|string %}
+                                    {% set candidate_id = session.get('candidate_id', '')|string %}
+                                    {% set details = none %}
+                                    
+                                    {% for detail in matching_details if not details %}
+                                        {% if detail.job_id|string == job_id_str|string %}
+                                            {% set details = detail %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if details and details.education_matching_words %}
+                                        <h5>Matching Education Words:</h5>
+                                        <div style="margin-bottom: 10px;">
+                                            {% for word in details.education_matching_words[:15] %}
+                                                <span class="matched-word">{{ word }}</span>{% if not loop.last %}, {% endif %}
+                                            {% endfor %}
+                                            {% if details.education_matching_words|length > 15 %}...{% endif %}
+                                        </div>
+                                        
+                                        {% if details.semantic_education_matches %}
+                                        <h5>Semantic Education Matches:</h5>
+                                        <div style="margin-bottom: 10px;">
+                                            {% for match in details.semantic_education_matches[:10] %}
+                                                <div class="skill-tag skill-partial">
+                                                    {{ match[0] }} ≈ {{ match[1] }}
+                                                </div>
+                                            {% endfor %}
+                                            {% if details.semantic_education_matches|length > 10 %}...{% endif %}
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <h5>Job Description Text:</h5>
+                                        {% if 'JobDescription' in job and job['JobDescription'] %}
+                                            {% set job_text = job['JobDescription'] %}
+                                            {% set words = job_text.split() %}
+                                            {% set edu_match_words = details.education_matching_words %}
+                                            
+                                            {% for word in words[:50] %}
+                                                {% set word_processed = word|lower|replace(',', '')|replace('.', '')|replace(';', '')|replace(':', '') %}
+                                                {% if word_processed in edu_match_words %}
+                                                    <span class="matched-word">{{ word }}</span>
+                                                {% else %}
+                                                    {{ word }}
+                                                {% endif %}
+                                                {{ ' ' }}
+                                            {% endfor %}
+                                            {% if words|length > 50 %}...{% endif %}
+                                        {% else %}
+                                            No job description available.
+                                        {% endif %}
+                                    {% else %}
+                                        No education text available for comparison.
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div class="section">
+            <h2>Similar Candidates</h2>
+            {% if candidates.empty %}
+                <p class="no-results">No similar candidates found.</p>
+            {% else %}
+                {% for _, candidate in candidates.iterrows() %}
+                <div class="card">
+                    <div class="similarity-badge">{{ "%.1f"|format(candidate['Similarity'] * 100) if candidate['Similarity'] > 0.0001 else "0.0" }}% Match</div>
+                    
+                    <div class="candidate-name">
+                        {% if 'firstName' in candidate and 'lastName' in candidate %}
+                            {{ candidate['firstName'] }} {{ candidate['lastName'] }}
+                        {% else %}
+                            Candidate ID: {{ candidate['CandidateID'] }}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="job-meta">
+                        {% if 'Experience' in candidate %}
+                        <div><span class="meta-label">Experience:</span> {{ candidate['Experience'] }} years</div>
+                        {% endif %}
+                        
+                        {% if 'Location' in candidate %}
+                        <div><span class="meta-label">Location:</span> {{ candidate['Location'] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if 'Skills' in candidate and candidate['Skills']|length > 0 %}
+                    <div style="margin-top: 15px;">
+                        <span class="meta-label">Skills:</span>
+                        <div style="margin-top: 5px;">
+                            {% for skill in candidate['Skills'] %}
+                                <span class="skill-tag">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="/" class="back-button">Back to Search</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(button) {
+            const detailsDiv = button.nextElementSibling;
+            if (detailsDiv.classList.contains('hidden')) {
+                detailsDiv.classList.remove('hidden');
+                button.textContent = 'Hide Match Details';
+            } else {
+                detailsDiv.classList.add('hidden');
+                button.textContent = 'Show Match Details';
+            }
+        }
+    </script>
+</body>
+</html> 

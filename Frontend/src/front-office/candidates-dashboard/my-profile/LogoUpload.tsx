@@ -1,35 +1,38 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
-import { UserProfileData } from '../hooks/useUserProfile';
+import { useUserProfile } from '../hooks/useUserProfile';
+import { toast } from 'react-hot-toast';
 
 interface ProfileImageUploadProps {
   onImageUpload?: (file: File) => void;
-  userData?: UserProfileData | null;
 }
 
-const LogoUpload: React.FC<ProfileImageUploadProps> = ({ onImageUpload, userData }) => {
+const LogoUpload: React.FC<ProfileImageUploadProps> = ({ onImageUpload }) => {
+  const { userData, isLoading, error: profileError, updateProfileData } = useUserProfile();
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
   // Initialize profile image from userData
   useEffect(() => {
     if (userData?.profileImage) {
-      setPreviewUrl(userData?.profileImage);
+      setPreviewUrl(userData.profileImage);
     }
   }, [userData]);
   
   const handleImageUpload = async (file: File) => {
     setUploading(true);
     setError(null);
-    setSuccess(null);
+    const loadingToast = toast.loading('Uploading profile image...');
+    
     const formData = new FormData();
     formData.append('image', file);
     
     if (!userData?.id) {
       setError('User ID not found');
       setUploading(false);
+      toast.dismiss(loadingToast);
+      toast.error('User ID not found. Please try again later.');
       return;
     }
     
@@ -48,14 +51,36 @@ const LogoUpload: React.FC<ProfileImageUploadProps> = ({ onImageUpload, userData
       const data = await response.json();
       setPreviewUrl(data.imageUrl);
       setProfileImage(file);
-      setSuccess('Profile image updated successfully');
+      
+      // Update profile data in AuthContext
+      updateProfileData({
+        profileImage: data.imageUrl
+      });
+      
+      toast.dismiss(loadingToast);
+      toast.success('Profile image updated successfully');
+      
+      // Call the onImageUpload callback if provided
+      if (onImageUpload) {
+        onImageUpload(file);
+      }
     } catch (error) {
       console.error('Error uploading image:', error);
+      toast.dismiss(loadingToast);
+      toast.error('Failed to upload image. Please try again.');
       setError('Failed to upload image. Please try again.');
     } finally {
       setUploading(false);
     }
   };
+  
+  if (isLoading) {
+    return <div>Loading profile data...</div>;
+  }
+  
+  if (profileError) {
+    return <div className="alert alert-danger">{profileError}</div>;
+  }
   
   return (
     <div className="uploading-outer">
@@ -85,7 +110,6 @@ const LogoUpload: React.FC<ProfileImageUploadProps> = ({ onImageUpload, userData
         </span>
       </div>
       {error && <div className="alert alert-danger mt-3">{error}</div>}
-      {success && <div className="alert alert-success mt-3">{success}</div>}
       {previewUrl && (
         <div className="upload-preview mt-3">
           <img 

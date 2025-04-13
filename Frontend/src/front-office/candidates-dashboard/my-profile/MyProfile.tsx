@@ -38,10 +38,10 @@ const MyProfile: React.FC = () => {
 
   return (
     <div className="widget-content">
-      <LogoUpload userData={userData} />
+      <LogoUpload />
       {/* End logo upload component */}
 
-      <FormInfoBox userData={userData} />
+      <FormInfoBox />
       {/* End form info box */}
 
 

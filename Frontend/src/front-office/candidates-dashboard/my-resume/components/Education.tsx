@@ -3,8 +3,7 @@ import { useUserProfile } from '../../hooks/useUserProfile';
 import EducationModal from './EducationModal';
 import { toast, Toaster } from 'react-hot-toast';
 import './Modal.css';
-import { AuthContext } from '../../../../routing-module/AuthContext';
-import { useContext } from 'react';
+
 interface IEducation {
   _id?: string;
   institution: string;
@@ -16,10 +15,16 @@ interface IEducation {
 }
 
 const Education: React.FC = () => {
-  const { userData, isLoading, error } = useUserProfile();
+  const { 
+    userData, 
+    isLoading, 
+    error, 
+    updateEducation, 
+    deleteEducation 
+  } = useUserProfile();
+  
   const [educationItems, setEducationItems] = useState<IEducation[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const {updateProfileData}  = useContext(AuthContext);  
   const [currentEducation, setCurrentEducation] = useState<IEducation>({
     institution: '',
     diploma: '',
@@ -70,27 +75,18 @@ const Education: React.FC = () => {
             index === editIndex ? { ...currentEducation, _id: item._id } : item
           )
         : [...educationItems, { ...currentEducation }];
-
-      const response = await fetch('http://localhost:5000/api/profile/education', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          userId: userData.id,
-          education: updatedEducation
-        })
-      });
-
-      if (!response.ok) {
+      
+      // Use the enhanced updateEducation method
+      const result = await updateEducation(updatedEducation);
+      
+      if (result.success && result.data) {
+        setEducationItems(Array.isArray(result.data) ? result.data : result.data.education || updatedEducation);
+        toast.dismiss(loadingToast);
+        toast.success(editIndex !== null ? 'Education updated successfully!' : 'Education added successfully!');
+        resetForm();
+      } else {
         throw new Error('Failed to save education');
       }
-
-      const responseData = await response.json();
-      setEducationItems(responseData);
-      toast.dismiss(loadingToast);
-      toast.success(editIndex !== null ? 'Education updated successfully!' : 'Education added successfully!');
-      resetForm();
     } catch (error) {
       console.error('Failed to save education:', error);
       toast.dismiss(loadingToast);
@@ -114,25 +110,22 @@ const Education: React.FC = () => {
 
       const loadingToast = toast.loading('Deleting education...');
       const itemToDelete = educationItems[index];
-      const updatedItems = educationItems.filter((_, i) => i !== index);
-
-      const response = await fetch(`http://localhost:5000/api/profile/education/${itemToDelete._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: userData.id })
-      });
-
-      if (!response.ok) {
+      
+      if (!itemToDelete._id) {
+        throw new Error('Education ID not found');
+      }
+      
+      // Use the enhanced deleteEducation method
+      const result = await deleteEducation(itemToDelete._id);
+      
+      if (result.success) {
+        const updatedItems = educationItems.filter((_, i) => i !== index);
+        setEducationItems(updatedItems);
+        toast.dismiss(loadingToast);
+        toast.success('Education deleted successfully!');
+      } else {
         throw new Error('Failed to delete education');
       }
-
-      setEducationItems(updatedItems);
-      updateProfileData(userData);
-      toast.dismiss(loadingToast);
-      toast.success('Education deleted successfully!');
-    window.location.reload();
     } catch (error) {
       console.error('Failed to delete education:', error);
       toast.error('Failed to delete education. Please try again.');
@@ -242,7 +235,7 @@ const Education: React.FC = () => {
         <p>No education entries yet. Add your first education above.</p>
       ) : (
         educationItems.map((item, index) => (
-          <div className="resume-block" key={item._id}>
+          <div className="resume-block" key={item._id || index}>
             <div className="inner">
               <span className="name">{item.institution.charAt(0)}</span>
               <div className="title-box">
@@ -251,30 +244,29 @@ const Education: React.FC = () => {
                   <span>{item.institution}</span>
                 </div>
                 <div className="edit-box">
-                  <span className="year">
-                    {new Date(item.startDate).getFullYear()} - {new Date(item.endDate).getFullYear()}
-                  </span>
-                  <div className="edit-btns">
-                    <button 
-                      type="button" 
-                      onClick={() => handleEdit(index)}
-                      disabled={saving}
-                    >
-                      <span className="la la-pencil"></span>
-                    </button>
-                    <button 
-                      type="button" 
-                      onClick={() => handleDelete(index)}
-                      disabled={saving}
-                    >
-                      <span className="la la-trash"></span>
-                    </button>
-                  </div>
+                  <button 
+                    className="edit-btn"
+                    onClick={() => handleEdit(index)}
+                    disabled={saving}
+                  >
+                    <span className="la la-pencil"></span>
+                  </button>
+                  <button 
+                    className="delete-btn"
+                    onClick={() => handleDelete(index)}
+                    disabled={saving}
+                  >
+                    <span className="la la-trash"></span>
+                  </button>
                 </div>
               </div>
-              <div className="text">
-                <p><strong>Location:</strong> {item.location}</p>
-                <p>{item.description}</p>
+              <div className="text">{item.description}</div>
+              <div className="location">
+                <i className="la la-map-marker"></i> {item.location}
+              </div>
+              <div className="time-period">
+                <i className="la la-calendar"></i> {new Date(item.startDate).toLocaleDateString()} - 
+                {item.endDate ? new Date(item.endDate).toLocaleDateString() : 'Present'}
               </div>
             </div>
           </div>

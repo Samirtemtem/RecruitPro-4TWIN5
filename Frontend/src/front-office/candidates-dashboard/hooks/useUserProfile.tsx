@@ -112,14 +112,141 @@ export const useUserProfile = () => {
     }
   }, [isProfileLoaded]);
 
+  // Enhanced updateEducation function
+  const updateEducation = async (updatedEducation: any[]): Promise<{ success: boolean, data?: any }> => {
+    return updateProfileSection('education', { education: updatedEducation }, 'education');
+  };
+
+  // Enhanced updateExperience function
+  const updateExperience = async (updatedExperience: any[]): Promise<{ success: boolean, data?: any }> => {
+    return updateProfileSection('experience', { experience: updatedExperience }, 'experience');
+  };
+
+  // Enhanced updateSkills function
+  const updateSkills = async (updatedSkills: any[]): Promise<{ success: boolean, data?: any }> => {
+    return updateProfileSection('skills', { skills: updatedSkills }, 'skills');
+  };
+
+  // Enhanced deleteEducation function
+  const deleteEducation = async (educationId: string): Promise<{ success: boolean, data?: any, error?: string }> => {
+    try {
+      setIsLoading(true);
+      
+      if (!profileData?.id) {
+        throw new Error('User ID not found');
+      }
+      
+      const response = await fetch(`http://localhost:5000/api/profile/education/${educationId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: profileData.id })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete education');
+      }
+
+      // Update local state and context
+      const updatedEducation = profileData.education.filter(item => item._id !== educationId);
+      updateProfileData({
+        education: updatedEducation
+      });
+      
+      return { success: true };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete education';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Enhanced deleteExperience function
+  const deleteExperience = async (experienceId: string): Promise<{ success: boolean, data?: any, error?: string }> => {
+    try {
+      setIsLoading(true);
+      
+      if (!profileData?.id) {
+        throw new Error('User ID not found');
+      }
+      
+      const response = await fetch(`http://localhost:5000/api/profile/experience/${experienceId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: profileData.id })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete experience');
+      }
+
+      // Update local state and context
+      const updatedExperience = profileData.experience.filter(item => item._id !== experienceId);
+      updateProfileData({
+        experience: updatedExperience
+      });
+      
+      return { success: true };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete experience';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Enhanced deleteSkill function
+  const deleteSkill = async (skillId: string): Promise<{ success: boolean, data?: any, error?: string }> => {
+    try {
+      setIsLoading(true);
+      
+      if (!profileData?.id) {
+        throw new Error('User ID not found');
+      }
+      
+      const response = await fetch(`http://localhost:5000/api/profile/skills/${skillId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: profileData.id })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete skill');
+      }
+
+      // Update local state and context
+      const updatedSkills = profileData.skills.filter(item => item._id !== skillId);
+      updateProfileData({
+        skills: updatedSkills
+      });
+      
+      return { success: true };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete skill';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Utility function to update profile sections with API and update AuthContext
   const updateProfileSection = async (
     endpoint: string, 
     data: any, 
     section: keyof UserProfileData
-  ) => {
+  ): Promise<{ success: boolean, data?: any, error?: string }> => {
     try {
       setIsLoading(true);
+      setError(null);
       
       if (!profileData?.id) {
         throw new Error('User ID not found');
@@ -141,15 +268,20 @@ export const useUserProfile = () => {
       }
 
       const updatedData = await response.json();
+      console.log(`✅ Profile ${section} updated successfully:`, updatedData);
       
       // Update the specific section in the context
-      updateProfileData({
-        [section]: updatedData[section] || updatedData
-      });
+      // If API returns the complete section data, use it directly
+      if (Array.isArray(updatedData) || updatedData[section]) {
+        updateProfileData({
+          [section]: updatedData[section] || updatedData
+        });
+      }
       
       return { success: true, data: updatedData };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : `Failed to update ${section}`;
+      console.error(`❌ Error updating ${section}:`, errorMessage);
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -164,6 +296,12 @@ export const useUserProfile = () => {
     formatDate,
     refreshUserProfile,
     updateProfileData,
-    updateProfileSection
+    updateProfileSection,
+    updateEducation,
+    updateExperience,
+    updateSkills,
+    deleteEducation,
+    deleteExperience,
+    deleteSkill
   };
 }; 

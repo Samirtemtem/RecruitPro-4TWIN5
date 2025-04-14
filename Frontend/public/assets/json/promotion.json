@@ -1,0 +1,45 @@
+{
+    "data":[
+        {
+          "Image": "user-32.jpg",
+          "PromotedEmployee": "Anthony Lewis",
+          "Department": "Finance",
+          "DesignationFrom": "Accountant",
+          "DesignationTo": "Sr Accountant",
+          "PromotionDate": "14/01/2024"
+        },
+        {
+          "Image": "user-09.jpg",
+          "PromotedEmployee": "Brian Villalobos",
+          "Department": "Application Development",
+          "DesignationFrom": "Jr App Developer",
+          "DesignationTo": "Sr App Developer",
+          "PromotionDate": "21/01/2024"
+        },
+        {
+          "Image": "user-01.jpg",
+          "PromotedEmployee": "Harvey Smith",
+          "Department": "Web Development",
+          "DesignationFrom": "Sr Web Developer",
+          "DesignationTo": "Team Lead",
+          "PromotionDate": "20/02/2024"
+        },
+        {
+          "Image": "user-33.jpg",
+          "PromotedEmployee": "Stephan Peralt",
+          "Department": "UI / UX",
+          "DesignationFrom": "Jr Designer",
+          "DesignationTo": "Sr Designer",
+          "PromotionDate": "15/03/2024"
+        },
+        {
+          "Image": "user-34.jpg",
+          "PromotedEmployee": "Doglas Martini",
+          "Department": "Marketing",
+          "DesignationFrom": "SEO Analyst",
+          "DesignationTo": "Sr SEO Analyst",
+          "PromotionDate": "10/04/2024"
+        }
+       ],
+    "totaldata":5
+}

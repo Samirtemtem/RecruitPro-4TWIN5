@@ -1,0 +1,50 @@
+{
+    "data":[
+        {
+          "Image": "user-32.jpg",
+          "ResigningEmployee": "Anthony Lewis",
+          "Department": "Finance",
+          "TerminationType": "Retirement",
+          "NoticeDate": "14/01/2024",
+          "Reason": "Employee retires",
+          "ResignationDate": "14/03/2024"
+        },
+        {
+          "Image": "user-09.jpg",
+          "ResigningEmployee": "Brian Villalobos",
+          "Department": "Application Development",
+          "TerminationType": "Insubordination",
+          "NoticeDate": "21/01/2024",
+          "Reason": "Entrepreneurial Pursuits",
+          "ResignationDate": "21/03/2024"
+        },
+        {
+          "Image": "user-01.jpg",
+          "ResigningEmployee": "Harvey Smith",
+          "Department": "Web Development",
+          "TerminationType": "Layoff",
+          "NoticeDate": "18/02/2024",
+          "Reason": "Workforce reduction",
+          "ResignationDate": "18/04/2024"
+        },
+        {
+          "Image": "user-33.jpg",
+          "ResigningEmployee": "Stephan Peralt",
+          "Department": "UI / UX",
+          "TerminationType": "Breach of Contract",
+          "NoticeDate": "14/03/2024",
+          "Reason": "Violates the terms of the contract",
+          "ResignationDate": "14/05/2024"
+        },
+        {
+          "Image": "user-34.jpg",
+          "ResigningEmployee": "Doglas Martini",
+          "Department": "Marketing",
+          "TerminationType": "Lack of Skills",
+          "NoticeDate": "10/04/2024",
+          "Reason": "Unable to perform job duties",
+          "ResignationDate": "10/06/2024"
+        }
+       ],
+    "totaldata":5
+}

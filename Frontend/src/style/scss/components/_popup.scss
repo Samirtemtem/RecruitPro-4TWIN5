@@ -1,0 +1,327 @@
+.modal {
+    .card {
+        border: 0;
+    }
+}
+.modal {
+    .modal-content {
+        border: 1px solid $light-900;
+        box-shadow: 0px 4px 74px 0px #D0D0D040;
+        border-radius: 5px;
+    }
+    .modal-title {
+        font-size: $font-size-20;
+        font-weight: $font-weight-semibold;
+        @include respond-below(lg) {
+            font-size: $font-size-16;
+        }
+    }
+	.logo-lg {
+		img {
+			width: 150px;
+		}
+	}
+    .modal-header {
+        border-color: $light-900;
+        border-bottom: 1px solid $light-900;
+        .close,
+        .btn-close {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            align-items: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            color: $danger-700;
+            opacity: 1;
+            font-size: $font-size-12;
+            width: 22px;
+            height: 22px;
+            border: 0;
+            font-weight: $font-weight-bold;
+            background-color: transparent;
+            @include rounded(50px);
+            &:hover{
+                background-color: transparent;
+                color:$white;
+            }
+        }
+    }
+    .modal-footer{
+        border-top: 1px solid $light-900;
+        .btn {
+            margin: 0;
+        }
+        .btn-secondary{
+            background: $secondary;
+            &:hover{
+                @include box-shadow(inset, 0, 0px, 0px, 100px, $white);
+                color: $secondary !important;
+            }
+        }
+    }
+    .note-editor.note-frame.card {
+        border: 1px solid $gray-200 !important;
+    }
+}
+.modal-content {
+    .modal-header {
+        justify-content: space-between;
+        .custom-btn-close {
+            width: 20px;
+            height: 20px;
+            @include rounded(50%);
+            background-color: $gray-500;
+            color: $white;
+            margin: 0;
+            padding: 0;
+            background-image: none;
+            &:hover {
+                background-color: $danger;
+            }
+        }
+    }
+}
+.modal-btn {
+    .btn {
+        padding:  5px 20px;
+    }
+}
+.modal {
+    &.animated .modal-dialog {
+        transform: translate(0, 0);
+    }
+    &.effect-scale {
+        .modal-dialog {
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        &.show .modal-dialog {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    &.effect-slide-in-right {
+        .modal-dialog {
+            transform: translateX(20%);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.25, 0.5, 0.5, 0.9);
+        }
+        &.show .modal-dialog {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    &.effect-slide-in-bottom {
+        .modal-dialog {
+            transform: translateY(20%);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        &.show .modal-dialog {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    &.effect-newspaper {
+        .modal-dialog {
+            transform: scale(0) rotate(720deg);
+            opacity: 0;
+        }
+        &.show~.modal-backdrop, .modal-dialog {
+            transition: all 0.5s;
+        }
+        &.show .modal-dialog {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+    }
+    &.effect-fall {
+        -webkit-perspective: 1300px;
+        -moz-perspective: 1300px;
+        perspective: 1300px;
+        .modal-dialog {
+            -moz-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            transform: translateZ(600px) rotateX(20deg);
+            opacity: 0;
+        }
+        &.show .modal-dialog {
+            transition: all 0.3s ease-in;
+            transform: translateZ(0px) rotateX(0deg);
+            opacity: 1;
+        }
+    }
+    &.effect-flip-horizontal {
+        perspective: 1300px;
+        .modal-dialog {
+            -moz-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            transform: rotateY(-70deg);
+            transition: all 0.3s;
+            opacity: 0;
+        }
+        &.show .modal-dialog {
+            transform: rotateY(0deg);
+            opacity: 1;
+        }
+    }
+    &.effect-flip-vertical {
+        perspective: 1300px;
+        .modal-dialog {
+            -moz-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            transform: rotateX(-70deg);
+            transition: all 0.3s;
+            opacity: 0;
+        }
+        &.show .modal-dialog {
+            transform: rotateX(0deg);
+            opacity: 1;
+        }
+    }
+    &.effect-super-scaled {
+        .modal-dialog {
+            transform: scale(2);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        &.show .modal-dialog {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    &.effect-sign {
+        perspective: 1300px;
+        .modal-dialog {
+            -moz-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            transform: rotateX(-60deg);
+            transform-origin: 50% 0;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        &.show .modal-dialog {
+            transform: rotateX(0deg);
+            opacity: 1;
+        }
+    }
+    &.effect-rotate-bottom {
+        perspective: 1300px;
+        .modal-dialog {
+            -moz-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            transform: translateY(100%) rotateX(90deg);
+            transform-origin: 0 100%;
+            opacity: 0;
+            transition: all 0.3s ease-out;
+        }
+        &.show .modal-dialog {
+            transform: translateY(0%) rotateX(0deg);
+            opacity: 1;
+        }
+    }
+    &.effect-rotate-left {
+        perspective: 1300px;
+        .modal-dialog {
+            -moz-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            transform: translateZ(100px) translateX(-30%) rotateY(90deg);
+            transform-origin: 0 100%;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        &.show .modal-dialog {
+            transform: translateZ(0px) translateX(0%) rotateY(0deg);
+            opacity: 1;
+        }
+    }
+}
+.offcanvas {
+    color: $gray-500;
+    &.offcanvas-end {
+        width: auto !important;
+    }
+}
+.offcanvas.offcanvas-end.em-payrol-add {
+    max-width: 1192px !important;
+}
+.modal-bg {
+    &::before {
+        position: absolute;
+        top: 0;
+        right: 10%;
+        content: "";
+        background: url(../../../../public/assets/img/bg/theme-bg.svg) no-repeat;
+        width: 171px;
+        height: 54px;
+    }
+}
+#delete-modal {
+    .modal-dialog {
+        max-width: 400px;
+        .delete-icon {
+            width: 60px;
+            height: 60px;
+            @include rounded(5px);
+            margin: 0 auto 24px;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            align-items: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            background: $danger-100;
+            color: $danger;
+            font-size: $font-size-40;
+        }
+        h4 {
+            font-size: $font-size-20;
+            margin-bottom: 5px;
+        }
+        p {
+            margin-bottom: 24px;
+        }
+    }
+}
+.custom-modal {
+    .modal-header {
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+.modal-header {
+    .badge {
+        box-shadow: none;
+    }
+}
+.offcanvas {
+    &.offcanvas-large {
+        width: 800px !important;
+    }
+    .btn-close.custom-btn-close {
+        width: 20px;
+        height: 20px;
+        @include rounded(50%);
+        background-color: $gray-500;
+        color: $white;
+        margin: 0 0 0 auto;
+        padding: 0;
+        background-image: none;
+        &:hover {
+            background-color: $danger;
+        }
+    }
+}
+#delete_modal {
+    .modal-dialog {
+        max-width: 400px;
+    }
+}

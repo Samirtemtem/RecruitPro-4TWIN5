@@ -1,0 +1,95 @@
+{
+  "data" : [
+    {
+      "CompanyName": "BrightWave Innovations",
+      "Email": "michael@example.com",
+      "AccountURL": "bwi.example.com",
+      "Plan": "Advanced (Monthly)",
+      "CreatedDate": "12/09/2024",
+      "Image": "company-01.svg",
+      "Status": "Active"
+    },
+    {
+      "CompanyName": "Stellar Dynamics",
+      "Email": "sophie@example.com",
+      "AccountURL": "sd.example.com",
+      "Plan": "Basic (Yearly)",
+      "CreatedDate": "24/10/2024",
+      "Image": "company-02.svg",
+      "Status": "Active"
+    },
+    {
+      "CompanyName": "Quantum Nexus",
+      "Email": "cameron@example.com",
+      "AccountURL": "qn.example.com",
+      "Plan": "Advanced (Monthly)",
+      "CreatedDate": "18/02/2024",
+      "Image": "company-03.svg",
+      "Status": "Active"
+    },
+    {
+      "CompanyName": "EcoVision Enterprises",
+      "Email": "doris@example.com",
+      "AccountURL": "eve.example.com",
+      "Plan": "Advanced (Monthly)",
+      "CreatedDate": "17/10/2024",
+      "Image": "company-04.svg",
+      "Status": "Active"
+    },
+    {
+      "CompanyName": "Aurora Technologies",
+      "Email": "thomas@example.com",
+      "AccountURL": "at.example.com",
+      "Plan": "Enterprise (Monthly)",
+      "CreatedDate": "20/07/2024",
+      "Image": "company-05.svg",
+      "Status": "Active"
+    },
+    {
+      "CompanyName": "BlueSky Ventures",
+      "Email": "kathleen@example.com",
+      "AccountURL": "bsv.example.com",
+      "Plan": "Advanced (Monthly)",
+      "CreatedDate": "10/04/2024",
+      "Image": "company-06.svg",
+      "Status": "Active"
+    },
+    {
+      "CompanyName": "TerraFusion Energy",
+      "Email": "bruce@example.com",
+      "AccountURL": "tfe.example.com",
+      "Plan": "Enterprise (Yearly)",
+      "CreatedDate": "29/08/2024",
+      "Image": "company-07.svg",
+      "Status": "Active"
+    },
+    {
+      "CompanyName": "UrbanPulse Design",
+      "Email": "estelle@example.com",
+      "AccountURL": "upd.example.com",
+      "Plan": "Basic (Monthly)",
+      "CreatedDate": "22/02/2024",
+      "Image": "company-08.svg",
+      "Status": "Inactive"
+    },
+    {
+      "CompanyName": "Nimbus Networks",
+      "Email": "stephen@example.com",
+      "AccountURL": "nn.example.com",
+      "Plan": "Basic (Yearly)",
+      "CreatedDate": "03/11/2024",
+      "Image": "company-09.svg",
+      "Status": "Active"
+    },
+    {
+      "CompanyName": "Epicurean Delights",
+      "Email": "angela@example.com",
+      "AccountURL": "ed.example.com",
+      "Plan": "Advanced (Monthly)",
+      "CreatedDate": "17/12/2024",
+      "Image": "company-10.svg",
+      "Status": "Active"
+    }
+  ],
+  "totalData": 10
+}

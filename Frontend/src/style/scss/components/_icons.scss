@@ -1,0 +1,28 @@
+.icons-list {
+    padding: 0;
+    display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      li {
+        display: block;
+        width: 40px;
+        height: 40px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        align-items: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        justify-content: center;
+        -webkit-justify-content: center;
+        -ms-flex-pack: center;
+        font-size: $font-size-18;
+        @include rounded(50px);
+        border: 1px solid $gray-200;
+        color: $primary;
+        margin: 5px;
+        @include box-shadow(null, 0, 2px, 3px, null, rgb(215, 197, 255));
+    }
+}

@@ -1,0 +1,105 @@
+{
+    "data":[
+        {
+          "Name": "Anthony Lewis",
+          "Email": "anthony@example.com",
+          "Phone": "(123) 4567 890",
+          "CallType": "Incoming",
+          "Class": "ti ti-phone-incoming text-success me-2",
+          "Duration": "0.25",
+          "Image": "user-32.jpg",
+          "DateTime": "14/01/2024, 04:27 AM"
+        },
+        {
+          "Name": "Brian Villalobos",
+          "Email": "brian@example.com",
+          "Phone": "(179) 7382 829",
+          "CallType": "Outgoing",
+          "Class": "ti ti-phone-outgoing text-success me-2",
+          "Duration": "0.1",
+          "Image": "user-09.jpg",
+          "DateTime": "21/01/2024, 03:19 AM"
+        },
+        {
+          "Name": "Harvey Smith",
+          "Email": "harvey@example.com",
+          "Phone": "(184) 2719 738",
+          "CallType": "Incoming",
+          "Class": "ti ti-video text-success me-2",
+          "Duration": "0.4",
+          "Image": "user-01.jpg",
+          "DateTime": "20/02/2024, 12:15 PM"
+        },
+        {
+          "Name": "peral@example.com",
+          "Email": "peral@example.com",
+          "Phone": "(193) 7839 748",
+          "CallType": "Missed Call",
+          "Class": "ti ti-phone-x text-danger me-2",
+          "Duration": "0",
+          "Image": "user-33.jpg",
+          "DateTime": "15/03/2024, 12:11 AM"
+        },
+        {
+          "Name": "Doglas Martini",
+          "Email": "martniwr@example.com",
+          "Phone": "(183) 9302 890",
+          "CallType": "Outgoing",
+          "Class": "ti ti-video text-success me-2",
+          "Duration": "0.35",
+          "Image": "user-33.jpg",
+          "DateTime": "12/04/2024, 05:48 PM"
+        },
+        {
+          "Name": "Linda Ray",
+          "Email": "ray456@example.com",
+          "Phone": "(120) 3728 039",
+          "CallType": "Incomiing",
+          "Class": "ti ti-phone-incoming text-success me-2",
+          "Duration": "1.4",
+          "Image": "user-02.jpg",
+          "DateTime": "20/05/2024, 06:11 PM"
+        },
+        {
+          "Name": "Elliot Murray",
+          "Email": "murray@example.com",
+          "Phone": "(102) 8480 832",
+          "CallType": "Missed call",
+          "Class": "ti ti-video text-danger me-2",
+          "Duration": "0",
+          "Image": "user-35.jpg",
+          "DateTime": "06/07/2024, 07:15 PM"
+        },
+        {
+          "Name": "Rebecca Smtih",
+          "Email": "smtih@example.com",
+          "Phone": "(162) 8920 713",
+          "CallType": "Outgoing",
+          "Class": "ti ti-phone-outgoing text-success me-2",
+          "Duration": "0.45",
+          "Image": "user-36.jpg",
+          "DateTime": "02/09/2024, 09:21 PM"
+        },
+        {
+          "Name": "Connie Waters",
+          "Email": "connie@example.com",
+          "Phone": "(189) 0920 723",
+          "CallType": "Incoming",
+          "Class": "ti ti-phone-incoming text-success me-2",
+          "Duration": "0.5",
+          "Image": "user-37.jpg",
+          "DateTime": "15/11/2024, 12:44 PM"
+        },
+        {
+          "Name": "Lori Broaddus",
+          "Email": "broaddus@example.com",
+          "Phone": "(168) 8392 823",
+          "CallType": "Missed call",
+          "Class": "ti ti-phone-x text-danger me-2",
+          "Duration": "0",
+          "Image": "user-38.jpg",
+          "DateTime": "10/12/2024, 11:23 PM"
+        }
+      ],
+      "totaldata":10
+}

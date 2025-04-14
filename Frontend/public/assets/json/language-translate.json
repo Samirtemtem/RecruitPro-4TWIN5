@@ -1,0 +1,37 @@
+{
+    "data": [
+        {
+            "medium": "Web",
+            "file": "Group",
+            "total": "3456",
+            "complete": "3456",
+            "progress": 1
+            
+           
+        },
+        {
+            "medium": "Web",
+            "file": "Chat",
+            "total": "3456",
+            "complete": "3456",
+            "progress": 2
+        },
+        {
+            "medium": "Web",
+            "file": "Status",
+            "total": "3456",
+            "complete": "3456",
+            "progress": 3
+        },
+        {
+            "medium": "Web",
+            "file": "Setting",
+            "total": "3456",
+            "complete": "3456",
+            "progress": 4
+        }
+       
+       
+    ],
+    "totalData": 10
+}

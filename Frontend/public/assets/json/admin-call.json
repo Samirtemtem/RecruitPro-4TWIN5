@@ -1,0 +1,76 @@
+{
+  "data":[
+    {
+        "name": "Aaryian Jose",
+        "incomingcall": "80",
+        "outgoingcall": "100",
+        "missedcall": "30",
+        "img": "assets/admin/img/users/user-01.jpg"
+    },
+    {
+        "name": "Sarika Jain",
+        "incomingcall": "120",
+        "outgoingcall": "120",
+        "missedcall": "120",
+        "img": "assets/admin/img/users/user-02.jpg"
+    },
+    {
+        "name": "Clyde Smith",
+        "incomingcall": "200",
+        "outgoingcall": "200",
+        "missedcall": "200",
+        "img": "assets/admin/img/users/user-03.jpg"
+    },
+    {
+        "name": "Carla Jenkins",
+        "incomingcall": "250",
+        "outgoingcall": "250",
+        "missedcall": "250",
+        "img": "assets/admin/img/users/user-04.jpg"
+    },
+    {
+        "name": "Federico Wells",
+        "incomingcall": "300",
+        "outgoingcall": "300",
+        "missedcall": "300",
+        "img": "assets/admin/img/users/user-05.jpg"
+    },
+    {
+        "name": "Edward Lietz",
+        "incomingcall": "180",
+        "outgoingcall": "180",
+        "missedcall": "180",
+        "img": "assets/admin/img/users/user-06.jpg"
+    },
+    {
+        "name": "Sharon Ford",
+        "incomingcall": "200",
+        "outgoingcall": "200",
+        "missedcall": "200",
+        "img": "assets/admin/img/users/user-07.jpg"
+    },
+    {
+        "name": "Thomas Rethman",
+        "incomingcall": "320",
+        "outgoingcall": "320",
+        "missedcall": "320",
+        "img": "assets/admin/img/users/user-08.jpg"
+    },
+    {
+        "name": "Wilbur Martinez",
+        "incomingcall": "400",
+        "outgoingcall": "400",
+        "missedcall": "400",
+        "img": "assets/admin/img/users/user-09.jpg"
+    },
+    {
+        "name": "Danielle Baker",
+        "incomingcall": "210",
+        "outgoingcall": "210",
+        "missedcall": "210",
+        "img": "assets/admin/img/users/user-10.jpg"
+    }
+],
+"totalData":10
+
+}

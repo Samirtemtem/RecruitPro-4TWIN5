@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Recommendation System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .info {
+            background-color: #e7f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+        }
+        .info h3 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+        .debug-links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .debug-links a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .debug-links a:hover {
+            background-color: #e9ecef;
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Job Recommendation System</h1>
+        
+        <form action="/recommend" method="post">
+            <label for="candidate_id">Enter Candidate ID:</label>
+            <input type="text" id="candidate_id" name="candidate_id" required placeholder="Enter the candidate's unique ID">
+            <button type="submit">Get Recommendations</button>
+        </form>
+        
+        <div class="info">
+            <h3>How it works</h3>
+            <p>Our recommendation system uses AI to match candidate profiles with suitable job opportunities. The system analyzes skills, experience, and education to find the best matches.</p>
+            <p>Enter a candidate ID to see personalized job recommendations and a list of similar candidates who might be interested in the same positions.</p>
+        </div>
+        
+        <div class="debug-links">
+            <a href="/debug/candidates">View Candidates</a>
+            <a href="/debug/jobposts">View Job Posts</a>
+            <a href="/debug/skill_analysis">Analyze Skills</a>
+        </div>
+    </div>
+</body>
+</html> 

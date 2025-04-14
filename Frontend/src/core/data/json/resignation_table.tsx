@@ -1,0 +1,42 @@
+export const resignation_table = [
+    {
+      Image: "user-32.jpg",
+      Resigning_Employee: "Anthony Lewis",
+      Department: "Finance",
+      Reason: "Career Change",
+      Notice_Date: "14 Jan 2024",
+      Resignation_Date: "14 Mar 2024",
+    },
+    {
+      Image: "user-09.jpg",
+      Resigning_Employee: "Brian Villalobos",
+      Department: "Application Development",
+      Reason: "Entrepreneurial Pursuits",
+      Notice_Date: "21 Jan 2024",
+      Resignation_Date: "21 Mar 2024",
+    },
+    {
+      Image: "user-01.jpg",
+      Resigning_Employee: "Harvey Smith",
+      Department: "Web Development",
+      Reason: "Relocation",
+      Notice_Date: "18 Feb 2024",
+      Resignation_Date: "18 Apr 2024",
+    },
+    {
+      Image: "user-33.jpg",
+      Resigning_Employee: "Stephan Peralt",
+      Department: "UI / UX",
+      Reason: "Health Reasons",
+      Notice_Date: "14 Mar 2024",
+      Resignation_Date: "14 May 2024",
+    },
+    {
+      Image: "user-34.jpg",
+      Resigning_Employee: "Doglas Martini",
+      Department: "Marketing",
+      Reason: "Personal Development",
+      Notice_Date: "10 Apr 2024",
+      Resignation_Date: "10 Jun 2024",
+    },
+  ];

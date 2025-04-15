@@ -6,6 +6,7 @@ import JobDetailsDescriptions from "./job-single-pages/shared-components/JobDeta
 import DefaulHeader2 from "../../common/Header";
 import MapJobFinder from "./job-listing-pages/components/MapJobFinder";
 import SocialTwo from "./job-single-pages/social/SocialTwo";
+import { useAuth } from "../../routing-module/AuthContext";
 
 import { useAuth } from "../../routing-module/AuthContext";
 import axios from "axios";
@@ -18,6 +19,10 @@ const JobSingleDynamicV1 = () => {
   const [error, setError] = useState(null);
   const [applicationStatus, setApplicationStatus] = useState(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isShortlisted, setIsShortlisted] = useState(false);
+
+  // Get user ID from auth context
+  const { userId } = useAuth();
 
   const { userId } = useAuth();
   const [matchDetails, setMatchDetails] = useState(null);
@@ -48,7 +53,7 @@ const JobSingleDynamicV1 = () => {
       try {
         const response = await fetch(`http://localhost:5000/api/jobs/${jobId}`);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setJob(data);
@@ -67,6 +72,28 @@ const JobSingleDynamicV1 = () => {
     fetchJob();
   }, [jobId]);
 
+  // Check if job is shortlisted when component loads or userId changes
+  useEffect(() => {
+    const checkShortlistStatus = async () => {
+      if (!userId || !jobId) return;
+
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/shortlisted-jobs/check?userId=${userId}&jobId=${jobId}`
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setIsShortlisted(data.isShortlisted);
+        }
+      } catch (error) {
+        console.error("Error checking shortlist status:", error);
+      }
+    };
+
+    checkShortlistStatus();
+  }, [userId, jobId]);
+
   const handleApplyJob = () => {
     const candidateId = localStorage.getItem("userId");
     if (!candidateId) {
@@ -76,31 +103,81 @@ const JobSingleDynamicV1 = () => {
     setShowConfirmDialog(true);
   };
 
+  // Toggle shortlist status
+  const toggleShortlist = async () => {
+    try {
+      // If no user is logged in, show login prompt
+      if (!userId) {
+        setApplicationStatus("Please log in to shortlist jobs");
+        setTimeout(() => setApplicationStatus(null), 2000);
+        return;
+      }
+
+      // If job is already shortlisted, remove it
+      if (isShortlisted) {
+        await fetch(
+          `http://localhost:5000/api/shortlisted-jobs/${userId}/${jobId}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        setIsShortlisted(false);
+        setApplicationStatus("Job removed from shortlist");
+        setTimeout(() => setApplicationStatus(null), 2000);
+      }
+      // Otherwise, add it to shortlist
+      else {
+        await fetch("http://localhost:5000/api/shortlisted-jobs", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userId,
+            jobId: jobId,
+          }),
+        });
+
+        setIsShortlisted(true);
+        setApplicationStatus("Job added to shortlist");
+        setTimeout(() => setApplicationStatus(null), 2000);
+      }
+    } catch (error) {
+      console.error("Error toggling shortlist:", error);
+      setApplicationStatus("Error updating shortlist");
+      setTimeout(() => setApplicationStatus(null), 2000);
+    }
+  };
+
   const confirmApplication = async () => {
     const candidateId = localStorage.getItem("userId");
     const applicationData = {
       jobPostId: jobId,
       candidateId: candidateId,
     };
-  
+
     try {
-      const response = await fetch("http://localhost:5000/app/api/applications", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(applicationData),
-      });
-  
+      const response = await fetch(
+        "http://localhost:5000/app/api/applications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(applicationData),
+        }
+      );
+
       if (!response.ok) {
         // Attempt to parse the error message from the response
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to submit application');
+        throw new Error(errorData.message || "Failed to submit application");
       }
-  
+
       const result = await response.json();
       setApplicationStatus("Application submitted successfully!");
-      
+
       // Automatically hide the success message after 1 second
       setTimeout(() => setApplicationStatus(null), 1000);
     } catch (error) {
@@ -123,7 +200,14 @@ const JobSingleDynamicV1 = () => {
   };
 
   const skillBackgroundColors = [
-    "#6c757d", "#17a2b8", "#5a6268", "#495057", "#343a40", "#007bff", "#28a745", "#ffc107",
+    "#6c757d",
+    "#17a2b8",
+    "#5a6268",
+    "#495057",
+    "#343a40",
+    "#007bff",
+    "#28a745",
+    "#ffc107",
   ];
 
   return (
@@ -160,14 +244,21 @@ const JobSingleDynamicV1 = () => {
 
                   <ul className="job-other-info">
                     {job.requirements?.map((val, i) => (
-                      <li key={i} className="job-skill" style={{
-                        backgroundColor: skillBackgroundColors[i % skillBackgroundColors.length],
-                        color: "#fff",
-                        padding: "5px 10px",
-                        borderRadius: "5px",
-                        margin: "5px 10px 5px 0",
-                        display: "inline-block",
-                      }}>
+                      <li
+                        key={i}
+                        className="job-skill"
+                        style={{
+                          backgroundColor:
+                            skillBackgroundColors[
+                              i % skillBackgroundColors.length
+                            ],
+                          color: "#fff",
+                          padding: "5px 10px",
+                          borderRadius: "5px",
+                          margin: "5px 10px 5px 0",
+                          display: "inline-block",
+                        }}
+                      >
                         {val}
                       </li>
                     ))}
@@ -182,11 +273,19 @@ const JobSingleDynamicV1 = () => {
                   >
                     Apply For Job
                   </a>
-                  <button className="bookmark-btn">
-                    <i className="flaticon-bookmark"></i>
+                  <button
+                    className="bookmark-btn"
+                    style={{
+                      color: isShortlisted ? "#D50000" : "#777777",
+                      transition: "all 0.3s ease",
+                    }}
+                    onClick={toggleShortlist}
+                  >
+                    <i
+                      className={`${isShortlisted ? "fas" : "far"} fa-bookmark`}
+                    ></i>
                   </button>
                 </div>
-
               </div>
               <MatchInsightCard matchDetails={matchDetails} />
 
@@ -210,7 +309,9 @@ const JobSingleDynamicV1 = () => {
                 <div className="related-jobs">
                   <div className="title-box">
                     <h3>Latest Jobs</h3>
-                    <div className="text">Check out our latest job listings!</div>
+                    <div className="text">
+                      Check out our latest job listings!
+                    </div>
                   </div>
                   <RelatedJobs />
                 </div>
@@ -220,11 +321,11 @@ const JobSingleDynamicV1 = () => {
                 <aside className="sidebarr">
                   <div className="sidebar-widget" style={jobOverviewStyle}>
                     <h4 className="widget-title">Job Overview</h4>
-                    <JobOverView 
-                      title={job.title} 
-                      publishDate={job.publishDate} 
-                      deadline={job.deadline} 
-                      requirements={job.requirements} 
+                    <JobOverView
+                      title={job.title}
+                      publishDate={job.publishDate}
+                      deadline={job.deadline}
+                      requirements={job.requirements}
                     />
                     <h4 className="widget-title mt-5">Job Location</h4>
                     <div className="widget-content">
@@ -244,46 +345,59 @@ const JobSingleDynamicV1 = () => {
 
       {/* Confirmation Dialog Instead of Modal */}
       {showConfirmDialog && (
-        <div className="confirmation-dialog" style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          zIndex: "1050",
-          backgroundColor: "#ffffff",
-          padding: "30px",
-          borderRadius: "10px",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
-          width: "400px",
-          textAlign: "center"
-        }}>
+        <div
+          className="confirmation-dialog"
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: "1050",
+            backgroundColor: "#ffffff",
+            padding: "30px",
+            borderRadius: "10px",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
+            width: "400px",
+            textAlign: "center",
+          }}
+        >
           <h5>Confirm Application</h5>
           <p>Do you accept the terms and conditions to apply for this job?</p>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <button className="btn btn-secondary" onClick={() => setShowConfirmDialog(false)}>Cancel</button>
-            <button className="btn btn-primary" onClick={confirmApplication}>Accept</button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setShowConfirmDialog(false)}
+            >
+              Cancel
+            </button>
+            <button className="btn btn-primary" onClick={confirmApplication}>
+              Accept
+            </button>
           </div>
         </div>
       )}
 
       {/* Success Message */}
       {applicationStatus && (
-        <div className="alert" style={{
-          position: "fixed",
-          top: "20px",
-          left: "50%",
-          transform: "translate(-50%, 0)",
-          zIndex: "1000",
-          width: "80%",
-          maxWidth: "400px",
-          padding: "15px",
-          backgroundColor: "#d4edda",
-          color: "#155724",
-          border: "1px solid #c3e6cb",
-          borderRadius: "5px",
-          textAlign: "center",
-          transition: "opacity 0.5s ease",
-        }}>
+        <div
+          className="alert"
+          style={{
+            position: "fixed",
+            top: "20px",
+            left: "50%",
+            transform: "translate(-50%, 0)",
+            zIndex: "1000",
+            width: "80%",
+            maxWidth: "400px",
+            padding: "15px",
+            backgroundColor: "#d4edda",
+            color: "#155724",
+            border: "1px solid #c3e6cb",
+            borderRadius: "5px",
+            textAlign: "center",
+            transition: "opacity 0.5s ease",
+          }}
+        >
           {applicationStatus}
         </div>
       )}

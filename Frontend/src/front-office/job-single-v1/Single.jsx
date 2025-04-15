@@ -8,7 +8,7 @@ import MapJobFinder from "./job-listing-pages/components/MapJobFinder";
 import SocialTwo from "./job-single-pages/social/SocialTwo";
 import { useAuth } from "../../routing-module/AuthContext";
 
-import { useAuth } from "../../routing-module/AuthContext";
+
 import axios from "axios";
 import MatchInsightCard from "./MatchInsightCard";
 
@@ -24,7 +24,7 @@ const JobSingleDynamicV1 = () => {
   // Get user ID from auth context
   const { userId } = useAuth();
 
-  const { userId } = useAuth();
+  
   const [matchDetails, setMatchDetails] = useState(null);
 
   const fetchMatchDetails = async (resolvedJobId) => {

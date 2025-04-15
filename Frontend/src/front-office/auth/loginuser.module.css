@@ -1,0 +1,164 @@
+/* src/front-office/auth/loginuser.module.css */
+.loginForm {
+    max-width: 450px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logo {
+    max-width: 150px;
+    transition: transform 0.3s ease;
+  }
+  
+  .logo:hover {
+    transform: scale(1.05);
+  }
+  
+  .loginSubtitle {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .customInputGroup {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .customInputGroup:focus-within {
+    border-color: #007bff;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+  }
+  
+  .formControl {
+    border: none !important;
+    padding: 12px;
+  }
+  
+  .inputGroupText {
+    background: transparent;
+    border: none;
+    color: #666;
+  }
+  
+  .optionsRow {
+    font-size: 14px;
+  }
+  
+  .forgotPassword {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .forgotPassword:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  
+  .customButton {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    border: none;
+    transition: transform 0.2s ease;
+  }
+  
+  .customButton:hover {
+    transform: translateY(-2px);
+  }
+  
+  .customButton:disabled {
+    opacity: 0.7;
+    transform: none;
+  }
+  
+  .registerText {
+    font-size: 14px;
+  }
+  
+  .registerLink {
+    color: #007bff;
+    text-decoration: none;
+    margin-left: 5px;
+  }
+  
+  .registerLink:hover {
+    text-decoration: underline;
+  }
+  
+  .loginOr {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .spanOr {
+    background: #fff;
+    padding: 0 15px;
+    position: relative;
+    z-index: 1;
+    color: #666;
+  }
+  
+  .loginOr:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+  }
+  
+  .socialButtons {
+    margin-top: 20px;
+  }
+  
+  .socialBtn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .googleBtn {
+    background: #fff;
+  }
+  
+  .linkedinBtn {
+    background: #fff;
+  }
+  
+  .githubBtn {
+    background: #fff;
+  }
+  
+  .socialBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .footerText {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  @media (max-width: 768px) {
+    .loginForm {
+      max-width: 100%;
+      margin: 20px;
+    }
+  
+    .socialBtn {
+      width: 50px;
+      height: 50px;
+    }
+  }

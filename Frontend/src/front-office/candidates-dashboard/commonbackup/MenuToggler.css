@@ -1,0 +1,79 @@
+/* MenuToggler styling for Superio theme */
+
+.toggle-filters {
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #1967D2;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.toggle-filters:hover {
+  background-color: #0e4da3;
+}
+
+.toggle-filters span {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+@media (max-width: 1023px) {
+  .toggle-filters {
+    display: flex;
+  }
+}
+
+/* For the backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.sidebar-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (min-width: 1024px) {
+  .sidebar-backdrop {
+    display: none;
+  }
+}
+
+/* Utility classes for responsive design */
+.show-1023 {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .show-1023 {
+    display: block;
+  }
+}
+
+.hidden-1023 {
+  display: block;
+}
+
+@media (max-width: 1023px) {
+  .hidden-1023 {
+    display: none;
+  }
+} 

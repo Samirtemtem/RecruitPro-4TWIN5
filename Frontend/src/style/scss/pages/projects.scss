@@ -1,0 +1,271 @@
+.media-images-slider {
+  a {
+    position: relative;
+    transition: 0.5s all;
+    span {
+      opacity: 0;
+      transition: 0.5s all;
+      i {
+        opacity: 1;
+      }
+    }
+    .hover-links {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translatex(-50%);
+      transition: 0.5s all;
+    }
+    &:hover {
+      transition: 0.5s all;
+      span {
+        opacity: 0.5;
+        transition: 0.5s all;
+      }
+      .hover-links {
+        top: 50%;
+        transform: translate(-50%,-50%);
+        transition: 0.5s all;
+      }
+      &::before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        background: $gray-900;
+        opacity: 0.8;
+        position: absolute;
+        transition: 0.5s all;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
+    img {
+      transition: 0.5s all;
+      
+    }
+  }
+}
+.accordion-button {
+  cursor: pointer;
+}
+.notice-widget {
+  position: relative;
+  > div {
+    position: relative;
+    &:before {
+      position: absolute;
+      content: "";
+      width: 1px;
+      height: calc(100% - 25px);
+      background-color: $light-900;
+      top: 55%;
+      inset-inline-start: 16px;
+    }
+    &:last-child {
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+.attendance-point {
+  position: relative;
+  z-index: 1;
+  &::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    z-index: -1;
+    position: absolute;
+    left: 0;
+    top: 1px;
+  }
+  &.present {
+    &::before {
+      background: $success-600;
+    }
+  }
+  &.holiday {
+    &::before {
+      background: $secondary-600;
+    }
+  }
+  &.absent {
+    &::before {
+      background: $danger-500;
+    }
+  }
+}
+.attendance-circle-progress {
+  width: 110px;
+  height: 110px !important;
+  line-height: 38px;
+  background: none;
+  box-shadow: none;
+  position: relative;
+  &::after {
+      content: "";
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid  transparent;
+      position: absolute;
+      top: 0;
+      left: 0;
+  }
+  .avatar.avatar-xxl {
+    width: 110px;
+    height: 110px;
+  }
+  .progress-value {
+      position: absolute;
+      top: 5%;
+      left: 5%;
+      width: 90%;
+      height: 90%;
+      font-size: 12px;
+      color: $gray-700;
+      line-height: 38px;
+      text-align: center;
+  }
+  .progress-left {
+      left: 0;
+      .progress-bar {
+          left: 100%;
+          border-top-right-radius: 80px;
+          border-bottom-right-radius: 80px;
+          border-left: 0;
+          -webkit-transform-origin: center left;
+          transform-origin: center left;
+      }
+  }
+  .progress-right {
+      right: 0;
+      .progress-bar {
+          left: -100%;
+          border-top-left-radius: 80px;
+          border-bottom-left-radius: 80px;
+          border-right: 0;
+          -webkit-transform-origin: center right;
+          transform-origin: center right;
+          animation: loading-1 1.8s linear forwards;
+        }
+  }
+  .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: none;
+      border-width: 4px;
+      border-style: solid;
+      position: absolute;
+      top: 0;
+  }
+}
+.attendance-circle-progress>span {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+.pipeline-list.candidates {
+  ul {
+    li {
+      a {
+        min-width: 135px;
+      }
+    }
+  }
+}
+.card-translate-top {
+  margin-top: -120px;
+}
+.filter-range .irs--flat .irs-handle>i:first-child {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -1px;
+  background-color:$primary;
+  border-radius: 50px;
+  border: 0;
+}
+.filter-range .irs--flat .irs-line {
+  top: 28px;
+  height: 6px;
+  background-color: $light;
+  border-radius: 4px;
+}
+.filter-range .irs--flat .irs-bar {
+  top: 28px;
+  height: 6px;
+  background-color: $primary;
+}
+.filter-range .irs-with-grid .irs-grid {
+display: none;
+}
+.filter-range .irs--flat .irs-from, 
+.filter-range .irs--flat .irs-to, 
+.filter-range .irs--flat .irs-single {
+  color: white;
+  font-size: 14px;
+  line-height: 1.333;
+  text-shadow: none;
+  padding: 4px 12px;
+  background-color:$primary;
+  border-radius: 4px;
+  top:-10px;
+}
+.filter-range .irs--flat .irs-from:before,
+.filter-range .irs--flat .irs-to:before, 
+.filter-range .irs--flat .irs-single:before {
+  border-top-color: $primary;
+  left: 60%;
+}
+.breadcrumb-bg {
+  img {
+    position: absolute;
+    &.job-bg-01 {
+      left: 0;
+      top: 25%;
+    }
+    &.job-bg-02 {
+      left: 20%;
+      top: -30%;
+    }
+    &.job-bg-03 {
+      left: 60%;
+      top: 10%;
+    }
+    &.job-bg-04 {
+      right: 0;
+      top: 0;
+    }
+  }
+}
+.task-tag{
+  &:hover{
+    color: $dark;
+  }
+}
+.permission-table{
+  .form-check-input{
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+}
+.leave-duallist select.form-control[multiple] {
+  height: 200px;
+  padding: 7px;
+}
+.og-upload{
+  width: 8rem;
+  height: 5rem;
+}

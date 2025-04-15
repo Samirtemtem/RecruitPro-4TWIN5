@@ -1,0 +1,75 @@
+{
+    "data":[
+        {
+          "Image": "user-01.jpg",
+          "Author": "Ivan Lucas",
+          "Role": "HR Manager",
+          "Content": "This system streamlined our HR processes, saving us time and boosting team efficiency.",
+          "CreatedDate": "12/09/2024"
+        },
+        {
+          "Image": "user-02.jpg",
+          "Author": "John Mason",
+          "Role": "HR Manager",
+          "Content": "This system has made payroll and attendance tracking so much easier for our team",
+          "CreatedDate": "24/10/2024"
+        },
+        {
+          "Image": "user-03.jpg",
+          "Author": "Susan Hill",
+          "Role": "HR Manager",
+          "Content": "We've significantly reduced paperwork and manual errors since implementing this platform",
+          "CreatedDate": "18/02/2024"
+        },
+        {
+          "Image": "user-04.jpg",
+          "Author": "Gary Payton",
+          "Role": "HR Manager",
+          "Content": "Managing employee leave requests and benefits is now a hassle-free process",
+          "CreatedDate": "17/10/2024"
+        },
+        {
+          "Image": "user-05.jpg",
+          "Author": "Jennifer Vaughn",
+          "Role": "HR Manager",
+          "Content": "This platform has drastically cut down the time we spend on recruitment and onboarding.",
+          "CreatedDate": "20/07/2024"
+        },
+        {
+          "Image": "user-06.jpg",
+          "Author": "Ricky Easley",
+          "Role": "HR Manager",
+          "Content": "The system's ease of use has greatly improved our HR team's productivity.",
+          "CreatedDate": "10/04/2024"
+        },
+        {
+          "Image": "user-07.jpg",
+          "Author": "David Rodriguez",
+          "Role": "HR Manager",
+          "Content": "The platform allows me to update my personal details and view my payslips instantly",
+          "CreatedDate": "29/08/2024"
+        },
+        {
+          "Image": "user-08.jpg",
+          "Author": "Dennis Lorenzo",
+          "Role": "Employee",
+          "Content": "Submitting my timesheets and checking my attendance is super easy with this tool.",
+          "CreatedDate": "22/02/2024"
+        },
+        {
+          "Image": "user-09.jpg",
+          "Author": "Barry Ducote",
+          "Role": "Manager",
+          "Content": "Enhanced employee performance tracking and simplified payroll management effortlessly.",
+          "CreatedDate": "03/11/2024"
+        },
+        {
+          "Image": "user-10.jpg",
+          "Author": "Judy Walton",
+          "Role": "Employee",
+          "Content": "It’s great to see all my benefits and compensation details in one user-friendly interface.",
+          "CreatedDate": "17/12/2024"
+        }
+       ],
+    "totaldata":10
+}

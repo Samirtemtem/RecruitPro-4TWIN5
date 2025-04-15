@@ -1,0 +1,69 @@
+{
+  "data": [
+    {
+      "Plan_Name": "Basic",
+      "Plan_Type": "Monthly",
+      "Total_Subscribers": "56",
+      "Price": "$50",
+      "Created_Date": "14/01/2024",
+      "Status": "Active"
+    },
+    {
+      "Plan_Name": "Advanced",
+      "Plan_Type": "Monthly",
+      "Total_Subscribers": "99",
+      "Price": "$200",
+      "Created_Date": "21/01/2024",
+      "Status": "Active"
+    },
+    {
+      "Plan_Name": "Premium",
+      "Plan_Type": "Monthly",
+      "Total_Subscribers": "58",
+      "Price": "$300",
+      "Created_Date": "10/02/2024",
+      "Status": "Active"
+    },
+    {
+      "Plan_Name": "Enterprise",
+      "Plan_Type": "Monthly",
+      "Total_Subscribers": "67",
+      "Price": "$400",
+      "Created_Date": "18/02/2024",
+      "Status": "Active"
+    },
+    {
+      "Plan_Name": "Basic",
+      "Plan_Type": "Yearly",
+      "Total_Subscribers": "78",
+      "Price": "$600",
+      "Created_Date": "15/03/2024",
+      "Status": "Active"
+    },
+    {
+      "Plan_Name": "Advanced",
+      "Plan_Type": "Yearly",
+      "Total_Subscribers": "99",
+      "Price": "$2400",
+      "Created_Date": "26/03/2024",
+      "Status": "Active"
+    },
+    {
+      "Plan_Name": "Premium",
+      "Plan_Type": "Yearly",
+      "Total_Subscribers": "48",
+      "Price": "$3600",
+      "Created_Date": "05/04/2024",
+      "Status": "Active"
+    },
+    {
+      "Plan_Name": "Enterprise",
+      "Plan_Type": "Yearly",
+      "Total_Subscribers": "17",
+      "Price": "$4800",
+      "Created_Date": "16/04/2024",
+      "Status": "Active"
+    }
+  ],
+  "totalData": 8
+}

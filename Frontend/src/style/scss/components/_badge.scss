@@ -1,0 +1,126 @@
+.badge {
+    &.badge-primary {
+        background: rgba($primary, 0.1);
+        box-shadow: 0 1px 1px rgba($primary, 0.5);
+        color: $primary;        
+    }
+    &.badge-skyblue{
+        background-color: $skyblue;
+        color: $white;
+    }
+    &.badge-pink{
+        background-color: $pink;
+        color: $white;
+    }
+    &.badge-dark-transparent {
+        background: $dark-transparent;
+        color: $gray-900;
+    }
+    &.badge-secondary-transparent {
+        background: $secondary-transparent;
+        color: $secondary;
+    }
+    &.badge-pink-transparent {
+        background: $pink-transparent;
+        color: $pink;
+    }
+    &.badge-secondary-transparent {
+        background: $secondary-transparent;
+        color: $secondary;
+    }
+    &.badge-success-transparent {
+        background: $success-100;
+        color: $success;
+    }
+    &.badge-purple-transparent {
+        background:$purple-transparent;
+        color: $purple;
+    }
+    &.badge-warning-transparent {
+        background:$warning-transparent;
+        color: $warning;
+    }
+    &.badge-danger-transparent {
+        background:$danger-transparent;
+        color: $danger;
+    }
+    &.badge-info-transparent {
+        background:$info-transparent;
+        color: $info;
+    }
+}
+@each $color, $value in $theme-colors {
+    .badge {
+        &.badge-#{$color} {
+            background: #{$value};
+            color: $white;
+        }
+        &.badge-soft-#{$color} {
+            background: rgba($value, 0.1);
+            color: $value;
+        }
+    }
+}
+.badge{
+    padding: .25rem .45rem;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.5px;
+    border-radius: $border-radius;
+    &.badge-xs {
+        font-size: 10px;
+        font-weight: $font-weight-medium;
+        padding: 0px 5px;
+        line-height: 18px;
+    }
+    &.badge-sm {
+        font-size: 11px;
+        padding: 5px 8px;
+        line-height: 11px;
+    }
+    &.badge-md {
+        font-size: 12px;
+        padding: 5px 12px;
+        line-height: 1.5;
+    }
+    &.badge-lg {
+        font-size: $font-size-14;
+        padding: 0px 10px;
+        line-height: 30px;
+    }
+    &.badge-xl {
+        font-size: $font-size-16;
+        padding: 0px 15px;
+        line-height: 35px;
+    }
+    &.badge-soft-skyblue {
+        background: $skyblue-100;
+        color: $skyblue;
+    }
+}
+.badge.arrow {
+    width: 20px;
+    height: 20px;
+    background: $light-200;
+    color: $dark;
+    &:hover {
+        background: $primary;
+        color: $white;
+    }
+}
+.badge.bg-light.arrow:hover {
+    background: $dark !important;
+}
+.badge-primary-hover:hover {
+    background: $primary !important;
+    border-color: $primary !important;
+    color: $white !important;
+}
+.badge-danger-hover:hover {
+    background: $danger !important;
+    border-color: $danger !important;
+    color: $white !important;
+}
+.badge.badge-soft-purple {
+    background: $purple-100 !important;
+    color: $purple !important;
+}

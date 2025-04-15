@@ -236,6 +236,34 @@ Retrieves statistics about a candidate's recommendations and interactions.
   }
   ```
 
+#### 4. Get Match Details Job/Candidate
+
+Provides similarity score and skill matching (exact and semantic) between a candidate and a jobpost
+
+- **URL**: `/api/match-details`
+- **Method**: POST
+- **Request Body**:
+  ```json
+  {
+    "candidateId": "60a2b4e8b54c6a1e9c9c9f1d",
+    "jobId": "60a2b4e8b54c6a1e9c9c9f1e"
+  }
+  ```
+- **Success Response**:
+  ```json
+  {
+    "candidateId": "60a2b4e8b54c6a1e9c9c9f1d",
+    "jobId": "60a2b4e8b54c6a1e9c9c9f1e",
+    "similarity": 0.82,
+    "exactSkillMatches": ["Python", "Django"],
+    "semanticSkillMatches": [
+      { "jobSkill": "PostgreSQL", "candidateSkill": "SQL" },
+      { "jobSkill": "REST", "candidateSkill": "API development" }
+    ]
+  }
+  ```
+
+
 ### Angular Integration Example
 
 Here's how to integrate the recommendation system with an Angular application:

@@ -736,6 +736,266 @@ def debug_skill_analysis():
     except Exception as e:
         return f"Error analyzing skills: {str(e)}"
 
+
+
+@app.route('/debug/match-details', methods=['GET', 'POST'])
+def debug_match_details():
+    if request.method == 'POST':
+        candidate_id = request.form['candidate_id']
+        job_id = request.form['job_id']
+        return redirect(url_for('match_details_result', candidate_id=candidate_id, job_id=job_id))
+
+    return '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Match Details Debug</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            body { padding: 30px; }
+            .form-container {
+                max-width: 500px;
+                margin: auto;
+                padding: 30px;
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            h2 {
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <a href="/" class="btn btn-primary mb-4">⬅ Back to Home</a>
+            <div class="form-container">
+                <h2>Debug Match Details</h2>
+                <form method="post">
+                    <div class="form-group">
+                        <label for="candidate_id">Candidate ID</label>
+                        <input type="text" class="form-control" id="candidate_id" name="candidate_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="job_id">Job ID</label>
+                        <input type="text" class="form-control" id="job_id" name="job_id" required>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">Check Match</button>
+                </form>
+            </div>
+        </div>
+    </body>
+    </html>
+    '''
+
+    
+@app.route('/debug/match-details/result')
+def match_details_result():
+    candidate_id = request.args.get('candidate_id')
+    job_id = request.args.get('job_id')
+
+    candidate_id = str(candidate_id).strip()
+    job_id = str(job_id).strip()
+
+    candidate_idx, _ = find_candidate_by_id(candidate_id, candidates)
+    job_idx = jobposts[jobposts['JobID'].astype(str) == job_id].index
+
+    if candidate_idx is None or job_idx.empty:
+        return f"<h3 style='color:red;'>No match found for candidate {candidate_id} or job {job_id}</h3>"
+
+    job_idx = job_idx[0]
+    similarity = similarity_matrix[job_idx, candidate_idx]
+
+    job_data = jobposts.iloc[job_idx]
+    candidate_data = candidates.iloc[candidate_idx]
+
+    job_skills = job_data['Skills'] if isinstance(job_data['Skills'], list) else []
+    candidate_skills = candidate_data['Skills'] if isinstance(candidate_data['Skills'], list) else []
+
+    exact_matches = [skill for skill in job_skills if skill in candidate_skills]
+    semantic_matches = []
+    for job_skill in job_skills:
+        for candidate_skill in candidate_skills:
+            if job_skill.lower() in candidate_skill.lower() or candidate_skill.lower() in job_skill.lower():
+                if job_skill not in exact_matches and job_skill not in [m['jobSkill'] for m in semantic_matches]:
+                    semantic_matches.append({
+                        'jobSkill': job_skill,
+                        'candidateSkill': candidate_skill
+                    })
+
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Match Details</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            body {{ padding: 30px; }}
+            .skill-tag {{
+                padding: 5px 10px;
+                border-radius: 4px;
+                margin: 4px;
+                display: inline-block;
+                font-size: 14px;
+            }}
+            .skill-match {{ background-color: #d4edda; color: #155724; }}
+            .skill-partial {{ background-color: #fff3cd; color: #856404; }}
+            .similarity-score {{ font-size: 24px; font-weight: bold; color: #007bff; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <a href="/debug/match-details" class="btn btn-secondary mb-4">⬅ Back</a>
+            <h1>Job-Candidate Match Details</h1>
+            <p><strong>Candidate ID:</strong> {candidate_id}</p>
+            <p><strong>Job ID:</strong> {job_id}</p>
+            <p class="similarity-score">Similarity Score: {similarity * 100:.2f}%</p>
+
+            <div class="card mt-4">
+                <div class="card-header"><strong>Exact Skill Matches</strong></div>
+                <div class="card-body">
+                    {" ".join([f"<span class='skill-tag skill-match'>{skill}</span>" for skill in exact_matches]) or "<p class='text-muted'>None</p>"}
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header"><strong>Semantic Skill Matches</strong></div>
+                <div class="card-body">
+                    {" ".join([f"<span class='skill-tag skill-partial'>{m['jobSkill']} ≈ {m['candidateSkill']}</span>" for m in semantic_matches]) or "<p class='text-muted'>None</p>"}
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    return html
+
+    candidate_id = request.args.get('candidate_id')
+    job_id = request.args.get('job_id')
+
+    from flask import Response
+    import json
+
+    # Simulate API call
+    candidate_id = str(candidate_id).strip()
+    job_id = str(job_id).strip()
+
+    candidate_idx, _ = find_candidate_by_id(candidate_id, candidates)
+    job_idx = jobposts[jobposts['JobID'].astype(str) == job_id].index
+
+    if candidate_idx is None or job_idx.empty:
+        return Response(f"No match found for candidate {candidate_id} or job {job_id}", mimetype='text/plain')
+
+    job_idx = job_idx[0]
+    similarity = similarity_matrix[job_idx, candidate_idx]
+
+    job_data = jobposts.iloc[job_idx]
+    candidate_data = candidates.iloc[candidate_idx]
+
+    job_skills = job_data['Skills'] if isinstance(job_data['Skills'], list) else []
+    candidate_skills = candidate_data['Skills'] if isinstance(candidate_data['Skills'], list) else []
+
+    exact_matches = [skill for skill in job_skills if skill in candidate_skills]
+
+    semantic_matches = []
+    for job_skill in job_skills:
+        for candidate_skill in candidate_skills:
+            if job_skill.lower() in candidate_skill.lower() or candidate_skill.lower() in job_skill.lower():
+                if job_skill not in exact_matches and job_skill not in [m['jobSkill'] for m in semantic_matches]:
+                    semantic_matches.append({
+                        'jobSkill': job_skill,
+                        'candidateSkill': candidate_skill
+                    })
+
+    result = {
+        'candidateId': candidate_id,
+        'jobId': job_id,
+        'similarity': round(float(similarity), 4),
+        'exactSkillMatches': exact_matches,
+        'semanticSkillMatches': semantic_matches
+    }
+
+    return Response(json.dumps(result, indent=4), mimetype='application/json')
+
+
+
+#########################################################################################################################################
+
+## API Endpoints 
+# Route to get match details for a specific candidate and job
+@app.route('/api/match-details', methods=['POST'])
+def get_match_details():
+    """
+    Endpoint to retrieve detailed matching information for a candidate-job pair.
+
+    Accepts userId (from users collection) and jobId, maps it to profileId internally.
+
+    Expected JSON payload:
+    {
+        "userId": "<user_id>",
+        "jobId": "<job_id>"
+    }
+
+    Returns:
+        JSON with match scores and skill matches.
+    """
+    try:
+        data = request.get_json()
+
+        if not data or 'userId' not in data or 'jobId' not in data:
+            return jsonify({'error': 'Missing userId or jobId'}), 400
+
+        user_id = str(data['userId']).strip()
+        job_id = str(data['jobId']).strip()
+
+        # Map userId to profileId (which is the CandidateID used in recommendations)
+        candidate_row = candidates[candidates['user'].astype(str) == user_id]
+
+        if candidate_row.empty:
+            return jsonify({'error': f'No profile found for userId {user_id}'}), 404
+
+        candidate_id = str(candidate_row.iloc[0]['_id'])
+
+        if job_id not in detailed_matching_info:
+            return jsonify({'error': f'Job ID {job_id} not found in match data'}), 404
+
+        if candidate_id not in detailed_matching_info[job_id]:
+            return jsonify({'error': f'Candidate ID {candidate_id} not found for Job ID {job_id}'}), 404
+
+        match = detailed_matching_info[job_id][candidate_id]
+
+        response = {
+            'candidateId': candidate_id,
+            'jobId': job_id,
+            'similarity': round(match.get('total_similarity', 0.0), 4),
+            'skillScore': round(match.get('skill_similarity', 0.0), 4),
+            'experienceScore': round(match.get('experience_similarity', 0.0), 4),
+            'educationScore': round(match.get('education_similarity', 0.0), 4),
+            'exactSkillMatches': match.get('exact_skill_matches', []),
+            'semanticSkillMatches': [
+                {'jobSkill': js, 'candidateSkill': cs}
+                for js, cs in match.get('semantic_skill_matches', [])
+            ],
+            'semanticEducationMatches': [
+                {'jobEducation': je, 'candidateEducation': ce}
+                for je, ce in match.get('semantic_education_matches', [])
+            ],
+            'semanticExperienceMatches': [
+                {'jobExperience': je, 'candidateExperience': ce}
+                for je, ce in match.get('semantic_experience_matches', [])
+            ],
+            'jobLanguage': match.get('job_language', 'en'),
+            'candidateLanguage': match.get('candidate_language', 'en'),
+            'originalJobSkills': match.get('original_job_skills', []),
+            'originalCandidateSkills': match.get('original_candidate_skills', [])
+        }
+
+        return jsonify(response), 200
+
+    except Exception as e:
+        logging.exception("Error in get_match_details")
+        return jsonify({'error': f'Internal server error: {str(e)}'}), 500
+
 def update_user_recommendations(user_id):
     """Update recommendations for a specific user and store in the database"""
     # Find the candidate in the dataset

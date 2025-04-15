@@ -244,7 +244,16 @@ const ProjectDetails = () => {
         <i className="ti ti-user me-1" />
         Candidates
     </Link>
+   
 </div>
+<div className="ms-2">
+    <Link to={`/candidates-grid-recomand/${id}`} className="btn btn-primary">
+        <i className="ti ti-user me-1" />
+        Recommanded
+    </Link>
+   
+</div>
+
 
 
 

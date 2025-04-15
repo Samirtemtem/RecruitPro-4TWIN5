@@ -90,6 +90,10 @@ router.get('/jobposts/:jobPostId/candidates', async (req: Request, res: Response
   }
 });
 
+
+
+
+
 // Get Application by ID
 router.get('/applications/:id', async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
@@ -521,6 +525,41 @@ router.patch('/applications/:id/reject', async (req: Request, res: Response): Pr
       res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+
+
+
+
+// Route to get candidates by job post ID
+router.get('/applications/jobPost/:jobPostId/candidates', async (req: Request, res: Response): Promise<void> => {
+  const { jobPostId } = req.params;
+
+  try {
+    const applications = await Application.find({ jobPost: jobPostId })
+      .populate('candidate') // Populate the entire candidate object
+      .sort({ compatibilityScore: -1 }); // Sort by compatibility score descending
+
+    if (!applications.length) {
+      res.status(404).json({ message: 'No applications found for this job post.' });
+      return;
+    }
+
+    const candidates = applications.map(application => ({
+      candidate: application.candidate, // Return the full candidate object
+      compatibilityScore: application.compatibilityScore
+    }));
+
+    res.status(200).json(candidates);
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error });
+    return;
+  }
+});
+
+
 
 
 

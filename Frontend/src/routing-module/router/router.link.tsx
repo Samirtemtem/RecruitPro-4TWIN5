@@ -13,6 +13,7 @@ import JobGrid from "../../back-office/recruitment/jobs/jobgrid";
 import JobList from "../../back-office/recruitment/joblist/joblist";
 import CandidateGrid from "../../back-office/recruitment/candidates/candidategrid";
 import CandidateGridPerJobPost from "../../back-office/recruitment/candidates/candidategridPerJobPost";
+import CandidateGridPerJobPostRecom from "../../back-office/recruitment/candidates/candidategridRecomPerJobPost";
 import ProjectDetails from "../../back-office/projects/project/projectdetails";
 import EmployeeList from "../../back-office/hrm/employees/employeesList";
 import TwoStepVerification from "../../front-office/auth/TwoStepVerification";
@@ -363,6 +364,11 @@ export const authRoutes = [
   {
     path:"/candidates-grid/:id",
     element: <CandidateGridPerJobPost />,
+    route: Route,
+  },
+  {
+    path:"/candidates-grid-recomand/:id",
+    element: <CandidateGridPerJobPostRecom />,
     route: Route,
   },
   {

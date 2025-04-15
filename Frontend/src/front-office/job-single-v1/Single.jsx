@@ -6,6 +6,7 @@ import JobDetailsDescriptions from "./job-single-pages/shared-components/JobDeta
 import DefaulHeader2 from "../../common/Header";
 import MapJobFinder from "./job-listing-pages/components/MapJobFinder";
 import SocialTwo from "./job-single-pages/social/SocialTwo";
+import { useAuth } from "../../routing-module/AuthContext";
 
 const JobSingleDynamicV1 = () => {
   const { id: jobId } = useParams();
@@ -14,17 +15,26 @@ const JobSingleDynamicV1 = () => {
   const [error, setError] = useState(null);
   const [applicationStatus, setApplicationStatus] = useState(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [matchData, setMatchData] = useState(null);
+  const [loadingMatch, setLoadingMatch] = useState(false);
+  
+  // Get auth context for profile data
+  const { token, userId } = useAuth();
 
+  // Fetch job data
   useEffect(() => {
     const fetchJob = async () => {
       try {
+        console.log("Fetching job data for ID:", jobId);
         const response = await fetch(`http://localhost:5000/api/jobs/${jobId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        console.log("Job data received:", data);
         setJob(data);
       } catch (error) {
+        console.error("Error fetching job data:", error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -34,6 +44,73 @@ const JobSingleDynamicV1 = () => {
     fetchJob();
   }, [jobId]);
 
+  // Track job view interaction when job is loaded
+  useEffect(() => {
+    if (job.title && userId) {
+      trackJobInteraction('view');
+    }
+  }, [job.title, userId]);
+
+  // Fetch matching data when job is loaded and user is authenticated
+  useEffect(() => {
+    if (job.title && userId) {
+      fetchMatchingData();
+    }
+  }, [job.title, userId]);
+
+  // Function to fetch matching data from recommendation service
+  const fetchMatchingData = async () => {
+    if (!userId || !jobId) return;
+    
+    try {
+      setLoadingMatch(true);
+      console.log("Fetching matching data from recommendation service...");
+      
+      // Make a request to get recommendations specific to this job
+      const response = await fetch(`http://localhost:5000/api/recommendations/jobs?candidateId=${userId}&jobId=${jobId}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch matching data');
+      }
+      
+      const data = await response.json();
+      console.log("Match data received:", data);
+      
+      if (data && data.matchData) {
+        setMatchData(data.matchData);
+      }
+    } catch (error) {
+      console.error("Error fetching match data:", error);
+    } finally {
+      setLoadingMatch(false);
+    }
+  };
+
+  // Function to track job interactions (view, click, apply)
+  const trackJobInteraction = async (type) => {
+    if (!userId || !jobId) return;
+    
+    try {
+      const response = await fetch('http://localhost:5000/api/recommendations/interaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          candidateId: userId,
+          jobId: jobId,
+          type: type
+        })
+      });
+      
+      if (!response.ok) {
+        console.error(`Failed to track ${type} interaction`);
+      }
+    } catch (error) {
+      console.error(`Error tracking ${type} interaction:`, error);
+    }
+  };
+
   const handleApplyJob = () => {
     const candidateId = localStorage.getItem("userId");
     if (!candidateId) {
@@ -41,6 +118,9 @@ const JobSingleDynamicV1 = () => {
       return;
     }
     setShowConfirmDialog(true);
+    
+    // Track click interaction
+    trackJobInteraction('click');
   };
 
   const confirmApplication = async () => {
@@ -68,6 +148,9 @@ const JobSingleDynamicV1 = () => {
       const result = await response.json();
       setApplicationStatus("Application submitted successfully!");
       
+      // Track apply interaction
+      trackJobInteraction('apply');
+      
       // Automatically hide the success message after 1 second
       setTimeout(() => setApplicationStatus(null), 1000);
     } catch (error) {
@@ -81,6 +164,12 @@ const JobSingleDynamicV1 = () => {
   if (error) return <h1>Error: {error}</h1>;
   if (!job.title) return <h1>No Job Found</h1>;
 
+  // Extract data from matchData or use defaults
+  const matchPercentage = matchData?.matchPercentage || 0;
+  const matchingSkills = matchData?.matchingSkills || [];
+  const totalSkills = matchData?.totalSkills || 0;
+  const skillsToImprove = matchData?.skillsToImprove || [];
+
   const jobOverviewStyle = {
     width: "120%",
     padding: "20px",
@@ -92,6 +181,27 @@ const JobSingleDynamicV1 = () => {
   const skillBackgroundColors = [
     "#6c757d", "#17a2b8", "#5a6268", "#495057", "#343a40", "#007bff", "#28a745", "#ffc107",
   ];
+
+  // Get color for match percentage
+  const getMatchColor = (percentage) => {
+    if (percentage >= 75) return "#28a745"; // Green for high match
+    if (percentage >= 50) return "#ffc107"; // Yellow for medium match
+    return "#dc3545"; // Red for low match
+  };
+
+  // Style for the skills match text (LinkedIn-style)
+  const matchTextStyle = {
+    display: "flex",
+    alignItems: "center",
+    padding: "10px 12px",
+    backgroundColor: "#f3f9ff",
+    borderRadius: "6px",
+    border: "1px solid #e1e9f0",
+    fontWeight: "600",
+    color: "#0a66c2",
+    marginBottom: "15px",
+    fontSize: "14px"
+  };
 
   return (
     <>
@@ -139,9 +249,28 @@ const JobSingleDynamicV1 = () => {
                       </li>
                     ))}
                   </ul>
+                  
+                  {/* LinkedIn-style skills match display */}
+                  {userId && matchingSkills.length > 0 && (
+                    <div style={matchTextStyle}>
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" data-supported-dps="16x16" fill="#0a66c2" width="16" height="16" focusable="false" style={{marginRight: "8px"}}>
+                        <path d="M13 4a1 1 0 11-1-1 1 1 0 011 1zM3 4a1 1 0 11-1-1 1 1 0 011 1zm4.5 6a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm0-6a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zM3 9.5A1.5 1.5 0 104.5 11 1.5 1.5 0 003 9.5zM13 9.5a1.5 1.5 0 10-1.5 1.5 1.5 1.5 0 001.5-1.5z"></path>
+                      </svg>
+                      {matchingSkills.length} of {totalSkills} skills match your profile - you may be a good fit
+                    </div>
+                  )}
+                  
+                  {userId && loadingMatch && (
+                    <div style={{ ...matchTextStyle, color: "#6c757d" }}>
+                      <div className="spinner-border spinner-border-sm text-secondary mr-2" role="status" style={{marginRight: "8px"}}>
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                      Analyzing your match with this job...
+                    </div>
+                  )}
                 </div>
 
-                <div className="btn-box">
+                <div className="btn-box" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
                   <a
                     href="#"
                     className="theme-btn btn-style-one"
@@ -149,11 +278,52 @@ const JobSingleDynamicV1 = () => {
                   >
                     Apply For Job
                   </a>
+                  
+                  {/* Match Percentage Badge */}
+                  {userId && matchData && (
+                    <div className="match-badge" style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      backgroundColor: "#f9f9f9",
+                      padding: "5px 12px",
+                      borderRadius: "20px",
+                      border: `2px solid ${getMatchColor(matchPercentage)}`,
+                      boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
+                    }}>
+                      <div style={{
+                        width: "36px",
+                        height: "36px",
+                        borderRadius: "50%",
+                        backgroundColor: getMatchColor(matchPercentage),
+                        color: "#fff",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontWeight: "bold",
+                        fontSize: "14px"
+                      }}>
+                        {Math.round(matchPercentage)}%
+                      </div>
+                      <div style={{
+                        display: "flex",
+                        flexDirection: "column"
+                      }}>
+                        <span style={{fontSize: "12px", color: "#555"}}>Match</span>
+                        <span style={{fontSize: "12px", fontWeight: "bold", color: getMatchColor(matchPercentage)}}>
+                          {matchPercentage >= 75 ? 'Strong' : matchPercentage >= 50 ? 'Good' : 'Partial'}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  
                   <button className="bookmark-btn">
                     <i className="flaticon-bookmark"></i>
                   </button>
                 </div>
 
+
+                
               </div>
             </div>
           </div>

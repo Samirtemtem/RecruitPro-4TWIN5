@@ -1,0 +1,34 @@
+<svg width="200" height="151" viewBox="0 0 200 151" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1_1066_41561" fill="white">
+<path d="M0 0H200V11H0V0Z"/>
+</mask>
+<path d="M0 0H200V11H0V0Z" fill="white"/>
+<path d="M0 0V-0.5H-0.5V0H0ZM200 0H200.5V-0.5H200V0ZM0 0.5H200V-0.5H0V0.5ZM199.5 0V11H200.5V0H199.5ZM0.5 11V0H-0.5V11H0.5Z" fill="#E5E7EB" mask="url(#path-1-inside-1_1066_41561)"/>
+<circle cx="6.5" cy="5.5" r="1.5" fill="#D00C0C"/>
+<circle cx="11.5" cy="5.5" r="1.5" fill="#03C95A"/>
+<circle cx="16.5" cy="5.5" r="1.5" fill="#FFC107"/>
+<path d="M0.25 11.25H199.75V149.75H0.25V11.25Z" fill="white"/>
+<path d="M0.25 11.25H199.75V149.75H0.25V11.25Z" stroke="#E5E7EB" stroke-width="0.5"/>
+<mask id="path-7-inside-2_1066_41561" fill="white">
+<path d="M0.5 11.5H199.5V19.5H0.5V11.5Z"/>
+</mask>
+<path d="M0.5 11.5H199.5V19.5H0.5V11.5Z" fill="#212529"/>
+<path d="M199.5 19H0.5V20H199.5V19Z" fill="#E5E7EB" mask="url(#path-7-inside-2_1066_41561)"/>
+<rect x="5.5" y="13.5" width="15" height="4" rx="2" fill="#F26522"/>
+<rect x="32.5" y="13.5" width="18" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="52.5" y="13.5" width="18" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="72.5" y="13.5" width="9" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="83.5" y="13.5" width="22" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="107.5" y="13.5" width="13" height="3" rx="1.5" fill="#DCE5E8"/>
+<circle cx="169.5" cy="15.5" r="2" fill="#DCE5E8"/>
+<circle cx="175.5" cy="15.5" r="2" fill="#DCE5E8"/>
+<circle cx="181.5" cy="15.5" r="2" fill="#DCE5E8"/>
+<circle cx="187.5" cy="15.5" r="2" fill="#DCE5E8"/>
+<circle cx="193.5" cy="15.5" r="2" fill="#DCE5E8"/>
+<rect x="0.5" y="19" width="199" height="125" fill="#EDF2F4"/>
+<path d="M0.5 128.75H199.5V128.25H0.5V128.75Z" fill="#E5E7EB"/>
+<rect width="41" height="2" rx="1" transform="matrix(1 0 0 -1 77 132.5)" fill="#EDF2F4"/>
+<rect x="0.5" y="19" width="199" height="25" fill="#212529"/>
+<rect x="43" y="22" width="153" height="109" rx="5" fill="white"/>
+<rect x="5" y="22" width="33" height="109" rx="5" fill="white"/>
+</svg>

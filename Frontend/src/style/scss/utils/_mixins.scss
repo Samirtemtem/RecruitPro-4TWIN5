@@ -1,0 +1,113 @@
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+// Respond Above
+
+@mixin respond-above($breakpoint) {
+
+  // If the breakpoint exists in the map.
+  @if map-has-key($breakpoints, $breakpoint) {
+
+    // Get the breakpoint value.
+    $breakpoint-value: map-get($breakpoints, $breakpoint);
+
+    // Write the media query.
+    @media (min-width: $breakpoint-value) {
+      @content;
+    }
+
+  // If the breakpoint doesn't exist in the map.
+  } @else {
+
+    // Log a warning.
+    @warn 'Invalid breakpoint: #{$breakpoint}.';
+  }
+}
+
+// Respond Above
+
+@mixin respond-below($breakpoint) {
+
+  // If the breakpoint exists in the map.
+  @if map-has-key($breakpoints, $breakpoint) {
+
+    // Get the breakpoint value.
+    $breakpoint-value: map-get($breakpoints, $breakpoint);
+    $breakpoint-value: map-get($breakpoints, $breakpoint);
+
+    // For value like 991.98px, 1199.98px, 1399.98px
+    $max-value: $breakpoint-value - 0.02px;
+
+    // Write the media query.
+    @media (max-width: $max-value) {
+      @content;
+    }
+
+  // If the breakpoint doesn't exist in the map.
+  } @else {
+
+    // Log a warning.
+    @warn 'Invalid breakpoint: #{$breakpoint}.';
+  }
+}
+
+@mixin transform($property) {
+  transform: $property;
+  -webkit-transform: $property;
+  -ms-transform: $property;
+}
+
+
+@mixin transition($property) {
+  -webkit-transition: $property;
+  -ms-transition: $property;
+  transition: $property;
+}
+
+@mixin placeholder-color($color) {
+  &::-webkit-input-placeholder { /* WebKit browsers */
+      color: $color;
+      opacity: 1;
+  }
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color: $color;
+      opacity: 1;
+  }
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color: $color;
+      opacity: 1;
+  }
+  &:-ms-input-placeholder { /* Internet Explorer 10+ */
+      color: $color;
+      opacity: 1;
+  }
+}
+
+@mixin rounded($unit) {
+  border-radius: $unit;
+}
+
+@mixin transform-origin($property) {
+  transform-origin: $property;
+  -webkit-transform-origin: $property;
+  -ms-transform-origin: $property;
+}
+
+@mixin box-shadow($inset:inset,$horizontaloffset:10px,$verticaloffset:10px,$blur:10px,$spread:10px,$color: #000000) {
+  -webkit-box-shadow: $inset $horizontaloffset $verticaloffset $blur $spread $color;
+  -moz-box-shadow: $inset $horizontaloffset $verticaloffset $blur $spread $color;
+  box-shadow: $inset $horizontaloffset $verticaloffset $blur $spread $color;
+}
+
+%animation-effect {   
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}

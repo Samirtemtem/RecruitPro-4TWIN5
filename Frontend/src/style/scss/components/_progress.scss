@@ -1,0 +1,317 @@
+.progress {
+    background-color: $light-900;
+    height: 0.75rem;
+    border-radius: 0.25rem;
+}
+.progress-stacked {
+    background-color: $light-900;
+}
+.progress-bar {
+    color: $white;
+    background-color: $primary;
+}
+
+@keyframes progress-animate {
+    0% {
+        width: 0;
+    }
+}
+.progress-animate {
+    position: relative;
+    border-radius: 0.625rem;
+    .progress-bar {
+        position: relative;
+        border-radius: 0.625rem;
+        animation:  2s progress-animate;
+    }
+}
+.progress,.progress-stacked {
+    &.progress-xs {
+        height: .3125rem;
+    }
+    &.progress-sm {
+        height: 0.5rem;
+    }
+    &.progress-lg {
+        height: 1rem;
+    }
+    &.progress-xl {
+        height: 1.25rem;
+    }
+}
+.progress-vertical {
+    min-height: 250px;
+    height: 250px;
+    width: 10px;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0;
+    margin-right: 20px;
+
+    .progress-bar {
+        width: 100%;
+    }
+
+    &.progress-xl {
+        width: 15px;
+    }
+
+    &.progress-lg {
+        width: 12px;
+    }
+
+    &.progress-sm {
+        width: 8px;
+    }
+
+    &.progress-xs {
+        width: 5px;
+    }
+}
+.progress-vertical-bottom {
+    min-height: 250px;
+    height: 250px;
+    position: relative;
+    width: 10px;
+    display: inline-block;
+    margin-bottom: 0;
+    margin-right: 20px;
+
+    .progress-bar {
+        width: 100%;
+        bottom: 0;
+        position: absolute;
+    }
+
+    &.progress-xl {
+        width: 15px;
+    }
+
+    &.progress-lg {
+        width: 12px;
+    }
+
+    &.progress-sm {
+        width: 8px;
+    }
+
+    &.progress-xs {
+        width: 5px;
+    }
+}
+.progress-custom {
+    overflow: visible;
+    position: relative;
+    .progress-bar {
+        position: relative;
+        overflow: visible;
+        &:after {
+            content: "";
+            width: 1.15rem;
+            height: 1.15rem;
+            border-radius: 50%;
+            box-shadow: 0 0.313rem 0.313rem rgba($primary, 0.5);
+            background: $white;
+            position: absolute;
+            inset-inline-end: -0.375rem;
+            inset-block-start: -0.375rem;
+            border: 0.25rem solid $primary;
+        }
+        &.bg-secondary:after {
+            border: 0.25rem solid $secondary;
+            box-shadow: 0 0.313rem 0.313rem rgba(var(--secondary-rgb),0.2);
+        }
+        &.bg-warning:after {
+            border: 0.25rem solid $warning;
+            box-shadow: 0 0.313rem 0.313rem rgba(var(--warning-rgb),0.2);
+        }
+        &.bg-info:after {
+            border: 0.25rem solid $info;
+            box-shadow: 0 0.313rem 0.313rem rgba(var(--info-rgb),0.2);
+        }
+        &.bg-success:after {
+            border: 0.25rem solid $success;
+            box-shadow: 0 0.313rem 0.313rem rgba(var(--success-rgb),0.2);
+        }
+        &.bg-danger:after {
+            border: 0.25rem solid $danger;
+            box-shadow: 0 0.313rem 0.313rem rgba(var(--danger-rgb),0.2);
+        }
+    }
+    .progress-bar-value{
+        width: 1.875rem;
+        height: 1.25rem;
+        line-height: 1.25rem;
+        border-radius: 0.188rem;
+        background: $primary;
+        box-shadow: 0 0.313rem 0.313rem rgba(0,0,0,0.4);
+        font-size: 0.625rem;
+        font-weight: $font-weight-semibold;
+        color: $white;
+        text-align: center;
+        position: absolute;
+        inset-block-end: 1.5rem;
+        inset-inline-end: -0.688rem;
+        &:after{
+            content: "";
+            border-block-start: 0.438rem solid $primary;
+            border-inline-start: 0.438rem solid transparent;
+            border-inline-end: 0.438rem solid transparent;
+            position: absolute;
+            inset-block-end: -0.375rem;
+            inset-inline-start: 28%;
+        }
+        &.bg-secondary {
+            background-color: $secondary;
+            &:after {
+                border-block-start: 0.438rem solid $secondary;
+            }
+        }
+        &.bg-success {
+            background-color: $success;
+            &:after {
+                border-block-start: 0.438rem solid $success;
+            }
+        }
+        &.bg-warning {
+            background-color: $warning;
+            &:after {
+                border-block-start: 0.438rem solid $warning;
+            }
+        }
+        &.bg-danger {
+            background-color: $danger;
+            &:after {
+                border-block-start: 0.438rem solid $danger;
+            }
+        }
+        &.bg-info {
+            background-color: $info;
+            &:after {
+                border-block-start: 0.438rem solid $info;
+            }
+        }
+    }
+}
+[dir="rtl"] {
+    .progress-bar-title{ 
+        border-radius: 0 0.313rem 0.313rem 0;
+    }
+}
+.progress-item-1, .progress-item-2, .progress-item-3{
+    position:absolute;
+	margin-block-start:-0.25rem;
+	z-index:1;
+	height:0.938rem;
+	width:0.938rem;
+	border-radius:1.563rem;
+    background-color: $light;
+}
+.progress-item-1{
+	inset-inline-start:25%;
+}
+.progress-item-2{
+	inset-inline-start:50%;
+}
+.progress-item-3{
+	inset-inline-start:75%;
+}
+.custom-progress-3 {
+    overflow: visible;
+    border-radius: 0.625rem;
+    .progress-bar {
+        position: relative;
+        overflow: visible;
+        margin: 0.313rem;
+        border-radius: 0.25rem;
+        &:before {
+            content: "";
+            position: absolute;
+            width: 0.25rem;
+            height: 0.25rem;
+            inset-inline-start: 0.125rem;
+            background-color: $white;
+            border-radius: 50%;
+        }
+        .progress-bar-value{
+            border: 0.125rem solid $primary;
+            width: 2.5rem;
+            height: 1.563rem;
+            line-height: 1.313rem;
+            border-radius: 3.125rem;
+            background: $white;
+            font-size: 0.625rem;
+            font-weight: $font-weight-semibold;
+            color: $primary;
+            text-align: center;
+            position: absolute;
+            inset-inline-end: -0.625rem;
+            &.secondary {
+                border: 0.125rem solid $secondary;
+                color: $secondary;
+            }
+            &.warning {
+                border: 0.125rem solid $warning;
+                color: $warning;
+            }
+            &.info {
+                border: 0.125rem solid $info;
+                color: $info;
+            }
+            &.success {
+                border: 0.125rem solid $success;
+                color: $success;
+            }
+            &.danger {
+                border: 0.125rem solid $danger;
+                color: $danger;
+            }
+        }
+    }
+}
+.custom-progress-4 {
+    &.progress {
+        background-color: rgba($primary, 0.1);
+        border-radius: 0.25rem;
+        &.secondary {
+            background-color: rgba($secondary, 0.1);
+            .progress-bar-label {
+                color: $secondary;
+            }
+        }
+        &.warning {
+            background-color: rgba($warning, 0.1);
+            .progress-bar-label {
+                color: $warning;
+            }
+        }
+        &.info {
+            background-color: rgba($info, 0.1);
+            .progress-bar-label {
+                color: $info;
+            }
+        }
+        &.success {
+            background-color: rgba($success, 0.1);
+            .progress-bar-label {
+                color: $success;
+            }
+        }
+        &.danger {
+            background-color: rgba($danger, 0.1);
+            .progress-bar-label {
+                color: $danger;
+            }
+        }
+        .progress-bar {
+            border-radius: 0.25rem;
+        }
+        .progress-bar-label {
+            position: absolute;
+            inset-inline-end: 0.313rem;
+            font-weight: $font-weight-semibold;
+            font-size: 0.813rem;
+            color: $primary;
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "data": [
+        {
+            "medium": "Admin",
+            "file": "Group",
+            "total": "3456",
+            "complete": "3456",
+            "progress":1
+            
+           
+        },
+        {
+            "medium": "Admin",
+            "file": "Chat",
+            "total": "3456",
+            "complete": "3456",
+            "progress":2
+        },
+        {
+            "medium": "Admin",
+            "file": "Status",
+            "total": "3456",
+            "complete": "3456",
+            "progress":3
+        },
+        {
+            "medium": "Admin",
+            "file": "Setting",
+            "total": "3456",
+            "complete": "3456",
+            "progress":4
+        }
+       
+       
+    ],
+    "totalData": 10
+}

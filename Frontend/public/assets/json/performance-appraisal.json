@@ -1,0 +1,45 @@
+{
+    "data":[
+        {
+          "Image": "user-32.jpg",
+          "Name": "Anthony Lewis",
+          "Designation": "Web Designer",
+          "Department": "Designing",
+          "AppraisalDate": "14/01/2024",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-09.jpg",
+          "Name": "Brian Villalobos",
+          "Designation": "Web Developer",
+          "Department": "Developer",
+          "AppraisalDate": "21/01/2024",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-01.jpg",
+          "Name": "Harvey Smith",
+          "Designation": "IOS Developer",
+          "Department": "Developer",
+          "AppraisalDate": "18/02/2024",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-33.jpg",
+          "Name": "Stephan Peralt",
+          "Designation": "Android Developer",
+          "Department": "Developer",
+          "AppraisalDate": "24/02/2024",
+          "Status": "Active"
+        },
+        {
+          "Image": "user-34.jpg",
+          "Name": "Doglas Martini",
+          "Designation": "DevOps Engineer",
+          "Department": "DevOps",
+          "AppraisalDate": "11/03/2024",
+          "Status": "Active"
+        }
+       ],
+       "totaldata":5
+}

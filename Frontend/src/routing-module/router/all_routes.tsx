@@ -1,4 +1,3 @@
-
 export const all_routes = {
 
   // main
@@ -63,6 +62,9 @@ export const all_routes = {
   // dashboard routes
   adminDashboard: "/adminDashboard",
   UserHome: "/UserHome",
+
+  // Contact management route
+  contactManagement: "/contact-management",
 
   //profile routes
   profile: "/profile",

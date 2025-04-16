@@ -75,6 +75,7 @@ import {
 import { ApplicationPage } from "../../front-office/candidates-dashboard/application/ApplicationPage";
 import CandidatesOverview from "../../back-office/candidatesOverview";
 import UsersList from "../../back-office/hrm/users/usersList";
+import { ContactManagementPage } from "../../back-office/contacts";
 
 const routes = all_routes;
 
@@ -417,6 +418,11 @@ export const authRoutes = [
   {
     path: "/candidate-details2/:id",
     element: <CandidateDetails2 />,
+    route: Route,
+  },
+  {
+    path: routes.contactManagement,
+    element: <ContactManagementPage />,
     route: Route,
   },
 ];

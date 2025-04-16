@@ -31,6 +31,16 @@ const useSidebarData = () => {
                   { label: "Admin Dashboard", link: routes.adminDashboard },
                 ],
               },
+              {
+                label: 'Messages de Contact',
+                link: routes.contactManagement,
+                submenu: false,
+                showSubRoute: false,
+                icon: 'message-square',
+                base: 'contact-messages',
+                materialicons: 'email',
+                submenuItems: [],
+              },
             ],
           },
           {
@@ -79,6 +89,7 @@ const useSidebarData = () => {
                   { label: "HR Dashboard", link: routes.employeeDashboard },
                 ],
               },
+              
             ],
           },
           

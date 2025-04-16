@@ -17,17 +17,17 @@ import ProjectDetails from "../../back-office/projects/project/projectdetails";
 import EmployeeList from "../../back-office/hrm/employees/employeesList";
 import TwoStepVerification from "../../front-office/auth/TwoStepVerification";
 // Import candidate dashboard components
-import { 
-  MyProfile, 
-  Dashboard, 
-  AppliedJobs, 
-  JobAlerts, 
-  CvManager, 
+import {
+  MyProfile,
+  Dashboard,
+  AppliedJobs,
+  JobAlerts,
+  CvManager,
   ChangePassword,
   MyResume,
   Packages,
   ShortlistedJobs,
-  Messages
+  Messages,
 } from "../../front-office/candidates-dashboard";
 
 ///////////////////////////////////////////////////////////
@@ -68,7 +68,10 @@ import ResultsPage from "../../index/components/ResultPage";
 import CandidateDetails from "../../back-office/candidates/candidateDetails";
 import CandidateDetails2 from "../../back-office/candidates/candidateDetails2";
 import ProgressBar from "../../Test/Progress";
-import { AppliedJobsPage } from "../../front-office/candidates-dashboard/applied-jobs";
+import {
+  AppliedJobsPage,
+  ComparatorPage,
+} from "../../front-office/candidates-dashboard/applied-jobs";
 import { ApplicationPage } from "../../front-office/candidates-dashboard/application/ApplicationPage";
 import CandidatesOverview from "../../back-office/candidatesOverview";
 import UsersList from "../../back-office/hrm/users/usersList";
@@ -76,12 +79,10 @@ import UsersList from "../../back-office/hrm/users/usersList";
 const routes = all_routes;
 
 export const publicRoutes = [
-  
-
   {
     path: "/testt",
     name: "Root",
-    element: <CandidatesOverview  />, 
+    element: <CandidatesOverview />,
     route: Route,
   },
   {
@@ -93,27 +94,26 @@ export const publicRoutes = [
   {
     path: "/SocialAuthHandler",
     name: "Root",
-    element: <SocialAuthHandler  />,
+    element: <SocialAuthHandler />,
     route: Route,
   },
   {
     path: "/face-recogn",
     name: "Root",
-    element: <UserSelect  />,
+    element: <UserSelect />,
     route: Route,
   },
   {
     path: "/login",
     name: "Root",
-    element: <Login  />,
+    element: <Login />,
     route: Route,
   },
-    
-  
+
   {
     path: "/forgotpassword",
     name: "Root",
-    element: <ForgotPassword  />,
+    element: <ForgotPassword />,
     route: Route,
   },
   {
@@ -136,8 +136,7 @@ export const publicRoutes = [
     path: routes.resetPasswordSuccess,
     element: <ResetPasswordSuccess />,
   },
-  
-]
+];
 export const publicRoutesFront = [
   {
     path: "/",
@@ -149,13 +148,13 @@ export const publicRoutesFront = [
   {
     path: "/LoginUser",
     name: "Root",
-    element: <LoginUser  />,
+    element: <LoginUser />,
     route: Route,
   },
   {
     path: "/register",
     name: "Register",
-    element: <RegisterWizard  />,
+    element: <RegisterWizard />,
     route: Route,
   },
   {
@@ -165,35 +164,75 @@ export const publicRoutesFront = [
     route: Route,
   },
 
- //   landing page components     /////////////////////////////////////////////////////
+  //   landing page components     /////////////////////////////////////////////////////
 
- { path: "/about", name: "About", element: <About /> , route: Route,},
- { path: "/app-section", name: "App Section", element: <AppSection />, route: Route,},
- { path: "/auth-modal", name: "Auth Modal", element: <AuthModal /> ,route: Route,},
- { path: "/blog", name: "Blog", element: <Blog />,route: Route, },
- { path: "/call-to-action", name: "Call To Action", element: <CallToAction />,route: Route, },
- { path: "/footer", name: "Footer", element: <Footer /> ,route: Route,},
- { path: "/funfact", name: "Funfact", element: <Funfact />,route: Route, },
- //{ path: "/header", name: "Header", element: <Header />,route: Route, },
- { path: "/job-categorie", name: "Job Categorie", element: <JobCategorie /> ,route: Route,},
- { path: "/job-featured", name: "Job Featured", element: <JobFeatured />,route: Route,},
- { path: "/job-search-banner", name: "Job Search Banner", element: <JobSearchBanner />,route: Route, },
- { path: "/partner-slider", name: "Partner Slider", element: <PartnerSlider />,route: Route, },
- { path: "/testimonial", name: "Testimonial", element: <Testimonial /> ,route: Route,},
-
- ///////////////////////////////////////////////////////////////////
-
-{
-  path: "/results",
-  name: "Root", 
-  element: <ResultsPage />,
-  route: Route,
+  { path: "/about", name: "About", element: <About />, route: Route },
+  {
+    path: "/app-section",
+    name: "App Section",
+    element: <AppSection />,
+    route: Route,
   },
- {
-  path: "/JobListFront",
-  name: "Root", 
-  element: <JobListFront />,
-  route: Route,
+  {
+    path: "/auth-modal",
+    name: "Auth Modal",
+    element: <AuthModal />,
+    route: Route,
+  },
+  { path: "/blog", name: "Blog", element: <Blog />, route: Route },
+  {
+    path: "/call-to-action",
+    name: "Call To Action",
+    element: <CallToAction />,
+    route: Route,
+  },
+  { path: "/footer", name: "Footer", element: <Footer />, route: Route },
+  { path: "/funfact", name: "Funfact", element: <Funfact />, route: Route },
+  //{ path: "/header", name: "Header", element: <Header />,route: Route, },
+  {
+    path: "/job-categorie",
+    name: "Job Categorie",
+    element: <JobCategorie />,
+    route: Route,
+  },
+  {
+    path: "/job-featured",
+    name: "Job Featured",
+    element: <JobFeatured />,
+    route: Route,
+  },
+  {
+    path: "/job-search-banner",
+    name: "Job Search Banner",
+    element: <JobSearchBanner />,
+    route: Route,
+  },
+  {
+    path: "/partner-slider",
+    name: "Partner Slider",
+    element: <PartnerSlider />,
+    route: Route,
+  },
+  {
+    path: "/testimonial",
+    name: "Testimonial",
+    element: <Testimonial />,
+    route: Route,
+  },
+
+  ///////////////////////////////////////////////////////////////////
+
+  {
+    path: "/results",
+    name: "Root",
+    element: <ResultsPage />,
+    route: Route,
+  },
+  {
+    path: "/JobListFront",
+    name: "Root",
+    element: <JobListFront />,
+    route: Route,
   },
 
   {
@@ -204,24 +243,23 @@ export const publicRoutesFront = [
 
   {
     path: "/Contact",
-    name: "Root", 
+    name: "Root",
     element: <Contact />,
     route: Route,
   },
   {
     path: "/AboutUs",
-    name: "Root", 
+    name: "Root",
     element: <AboutUs />,
     route: Route,
   },
   {
     path: "/Terms",
-    name: "Root", 
+    name: "Root",
     element: <Terms />,
     route: Route,
   },
-  
-]
+];
 
 export const authRoutesfront = [
   {
@@ -232,7 +270,7 @@ export const authRoutesfront = [
   },
   {
     path: "/DashboardCandidate",
-    name: "Root", 
+    name: "Root",
     element: <DashboardCandidate />,
     route: Route,
   },
@@ -302,8 +340,12 @@ export const authRoutesfront = [
     element: <MyProfile.MyProfilePage />,
     route: Route,
   },
-
-]
+  {
+    path: "/candidates-dashboard/applied-jobs/comparator",
+    element: <ComparatorPage />,
+    route: Route,
+  },
+];
 export const authRoutes = [
   {
     path: "/",
@@ -315,15 +357,9 @@ export const authRoutes = [
   {
     path: "/VerifyEmail",
     name: "Root",
-    element: <VerifyEmail  />,
+    element: <VerifyEmail />,
     route: Route,
   },
-  
-
-  
-
-  
-
 
   // Admin Routes
   {
@@ -331,7 +367,7 @@ export const authRoutes = [
     element: <AdminDashboard />,
     route: Route,
   },
-  
+
   {
     path: "/employeeDashboard",
     element: <EmployeeDashboard />,
@@ -353,7 +389,7 @@ export const authRoutes = [
     route: Route,
   },
   {
-    path:"/candidates-grid/:id",
+    path: "/candidates-grid/:id",
     element: <CandidateGridPerJobPost />,
     route: Route,
   },
@@ -366,25 +402,21 @@ export const authRoutes = [
     path: routes.employeeList,
     element: <EmployeeList />,
     route: Route,
-  },  
+  },
   {
     path: routes.usersList,
     element: <UsersList />,
     route: Route,
-  },  
-
-
-  
+  },
 
   {
-    path:"/candidate-details/:id",
+    path: "/candidate-details/:id",
     element: <CandidateDetails />,
     route: Route,
   },
   {
-    path:"/candidate-details2/:id",
+    path: "/candidate-details2/:id",
     element: <CandidateDetails2 />,
     route: Route,
   },
-
-]
+];

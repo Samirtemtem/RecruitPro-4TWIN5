@@ -4,7 +4,7 @@ export enum Role {
   ADMIN = 'ADMIN',
   CANDIDATE = 'CANDIDATE',
   EMPLOYEE = 'EMPLOYEE',
-  USER = 'USER'
+ // USER = 'USER'
 }
 
 export enum Privilege {

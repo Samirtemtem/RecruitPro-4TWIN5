@@ -11,6 +11,8 @@ import DashboardCandidatesHeader from "../dashboard/components/DashboardCandidat
 import DashboardCandidatesSidebar from "../dashboard/components/DashboardCandidatesSidebar";
 import Header from '../../../common/Header';
 import Seo from '../../../common/Seo';
+import { Link } from 'react-router-dom';
+
 const AppliedJobsPage: React.FC = () => {
   return (
 
@@ -46,9 +48,28 @@ const AppliedJobsPage: React.FC = () => {
         }}
       ></div>
           <BreadCrumb title="Applied Jobs!" />
+          {/* Comparator Button */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+            <Link
+              to="/candidates-dashboard/applied-jobs/comparator"
+              className="theme-btn btn-style-one call-modal"
+              style={{ 
+                fontWeight: 600, 
+                borderRadius: 8, 
+                padding: '12px 24px', 
+                fontSize: 15,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <i className="la la-exchange" style={{ fontSize: 18 }}></i>
+              Comparateur de jobs
+            </Link>
+          </div>
           {/* Collapsible sidebar button */}
-
-          {/* End .row top card block */}
 
          
         <div className="row">

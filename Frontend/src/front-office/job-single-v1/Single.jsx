@@ -8,6 +8,10 @@ import MapJobFinder from "./job-listing-pages/components/MapJobFinder";
 import SocialTwo from "./job-single-pages/social/SocialTwo";
 import { useAuth } from "../../routing-module/AuthContext";
 
+
+import axios from "axios";
+import MatchInsightCard from "./MatchInsightCard";
+
 const JobSingleDynamicV1 = () => {
   const { id: jobId } = useParams();
   const [job, setJob] = useState({});
@@ -20,6 +24,30 @@ const JobSingleDynamicV1 = () => {
   // Get user ID from auth context
   const { userId } = useAuth();
 
+  
+  const [matchDetails, setMatchDetails] = useState(null);
+
+  const fetchMatchDetails = async (resolvedJobId) => {
+    if (!userId || !resolvedJobId) return;
+  
+    try {
+      const res = await axios.post("http://localhost:5001/api/match-details", {
+        userId: userId,
+        jobId: resolvedJobId,
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+  
+      console.log("📦 Match details response:", res.data);
+      setMatchDetails(res.data);
+    } catch (err) {
+      console.error("❌ Error fetching match details:", err.response?.data || err.message);
+      console.log("ids:", userId, resolvedJobId);
+    }
+  };
+  
   useEffect(() => {
     const fetchJob = async () => {
       try {
@@ -29,6 +57,11 @@ const JobSingleDynamicV1 = () => {
         }
         const data = await response.json();
         setJob(data);
+
+        if (userId && jobId) {
+          fetchMatchDetails(jobId);        
+        }
+
       } catch (error) {
         setError(error.message);
       } finally {
@@ -254,6 +287,8 @@ const JobSingleDynamicV1 = () => {
                   </button>
                 </div>
               </div>
+              <MatchInsightCard matchDetails={matchDetails} />
+
             </div>
           </div>
         </div>

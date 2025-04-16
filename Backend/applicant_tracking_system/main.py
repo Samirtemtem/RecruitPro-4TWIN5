@@ -661,120 +661,99 @@ education_similarity, education_matching_words, edu_raw_info = calculate_text_si
     job_descriptions, candidate_education_texts
 )
 
-# Create a detailed matching information dictionary for each job-candidate pair
+
+
+# Helper function: convert to lowercase and remove whitespace
+def clean_text(text):
+    if isinstance(text, str):
+        return re.sub(r'\s+', '', text.strip().lower())
+    return ""
+
+# Create a detailed matching info dictionary for every job-candidate pair
 detailed_matching_info = {}
 for job_idx, job in enumerate(jobposts.iterrows()):
     job_id = str(job[1]['JobID'])
     job_language = job[1].get('original_language', 'en')
     detailed_matching_info[job_id] = {}
-    
+
     for candidate_idx, candidate in enumerate(candidates.iterrows()):
         candidate_id = str(candidate[1]['CandidateID'])
         candidate_language = candidate[1].get('original_language', 'en')
-        
-        # Extract job and candidate skills for comparison
-        job_skills = job[1]['Skills'] if isinstance(job[1]['Skills'], list) else []
-        candidate_skills = candidate[1]['Skills'] if isinstance(candidate[1]['Skills'], list) else []
-        
-        # Find exact skill matches
-        exact_skill_matches = [skill for skill in job_skills if skill in candidate_skills]
-        
-        # Find semantic skill matches
+
+        # Clean and normalize skills
+        job_skills = [clean_text(s) for s in job[1]['Skills']] if isinstance(job[1]['Skills'], list) else []
+        candidate_skills = [clean_text(s) for s in candidate[1]['Skills']] if isinstance(candidate[1]['Skills'], list) else []
+
+        # Exact skill matches
+        exact_skill_matches = [s for s in job_skills if s in candidate_skills]
+
+        # Semantic skill matches (partial substring matches)
         semantic_skill_matches = []
-        
-        # For simplicity, we'll consider skills that share at least 3 consecutive characters as potential semantic matches
         for job_skill in job_skills:
             if job_skill in exact_skill_matches:
-                continue  # Skip exact matches
-                
+                continue
             for candidate_skill in candidate_skills:
                 if len(job_skill) > 3 and len(candidate_skill) > 3:
-                    if job_skill.lower() in candidate_skill.lower() or candidate_skill.lower() in job_skill.lower():
+                    if job_skill in candidate_skill or candidate_skill in job_skill:
                         if (job_skill, candidate_skill) not in semantic_skill_matches:
                             semantic_skill_matches.append((job_skill, candidate_skill))
-        
-        # Get experience matching words
-        exp_matches = []
-        if job_idx < len(experience_matching_words) and candidate_idx < len(experience_matching_words[job_idx]):
-            exp_matches = experience_matching_words[job_idx][candidate_idx]
-            
-        # Get education matching words
-        edu_matches = []
-        if job_idx < len(education_matching_words) and candidate_idx < len(education_matching_words[job_idx]):
-            edu_matches = education_matching_words[job_idx][candidate_idx]
-            
-        # Extract education terms for semantic matching
-        job_education = []
-        if 'Education' in job[1] and isinstance(job[1]['Education'], list):
-            job_education = [edu.lower() for edu in job[1]['Education'] if isinstance(edu, str)]
-        
-        candidate_education = []
-        if 'Education' in candidate[1] and isinstance(candidate[1]['Education'], list):
-            candidate_education = [edu.lower() for edu in candidate[1]['Education'] if isinstance(edu, str)]
-            
-        # Find semantic education matches
+
+        # Matching words from experience and education text similarity
+        exp_matches = experience_matching_words[job_idx][candidate_idx] if job_idx < len(experience_matching_words) and candidate_idx < len(experience_matching_words[job_idx]) else []
+        edu_matches = education_matching_words[job_idx][candidate_idx] if job_idx < len(education_matching_words) and candidate_idx < len(education_matching_words[job_idx]) else []
+
+        # Clean and normalize education fields
+        job_education = [clean_text(e) for e in job[1].get('Education', []) if isinstance(e, str)]
+        candidate_education = [clean_text(e) for e in candidate[1].get('Education', []) if isinstance(e, str)]
+
+        # Semantic education matching
         semantic_education_matches = []
         for job_edu in job_education:
             for candidate_edu in candidate_education:
                 if len(job_edu) > 3 and len(candidate_edu) > 3:
-                    # Check if terms share significant substring or are related
                     if (job_edu in candidate_edu or candidate_edu in job_edu or 
                         any(term in job_edu and term in candidate_edu for term in ["degree", "bachelor", "master", "phd", "diploma", "certificate"])):
                         if (job_edu, candidate_edu) not in semantic_education_matches:
                             semantic_education_matches.append((job_edu, candidate_edu))
-        
-        # Extract experience terms for semantic matching
-        job_experience = []
-        if 'experience_details' in job[1] and isinstance(job[1]['experience_details'], list):
-            job_experience = [exp.lower() for exp in job[1]['experience_details'] if isinstance(exp, str)]
-        elif 'JobDescription' in job[1] and isinstance(job[1]['JobDescription'], str):
-            # Extract experience-related terms from job description
-            job_experience = [term.lower() for term in job[1]['JobDescription'].split() 
-                             if any(exp_term in term.lower() for exp_term in ["develop", "manag", "lead", "architect", "engineer", "analys"])]
-            
-        candidate_experience = []
-        if 'experience_details' in candidate[1] and isinstance(candidate[1]['experience_details'], list):
-            candidate_experience = [exp.lower() for exp in candidate[1]['experience_details'] if isinstance(exp, str)]
-            
-        # Find semantic experience matches
+
+        # Extract and normalize experience terms
+        job_experience = [clean_text(e) for e in job[1].get('experience_details', []) if isinstance(e, str)]
+        candidate_experience = [clean_text(e) for e in candidate[1].get('experience_details', []) if isinstance(e, str)]
+
+        if not job_experience and isinstance(job[1].get('JobDescription'), str):
+            job_experience = [clean_text(t) for t in job[1]['JobDescription'].split()
+                              if any(x in t.lower() for x in ["develop", "manag", "lead", "architect", "engineer", "analys"])]
+
+        # Semantic experience matching
         semantic_experience_matches = []
         experience_terms = ["develop", "manag", "lead", "direct", "head", "senior", "architect", "engineer", "design", "analyst"]
-        
         for job_exp in job_experience:
             for candidate_exp in candidate_experience:
                 if len(job_exp) > 3 and len(candidate_exp) > 3:
-                    # Check if terms share significant substring or contain common role keywords
                     if (job_exp in candidate_exp or candidate_exp in job_exp or
                         any(term in job_exp and term in candidate_exp for term in experience_terms)):
                         if (job_exp, candidate_exp) not in semantic_experience_matches:
                             semantic_experience_matches.append((job_exp, candidate_exp))
-        
-        # Gather raw text data
+
+        # Collect job and candidate raw texts
         job_text = job[1]['JobDescription'] if 'JobDescription' in job[1] and pd.notna(job[1]['JobDescription']) else ""
         experience_text = candidate_experience_texts[candidate_idx] if candidate_idx < len(candidate_experience_texts) else ""
         education_text = candidate_education_texts[candidate_idx] if candidate_idx < len(candidate_education_texts) else ""
-        
-        # Calculate individual similarity components (if available)
+
+        # Compute similarity scores
         skill_similarity = 0.0
         if job_idx < len(jobposts_combined) and candidate_idx < len(candidates_combined):
-            # Calculate skill-only similarity
             if jobposts_skills_encoded.shape[1] > 0:
                 job_skills_vector = jobposts_skills_encoded[job_idx]
                 candidate_skills_vector = candidates_skills_encoded[candidate_idx]
                 if np.any(job_skills_vector) and np.any(candidate_skills_vector):
                     skill_similarity_raw = cosine_similarity([job_skills_vector], [candidate_skills_vector])[0][0]
-                    skill_similarity = skill_similarity_raw * (1/3)  # 33.3% weight (1/3)
-                
-        # Get the experience and education similarities
-        exp_similarity = 0.0
-        if job_idx < experience_similarity.shape[0] and candidate_idx < experience_similarity.shape[1]:
-            exp_similarity = experience_similarity[job_idx, candidate_idx] * (1/3)  # 33.3% weight (1/3)
-            
-        edu_similarity = 0.0
-        if job_idx < education_similarity.shape[0] and candidate_idx < education_similarity.shape[1]:
-            edu_similarity = education_similarity[job_idx, candidate_idx] * (1/3)  # 33.3% weight (1/3)
+                    skill_similarity = skill_similarity_raw * (1/3)  # Weighted: 33.3%
+
+        exp_similarity = experience_similarity[job_idx, candidate_idx] * (1/3) if job_idx < experience_similarity.shape[0] and candidate_idx < experience_similarity.shape[1] else 0.0
+        edu_similarity = education_similarity[job_idx, candidate_idx] * (1/3) if job_idx < education_similarity.shape[0] and candidate_idx < education_similarity.shape[1] else 0.0
         
-        # Store all the detailed matching information with language data
+        # Save all detailed match info
         detailed_matching_info[job_id][candidate_id] = {
             'skill_similarity': skill_similarity,
             'experience_similarity': exp_similarity,
@@ -789,7 +768,6 @@ for job_idx, job in enumerate(jobposts.iterrows()):
             'job_text': job_text,
             'experience_text': experience_text,
             'education_text': education_text,
-            # Language information for multilingual support
             'job_language': job_language,
             'candidate_language': candidate_language,
             'original_job_text': job[1].get('original_description', job_text),
@@ -797,6 +775,7 @@ for job_idx, job in enumerate(jobposts.iterrows()):
             'original_job_skills': job[1].get('original_skills', job_skills),
             'original_candidate_skills': candidate[1].get('original_skills', candidate_skills)
         }
+
 
 # Combine all similarities with equal weights
 # 33.3% skills, 33.3% experience, 33.3% education

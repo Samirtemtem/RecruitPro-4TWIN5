@@ -52,7 +52,7 @@
     "react-phone-input-2": "^2.15.1",
     "react-pro-sidebar": "^1.1.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.2.0",
+    "react-router-dom": "^7.5.0",
     "react-scripts": "^5.0.1",
     "react-select": "^5.8.3",
     "react-simple-wysiwyg": "^3.2.0",

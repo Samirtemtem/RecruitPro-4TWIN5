@@ -1,30 +1,43 @@
-import 'dotenv/config';
+import "dotenv/config";
 
-import { Request, Response } from 'express';
-import {User} from '../models/User';
-import cloudinary from 'cloudinary';
-import multer from 'multer';
-import { Role } from '../models/types';
-import Profile from '../models/Profile'; 
-import Education from '../models/Education'; // Adjust the import based on your file structure
-import Experience from '../models/Experience'; // Adjust the import based on your file structure
-import Skill from '../models/Skill'; // Adjust the import based on your file structure
-import JobPost from '../models/JobPost';
-
+import { Request, Response } from "express";
+import { User } from "../models/User";
+import cloudinary from "cloudinary";
+import multer from "multer";
+import { Role } from "../models/types";
+import Profile from "../models/Profile";
+import Education from "../models/Education"; // Adjust the import based on your file structure
+import Experience from "../models/Experience"; // Adjust the import based on your file structure
+import Skill from "../models/Skill"; // Adjust the import based on your file structure
+import JobPost from "../models/JobPost";
 
 // Initialize Cloudinary configuration (if not already done)
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dlwmx7jxt',
-  api_key: process.env.CLOUDINARY_API_KEY || '262566918812916',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'z79kUONbia147t5PocRrwHvJOwU',
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "dlwmx7jxt",
+  api_key: process.env.CLOUDINARY_API_KEY || "262566918812916",
+  api_secret:
+    process.env.CLOUDINARY_API_SECRET || "z79kUONbia147t5PocRrwHvJOwU",
 });
-export const createUser = async (req: Request, res: Response): Promise<void> => {
+export const createUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     // Log the incoming request body
     console.log("Request body:", req.body);
 
-    const { firstName, lastName, email, password, address, phoneNumber, role, department, privilege } = req.body;
-    let imageUrl: string = '';
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      address,
+      phoneNumber,
+      role,
+      department,
+      privilege,
+    } = req.body;
+    let imageUrl: string = "";
 
     // Check if files are uploaded and log the file info
     if (req.file) {
@@ -50,8 +63,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       department,
       privilege,
       isVerified: false,
-      image: imageUrl, 
-      provider: "local",// Save the image URL from Cloudinary
+      image: imageUrl,
+      provider: "local", // Save the image URL from Cloudinary
     });
 
     // Save the new user to the database
@@ -59,7 +72,9 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     console.log("User created successfully:", newUser);
 
     // Send response
-    res.status(201).json({ message: "User created successfully", user: newUser });
+    res
+      .status(201)
+      .json({ message: "User created successfully", user: newUser });
   } catch (error: any) {
     console.error("Error creating user:", error.message);
     res.status(400).json({ error: error.message });
@@ -79,7 +94,10 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
  *       500:
  *         description: Server error
  */
-export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+export const getAllUsers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const roles = ["HR-MANAGER", "DEPARTMENT-MANAGER", "EMPLOYEE"];
     const users = await User.find({ role: { $in: roles } });
@@ -102,7 +120,10 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
  *       500:
  *         description: Server error
  */
-export const getLatestUsers = async (req: Request, res: Response): Promise<void> => {
+export const getLatestUsers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const users = await User.find()
       .sort({ creationDate: -1 }) // Sort by creation date in descending order
@@ -135,7 +156,10 @@ export const getLatestUsers = async (req: Request, res: Response): Promise<void>
  *       500:
  *         description: Server error
  */
-export const getUserById = async (req: Request, res: Response): Promise<any> => {
+export const getUserById = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -205,9 +229,14 @@ export const getUserById = async (req: Request, res: Response): Promise<any> => 
 export const updateUser = async (req: Request, res: Response): Promise<any> => {
   console.log("ENTERED UPDATE");
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedUser) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found" });
+    res
+      .status(200)
+      .json({ message: "User updated successfully", user: updatedUser });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
@@ -238,8 +267,11 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
 export const deleteUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
-    if (!deletedUser) return res.status(404).json({ message: "User not found" });
-    res.status(200).json({ message: "User deleted successfully", user: deletedUser });
+    if (!deletedUser)
+      return res.status(404).json({ message: "User not found" });
+    res
+      .status(200)
+      .json({ message: "User deleted successfully", user: deletedUser });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -258,7 +290,10 @@ export const deleteUser = async (req: Request, res: Response): Promise<any> => {
  *       500:
  *         description: Server error
  */
-export const getCandidates = async (req: Request, res: Response): Promise<void> => {
+export const getCandidates = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const candidates = await User.find({ role: Role.CANDIDATE });
     res.status(200).json(candidates);
@@ -268,41 +303,45 @@ export const getCandidates = async (req: Request, res: Response): Promise<void> 
 };
 
 // Get candidate by ID
-export const getCandidateById = async (req: Request, res: Response): Promise<void> => {
+export const getCandidateById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { id } = req.params; // Get the ID from the request parameters
   try {
-      // Find candidate by ID and populate applications, profile, education, experience, skills, and jobPosts
-      const candidate = await User.findById(id)
-          .populate('applications') // Populate the applications field
-          .populate({
-              path: 'profile', // Populate the profile
-              select: '-user', // Exclude the user reference if not needed
-              populate: [
-                  { path: 'education', model: Education }, // Populate education
-                  { path: 'experience', model: Experience }, // Populate experience
-                  { path: 'skills', model: Skill } // Populate skills
-              ]
-          })
-          .populate('jobPosts'); // Populate job posts directly from User
+    // Find candidate by ID and populate applications, profile, education, experience, skills, and jobPosts
+    const candidate = await User.findById(id)
+      .populate("applications") // Populate the applications field
+      .populate({
+        path: "profile", // Populate the profile
+        select: "-user", // Exclude the user reference if not needed
+        populate: [
+          { path: "education", model: Education }, // Populate education
+          { path: "experience", model: Experience }, // Populate experience
+          { path: "skills", model: Skill }, // Populate skills
+        ],
+      })
+      .populate("jobPosts"); // Populate job posts directly from User
 
-      if (!candidate) {
-          res.status(404).json({ message: 'Candidate not found' });
-          return;
-      }
+    if (!candidate) {
+      res.status(404).json({ message: "Candidate not found" });
+      return;
+    }
 
-      res.status(200).json(candidate);
+    res.status(200).json(candidate);
   } catch (error: any) {
-      res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-
-
-export const getLastCandidates = async (req: Request, res: Response): Promise<void> => {
+export const getLastCandidates = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const candidates = await User.find({ role: Role.CANDIDATE })
       .sort({ createdAt: -1 }) // Assuming 'createdAt' is the field that indicates when the user was created
-      .limit(5);  
+      .limit(5);
 
     res.status(200).json(candidates);
   } catch (error: any) {
@@ -310,19 +349,25 @@ export const getLastCandidates = async (req: Request, res: Response): Promise<vo
   }
 };
 
-
-
-export const getCandidateCountPerYear = async (req: Request, res: Response): Promise<void> => {
+export const getCandidateCountPerYear = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const currentYear = new Date().getFullYear();
     const lastTwoYears = await User.aggregate([
-      { $match: { role: 'CANDIDATE', createdAt: { $gte: new Date(currentYear - 2, 0, 1) } } },
-      { $group: { _id: { $year: '$createdAt' }, count: { $sum: 1 } } },
-      { $sort: { _id: 1 } }
+      {
+        $match: {
+          role: "CANDIDATE",
+          createdAt: { $gte: new Date(currentYear - 2, 0, 1) },
+        },
+      },
+      { $group: { _id: { $year: "$createdAt" }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
     ]);
 
     const yearCounts: { [key: number]: number } = {};
-    lastTwoYears.forEach(item => {
+    lastTwoYears.forEach((item) => {
       yearCounts[item._id] = item.count;
     });
 
@@ -331,30 +376,35 @@ export const getCandidateCountPerYear = async (req: Request, res: Response): Pro
     const yearBeforeThatCount = yearCounts[currentYear - 2] || 0; // Two years ago
 
     // Calculate percentage changes
-    const changeFromLastToYearBeforeLast = yearBeforeLastCount > 0
-      ? ((lastYearCount - yearBeforeLastCount) / yearBeforeLastCount) * 100
-      : 0;
+    const changeFromLastToYearBeforeLast =
+      yearBeforeLastCount > 0
+        ? ((lastYearCount - yearBeforeLastCount) / yearBeforeLastCount) * 100
+        : 0;
 
-    const changeFromYearBeforeLastToLast = yearBeforeThatCount > 0
-      ? ((yearBeforeLastCount - yearBeforeThatCount) / yearBeforeThatCount) * 100
-      : 0;
+    const changeFromYearBeforeLastToLast =
+      yearBeforeThatCount > 0
+        ? ((yearBeforeLastCount - yearBeforeThatCount) / yearBeforeThatCount) *
+          100
+        : 0;
 
     res.status(200).json({
       counts: lastTwoYears,
       lastYearCount,
       yearBeforeLastCount,
-      percentageChangeLastToYearBeforeLast: changeFromLastToYearBeforeLast.toFixed(2),
-      percentageChangeYearBeforeLastToLast: changeFromYearBeforeLastToLast.toFixed(2)
+      percentageChangeLastToYearBeforeLast:
+        changeFromLastToYearBeforeLast.toFixed(2),
+      percentageChangeYearBeforeLastToLast:
+        changeFromYearBeforeLastToLast.toFixed(2),
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
 
-
-
-
-export const countEmployeesByDepartment = async (req: Request, res: Response): Promise<void> => {
+export const countEmployeesByDepartment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const currentYear = new Date().getFullYear();
     const lastYear = currentYear - 1;
@@ -363,20 +413,20 @@ export const countEmployeesByDepartment = async (req: Request, res: Response): P
     const departmentCounts = await User.aggregate([
       {
         $match: {
-          role: { $in: ['EMPLOYEE', 'HR-MANAGER', 'DEPARTMENT-MANAGER'] },
+          role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER"] },
           // Ensure we are only counting departments that are not null or empty
           department: { $exists: true, $ne: null }, // Exclude null and empty departments
         },
       },
       {
         $group: {
-          _id: '$department', // Group by department
+          _id: "$department", // Group by department
           count: { $sum: 1 }, // Count the number of employees
         },
       },
       {
         $project: {
-          department: '$_id', // Rename _id to department
+          department: "$_id", // Rename _id to department
           count: 1,
           _id: 0, // Exclude the default _id field
         },
@@ -385,12 +435,12 @@ export const countEmployeesByDepartment = async (req: Request, res: Response): P
 
     // Get total number of employees
     const totalEmployees = await User.countDocuments({
-      role: { $in: ['EMPLOYEE', 'HR-MANAGER', 'DEPARTMENT-MANAGER'] } // Corrected closing brace
+      role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER"] }, // Corrected closing brace
     });
 
     // Get the count of employees from the last year
     const lastYearCount = await User.countDocuments({
-      role: { $in: ['EMPLOYEE', 'HR-MANAGER', 'DEPARTMENT-MANAGER'] },
+      role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER"] },
       createDate: {
         $gte: new Date(`${lastYear}-01-01`),
         $lt: new Date(`${currentYear}-01-01`),
@@ -398,9 +448,10 @@ export const countEmployeesByDepartment = async (req: Request, res: Response): P
     });
 
     // Calculate percentage change
-    const percentageChange = lastYearCount > 0 
-      ? ((totalEmployees - lastYearCount) / lastYearCount) * 100 
-      : 0;
+    const percentageChange =
+      lastYearCount > 0
+        ? ((totalEmployees - lastYearCount) / lastYearCount) * 100
+        : 0;
 
     // Create the response object
     const response = {
@@ -411,45 +462,40 @@ export const countEmployeesByDepartment = async (req: Request, res: Response): P
 
     res.status(200).json(response); // Send the result as a response
   } catch (error) {
-    console.error('Error counting employees by department:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error counting employees by department:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-
-
-
-
-export const getUserJobPosts = async (req: Request, res: Response): Promise<void> => {
+export const getUserJobPosts = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { userId } = req.params;
 
   try {
     // Fetch the user and populate the jobPosts
-    const user = await User.findById(userId).populate('jobPosts');
+    const user = await User.findById(userId).populate("jobPosts");
 
     if (!user) {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: "User not found" });
       return;
     }
 
     res.status(200).json(user.jobPosts); // Return the user's job posts
   } catch (error: any) {
-    console.error('Error fetching user job posts:', error);
-    const errorMessage = (error instanceof Error) ? error.message : 'Error fetching job posts';
+    console.error("Error fetching user job posts:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Error fetching job posts";
     res.status(500).json({ message: errorMessage });
   }
 };
 
-
-
-
-
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await User.find({ role: Role.USER });
+    const users = await User.find({ role: Role.CANDIDATE });
     res.status(200).json(users);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
-

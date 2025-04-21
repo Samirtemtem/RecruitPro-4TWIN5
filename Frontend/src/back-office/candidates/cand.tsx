@@ -8,7 +8,6 @@ import { employeereportDetails } from '../../core/data/json/employeereportDetail
 import { DatePicker, TimePicker } from "antd";
 import CommonSelect from '../../core/common/commonSelect';
 import CollapseHeader from '../../core/common/collapse-header/collapse-header';
-import axios from 'axios';
 type PasswordField = "password" | "confirmPassword";
 
 
@@ -39,6 +38,18 @@ interface Candidate {
         status: string; // Application status (e.g., "SUBMITTED")
         submissionDate: string; // Date of submission
         department: string; // Department related to the application
+        aiAnalysis?: {
+            swot: {
+                strengths: string[];
+                weaknesses: string[];
+                opportunities: string[];
+                threats: string[];
+            };
+            matches: {
+                keywords: string[];
+                preferences: string[];
+            };
+        };
     }>;
     jobPosts: Array<{
         _id: string; // Job post ID
@@ -88,15 +99,13 @@ interface Candidate {
     is2FAEnabled: boolean; // Two-factor authentication status
     verificationToken?: string; // Optional verification token
 }
-
-
 const CandidateDetails2: React.FC = () => {
 
   
     const { id } = useParams<{ id: string }>(); // Get the ID from the URL parameters
     const [candidate, setCandidate] = useState<Candidate | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [application, setApplication] = useState<any>(null); // Hold application object
+    const [activeApplication, setActiveApplication] = useState<any>(null);
 
     useEffect(() => {
         const fetchCandidateDetails = async () => {
@@ -107,7 +116,11 @@ const CandidateDetails2: React.FC = () => {
                 }
                 const data: Candidate = await response.json();
                 setCandidate(data);
-                console.log(data);
+                console.log("Candidate data:", data);
+                // Set the first application as active by default if available
+                if (data.applications && data.applications.length > 0) {
+                    setActiveApplication(data.applications[0]);
+                }
             } catch (error) {
                 console.error('Error fetching candidate:', error);
             } finally {
@@ -118,6 +131,12 @@ const CandidateDetails2: React.FC = () => {
         fetchCandidateDetails();
     }, [id]);
 
+    // Function to handle application selection for viewing AI analysis
+    const handleApplicationSelect = (application: any) => {
+        setActiveApplication(application);
+        console.log("Selected application:", application);
+    };
+
     if (loading) {
         return <div>Loading candidate details...</div>;
     }
@@ -125,68 +144,6 @@ const CandidateDetails2: React.FC = () => {
     if (!candidate) {
         return <div>Candidate not found</div>;
     }
-
-
-
-
-    const statusOrder = ['SUBMITTED', 'REVIEWED', 'INTERVIEWED', 'ACCEPTED', 'REJECTED'];
-
-    const getNextStatus = (currentStatus: string) => {
-        const currentIndex = statusOrder.indexOf(currentStatus);
-        console.log(`Current Status: ${currentStatus}, Current Index: ${currentIndex}`);
-        
-        if (currentIndex === -1) {
-            console.warn(`Invalid current status: ${currentStatus}`);
-            return null;
-        }
-    
-        return currentIndex < statusOrder.length - 1 ? statusOrder[currentIndex + 1] : null;
-    };
-    
-    const handleNextStage = async () => {
-        if (application) {
-            console.log('Current Application:', application);
-    
-            const nextStatus = getNextStatus(application.status);
-            console.log('Next Status:', nextStatus);
-    
-            if (nextStatus) {
-                try {
-                    console.log(`Updating status to: ${nextStatus} for application ID: ${application._id}`);
-                    const response = await axios.patch(`http://localhost:5000/app/applications/${application._id}/status`, { status: nextStatus });
-                    const updatedApplication = response.data;
-                    console.log('Updated Application:', updatedApplication);
-    
-                    // Update local application state
-                    setApplication(updatedApplication);
-                    console.log('Application state updated successfully.');
-    
-                    // Update candidate's applications in state
-                    if (candidate) {
-                        const updatedCandidate = {
-                            ...candidate,
-                            applications: candidate.applications.map(app =>
-                                app._id === updatedApplication._id ? updatedApplication : app
-                            )
-                        };
-                        setCandidate(updatedCandidate);
-                        localStorage.setItem('selectedCandidate', JSON.stringify(updatedCandidate)); // Update localStorage
-                        console.log('Candidate state updated and saved to localStorage.');
-                    }
-                } catch (error) {
-                    console.error('Error updating status:', error);
-                    // Optionally, you could show an alert or UI message here
-                }
-            } else {
-                console.warn('No next stage available');
-            }
-        } else {
-            console.warn('No application found to update status.');
-        }
-    };
-
-
-
 
 
 
@@ -758,7 +715,7 @@ const CandidateDetails2: React.FC = () => {
 
 
 <div
-    className="tab-pane fade"
+    className=""
     id="address2"
     role="tabpanel"
     aria-labelledby="address-tab2"
@@ -860,12 +817,524 @@ const CandidateDetails2: React.FC = () => {
             {/* /Page Wrapper */}
 
 
+{/* Candidate Details */}
 
            
 
 
 
+{/* Candidate Details */}
+<div
+    className="offcanvas offcanvas-end offcanvas-large"
+    tabIndex={-1}
+    id="candidate_details"
+>
+    <div className="offcanvas-header border-bottom">
+        <h4 className="d-flex align-items-center">
+            Candidate Details
+            <span className="badge bg-primary-transparent fw-medium ms-2">
+                {(() => {
+                    const application = JSON.parse(localStorage.getItem('selectedApplication') || 'null');
+                    return application ? application.candidate : 'N/A';
+                })()}
+            </span>
+        </h4>
+        <button
+    type="button"
+    className="btn-close custom-btn-close"
+    data-bs-dismiss="offcanvas"
+    aria-label="Close"
+    onClick={() => localStorage.removeItem('selectedApplication')} // Remove from localStorage
+>
+    <i className="ti ti-x" />
+</button>
+    </div>
+    <div className="offcanvas-body">
+        <div className="card">
+            <div className="card-body">
+                <div className="d-flex align-items-center flex-wrap flex-md-nowrap row-gap-3">
+                    <span className="avatar avatar-xxxl candidate-img flex-shrink-0 me-3">
+                        <img src={candidate.image || "assets/img/users/user-13.jpg"} alt="Candidate" />
+                    </span>
+                    <div className="flex-fill border rounded p-3 pb-0">
+                        <div className="row align-items-center">
+                            {(() => {
+                                const application1 = JSON.parse(localStorage.getItem('selectedApplication') || 'null');
+                                if (!application1) return null; // Handle if application is null
+                                return (
+                                    <>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Candidate Name</p>
+                                                <h6 className="fw-normal">{candidate.firstName} {candidate.lastName}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Phone Number</p>
+                                                <h6 className="fw-normal">{candidate.phoneNumber}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Applied Date</p>
+                                                <h6 className="fw-normal">{new Date(application1.submissionDate).toLocaleDateString()}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Email</p>
+                                                <h6 className="fw-normal">{candidate.email}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Status</p>
+                                                <h6 className="fw-normal">{application1.status}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div className="mb-3">
+                                                <p className="mb-1">Compatibility Score</p>
+                                                <h6 className="fw-normal">{application1.compatibilityScore}</h6>
+                                            </div>
+                                        </div>
+                                    </>
+                                );
+                            })()}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div className="contact-grids-tab p-0 mb-3">
+            <ul className="nav nav-underline" id="myTab" role="tablist">
+                <li className="nav-item" role="presentation">
+                    <button
+                        className="nav-link active pt-0"
+                        id="info-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#basic-info"
+                        type="button"
+                        role="tab"
+                        aria-selected="true"
+                    >
+                        Profile
+                    </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                    <button
+                        className="nav-link pt-0"
+                        id="address-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#address"
+                        type="button"
+                        role="tab"
+                        aria-selected="false"
+                    >
+                        Hiring Pipeline
+                    </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                    <button
+                        className="nav-link pt-0"
+                        id="address-tab2"
+                        data-bs-toggle="tab"
+                        data-bs-target="#address2"
+                        type="button"
+                        role="tab"
+                        aria-selected="false"
+                    >
+                        AI Analysis Notes
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div className="tab-content" id="myTabContent">
+            <div
+                className="tab-pane fade show active"
+                id="basic-info"
+                role="tabpanel"
+                aria-labelledby="info-tab"
+                tabIndex={0}
+            >
+                <div className="card">
+                    <div className="card-header">
+                        <h5>Personal Information</h5>
+                    </div>
+                    <div className="card-body pb-0">
+                        <div className="row align-items-center">
+                            <div className="col-md-3">
+                                <div className="mb-3">
+                                    <p className="mb-1">Candidate Name</p>
+                                    <h6 className="fw-normal">{candidate.firstName} {candidate.lastName}</h6>
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                <div className="mb-3">
+                                    <p className="mb-1">Phone</p>
+                                    <h6 className="fw-normal">{candidate.phoneNumber}</h6>
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                <div className="mb-3">
+                                    <p className="mb-1">Email</p>
+                                    <h6 className="fw-normal">{candidate.email}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div className="card">
+                    <div className="card-header">
+                        <h5>Resume</h5>
+                    </div>
+                    <div className="card-body pb-0">
+                        <div className="row align-items-center">
+                            <div className="col-md-6">
+                                <div className="d-flex align-items-center mb-3">
+                                    <span className="avatar avatar-lg bg-light-500 border text-dark me-2">
+                                        <i className="ti ti-file-description fs-24" />
+                                    </span>
+                                    <div>
+                                        <h6 className="fw-medium">Resume.doc</h6>
+                                        <span>120 KB</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="mb-3 text-md-end">
+                                    {(() => {
+                                        const application = JSON.parse(localStorage.getItem('selectedApplication') || 'null');
+                                        return application ? (
+                                            <a
+                                                href={application.CV} // Use the CV URL from the application object
+                                                className="btn btn-dark d-inline-flex align-items-center"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <i className="ti ti-download me-1" />
+                                                Download
+                                            </a>
+                                        ) : (
+                                            <span>No CV available</span>
+                                        );
+                                    })()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                className="tab-pane fade"
+                id="address"
+                role="tabpanel"
+                aria-labelledby="address-tab"
+                tabIndex={0}
+            >
+
+
+
+
+
+
+<div className="card">
+    <div className="card-body">
+        <h5 className="fw-medium mb-2">Candidate Pipeline Stage</h5>
+        <div className="pipeline-list candidates border-0 mb-0">
+            <ul className="mb-0">
+                {[
+                    { stage: 'SUBMITTED', color: '#6f42c1' },  // Purple
+                    { stage: 'REVIEWED', color: '#007bff' },  // Blue
+                    { stage: 'INTERVIEWED', color: '#ffc107' }, // Yellow
+                    { stage: 'REJECTED', color: '#dc3545' },  // Red
+                    { stage: 'ACCEPTED', color: '#28a745' }   // Green
+                ].map((pipelineStage) => {
+                    const application = JSON.parse(localStorage.getItem('selectedApplication') || 'null');
+                    const isActive = application && application.status === pipelineStage.stage;
+
+                    return (
+                        <li key={pipelineStage.stage}>
+                            <Link
+                                to="#"
+                                style={{
+                                    backgroundColor: isActive ? pipelineStage.color : '#f8f9fa', // Gray for inactive
+                                    color: isActive ? '#fff' : '#000', // White text for active, black for inactive
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '5px',
+                                    display: 'inline-block',
+                                    textDecoration: 'none'
+                                }}
+                            >
+                                {pipelineStage.stage} {/* Display the stage */}
+                            </Link>
+                        </li>
+                    );
+                })}
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                <div className="card">
+                    <div className="card-header">
+                        <h5>Details</h5>
+                    </div>
+                    <div className="card-body pb-0">
+                        <div className="row align-items-center">
+                            <div className="col-md-3">
+                                <div className="mb-3">
+                                    <p className="mb-1">Current Status</p>
+                                    {(() => {
+                                        const application = JSON.parse(localStorage.getItem('selectedApplication') || 'null');
+                                        return application ? (
+                                            <span className="badge badge-soft-purple d-inline-flex align-items-center">
+                                                <i className="ti ti-point-filled me-1" />
+                                                {application.status}
+                                            </span>
+                                        ) : (
+                                            <span>No Status Available</span>
+                                        );
+                                    })()}
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                
+                            </div>
+                            <div className="col-md-3">
+                                <div className="mb-3">
+                                    <p className="mb-1">Applied Date</p>
+                                    {(() => {
+                                        const application = JSON.parse(localStorage.getItem('selectedApplication') || 'null');
+                                        return application ? (
+                                            <h6 className="fw-normal">{new Date(application.submissionDate).toLocaleDateString()}</h6>
+                                        ) : (
+                                            <h6 className="fw-normal">N/A</h6>
+                                        );
+                                    })()}
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                <div className="mb-3">
+                                    <p className="mb-1">Recruiter</p>
+                                    <h6 className="fw-normal">
+                                        <Link to="#">
+                                           
+                                            Anthony Lewis
+                                        </Link>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="card-footer">
+                        <div className="d-flex align-items-center justify-content-end">
+                            <Link to="#" className="btn btn-dark me-3">
+                                Reject
+                            </Link>
+                            <Link to="#" className="btn btn-primary">
+                                Move to Next Stage
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                className=""
+                id="address2"
+                role="tabpanel"
+                aria-labelledby="address-tab2"
+                tabIndex={0}
+            >
+                <div className="card">
+                    <div className="card-header">
+                        <h5>AI Analysis Notes</h5>
+                    </div>
+                    <div className="card-body">
+                        {(() => {
+                            const application = JSON.parse(localStorage.getItem('selectedApplication') || 'null');
+                            if (!application || !application.aiAnalysis) {
+                                return (
+                                    <div>
+                                        <p>Select an application first or no AI analysis is available for this application.</p>
+                                        <div className="mt-3">
+                                            <h6>Available Applications:</h6>
+                                            <div className="list-group">
+                                                {candidate.applications.map((app, index) => (
+                                                    <button 
+                                                        key={app._id} 
+                                                        className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                                                        onClick={() => {
+                                                            localStorage.setItem('selectedApplication', JSON.stringify(app));
+                                                            // Force a re-render
+                                                            setActiveApplication(app);
+                                                        }}
+                                                    >
+                                                        <span>
+                                                            Application #{index + 1} - Score: {app.compatibilityScore}
+                                                        </span>
+                                                        <span className="badge bg-primary rounded-pill">{app.status}</span>
+                                                    </button>
+                                                ))}
+                    </div>
+                </div>
+            </div>
+                                );
+                            }
+                            
+                            return (
+                                <div className="row">
+                                    <div className="col-12 mb-3">
+                                        <div className="d-flex justify-content-between align-items-center border-bottom pb-2">
+                                            <h6>
+                                                Score: {application.compatibilityScore} 
+                                                <span className="badge bg-primary-transparent ms-2">
+                                                    {application.status}
+                                                </span>
+                                            </h6>
+                                            <div className="dropdown">
+                                            
+                                                <ul className="dropdown-menu">
+                                                    {candidate.applications.map((app, index) => (
+                                                        <li key={app._id}>
+                                                            <button 
+                                                                className="dropdown-item" 
+                                                                onClick={() => {
+                                                                    localStorage.setItem('selectedApplication', JSON.stringify(app));
+                                                                    // Force a re-render
+                                                                    setActiveApplication(app);
+                                                                }}
+                                                            >
+                                                                Application #{index + 1} - Score: {app.compatibilityScore}
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+        </div>
+    </div>
+</div>
+
+                                    {/* Strengths Card */}
+                                    <div className="col-md-6 d-flex">
+                                        <div className="card flex-fill mb-3">
+                                            <div className="card-body">
+                                                <h6 className="d-flex align-items-center mb-2">
+                                                    <i className="ti ti-point-filled text-success me-1" />
+                                                    Strengths
+                                                </h6>
+                                                <ul className="ps-3">
+                                                    {application.aiAnalysis.swot.strengths.map((strength: string, i: number) => (
+                                                        <li key={i}>{strength}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Weaknesses Card */}
+                                    <div className="col-md-6 d-flex">
+                                        <div className="card flex-fill mb-3">
+                                            <div className="card-body">
+                                                <h6 className="d-flex align-items-center mb-2">
+                                                    <i className="ti ti-point-filled text-danger me-1" />
+                                                    Weaknesses
+                                                </h6>
+                                                <ul className="ps-3">
+                                                    {application.aiAnalysis.swot.weaknesses.map((weakness: string, i: number) => (
+                                                        <li key={i}>{weakness}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Opportunities Card */}
+                                    <div className="col-md-6 d-flex">
+                                        <div className="card flex-fill mb-3">
+                                            <div className="card-body">
+                                                <h6 className="d-flex align-items-center mb-2">
+                                                    <i className="ti ti-point-filled text-primary me-1" />
+                                                    Opportunities
+                                                </h6>
+                                                <ul className="ps-3">
+                                                    {application.aiAnalysis.swot.opportunities.map((opportunity: string, i: number) => (
+                                                        <li key={i}>{opportunity}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Threats Card */}
+                                    <div className="col-md-6 d-flex">
+                                        <div className="card flex-fill mb-3">
+                                            <div className="card-body">
+                                                <h6 className="d-flex align-items-center mb-2">
+                                                    <i className="ti ti-point-filled text-warning me-1" />
+                                                    Threats
+                                                </h6>
+                                                <ul className="ps-3">
+                                                    {application.aiAnalysis.swot.threats.map((threat: string, i: number) => (
+                                                        <li key={i}>{threat}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Keywords Card */}
+                                    <div className="col-md-6 d-flex">
+                                        <div className="card flex-fill mb-3">
+                                            <div className="card-body">
+                                                <h6 className="d-flex align-items-center mb-2">
+                                                    <i className="ti ti-point-filled text-info me-1" />
+                                                    Matched Keywords
+                                                </h6>
+                                                <ul className="ps-3">
+                                                    {application.aiAnalysis.matches.keywords.map((keyword: string, i: number) => (
+                                                        <li key={i}>{keyword}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Preferences Card */}
+                                    <div className="col-md-6 d-flex">
+                                        <div className="card flex-fill mb-3">
+                                            <div className="card-body">
+                                                <h6 className="d-flex align-items-center mb-2">
+                                                    <i className="ti ti-point-filled text-secondary me-1" />
+                                                    Matched Preferences
+                                                </h6>
+                                                <ul className="ps-3">
+                                                    {application.aiAnalysis.matches.preferences.map((preference: string, i: number) => (
+                                                        <li key={i}>{preference}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })()}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

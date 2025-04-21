@@ -387,6 +387,7 @@ export const register = async (
       provider: "local",
       isVerified: false,
     });
+    user.role = Role.CANDIDATE;
 
     await user.save();
 

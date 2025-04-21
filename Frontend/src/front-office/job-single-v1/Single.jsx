@@ -17,10 +17,76 @@ const JobSingleDynamicV1 = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [matchData, setMatchData] = useState(null);
   const [loadingMatch, setLoadingMatch] = useState(false);
-  
+  const [isShortlisted, setIsShortlisted] = useState(false);
+
   // Get auth context for profile data
   const { token, userId } = useAuth();
+ // Check if job is shortlisted when component loads or userId changes
+ useEffect(() => {
+  const checkShortlistStatus = async () => {
+    if (!userId || !jobId) return;
 
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/shortlisted-jobs/check?userId=${userId}&jobId=${jobId}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsShortlisted(data.isShortlisted);
+      }
+    } catch (error) {
+      console.error("Error checking shortlist status:", error);
+    }
+  };
+
+  checkShortlistStatus();
+}, [userId, jobId]);
+const toggleShortlist = async () => {
+  try {
+    // If no user is logged in, show login prompt
+    if (!userId) {
+      setApplicationStatus("Please log in to shortlist jobs");
+      setTimeout(() => setApplicationStatus(null), 2000);
+      return;
+    }
+
+    // If job is already shortlisted, remove it
+    if (isShortlisted) {
+      await fetch(
+        `http://localhost:5000/api/shortlisted-jobs/${userId}/${jobId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      setIsShortlisted(false);
+      setApplicationStatus("Job removed from shortlist");
+      setTimeout(() => setApplicationStatus(null), 2000);
+    }
+    // Otherwise, add it to shortlist
+    else {
+      await fetch("http://localhost:5000/api/shortlisted-jobs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          jobId: jobId,
+        }),
+      });
+
+      setIsShortlisted(true);
+      setApplicationStatus("Job added to shortlist");
+      setTimeout(() => setApplicationStatus(null), 2000);
+    }
+  } catch (error) {
+    console.error("Error toggling shortlist:", error);
+    setApplicationStatus("Error updating shortlist");
+    setTimeout(() => setApplicationStatus(null), 2000);
+  }
+};
   // Fetch job data
   useEffect(() => {
     const fetchJob = async () => {
@@ -317,9 +383,18 @@ const JobSingleDynamicV1 = () => {
                     </div>
                   )}
                   
-                  <button className="bookmark-btn">
-                    <i className="flaticon-bookmark"></i>
-                  </button>
+                  <button
+                    className="bookmark-btn"
+                    style={{
+                      color: isShortlisted ? "#D50000" : "#777777",
+                      transition: "all 0.3s ease",
+                    }}
+                    onClick={toggleShortlist}
+                  >
+                    <i
+                      className={`${isShortlisted ? "fas" : "far"} fa-bookmark`}
+                    ></i>
+                    </button>
                 </div>
 
 

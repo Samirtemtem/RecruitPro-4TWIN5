@@ -10,6 +10,7 @@ import ResetPasswordSuccess from "../../front-office/auth/resetPasswordSuccess";
 import ResetPassword from "../../front-office/auth/resetPassword";
 import AdminDashboard from "../../back-office/adminDashboard";
 import JobGrid from "../../back-office/recruitment/jobs/jobgrid";
+
 import JobList from "../../back-office/recruitment/joblist/joblist";
 import CandidateGrid from "../../back-office/recruitment/candidates/candidategrid";
 import CandidateGridPerJobPost from "../../back-office/recruitment/candidates/candidategridPerJobPost";
@@ -29,6 +30,7 @@ import {
   ShortlistedJobs,
   Messages,
 } from "../../front-office/candidates-dashboard";
+import Application from "../../back-office/candidates/Application";
 
 ///////////////////////////////////////////////////////////
 //import IndexPage from "../../front-office/indexpage/IndexPage";
@@ -77,7 +79,6 @@ import { ApplicationPage } from "../../front-office/candidates-dashboard/applica
 import CandidatesOverview from "../../back-office/candidatesOverview";
 import UsersList from "../../back-office/hrm/users/usersList";
 import { ContactManagementPage } from "../../back-office/contacts";
-import Application from "../../front-office/candidates-dashboard/application/components/Application";
 
 const routes = all_routes;
 
@@ -88,6 +89,12 @@ export const publicRoutes = [
     element: <CandidatesOverview />,
     route: Route,
   },
+  {
+    path: "/VerifyEmail",
+    element: <VerifyEmail />,
+    route: Route,
+  },
+
   {
     path: "/",
     name: "Root",
@@ -357,12 +364,6 @@ export const authRoutes = [
     route: Route,
   },
 
-  {
-    path: "/VerifyEmail",
-    name: "Root",
-    element: <VerifyEmail />,
-    route: Route,
-  },
 
   // Admin Routes
   {

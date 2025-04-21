@@ -1191,18 +1191,6 @@ const RegisterWizard: React.FC = () => {
                                   )}
                                 </div>
                               </div>
-                              <div className="col-lg-12">
-                              	<div className="form-group">
-                                  <label>Profile Image (Optional)</label>
-                                  <input
-                                    type="file"
-                                    className={`form-control ${errors.profileImage ? 'is-invalid' : ''}`}
-                                    accept="image/*"
-                                    onChange={(e) => handleInputChange('personal', 'profileImage', e.target.files?.[0])}
-                                  />
-                                  {errors.profileImage && <div className="invalid-feedback">{errors.profileImage}</div>}
-                                </div>
-                              </div>
                               <div className="col-12">
                                 <h5 className="mb-3">Social Links</h5>
                                 <div className="row">
@@ -1639,7 +1627,9 @@ const RegisterWizard: React.FC = () => {
         </div>
       </div>
       </section>
-      <FooterDefault />
+      <br />
+      <br />
+      
     </>
   );
 };

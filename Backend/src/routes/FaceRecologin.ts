@@ -45,7 +45,8 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 
 export const getUsers = async (req: Request, res: Response) => {
     try {
-        const allData = await User.find();
+       const allData = await User.find();
+
         res.json(allData);
     } catch (err) {
         if (err instanceof Error) {

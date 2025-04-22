@@ -1,0 +1,308 @@
+.highlight-new {
+  border-left: 4px solid #ff5c5c !important;
+  box-shadow: 0 5px 15px rgba(255, 92, 92, 0.1) !important;
+  transition: all 0.3s ease;
+}
+
+.highlight-new:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(255, 92, 92, 0.15) !important;
+}
+
+.job-new {
+  position: relative;
+}
+
+.job-new::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ff5c5c;
+  animation: pulse 2s infinite;
+  z-index: 10;
+}
+
+.clickable-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clickable-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.clickable-card:hover .view-details {
+  background-color: #1967d2;
+  color: white;
+}
+
+.clickable-card:active {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.view-details {
+  background-color: #e7f0ff !important;
+  color: #1967d2 !important;
+  transition: all 0.3s ease;
+}
+
+/* Match percentage styles */
+.match-percentage {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.percentage-value {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.percentage-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Adjust content padding to make room for the match indicator */
+.content {
+  position: relative;
+  padding-right: 70px !important;
+}
+
+/* Match explanation styles */
+.match-explanation {
+  background-color: #f5f7fc;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-left: 4px solid #4285f4;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.explanation-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #1967d2;
+}
+
+.explanation-header .icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.explanation-content p {
+  margin-bottom: 12px;
+  color: #696969;
+  font-size: 14px;
+}
+
+.match-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #696969;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+/* Job notification styles */
+.notification-card {
+  position: relative;
+  border-left: 4px solid #ff5c5c !important;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background-color: #ff5c5c;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(255, 92, 92, 0.3);
+  z-index: 2;
+}
+
+.notification-dismiss {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.notification-dismiss:hover {
+  background-color: #ff5c5c;
+  transform: rotate(90deg);
+}
+
+.notification-dismiss:hover span {
+  color: white;
+}
+
+.notification-dismiss span {
+  font-size: 12px;
+  color: #777;
+  transition: all 0.2s ease;
+}
+
+.notification-count {
+  background-color: #f5f7fc;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #1967d2;
+}
+
+.notification-count span {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.filter-note {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #777;
+  background-color: #f9f9f9;
+  padding: 8px 15px;
+  border-radius: 5px;
+  border-left: 3px solid #1967d2;
+}
+
+.filter-note .icon {
+  margin-right: 8px;
+  color: #1967d2;
+}
+
+/* Match filter styles */
+.match-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.match-filter label {
+  font-size: 14px;
+  color: #696969;
+  margin-bottom: 0;
+}
+
+.match-filter .form-select {
+  width: auto;
+  min-width: 150px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  color: #333;
+}
+
+.match-filter-badge {
+  margin-left: 15px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.notification-empty {
+  padding: 30px;
+  background-color: #f5f7fc;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.empty-icon {
+  font-size: 50px;
+  color: #ddd;
+  margin-bottom: 15px;
+}
+
+.notification-empty h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.notification-empty p {
+  color: #777;
+  font-size: 14px;
+}
+
+.empty-note {
+  margin-top: 15px;
+  font-size: 12px !important;
+  font-style: italic;
+  color: #999 !important;
+  border-top: 1px dashed #ddd;
+  padding-top: 10px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 92, 92, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(255, 92, 92, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 92, 92, 0);
+  }
+}
+
+/* Adjust notification badge position when match percentage is present */
+.job-notification .notification-badge {
+  right: 85px; /* Move to the left to accommodate match percentage */
+} 

@@ -7,7 +7,7 @@ import BreadCrumb from "../../../common/Breadcrumb";
 
 import DashboardCandidatesHeader from "./components/DashboardCandidatesHeader";
 import DashboardCandidatesSidebar from "./components/DashboardCandidatesSidebar";
-import JobApplied from "./components/JobApplied";
+import JobAlert from "./components/JobAlert";
 import TopCardBlock from "./components/TopCardBlock";
 import ProfileChart from "./components/ProfileChart";
 import Notification from "./components/Notification";
@@ -77,13 +77,12 @@ const DashboardCandidate = () => {
               {/* <!-- applicants Widget --> */}
               <div className="applicants-widget ls-widget">
                 <div className="widget-title">
-                  <h4>Jobs Applied Recently</h4>
+                  <h4>New Job Notifications</h4>
                 </div>
                 <div className="widget-content">
                   <div className="row">
-                    {/* <!-- Candidate block three --> */}
-
-                    <JobApplied />
+                    {/* <!-- Job alerts --> */}
+                    <JobAlert />
                   </div>
                 </div>
               </div>

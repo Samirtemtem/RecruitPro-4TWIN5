@@ -473,27 +473,29 @@ const ProjectDetails = () => {
                             <div className="row">
                   
                             <div className="row">
-  {applications.length > 0 ? (
-    applications.map((application) => (
-      <div key={application._id} className="col-xxl-3 col-xl-4 col-md-6">
-        <div className="card">
-          <div className="card-body">
-            <h6 className="fw-semibold">Status: {application.status}</h6>
-            <p>Compatibility Score: {application.compatibilityScore}</p>
-            <p>Submission Date: {new Date(application.submissionDate).toLocaleDateString()}</p>
-            <a href={application.CV} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-              View CV
-            </a>
-            <Link to={`/candidate-details2/${application.candidate}`} className="btn btn-primary m-2">
-              View Candidate 
-            </Link>
-          </div>
+                            {applications.length > 0 ? (
+  applications.map((application) => (
+    <div key={application._id} className="col-xxl-3 col-xl-4 col-md-6 mb-4">
+      <div className="card shadow-sm border-light">
+        <div className="card-body">
+          <h6 className="fw-semibold text-primary">Status: {application.status}</h6>
+          <br />
+          <p className="text-muted">Compatibility Score: <strong>{application.compatibilityScore}</strong></p>
+          <p className="text-muted">Submission Date: <strong>{new Date(application.submissionDate).toLocaleDateString()}</strong></p>
+         
+          <Link to={`/candidate-details2/${application.candidate}`} className="btn btn-primary m-2" id="btn">
+            View Candidate
+          </Link>
+          <Link to={`/application/${application._id}`} className="btn btn-secondary m-2" id="btn">
+            View Application
+          </Link>
         </div>
       </div>
-    ))
-  ) : (
-    <p>No applications found.</p>
-  )}
+    </div>
+  ))
+) : (
+  <p className="text-center">No applications found.</p>
+)}
 </div>
 
 </div>
@@ -649,6 +651,30 @@ const ProjectDetails = () => {
         </div>
     </div>
 </div>
+
+
+
+<style>
+        {`
+        
+
+          #btn {
+            width: 90%;
+            text-align: center;
+       
+          }
+
+          .text-muted {
+            font-size: 0.9rem;
+          }
+
+          .mb-4 {
+            margin-bottom: 1.5rem;
+          }
+
+        
+        `}
+      </style>
         </>
     );
 };

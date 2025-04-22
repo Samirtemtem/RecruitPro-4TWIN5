@@ -1,0 +1,55 @@
+{
+    "data":[
+        {
+          "Tag": "HRMS",
+          "CreatedDate": "12/09/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "Recruitment",
+          "CreatedDate": "24/10/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "HRTech",
+          "CreatedDate": "18/02/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "HRMSFuture",
+          "CreatedDate": "17/10/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "DataSecurity",
+          "CreatedDate": "20/07/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "HRSoftware",
+          "CreatedDate": "10/04/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "HRTrends",
+          "CreatedDate": "29/08/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "HRMSBenefits",
+          "CreatedDate": "22/02/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "HRMSTools",
+          "CreatedDate": "03/11/2024",
+          "Status": "Active"
+        },
+        {
+          "Tag": "HRTechInnovation",
+          "CreatedDate": "17/12/2024",
+          "Status": "Active"
+        }
+       ],
+    "totaldata":10
+}

@@ -1,0 +1,45 @@
+{
+    "data":[
+        {
+          "CategoryName": "Technology",
+          "SubCategoryName": "Hardware Cost"
+        },
+        {
+          "CategoryName": "Taxes",
+          "SubCategoryName": "Payroll Taxes"
+        },
+        {
+          "CategoryName": "Recruitment",
+          "SubCategoryName": "Advertisement"
+        },
+        {
+          "CategoryName": "Compensation",
+          "SubCategoryName": "Incentive"
+        },
+        {
+          "CategoryName": "Travel",
+          "SubCategoryName": "Business Travel"
+        },
+        {
+          "CategoryName": "Internship",
+          "SubCategoryName": "Stipends"
+        },
+        {
+          "CategoryName": "Employee Engagement",
+          "SubCategoryName": "Engagement Activities"
+        },
+        {
+          "CategoryName": "Employee Benefits",
+          "SubCategoryName": "Healthcare Benefits"
+        },
+        {
+          "CategoryName": "Corporate Events",
+          "SubCategoryName": "Decorations"
+        },
+        {
+          "CategoryName": "Compliance",
+          "SubCategoryName": "Performance Appraisal"
+        }
+       ],
+    "totaldata":10
+}

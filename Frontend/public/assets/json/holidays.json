@@ -1,0 +1,66 @@
+{
+    "data":[
+        {
+            "Title": "New Year",
+            "Date": "01/01/2024",
+            "Description": "First day of the new year",
+            "Status": "Active"
+        },
+        {
+            "Title": "Martin Luther King Jr. Day",
+            "Date": "15/01/2024",
+            "Description": "Celebrating the civil rights leader",
+            "Status": "Active"
+        },
+        {
+            "Title": "President's Day",
+            "Date": "19/02/2024",
+            "Description": "Honoring past US Presidents",
+            "Status": "Active"
+        },
+        {
+            "Title": "Good Friday",
+            "Date": "29/03/2024",
+            "Description": "Holiday before Easter",
+            "Status": "Active"
+        },
+        {
+            "Title": "Easter Monday",
+            "Date": "01/04/2024",
+            "Description": "Holiday after Easter",
+            "Status": "Active"
+        },
+        {
+            "Title": "Memorial Day",
+            "Date": "27/05/2024",
+            "Description": "Honors military personnel",
+            "Status": "Active"
+        },
+        {
+            "Title": "Independence Day",
+            "Date": "04/07/2024",
+            "Description": "Celebrates Independence",
+            "Status": "Active"
+        },
+        {
+            "Title": "Labour Day",
+            "Date": "02/09/2024",
+            "Description": "Honors working people",
+            "Status": "Inactive"
+        },
+        {
+            "Title": "Veterans Day",
+            "Date": "11/11/2024",
+            "Description": "Honors military veterans",
+            "Status": "Active"
+        },
+        {
+            "Title": "Christmas Day",
+            "Date": "25/12/2024",
+            "Description": "Celebration of Christmas",
+            "Status": "Active"
+        }
+    ],
+    "totaldata":10
+    
+}

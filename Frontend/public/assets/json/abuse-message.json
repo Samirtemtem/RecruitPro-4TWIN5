@@ -1,0 +1,86 @@
+{
+    "data":[
+        {
+            "reportedBy": "Alexander Manuel",
+            "reportedUser": "Aaryian Jose",
+            "totalMessageCount": "100",
+            "date": "02 Sep 2024, 10:00 AM",
+            "img": "assets/admin/img/users/user-01.jpg",
+            "img1": "assets/admin/img/profiles/profile-01.jpg"
+        },
+        {
+            "reportedBy": "Elizabeth Sosa",
+            "reportedUser": "Sarika Jain",
+            "totalMessageCount": "120",
+            "date": "14 Sep 2024, 11:30 AM",
+            "img": "assets/admin/img/users/user-02.jpg",
+            "img1": "assets/admin/img/profiles/profile-02.jpg"
+        },
+        {
+            "reportedBy": "Mark Villiams",
+            "reportedUser": "Clyde Smith",
+            "totalMessageCount": "200",
+            "date": "28 Sep 2024, 08:15 AM",
+            "img": "assets/admin/img/users/user-03.jpg",
+            "img1": "assets/admin/img/profiles/profile-03.jpg"
+        },
+        {
+            "reportedBy": "Michael Howard",
+            "reportedUser": "Clyde Smith",
+            "totalMessageCount": "250",
+            "date": "12 Oct 2024, 06:40 PM",
+            "img": "assets/admin/img/users/user-04.jpg",
+            "img1": "assets/admin/img/profiles/profile-04.jpg"
+        },
+        {
+            "reportedBy": "Horace Keene",
+            "reportedUser": "Federico Wells",
+            "totalMessageCount": "300",
+            "date": "12 Oct 2024, 06:40 PM",
+            "img": "assets/admin/img/users/user-05.jpg",
+            "img1": "assets/admin/img/profiles/profile-05.jpg"
+        },
+        {
+            "reportedBy": "Hollis Tran",
+            "reportedUser": "Edward Lietz",
+            "totalMessageCount": "180",
+            "date": "30 Oct 2024, 07:25 AM",
+            "img": "assets/admin/img/users/user-06.jpg",
+            "img1": "assets/admin/img/profiles/profile-06.jpg"
+        },
+        {
+            "reportedBy": "James Albert",
+            "reportedUser": "Sharon Ford",
+            "totalMessageCount": "200",
+            "date": "01 Nov 2024, 08:50 AM",
+            "img": "assets/admin/img/users/user-07.jpg",
+            "img1": "assets/admin/img/profiles/profile-07.jpg"
+        },
+        {
+            "reportedBy": "Debra Jones",
+            "reportedUser": "Thomas Rethman",
+            "totalMessageCount": "320",
+            "date": "10 Nov 2024, 11:20 AM",
+            "img": "assets/admin/img/users/user-08.jpg",
+            "img1": "assets/admin/img/profiles/profile-08.jpg"
+        },
+        {
+            "reportedBy": "Pearl Dewitt",
+            "reportedUser": "Wilbur Martinez",
+            "totalMessageCount": "400",
+            "date": "17 Nov 2024, 04:50 PM",
+            "img": "assets/admin/img/users/user-09.jpg",
+            "img1": "assets/admin/img/profiles/profile-09.jpg"
+        },
+        {
+            "reportedBy": "Richard Ohare",
+            "reportedUser": "Danielle Baker",
+            "totalMessageCount": "210",
+            "date": "12 Dec 2024, 09:30 AM",
+            "img": "assets/admin/img/users/user-10.jpg",
+            "img1": "assets/admin/img/profiles/profile-10.jpg"
+        }
+    ],
+    "totalData":10
+       
+}

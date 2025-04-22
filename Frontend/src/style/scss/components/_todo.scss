@@ -1,0 +1,120 @@
+.todo-inbox-check {
+    .checkboxs {
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        input ~ .checkmarks {
+            border-color: rgba(145, 158, 171, 0.30);
+            border-radius: 5px;
+            margin-top: 0;
+            width: 20px;
+            height: 20px;
+        }
+        input {
+            &:checked {
+                ~ .checkmarks{
+                    border-color: $primary;
+                    background-color:$primary;
+                }
+            }
+        }
+    }    
+}
+.todo-accordion{
+    .accordion-button:after{
+        display: none;
+    }
+}
+.todo-calendar  .input-groupicon.calender-input input {
+    padding-left: 10px;
+}
+.todo-calendar {
+    position: relative;
+    .calender-input {
+        position: relative;
+        .info-img {
+            position: absolute;
+            top: 11px;
+            z-index: 100;
+            width: 16px;
+            height: 16px;
+            right: 5px !important;
+            color: $text-color;
+        } 
+    }   
+}
+.todo-accordion {
+    .accordion-item {
+        background: transparent;
+        margin-bottom: 30px;
+        .accordion-header {
+            cursor: pointer;
+            .accordion-button {
+                background: transparent;
+                padding: 0;
+                &.collapsed {
+                    .todo-today-content {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+            .todo-drop-down {
+                a {
+                    span {
+                        i {
+                            color: $text-color;
+                        }
+                    }
+                }
+            }
+        }
+         .accordion-body {
+            padding: 0;
+         }
+
+    }
+}
+.section-bulk-wrap {
+    .form-sort {
+        .ti-filter {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+    }
+}
+.input-block {
+    &.todo-inbox-check {
+        margin-bottom: 0;
+        position: relative;
+    }
+}
+.section-bulk-widget {
+    .nav-pills {
+        .nav-link {
+            &:hover {
+                background: $dark;
+                color: $white !important;
+            }
+            &.active {
+                background: $dark;
+                color: $white !important;
+            }
+        }
+    }
+}
+.square-rotate {
+    transform: rotate(45deg);
+}
+.todo-strike-content {
+    .strike-info {
+        h4 {
+            text-decoration: line-through;
+        }
+        p {
+            text-decoration: line-through;
+        }
+    }
+}

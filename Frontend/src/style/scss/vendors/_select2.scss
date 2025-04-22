@@ -1,0 +1,130 @@
+.select2-container {
+    min-width: 100% !important;
+    z-index: 99;
+    .select2-selection--single {
+        height: 38px;
+    }
+}
+.select2-container--default {
+    .select2-selection--single {
+        border: 1px solid var(--Stroke, rgba(145, 158, 171, 0.30));
+        @include rounded(5px);
+        .select2-selection__rendered {
+            color: $gray-900 !important;
+            line-height: 38px;
+            @include rounded(5px);
+            padding-left: 10px;
+            font-size: $font-size-14;
+            font-weight: $font-weight-normal;
+            padding-right: 30px;
+            span {
+                display: -webkit-inline-box;
+                display: -ms-inline-flexbox;
+                display: inline-flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                img {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50px;
+                    margin-right: 5px;
+                }
+            }
+        }
+        .select {
+            width: 219px;
+        }
+        .select2-selection__arrow {
+            height: 38px;
+            right: 7px;
+        }
+    }
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-color: $gray-700;
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    padding: 3px;
+    height: 0;
+    margin-left: -6px;
+    margin-top: -3px;
+    width: 0;
+    @include transform(rotate(45deg) translateY(-50%));
+}
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: $black;
+    border-width: 1px 0 0 1px;
+    margin-top: 3px;
+    padding: 3px;
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background: $primary;
+    color: $white;
+}
+.select2-container--focus  {
+    .select2-selection--single{
+        background: $white !important;
+        border-color: $light-900;
+    }
+}
+span.select2-container.select2-container--default.select2-container--open {
+    z-index: 9999;
+    box-shadow: $box-shadow-sm;
+}
+.select2-container--classic .select2-selection--single,
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--single .select2-selection__rendered,
+.select2-container--default .select2-selection--single .select2-selection__arrow,
+.select2-container--default .select2-selection--multiple,
+.select2-container--classic .select2-selection--single .select2-selection__arrow,
+.select2-container--classic .select2-selection--single .select2-selection__rendered {
+    border-color: $input-border;
+    color: $text-color;
+}
+.select2-dropdown {
+    border-color: $input-border;
+}
+.select2-container--default .select2-selection--multiple {
+    line-height: 27px;
+    height: auto;
+    min-height: 40px;
+}
+
+.select2-container--classic .select2-selection--multiple .select2-selection__choice,
+.select2-container--default .select2-selection--multiple .select2-selection__choice,
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    background-color: $info;
+    border-color: $info;
+    color: $white;
+}
+.select2-container--default.select2-container--open.select2-container--below .select2-selection--single{
+    border-color: $primary;
+}
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: $primary;
+}
+.select2-container--open {
+    .ti-filter {
+        z-index: 9999 !important;
+    }
+}
+.select2-results__option {
+    span {
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50px;
+            margin-right: 5px;
+        }
+    }
+}

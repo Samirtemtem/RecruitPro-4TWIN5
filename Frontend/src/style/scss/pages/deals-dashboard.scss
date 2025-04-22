@@ -1,0 +1,70 @@
+.overlay-bg-3 {
+    z-index: 1;
+    &::before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        background-image: url(../../../../public/assets/img/bg/card-bg-03.png);
+        background-repeat: no-repeat;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+    }
+}
+.icon-rotate {
+    transform: rotate(45deg);
+    span {
+        transform: rotate(317deg);
+    }
+}
+#pipeline_chart {
+    margin-top: -30px;
+}
+.stage-chart-main {
+    margin-left: -60px;
+}
+.deal-stage-chart {
+    width: 235px;
+    height: 235px;
+    position: relative;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+.chart-stage-1 {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    z-index: 1;
+}
+.chart-stage-2 {
+    width: 85px;
+    height: 85px;
+    position: absolute;
+    right: 20px;
+    top: 0;
+    z-index: 2;
+}
+.chart-stage-3 {
+    width: 110px;
+    height: 110px;
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    z-index: 3;
+    transform: translateY(-50%);
+}
+.chart-stage-4 {
+    width: 95px;
+    height: 95px;
+    position: absolute;
+    right: 30px;
+    bottom: 0;
+    z-index: 2;
+}
+#heat_chart {
+    margin-left: -15px;
+}

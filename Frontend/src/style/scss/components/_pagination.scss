@@ -1,0 +1,171 @@
+.page-link {
+    color: $text-color;
+    background-color: $white;
+    border: 1px solid $border-color;
+    &:focus {
+        box-shadow: none;
+        background-color: $light;
+    }
+    &:hover {
+        color: $primary;
+        background-color: $light;
+        border-color: $border-color;
+    }
+}
+.page-item.active .page-link {
+    color: $white;
+    background-color: $primary;
+    border-color: $primary;
+}
+.disabled>.page-link, .page-link.disabled {
+    color: $text-color;
+    background-color: $white;
+    border-color: $border-color;
+    opacity: 0.7;
+}
+
+[dir="rtl"] { 
+    .pagination{
+        .page-link{
+            .bx-chevron-left::before{
+                content: "\ea50";
+            }
+            .bx-chevron-right::before{
+                content: "\ea4d";
+            }
+            .ri-arrow-right-s-line:before{
+                content: "\ea64";
+            }
+            .ri-arrow-left-s-line:before{
+                content: "\ea6e";
+            }
+        }
+    }
+}
+.pagination-style-1 .pagination {
+    .page-item {
+        margin: 0 0.25rem;
+        .page-link {
+            border: 0;
+            border-radius: $border-radius;
+            font-size: 0.8125rem;
+            i {
+                font-weight: $font-weight-semibold;
+            }
+        }
+        &.active {
+            .page-link {
+                border-radius: $border-radius;
+                background-color: $primary;
+                color: $white;
+            }
+            &:hover {
+                .page-link {
+                    border-radius: $border-radius;
+                    background-color: $primary;
+                    color: $white;
+                }
+            } 
+        }
+        &:hover {
+            .page-link {
+                background-color: $light;
+                color: $primary;
+            }
+        }
+    }
+}
+.pagination-style-2 .pagination {
+    border-radius: $border-radius;
+    .page-item {
+        margin: 0 0.25rem;
+        .page-link {
+            border: 0 !important;
+            font-size: 0.8125rem;
+        }
+        &.active {
+            .page-link {
+                background-color: $white;
+                color: $primary;
+                position: relative;
+                font-weight: bold;
+                &:before {
+                    position: absolute;
+                    content: "";
+                    inset-block-end: 0;
+                    inset-inline-start: 0;
+                    width: 100%;
+                    height: 0.1rem;
+                    background-color: $primary;
+                }
+            }
+        }
+        &:hover {
+            .page-link {
+                background-color: transparent;
+            }
+        }
+    }
+}
+.pagination-style-3 .pagination {
+    border-radius: 50px;
+    padding: 0.25rem;
+    align-items: center;
+    .page-item {
+        margin: 0 0.25rem;
+        .page-link {
+            border: 0;
+            border-radius: 50px;
+            font-size: 0.8125rem;
+            i {
+                font-weight: $font-weight-semibold;
+            }
+        }
+        &.active {
+            .page-link {
+                background-color: $primary;
+                color: $white;
+            }
+            &:hover {
+                .page-link {
+                    background-color: $primary;
+                }
+            }
+        }
+        &:hover {
+            .page-link {
+                background-color: $light;
+            }
+        }
+    }
+}
+.pagination-style-4 .pagination {
+    .page-item {
+        .page-link {
+            border: 0 !important;
+            font-size: 0.8125rem;
+            border-radius: $border-radius;
+            i {
+                font-weight: $font-weight-semibold;
+            }
+        }
+        &.active {
+            .page-link {
+                border: 0;
+                border-radius: $border-radius;
+                background-color: $primary;
+                color: $white;
+            }
+            &:hover {
+                .page-link {
+                    background-color: $primary;
+                }
+            }
+        }
+        &:hover {
+            .page-link {
+                background-color: transparent;
+            }
+        }
+    }
+}

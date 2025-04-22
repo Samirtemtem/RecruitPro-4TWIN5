@@ -1,0 +1,17 @@
+.trend-tag {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    background: $light-200;
+    display: inline-flex;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: $font-size-12;
+}
+
+.dot-icon{
+    position: absolute;
+    right: 0;
+    top: 20px;
+    margin-right: 20px;
+  }

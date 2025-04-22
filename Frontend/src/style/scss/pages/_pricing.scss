@@ -1,0 +1,48 @@
+.pricing-content{
+    padding: 15px;
+    .price-hdr{
+        margin: 0 0 14px 0;
+        display: flex;
+        align-items: center;
+        &::after{
+            content: "";
+            width: 90%;
+            height: 1px;
+            background: $gray-200;
+        }
+    }
+}
+.timeline-hrline {
+    position: relative;
+    z-index: 1;
+    &::before {
+        content: "";
+        width: 1px;
+        height: 100%;
+        border-left: 1px solid $gray-200;
+        position: absolute;
+        left: -12px;
+        top: 5px;
+        z-index: -1;
+    }
+}
+.schedule-timeline {
+    > div {
+        &:last-child {
+            .timeline-hrline {
+                &::before {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+.timeline-border{
+    width: 24px;
+    height: 24px;
+    border: 1px solid $gray-200;
+    border-radius: 12px;
+}
+.timeline-date{
+    margin-right: 21px;
+}

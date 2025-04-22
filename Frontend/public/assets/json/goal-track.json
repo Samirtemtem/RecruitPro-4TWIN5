@@ -1,0 +1,35 @@
+{
+    "data":[
+        {
+          "GoalType": "Development Goals",
+          "Subject": "Programming Skills",
+          "TargetAchievement": "Complete a HTML course",
+          "StartDate": "14/01/2024",
+          "EndDate": "13/03/2024",
+          "Description": "Improve proficiency",
+          "Status": "Active",
+          "Progress": "Completed 70%"
+        },
+        {
+          "GoalType": "Project Goals",
+          "Subject": "App Development",
+          "TargetAchievement": "Deliver the app",
+          "StartDate": "21/01/2024",
+          "EndDate": "21/02/2024",
+          "Description": "Complete the app",
+          "Status": "Active",
+          "Progress": "Completed 40%"
+        },
+        {
+          "GoalType": "Project Goals",
+          "Subject": "Web Development",
+          "TargetAchievement": "Deliver the template",
+          "StartDate": "18/02/2024",
+          "EndDate": "18/03/2024",
+          "Description": "Complete the template",
+          "Status": "Active",
+          "Progress": "Completed 60%"
+        }
+       ],
+    "totaldata":3
+}

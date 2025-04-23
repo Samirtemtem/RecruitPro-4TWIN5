@@ -7,7 +7,7 @@ interface JobType {
   styleClass: string;
   type: string;
 }
-
+//jgghgggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
 interface JobItem {
   _id: string;
   title: string;

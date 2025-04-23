@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import JobPost from '../models/JobPost';
-import User from '../models/User';
 dotenv.config();
 
 const router = express.Router();
@@ -227,83 +226,7 @@ const countOpenJobPosts = async (req: Request, res: Response) : Promise<any> => 
 // Route to count open job posts
 router.get('/job-posts/count/open', countOpenJobPosts);
 
-// ✅ Get matching jobs with match percentages for a specific user
-router.get('/matching/:userId', async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { userId } = req.params;
-        
-        // Step 1: Get the latest 10 open job posts
-        const latestJobs = await JobPost.find({ status: 'OPEN' })
-            .sort({ createdAt: -1 })
-            .limit(10);
-        
-        // Step 2: Get user profile for matching
-        const user = await User.findById(userId);
-        
-        if (!user) {
-            res.status(404).json({ error: 'User not found' });
-            return;
-        }
-        
-        // Step 3: Calculate match percentage for each job
-        const jobsWithMatchPercentage = latestJobs.map(job => {
-            // Get the job as a plain object
-            const jobObj = job.toObject();
-            
-            // Calculate match percentage (simplified algorithm for demonstration)
-            // In a real app, use more sophisticated matching based on skills, experience, etc.
-            let matchPercentage = 70; // base percentage
-            
-            // Example: Add up to 30% based on if keywords match
-            // This is highly simplified - a real matching algorithm would be more complex
-            const keywords = [
-                user.profile?.skills?.join(' ') || '',
-                user.profile?.title || '',
-                user.profile?.profession || '',
-                user.profile?.specialization || ''
-            ].join(' ').toLowerCase();
-            
-            const jobKeywords = [
-                job.title || '',
-                job.description || '',
-                job.requirements || '',
-                job.tags?.join(' ') || ''
-            ].join(' ').toLowerCase();
-            
-            // Count matches by checking if job keywords appear in user profile
-            let matchCount = 0;
-            const importantTerms = ['javascript', 'react', 'node', 'python', 'java', 'developer', 
-                                    'engineer', 'manager', 'designer', 'frontend', 'backend',
-                                    'fullstack', 'data', 'analyst', 'science', 'machine learning'];
-            
-            importantTerms.forEach(term => {
-                if (keywords.includes(term) && jobKeywords.includes(term)) {
-                    matchCount++;
-                }
-            });
-            
-            // Calculate additional percentage based on matches (up to 30%)
-            const additionalPercentage = Math.min(30, (matchCount / importantTerms.length) * 30);
-            matchPercentage += additionalPercentage;
-            
-            // Round to whole number
-            matchPercentage = Math.round(matchPercentage);
-            
-            // Add match percentage to job object
-            return {
-                ...jobObj,
-                matchPercentage
-            };
-        });
-        
-        // Sort by match percentage (highest first)
-        jobsWithMatchPercentage.sort((a, b) => (b.matchPercentage || 0) - (a.matchPercentage || 0));
-        
-        res.json(jobsWithMatchPercentage);
-    } catch (error) {
-        console.error('Error getting matching jobs:', error);
-        res.status(500).json({ error: (error as Error).message });
-    }
-});
+
+
 
 export default router;

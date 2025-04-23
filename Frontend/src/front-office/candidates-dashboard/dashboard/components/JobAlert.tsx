@@ -18,7 +18,6 @@ interface JobItem {
   status: string;
   jobType?: JobType[];
   logo?: string;
-  matchPercentage?: number;
 }
 
 const JobAlert = () => {
@@ -28,8 +27,6 @@ const JobAlert = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [viewedJobs, setViewedJobs] = useState<string[]>([]);
   const navigate = useNavigate();
-  const [userId, setUserId] = useState<string | null>(null);
-  const [matchThreshold, setMatchThreshold] = useState<number>(0); // Default: show all
 
   // Load viewed jobs from localStorage
   useEffect(() => {
@@ -37,36 +34,14 @@ const JobAlert = () => {
     if (storedViewedJobs) {
       setViewedJobs(JSON.parse(storedViewedJobs));
     }
-    
-    // Get user ID from localStorage or session
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(storedUserId);
-    }
   }, []);
 
   const fetchNewJobs = async () => {
     try {
       setRefreshing(true);
-      
-      let jobsData;
-      
-      if (userId) {
-        // Fetch jobs with matching percentage if user is logged in
-        const response = await axios.get(`http://localhost:5000/api/jobs/matching/${userId}`);
-        jobsData = response.data;
-      } else {
-        // Fallback to regular job fetch if no user ID available
-        const response = await axios.get("http://localhost:5000/api/jobs/FrontOfficelatestTen");
-        
-        // Simulate match percentages for development
-        jobsData = response.data.map((job: JobItem) => {
-          const matchPercentage = Math.floor(Math.random() * 41) + 60; // 60-100%
-          return { ...job, matchPercentage };
-        });
-      }
-      
-      setJobs(jobsData);
+      // Fetch latest jobs
+      const response = await axios.get("http://localhost:5000/api/jobs/FrontOfficelatestTen");
+      setJobs(response.data);
       setError(null);
     } catch (err) {
       console.error("Error fetching new jobs:", err);
@@ -79,7 +54,7 @@ const JobAlert = () => {
 
   useEffect(() => {
     fetchNewJobs();
-  }, [userId]);
+  }, []);
 
   // Mark a job as viewed when clicked and navigate to details
   const handleJobClick = (jobId: string) => {
@@ -91,15 +66,10 @@ const JobAlert = () => {
     navigate(`/job-single-v1/${jobId}`);
   };
 
-  // Check if a job is new (not viewed AND recent AND meets match threshold)
-  const isNewJob = (jobId: string, createdAt: string, matchPercentage: number = 0) => {
+  // Check if a job is new (not viewed AND recent)
+  const isNewJob = (jobId: string, createdAt: string) => {
     // Check if job has been viewed
     if (viewedJobs.includes(jobId)) {
-      return false;
-    }
-    
-    // Check if job meets match threshold
-    if (matchPercentage < matchThreshold) {
       return false;
     }
     
@@ -112,10 +82,8 @@ const JobAlert = () => {
     return diffHours <= 48; // Only show jobs less than 48 hours old as "new"
   };
 
-  // Get only recent unviewed jobs that meet the match threshold
-  const newJobs = jobs.filter(job => 
-    isNewJob(job._id, job.createdAt, job.matchPercentage)
-  );
+  // Get only recent unviewed jobs
+  const newJobs = jobs.filter(job => isNewJob(job._id, job.createdAt));
 
   if (loading) return <div className="text-center">Loading new job notifications...</div>;
 
@@ -148,41 +116,16 @@ const JobAlert = () => {
     }
   };
 
-  // Function to determine match color based on percentage
-  const getMatchColor = (percentage: number = 0) => {
-    if (percentage >= 90) return "#34a853"; // Excellent match - green
-    if (percentage >= 75) return "#4285f4"; // Good match - blue
-    if (percentage >= 60) return "#fbbc05"; // Fair match - yellow
-    return "#ea4335"; // Low match - red
-  };
-
   return (
     <>
       <div className="col-12 mb-4 d-flex justify-content-between align-items-center">
-        <div className="d-flex align-items-center">
-          <button 
-            onClick={fetchNewJobs} 
-            className="theme-btn btn-style-one me-3"
-            disabled={refreshing}
-          >
-            {refreshing ? "Refreshing..." : "Refresh Notifications"}
-          </button>
-          
-          <div className="match-filter">
-            <label htmlFor="matchFilter">Match Quality:</label>
-            <select 
-              id="matchFilter" 
-              value={matchThreshold}
-              onChange={(e) => setMatchThreshold(Number(e.target.value))}
-              className="form-select"
-            >
-              <option value="0">All Jobs</option>
-              <option value="60">Fair Match (60%+)</option>
-              <option value="75">Good Match (75%+)</option>
-              <option value="90">Excellent Match (90%+)</option>
-            </select>
-          </div>
-        </div>
+        <button 
+          onClick={fetchNewJobs} 
+          className="theme-btn btn-style-one"
+          disabled={refreshing}
+        >
+          {refreshing ? "Refreshing..." : "Refresh Notifications"}
+        </button>
         
         {newJobs.length > 0 && (
           <div className="notification-count">
@@ -205,11 +148,6 @@ const JobAlert = () => {
         <div className="filter-note">
           <span className="icon flaticon-clock-3"></span>
           <span>Showing only unread jobs posted in the last 48 hours</span>
-          {matchThreshold > 0 && (
-            <span className="match-filter-badge" style={{ backgroundColor: getMatchColor(matchThreshold) }}>
-              {matchThreshold}%+ match
-            </span>
-          )}
         </div>
       </div>
       
@@ -235,18 +173,6 @@ const JobAlert = () => {
               onClick={() => handleJobClick(item._id)}
             >
               <div className="notification-badge">New</div>
-              
-              {/* Match percentage indicator */}
-              {item.matchPercentage && (
-                <div 
-                  className="match-percentage" 
-                  style={{ backgroundColor: getMatchColor(item.matchPercentage) }}
-                >
-                  <span className="percentage-value">{item.matchPercentage}%</span>
-                  <span className="percentage-label">Match</span>
-                </div>
-              )}
-              
               <div className="content">
                 <span className="company-logo">
                   <img 
@@ -277,11 +203,6 @@ const JobAlert = () => {
                   <li className="time">New</li>
                   {item.status === "OPEN" && (
                     <li className="required">Open</li>
-                  )}
-                  {item.matchPercentage && item.matchPercentage >= 85 && (
-                    <li className="privacy" style={{ backgroundColor: getMatchColor(item.matchPercentage) }}>
-                      Strong Match
-                    </li>
                   )}
                   <li className="private view-details">View Details</li>
                 </ul>

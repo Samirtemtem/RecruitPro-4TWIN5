@@ -67,7 +67,7 @@
   color: white;
   font-weight: bold;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  z-index: 2;
+  z-index: 5;
 }
 
 .percentage-value {
@@ -220,38 +220,6 @@
   color: #1967d2;
 }
 
-/* Match filter styles */
-.match-filter {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.match-filter label {
-  font-size: 14px;
-  color: #696969;
-  margin-bottom: 0;
-}
-
-.match-filter .form-select {
-  width: auto;
-  min-width: 150px;
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  font-size: 14px;
-  color: #333;
-}
-
-.match-filter-badge {
-  margin-left: 15px;
-  padding: 3px 8px;
-  border-radius: 12px;
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-}
-
 .notification-empty {
   padding: 30px;
   background-color: #f5f7fc;
@@ -300,9 +268,4 @@
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(255, 92, 92, 0);
   }
-}
-
-/* Adjust notification badge position when match percentage is present */
-.job-notification .notification-badge {
-  right: 85px; /* Move to the left to accommodate match percentage */
 } 

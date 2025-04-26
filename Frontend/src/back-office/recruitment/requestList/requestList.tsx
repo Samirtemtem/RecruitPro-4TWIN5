@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { all_routes } from '../../../routing-module/router/all_routes';
-import { Table } from "antd"; // Importing Table from antd
+import { Table } from "antd";
 
 // Define the interface for request data
 interface RequestData {
   _id: string;
   department_Manager: {
-    firstName?: string; // Allow firstName to be optional
-    lastName?: string;  // Allow lastName to be optional
-  } | null; // Allow department_Manager to be null
+    firstName?: string;
+    lastName?: string;
+  } | null;
   position: string;
   department: string;
   importance: string;
@@ -18,7 +18,7 @@ interface RequestData {
   description: string;
   requirements: string[];
   experience: number;
-  jobPostCreated: boolean; // Add jobPostCreated field
+  jobPostCreated: boolean;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -26,17 +26,18 @@ interface RequestData {
 
 const RequestList: React.FC = () => {
   const [data, setData] = useState<RequestData[]>([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [searchText, setSearchText] = useState<string>("");
-  const [filteredDataSource, setFilteredDataSource] = useState<RequestData[]>(data);
-  const [Selections, setSelections] = useState<boolean>(true);
+  const [filteredDataSource, setFilteredDataSource] = useState<RequestData[]>([]);
 
   // Fetch data from the API
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/request/');
-        setData(Array.isArray(response.data) ? response.data : [response.data]);
+        const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
+        setData(fetchedData);
+        setFilteredDataSource(fetchedData); // Initialize filtered data
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -119,7 +120,7 @@ const RequestList: React.FC = () => {
     },
   ];
 
-  const onSelectChange = (newSelectedRowKeys: any[]) => {
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
@@ -130,10 +131,8 @@ const RequestList: React.FC = () => {
 
   return (
     <>
-      {/* Page Wrapper */}
       <div className="page-wrapper">
         <div className="content">
-          {/* Breadcrumb */}
           <div className="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
             <div className="my-auto mb-2">
               <h2 className="mb-1">Requests</h2>
@@ -151,8 +150,6 @@ const RequestList: React.FC = () => {
               </nav>
             </div>
           </div>
-          {/* /Breadcrumb */}
-          {/* Request list */}
           <div className="card">
             <div className="card-header d-flex align-items-center justify-content-between flex-wrap">
               <h5>Request List</h5>
@@ -171,25 +168,24 @@ const RequestList: React.FC = () => {
             <div className="card-body p-0">
               <Table
                 className="table datanew dataTable no-footer"
-                rowSelection={Selections ? rowSelection : undefined}
+                rowSelection={rowSelection ? rowSelection : undefined}
                 columns={columns}
                 dataSource={filteredDataSource}
+                rowKey="_id" // Ensure unique key for each row
               />
             </div>
           </div>
-          {/* / Request list */}
         </div>
         <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
-          <p className="mb-0">2014 - 2025 © SmartHR.</p>
+          <p className="mb-0">2025 © RecruitPro.</p>
           <p>
             Designed &amp; Developed By{" "}
             <Link to="#" className="text-primary">
-              Dreams
+              Infinite Loopers
             </Link>
           </p>
         </div>
       </div>
-      {/* /Page Wrapper */}
     </>
   );
 };

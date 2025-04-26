@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { 
-    createRequest,getRequestById,getRequests,updateRequest,deleteRequest
+    createRequest,getRequestById,getRequests,updateRequest,deleteRequest,updateJobPostCreated
 } from '../controllers/RequestController';
 
 const router = Router();
@@ -19,5 +19,8 @@ router.put('/:id', updateRequest);
 
 // Route pour supprimer une demande par ID
 router.delete('/:id', deleteRequest);
+
+
+router.patch('/requests/:id/jobPostCreated', updateJobPostCreated);
 
 export default router;

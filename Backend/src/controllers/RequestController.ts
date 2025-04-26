@@ -58,3 +58,27 @@ export const deleteRequest = async (req: Request, res: Response): Promise<void> 
         res.status(500).json({ message: error.message });
     }
 };
+
+
+
+
+
+export const updateJobPostCreated = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const updatedRequest = await RequestModel.findByIdAndUpdate(
+            id,
+            { jobPostCreated: true }, // Set jobPostCreated to true
+            { new: true }
+        );
+
+        if (!updatedRequest) {
+            res.status(404).json({ message: 'Request not found' });
+            return; // Early return
+        }
+
+        res.status(200).json(updatedRequest);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};

@@ -19,6 +19,21 @@ interface JobPost {
     publishDate: string;
     deadline: string;
 }
+
+
+interface JobPostSchema2 {
+    _id: string; // Unique identifier for the job post
+    title: string; // Title of the job
+    description: string; // Description of the job
+    requirements: string[]; // Array of requirements
+    department: string; // Department name
+    experience: number; // Required years of experience
+    status: "OPEN" | "CLOSED" | "PENDING"; // Status of the job post
+    publishDate: Date; // Date when the job was published
+    deadline: Date; // Deadline for applications
+}
+
+
 interface Application {
     _id: string;
     candidate: string;
@@ -33,7 +48,7 @@ const RequestDetails = () => {
     const applicants: number = 12; // Define number of applicants
     const maxApplicants: number = 200; // Define maximum applicants
     const progress: number = (applicants / maxApplicants) * 100;
-
+    const [showForm, setShowForm] = useState<boolean>(false);
     const { id } = useParams<{ id: string }>();
     const [job, setJob] = useState<JobPost | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -45,7 +60,7 @@ const RequestDetails = () => {
         description: "",
         department: "",
         requirements: "",
-        publishDate: "",
+        publishDate: new Date(),
         deadline: "",
         experience:"",
         status: "", // Added status to formData
@@ -94,9 +109,10 @@ const RequestDetails = () => {
                 description: job.description,
                 department: job.department,
                 requirements: job.requirements.join(", "),
-                publishDate: job.publishDate,
+                publishDate: new Date(job.publishDate),
+                deadline: job.deadline, // Ensure this is also a Date if it's a string
                 experience:job.experience,
-                deadline: job.deadline,
+            
                 status: job.status, // Set initial status
             });
         }
@@ -107,24 +123,7 @@ const RequestDetails = () => {
 
 
 
-    useEffect(() => {
-        const fetchApplications = async () => {
-            try {
-                const response = await fetch(`http://localhost:5000/app/byJobId/${id}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                setApplications(data);
-            } catch (error) {
-                console.error("Error fetching applications:", error);
-            }
-        };
-
-        if (id) {
-            fetchApplications();
-        }
-    }, [id]);
+    
 
 
 
@@ -161,35 +160,37 @@ const RequestDetails = () => {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+
+
+
+    
+    const handleSubmit = async (e) => {
         e.preventDefault();
     
-        const updatedJobPost = {
-            position: formData.position,
-            description: formData.description,
-            department: formData.department,
-            requirements: formData.requirements.split(",").map(req => req.trim()), // Convert string back to array
-            publishDate: formData.publishDate,
-            experience:formData.experience,
-            deadline: formData.deadline,
-            status: formData.status,
-        };
-    
         try {
-            const response = await axios.put(`http://localhost:5000/api/jobs/${formData.id}`, updatedJobPost);
-            if (response.status === 200) {
-                alert("Job post updated successfully!");
-                setJob(response.data);
-            }
+            const response = await axios.post("http://localhost:5000/api/jobs", {
+                ...formData,
+                requirements: formData.requirements.split(","), // Convert string to array
+            });
+    
+            alert("Job posted successfully!");
+            console.log(response.data);
+            setFormData({
+                id: "", // Reset id
+                position: "", // Reset position
+                description: "", // Reset description
+                department: "", // Reset department
+                requirements: "", // Reset requirements
+                publishDate: new Date(), // Reset publish date
+                deadline: "", // Reset deadline
+                experience: "", // Reset experience
+                status: "OPEN", // Reset status to default
+            });
         } catch (error) {
-            console.error("Error updating job post:", error);
-            alert("Failed to update job post.");
+            console.error("Error posting job:", error);
+            alert("Failed to post job!");
         }
     };
-
-
-
-    
 
 
     
@@ -267,18 +268,7 @@ const RequestDetails = () => {
                                 </Link>
                             </h6>
                             <div className="d-flex">
-                                <div className="text-end">
-                                    <Link
-                                        to="#"
-                                        className="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-inert={true}
-                                        data-bs-target="#edit_project"
-                                    >
-                                        <i className="ti ti-edit me-1" />
-                                        Edit Request
-                                    </Link>
-                                </div>
+                              
 
                                 {/* Delete Button */}
                                 <div className="ms-2">
@@ -292,13 +282,13 @@ const RequestDetails = () => {
                                 </div>
 
 
-                                <div className="ms-2">
-    <Link to={`/candidates-grid/${id}`} className="btn btn-secondary">
-        <i className="ti ti-user me-1" />
-        Create Job Post
-    </Link>
    
-</div>
+ <div className="ms-2">
+                                    <button className="btn btn-secondary" onClick={() => setShowForm(true)}>
+                                        <i className="ti ti-user me-1" />
+                                        Create Job Post
+                                    </button>
+                                </div>
 
 
 
@@ -418,9 +408,69 @@ const RequestDetails = () => {
                         </div>
                         
                     </div>
+                    {showForm && (
+                        <div className="row">
+                            <div className="col-xxl-12">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h5>Create Job Post</h5>
+                                        <form onSubmit={handleSubmit}>
+                                            <div className="mb-3">
+                                                <label htmlFor="position" className="form-label">Position</label>
+                                                <input type="text" name="position" id="position" className="form-control" value={formData.position} onChange={handleChange} required />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="department" className="form-label">Department</label>
+                                                <select name="department" className="form-select" value={formData.department} onChange={handleChange} required>
+                                                    {departmentChoose.map(dept => (
+                                                        <option key={dept.value} value={dept.value}>{dept.label}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="requirements" className="form-label">Requirements</label>
+                                                <textarea name="requirements" id="requirements" className="form-control" value={formData.requirements} onChange={handleChange} required />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="description" className="form-label">Description</label>
+                                                <textarea name="description" id="description" className="form-control" value={formData.description} onChange={handleChange} required />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="publishDate" className="form-label">Publish Date</label>
+                                                <DatePicker onChange={(date) => handleDateChange("publishDate", date)} />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="deadline" className="form-label">Deadline</label>
+                                                <DatePicker onChange={(date) => handleDateChange("deadline", date)} />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="experience" className="form-label">Experience (Years)</label>
+                                                <input type="number" name="experience" id="experience" className="form-control" value={formData.experience} onChange={handleChange} required />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="status" className="form-label">Status</label>
+                                                <select name="status" className="form-select" value={formData.status} onChange={handleChange} required>
+                                                    {statusChoose.map(status => (
+                                                        <option key={status.value} value={status.value}>{status.label}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <button type="submit" className="btn btn-primary">Submit</button>
+                                            <button type="button" className="btn btn-secondary ms-2" onClick={() => setShowForm(false)}>Cancel</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+
+
+
                     
                 </div>
       
+               
 
     
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
@@ -434,140 +484,7 @@ const RequestDetails = () => {
                 </div>
             </div>
 
-           {/* Edit Job Post Modal */}
-<div className="modal fade" id="edit_project" role="dialog">
-    <div className="modal-dialog modal-dialog-centered modal-lg">
-        <div className="modal-content">
-            <div className="modal-header header-border align-items-center justify-content-between">
-                <h5 className="modal-title">Edit Job Post</h5>
-                <button
-                    type="button"
-                    className="btn-close custom-btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                />
-            </div>
-            <div className="modal-body">
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label className="form-label">Job Title</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="title"
-                            value={formData.position}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Description</label>
-                        <textarea
-                            className="form-control"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Experience</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="experience"
-                            value={formData.experience}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Requirements</label>
-                        <textarea
-                            className="form-control"
-                            name="requirements"
-                            value={formData.requirements}
-                            onChange={handleChange}
-                            placeholder="Enter requirements separated by commas"
-                        />
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label className="form-label">Publish Date</label>
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    name="publishDate"
-                                    value={formData.publishDate ? moment(formData.publishDate).format("YYYY-MM-DD") : ""}
-                                    onChange={(e) => handleDateChange("publishDate", e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label className="form-label">Deadline</label>
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    name="deadline"
-                                    value={formData.deadline ? moment(formData.deadline).format("YYYY-MM-DD") : ""}
-                                    onChange={(e) => handleDateChange("deadline", e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label className="form-label">Department</label>
-                                <select
-                                    className="form-select"
-                                    name="department"
-                                    value={formData.department}
-                                    onChange={handleChange}
-                                >
-                                    {departmentChoose.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label className="form-label">Status</label>
-                                <select
-                                    className="form-select"
-                                    name="status"
-                                    value={formData.status}
-                                    onChange={handleChange}
-                                >
-                                    {statusChoose.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Close
-                        </button>
-                        <button type="submit" className="btn btn-primary">
-                            Save changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+   
 
 
 <style>

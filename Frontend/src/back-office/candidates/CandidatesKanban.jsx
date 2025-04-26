@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { all_routes } from '../../routing-module/router/all_routes';
-import dragula, { Drake } from "dragula";
+import dragula from "dragula";
 import CollapseHeader from '../../core/common/collapse-header/collapse-header';
 import axios from 'axios';
 
@@ -70,7 +70,6 @@ const CandidateKanban = () => {
                                     >
                                         <i className="ti ti-layout-kanban" />
                                     </Link>
-                                
                                     <Link to={all_routes.candidatesGrid} className="btn btn-icon btn-sm">
                                         <i className="ti ti-layout-grid" />
                                     </Link>
@@ -82,22 +81,7 @@ const CandidateKanban = () => {
                         </div>
                     </div>
                     {/* /Breadcrumb */}
-                    <div className="card">
-                        <div className="card-body p-3">
-                            <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                                <h5>Candidates Kanban</h5>
-                                <div className="d-flex align-items-center flex-wrap row-gap-3">
-                                    <div className="me-3">
-                                        <div className="input-icon-end position-relative">
-                                            <span className="input-icon-addon">
-                                                <i className="ti ti-chevron-down" />
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     {/* Candidates Kanban */}
                     <div className="row">
                         <div className="d-flex align-items-start overflow-auto project-status pb-4">
@@ -143,18 +127,15 @@ const CandidateKanban = () => {
                                                 <div className="card-body">
                                                     <div className="d-flex align-items-center flex-shrink-0 mb-3">
                                                         <Link
-                                                            to={`/application/${candidate._id}`} // Redirect to the application path using the ID
+                                                            to={`/application/${candidate._id}`}
                                                             onClick={() => {
-                                                                // Store the application details in local storage
-                                                                localStorage.setItem('selectedApplication', JSON.stringify(candidate.application));
+                                                                localStorage.setItem('selectedApplication', JSON.stringify(candidate));
                                                             }}
-                                          
                                                             className="avatar avatar-lg avatar rounded-circle me-2"
                                                             data-bs-toggle="offcanvas"
-                                                            
                                                         >
                                                             <img
-                                                                src={candidate.candidate.image} // Replace with the actual candidate image source
+                                                                src={candidate.candidate.image}
                                                                 className="img-fluid h-20 w-20"
                                                                 alt="img"
                                                             />
@@ -163,19 +144,17 @@ const CandidateKanban = () => {
                                                             <div className="d-flex flex-wrap">
                                                                 <h6 className="text-dark fs-16 fw-semibold">
                                                                     <Link
-                                                                     to={`/application/${candidate._id}`} // Redirect to the application path using the ID
-                                                                     onClick={() => {
-                                                                         // Store the application details in local storage
-                                                                         localStorage.setItem('selectedApplication', JSON.stringify(candidate.application));
-                                                                     }}
-                                                                        
+                                                                        to={`/application/${candidate._id}`}
+                                                                        onClick={() => {
+                                                                            localStorage.setItem('selectedApplication', JSON.stringify(candidate));
+                                                                        }}
                                                                     >
-                                                                        {candidate.candidate.firstName} {candidate.candidate.lastName} {/* Replace with actual name */}
+                                                                        {candidate.candidate.firstName} {candidate.candidate.lastName}
                                                                     </Link>
                                                                 </h6>
                                                             </div>
                                                             <p className="text-gray fs-13 fw-normal">
-                                                                {candidate.candidate.email} {/* Replace with actual email */}
+                                                                {candidate.candidate.email}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -185,7 +164,7 @@ const CandidateKanban = () => {
                                                                 Applied Role
                                                             </h6>
                                                             <span className="text-dark fs-14 fw-medium">
-                                                                {candidate.jobPost.title} {/* Replace with actual role */}
+                                                                {candidate.jobPost?.title || 'No title provided'} {/* Safely access title */}
                                                             </span>
                                                         </div>
                                                         <span className="border-start text-gray fs-14 fw-normal" />
@@ -194,7 +173,7 @@ const CandidateKanban = () => {
                                                                 Applied Date
                                                             </h6>
                                                             <span className="text-dark fs-14 fw-medium">
-                                                                {formatDate(candidate.submissionDate)} {/* Format date */}
+                                                                {formatDate(candidate.submissionDate)}
                                                             </span>
                                                         </div>
                                                     </div>

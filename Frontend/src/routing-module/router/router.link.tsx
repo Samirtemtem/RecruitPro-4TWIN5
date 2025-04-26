@@ -81,7 +81,7 @@ import UsersList from "../../back-office/hrm/users/usersList";
 import { ContactManagementPage } from "../../back-office/contacts";
 import CandidateKanban from "../../back-office/candidates/CandidatesKanban";
 import RequestList from "../../back-office/recruitment/requestList/requestList";
-import RequestDetails from "../../back-office/recruitment/requestList/requestDetails";
+import RequestDetails from "../../back-office/recruitment/requestList/requestDetails2";
 
 
 const routes = all_routes;
@@ -377,7 +377,7 @@ export const authRoutes = [
   },
 
   {
-    path: "/employeeDashboard",
+    path: "/HR-Dashboard",
     element: <EmployeeDashboard />,
     route: Route,
   },

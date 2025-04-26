@@ -130,6 +130,16 @@ const useSidebarData = () => {
               materialicons: 'shopping_bag',
               submenuItems: [],
             },
+            {
+              label: 'Requests',
+              link: "/requests",
+              submenu: false,
+              showSubRoute: false,
+              icon: 'user-shield',
+              base: 'users',
+              materialicons: 'shopping_bag',
+              submenuItems: [],
+            },
           ],
         },
       ];

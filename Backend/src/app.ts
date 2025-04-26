@@ -36,6 +36,7 @@ import recommendationRoutes from "./routes/recommendationRoutes";
 // Import shortlisted jobs routes
 import shortlistedJobRoutes from "./routes/shortlistedJobRoutes";
 import jobAlertRoutes from './routes/jobAlertRoutes';
+import RequestRoutes from './routes/requestRoutes';
 // Allow requests from your frontend (e.g., localhost:3000)
 const corsOptions = {
   origin: "http://localhost:3000", // Allow only the frontend origin (you can use '*' to allow all origins)
@@ -106,6 +107,8 @@ app.use("/api/recommendations", recommendationRoutes);
 
 // Shortlisted Jobs Routes
 app.use("/api/shortlisted-jobs", shortlistedJobRoutes);
+
+app.use("/request",RequestRoutes);
 
 // Error handling
 app.use(errorHandler);

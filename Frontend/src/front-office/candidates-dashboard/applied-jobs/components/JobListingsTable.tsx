@@ -15,7 +15,7 @@ interface JobItem {
 }
 
 interface JobApplication extends JobItem {
-  applicationId: string; // Add the application ID here
+  applicationId: string; // Application ID
 }
 
 const JobListingsTable: React.FC = () => {
@@ -23,10 +23,10 @@ const JobListingsTable: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   
-  const defaultImage = '/LogoEsprit2.png'; // Correct path for the public folder
+  const defaultImage = '/LogoEsprit2.png'; // Default image path
 
   useEffect(() => {
-    const userId = localStorage.getItem('userId'); // Retrieve userId from local storage
+    const userId = localStorage.getItem('userId');
     if (!userId) {
       setError('User ID not found in local storage.');
       setLoading(false);
@@ -41,19 +41,25 @@ const JobListingsTable: React.FC = () => {
         }
         const data = await response.json();
         
-        const formattedJobs = data.map((item: any) => ({
-          _id: item.jobPost._id,
-          image: item.jobPost.image || defaultImage,
-          title: item.jobPost.title.trim(),
-          department: item.jobPost.department,
-          description: item.jobPost.description,
-          publishDate: item.jobPost.publishDate,
-          deadline: item.jobPost.deadline,
-          requirements: item.jobPost.requirements,
-          experience: item.jobPost.experience,
-          status: item.status,
-          applicationId: item._id // Store the application ID here
-        }));
+        const formattedJobs = data.map((item: any) => {
+          if (!item.jobPost) {
+            console.warn('jobPost is missing in item:', item);
+            return null; // Skip invalid items
+          }
+          return {
+            _id: item.jobPost._id,
+            image: item.jobPost.image || defaultImage,
+            title: item.jobPost.title.trim(),
+            department: item.jobPost.department,
+            description: item.jobPost.description,
+            publishDate: item.jobPost.publishDate,
+            deadline: item.jobPost.deadline,
+            requirements: item.jobPost.requirements,
+            experience: item.jobPost.experience,
+            status: item.status,
+            applicationId: item._id // Store the application ID
+          };
+        }).filter(job => job !== null) as JobApplication[]; // Filter out null jobs
 
         setJobs(formattedJobs);
       } catch (err: any) {
@@ -64,7 +70,7 @@ const JobListingsTable: React.FC = () => {
     };
 
     fetchAppliedJobs();
-  }, []); // Empty dependency array to run on mount
+  }, []);
 
   const deleteApplication = async (applicationId: string) => {
     try {
@@ -74,8 +80,6 @@ const JobListingsTable: React.FC = () => {
       if (!response.ok) {
         throw new Error('Failed to delete application');
       }
-
-      // Remove the deleted application from the state
       setJobs((prevJobs) => prevJobs.filter((job) => job.applicationId !== applicationId));
     } catch (err: any) {
       setError(err.message);
@@ -112,7 +116,7 @@ const JobListingsTable: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {jobs.map((item) => (
+              {jobs.length > 0 ? jobs.map((item) => (
                 <tr key={item._id}>
                   <td>
                     <div className="job-block">
@@ -159,7 +163,11 @@ const JobListingsTable: React.FC = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={4}>No jobs found.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

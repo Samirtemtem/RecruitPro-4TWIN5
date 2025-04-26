@@ -80,6 +80,8 @@ import CandidatesOverview from "../../back-office/candidatesOverview";
 import UsersList from "../../back-office/hrm/users/usersList";
 import { ContactManagementPage } from "../../back-office/contacts";
 import CandidateKanban from "../../back-office/candidates/CandidatesKanban";
+import RequestList from "../../back-office/recruitment/requestList/requestList";
+import RequestDetails from "../../back-office/recruitment/requestList/requestDetails";
 
 
 const routes = all_routes;
@@ -445,6 +447,18 @@ export const authRoutes = [
     path:"/application/:id",
     element: <Application />,
     route: Route,
+  },
+  {
+    path:"/requests",
+    element: <RequestList />,
+    route: Route,
+  },
+  {
+    path:"/request-Detail/:id",
+    element: <RequestDetails />,
+    route: Route,
   }
+
+
 
 ];

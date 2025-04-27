@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import JobPost from '../models/JobPost';
+import Application, { IApplication } from '../models/Application';
+import { ApplicationStatus } from '../models/types';
 dotenv.config();
 
 const router = express.Router();
@@ -229,6 +231,47 @@ const countOpenJobPosts = async (req: Request, res: Response) : Promise<any> => 
 
 // Route to count open job posts
 router.get('/job-posts/count/open', countOpenJobPosts);
+
+
+
+
+
+
+
+
+
+// Controller to fetch applications grouped by status for a specific job post
+const fetchApplicationsGroupedByStatus = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const jobPostId = req.params.jobPostId;
+  
+      const applications = await Application.find({ jobPost: jobPostId })
+        .populate('candidate') // Populate candidate details
+        .populate('jobPost')
+        .exec();
+  
+      // Group applications by status
+      const groupedApplications = applications.reduce((acc, application) => {
+        const status = application.status as ApplicationStatus;
+        if (!acc[status]) {
+          acc[status] = [];
+        }
+        acc[status].push(application);
+        return acc;
+      }, {} as Record<ApplicationStatus, IApplication[]>);
+      
+      res.status(200).json(groupedApplications);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
+  // Route to handle GET requests for grouped applications with jobPostId in the path
+  router.get('/grouped/:jobPostId', fetchApplicationsGroupedByStatus);
+
+
+
+
 
 
 

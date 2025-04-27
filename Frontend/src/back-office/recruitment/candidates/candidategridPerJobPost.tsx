@@ -67,9 +67,23 @@ const CandidateGridPerJobPost = () => {
                                 </ol>
                             </nav>
                         </div>
-                        <div className="d-flex my-xl-auto right-content align-items-center flex-wrap">
-                            <CollapseHeader />
-                        </div>
+                        <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
+                                                    <div className="me-2 mb-2">
+                                                        <div className="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
+                                                            <Link
+                                                                to={`/applications-kanban/${id}`}
+                                                                className="btn btn-icon btn-sm active bg-primary text-white me-1"
+                                                            >
+                                                                <i className="ti ti-layout-kanban" />
+                                                            </Link>
+                                                            <Link to={`/candidates-grid/${id}`} className="btn btn-icon btn-sm">
+                                                                <i className="ti ti-layout-grid" />
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                </div>
+                       
                     </div>
                     {/* /Breadcrumb */}
                     <div className="card">
@@ -84,6 +98,7 @@ const CandidateGridPerJobPost = () => {
                             </div>
                         </div>
                     </div>
+                    
                     {/* Candidates Grid */}
                     <div className="row">
     {loading ? (

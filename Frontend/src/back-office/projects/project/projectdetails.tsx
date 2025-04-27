@@ -31,6 +31,9 @@ interface Application {
 }
 
 const ProjectDetails = () => {
+    const applicants: number = 12; // Define number of applicants
+    const maxApplicants: number = 200; // Define maximum applicants
+    const progress: number = (applicants / maxApplicants) * 100;
     const { id } = useParams<{ id: string }>();
     const [job, setJob] = useState<JobPost | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -223,7 +226,30 @@ const ProjectDetails = () => {
         });
     };
 
+    const [applicantData, setApplicantData] = useState<{
+        jobPostApplicationsCount: number;
+        totalApplicationsCount: number;
+        percentage: string;
+    } | null>(null);
+    const { jobPostApplicationsCount, totalApplicationsCount, percentage } = applicantData || {};
 
+    useEffect(() => {
+        const fetchApplicationCounts = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/app/Count/count/${id}`);
+                setApplicantData(response.data);
+            } catch (err) {
+                console.error("Error fetching application counts:", err);
+                setError("Failed to fetch application counts.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) {
+            fetchApplicationCounts();
+        }
+    }, [id]);
 
 
 
@@ -263,16 +289,22 @@ const ProjectDetails = () => {
                                         Delete
                                     </button>
                                 </div>
-                                <div className="ms-2">
+                                {/*<div className="ms-2">
                                     <Link to={`/candidates-grid/${id}`} className="btn btn-secondary">
                                         <i className="ti ti-user me-1" />
                                         Candidates
                                     </Link>
-                                </div>
+                                </div>*/}
                                 <div className="ms-2">
                                     <Link to={`/candidates-grid-recomand/${id}`} className="btn btn-primary">
                                         <i className="ti ti-user me-1" />
                                         Recommended
+                                    </Link>
+                                </div>
+                                <div className="ms-2">
+                                    <Link to={`/applications-kanban/${id}`} className="btn btn-secondary">
+                                        <i className="ti ti-user me-1" />
+                                        Applications
                                     </Link>
                                 </div>
                                 <div className="head-icons ms-2 text-end">
@@ -323,9 +355,27 @@ const ProjectDetails = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    {/* Applicants progress */}
+                                    <div className="bg-light p-2 rounded">
+            <span className="d-block mb-1"> Applicants </span>
+            <h4 className="mb-2">{jobPostApplicationsCount} / {totalApplicationsCount}</h4>
+            <div className="progress progress-xs mb-2">
+                <div
+                    className="progress-bar bg-primary"
+                    role="progressbar"
+                    style={{ width: `${progress}%` }}
+                    aria-valuenow={progress}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                />
+            </div>
+            <p>{percentage} Of Total</p>
+        </div>
                                 </div>
+                                
                             </div>
                         </div>
+                        
                         <div className="col-xxl-9 col-xl-8">
                             <div className="card">
                                 <div className="card-body">
@@ -497,7 +547,7 @@ const ProjectDetails = () => {
                                 <div className="modal-footer">
                                     <button
                                         type="button"
-                                        className="btn btn-secondary"
+                                        className="btn btn-secondary me-1"
                                         onClick={() => setShowEditForm(false)}
                                     >
                                         Close
@@ -510,7 +560,7 @@ const ProjectDetails = () => {
                         </div>
                     </div>
                 )}
-                            <div className="row">
+                           {/* <div className="row">
                                 {applications.length > 0 ? (
                                     applications.map((application) => (
                                         <div key={application._id} className="col-xxl-3 col-xl-4 col-md-6 mb-4">
@@ -533,7 +583,7 @@ const ProjectDetails = () => {
                                 ) : (
                                     <p className="text-center">No applications found.</p>
                                 )}
-                            </div>
+                            </div>*/}
                         </div>
                     </div>
                

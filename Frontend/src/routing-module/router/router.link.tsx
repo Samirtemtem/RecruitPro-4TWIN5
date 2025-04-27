@@ -82,6 +82,7 @@ import { ContactManagementPage } from "../../back-office/contacts";
 import CandidateKanban from "../../back-office/candidates/CandidatesKanban";
 import RequestList from "../../back-office/recruitment/requestList/requestList";
 import RequestDetails from "../../back-office/recruitment/requestList/requestDetails2";
+import ApplicationsKanban from "../../back-office/projects/JobApplicationsKanban/ApplicationsKanban";
 
 
 const routes = all_routes;
@@ -457,8 +458,13 @@ export const authRoutes = [
     path:"/request-Detail/:id",
     element: <RequestDetails />,
     route: Route,
-  }
-
+  },
+  {
+    path: "/applications-kanban/:jobPostId",
+    element: <ApplicationsKanban />,
+    route: Route,
+  },
+  
 
 
 ];

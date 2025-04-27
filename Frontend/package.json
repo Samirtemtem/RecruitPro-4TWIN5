@@ -29,6 +29,7 @@
     "franc-min": "^6.2.0",
     "fs": "^0.0.1-security",
     "jquery": "^3.7.1",
+    "jspdf": "^3.0.1",
     "moment": "^2.30.1",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^4.10.38",

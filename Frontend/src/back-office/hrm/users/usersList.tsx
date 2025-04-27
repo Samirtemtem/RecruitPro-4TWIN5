@@ -132,14 +132,7 @@ const UsersList = () => {
                                 </div>
                             ))
                         )}
-                        <div className="col-md-12">
-                            <div className="text-center mb-4">
-                                <Link to="#" className="btn btn-primary">
-                                    <i className="ti ti-loader-3 me-1" />
-                                    Load More
-                                </Link>
-                            </div>
-                        </div>
+                        
                     </div>
                     {/* /Candidates Grid */}
                 </div>

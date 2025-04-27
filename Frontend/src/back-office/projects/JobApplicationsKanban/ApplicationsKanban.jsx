@@ -111,7 +111,7 @@ const ApplicationsKanban = () => {
                                                         </Link>
                                                     </li>
                                                     <li>
-                                                        <Link to="#" className="dropdown-item rounded-1" data-bs-toggle="modal" data-bs-target="#delete_modal">
+                                                        <Link to="#" className="dropdown-item rounded-1" >
                                                             <i className="ti ti-trash me-2" />
                                                             Delete
                                                         </Link>
@@ -131,7 +131,7 @@ const ApplicationsKanban = () => {
                                                                 localStorage.setItem('selectedApplication', JSON.stringify(candidate));
                                                             }}
                                                             className="avatar avatar-lg avatar rounded-circle me-2"
-                                                            data-bs-toggle="offcanvas"
+                                                           
                                                         >
                                                             <img
                                                                 src={candidate.candidate.image}
@@ -163,8 +163,10 @@ const ApplicationsKanban = () => {
                                                                 Applied Role
                                                             </h6>
                                                             <span className="text-dark fs-14 fw-medium">
-                                                                {candidate.jobPost?.title || 'No title provided'} {/* Safely access title */}
-                                                            </span>
+    <Link to={`/projects-details/${jobPostId}`} className="text-dark">
+        {candidate.jobPost?.title || 'No title provided'}
+    </Link>
+</span>
                                                         </div>
                                                         <span className="border-start text-gray fs-14 fw-normal" />
                                                         <div>

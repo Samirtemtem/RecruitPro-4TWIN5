@@ -356,61 +356,14 @@ const [counts, setCounts] = useState({
               </nav>
             </div>
             <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
-              <div className="me-2 mb-2">
-                <div className="dropdown">
-                  <Link
-                    to="#"
-                    className="dropdown-toggle btn btn-white d-inline-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i className="ti ti-file-export me-1" />
-                    Export
-                  </Link>
-                  <ul className="dropdown-menu  dropdown-menu-end p-3">
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        <i className="ti ti-file-type-pdf me-1" />
-                        Export as PDF
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        <i className="ti ti-file-type-xls me-1" />
-                        Export as Excel{" "}
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="input-icon w-120 position-relative mb-2">
-                <span className="input-icon-addon">
-                  <i className="ti ti-calendar text-gray-9" />
-                </span>
-                <Calendar value={date} onChange={(e: any) => setDate(e.value)} view="year" dateFormat="yy" className="Calendar-form" />
-              </div>
+            
+              
               <div className="ms-2 head-icons">
                 <CollapseHeader />
               </div>
             </div>
           </div>
-          {/* /Breadcrumb */}
-          <div className="alert bg-secondary-transparent alert-dismissible fade show mb-4">
-            Your Leave Request on“24th April 2024”has been Approved!!!
-            <button
-              type="button"
-              className="btn-close fs-14"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-            >
-              <i className="ti ti-x" />
-            </button>
-          </div>
+          
           <div className="row">
       
 

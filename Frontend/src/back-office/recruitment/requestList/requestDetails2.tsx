@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import CollapseHeader from "../../../core/common/collapse-header/collapse-header";
+import { useNavigate } from 'react-router-dom';
 
 interface Request {
     _id: string;
@@ -42,7 +43,7 @@ const RequestDetails = () => {
         publishDate: new Date().toISOString(),
         deadline: new Date().toISOString(),
     });
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchRequestDetails = async () => {
             console.log("Fetching request details for ID:", id);
@@ -110,7 +111,8 @@ const RequestDetails = () => {
             // Launch the specified API
             const jobPostCreatedResponse = await axios.patch(`http://localhost:5000/request/requests/${id}/jobPostCreated`);
             console.log("Job post created response:", jobPostCreatedResponse.data);
-    
+     // Redirect to jobgrid
+     navigate('/jobgrid');
             setShowForm(false);
         } catch (error:any) {
             console.error("Error creating job post:", error);

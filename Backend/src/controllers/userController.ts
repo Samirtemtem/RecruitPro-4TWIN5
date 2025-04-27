@@ -498,4 +498,24 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
+
 };
+
+  export const getUsersROLEUSER = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const users = await User.find({ role:"USER" });
+      res.status(200).json(users);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  
+  
+};
+
+
+
+
+
+
+
+

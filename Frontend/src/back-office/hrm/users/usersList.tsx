@@ -24,7 +24,7 @@ const UsersList = () => {
     useEffect(() => {
         const fetchCandidates = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/user/get/getUsers'); // Adjust the URL accordingly
+                const response = await fetch('http://localhost:5000/api/user/getROLEUSER'); // Adjust the URL accordingly
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

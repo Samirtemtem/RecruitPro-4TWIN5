@@ -108,6 +108,12 @@ const RequestList: React.FC = () => {
       sorter: (a: RequestData, b: RequestData) => Number(a.jobPostCreated) - Number(b.jobPostCreated),
     },
     {
+      title: "Created At",
+      dataIndex: "createdAt",
+      render: (text: string) => new Date(text).toISOString().slice(0, 10),
+      sorter: (a: RequestData, b: RequestData) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    },
+    {
       title: "Actions",
       dataIndex: "actions",
       render: (_, record: RequestData) => (

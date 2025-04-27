@@ -152,6 +152,15 @@ router.put('/:id', async (req: Request, res: Response): Promise<any> => {
     }
 });
 
+
+
+
+
+
+
+
+
+
 // ✅ DELETE a job post by ID
 router.delete('/:id', async (req: Request, res: Response): Promise<any> => {
     try {
@@ -162,6 +171,13 @@ router.delete('/:id', async (req: Request, res: Response): Promise<any> => {
         res.status(500).json({ error: (error as Error).message });
     }
 });
+
+
+
+
+
+
+
 
 router.get('/job-posts/statistics', async (req: Request, res: Response): Promise<any> => {
     try {

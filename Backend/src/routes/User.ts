@@ -12,7 +12,8 @@ import {
   countEmployeesByDepartment,
   getUserJobPosts ,
   getCandidateById,
-  getUsers
+  getUsers,
+  getUsersROLEUSER
 } from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
@@ -103,5 +104,7 @@ router.get('/count-employees-by-department', countEmployeesByDepartment);
 router.get('/api/users/:userId/job-posts', getUserJobPosts);
 router.get('/get/getUsers', getUsers);
 
+
+router.get('/getROLEUSER', getUsersROLEUSER);
 // Export the router
 export default router;

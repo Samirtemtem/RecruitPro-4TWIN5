@@ -5,17 +5,24 @@ import CollapseHeader from '../../../core/common/collapse-header/collapse-header
 import { all_routes } from '../../../routing-module/router/all_routes';
 
 interface Candidate {
-    id: string; // Update this to match the data structure
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
     role: string;
-    appliedDate: string; // Adjust the type if needed
+    appliedDate: string;
     status: string;
-    image?: string; // Optional
+    image?: string;
     createDate?: string;
     phoneNumber?: string;
+    department?: string;
 }
+
+// Helper function to format date
+const formatDate = (dateString: string) => {
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' } as const;
+    return new Date(dateString).toLocaleDateString('en-GB', options); // 'en-GB' format is DD/MM/YYYY
+};
 
 const CandidateGrid = () => {
     const [candidates, setCandidates] = useState<Candidate[]>([]);
@@ -24,7 +31,7 @@ const CandidateGrid = () => {
     useEffect(() => {
         const fetchCandidates = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/user/get/candidates'); // Adjust the URL accordingly
+                const response = await fetch('http://localhost:5000/api/user/get/candidates');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -63,26 +70,24 @@ const CandidateGrid = () => {
                                 </ol>
                             </nav>
                         </div>
-                        
                         <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
-                                                    <div className="me-2 mb-2">
-                                                        <div className="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
-                                                            <Link
-                                                                to={all_routes.candidateskanban}
-                                                                className="btn btn-icon btn-sm active bg-primary text-white me-1"
-                                                            >
-                                                                <i className="ti ti-layout-kanban" />
-                                                            </Link>
-                                                            
-                                                            <Link to={all_routes.candidatesGrid} className="btn btn-icon btn-sm">
-                                                                <i className="ti ti-layout-grid" />
-                                                            </Link>
-                                                        </div>
-                                                    </div>
-                                                    <div className="head-icons">
-                                                        <CollapseHeader />
-                                                    </div>
-                                                </div>
+                            <div className="me-2 mb-2">
+                                <div className="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
+                                    <Link
+                                        to={all_routes.candidateskanban}
+                                        className="btn btn-icon btn-sm active bg-primary text-white me-1"
+                                    >
+                                        <i className="ti ti-layout-kanban" />
+                                    </Link>
+                                    <Link to={all_routes.candidatesGrid} className="btn btn-icon btn-sm">
+                                        <i className="ti ti-layout-grid" />
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="head-icons">
+                                <CollapseHeader />
+                            </div>
+                        </div>
                     </div>
                     {/* /Breadcrumb */}
                     <div className="card">
@@ -118,9 +123,6 @@ const CandidateGrid = () => {
                                                             <h6 className="fs-16 fw-semibold me-1">
                                                                 {candidate.firstName} {candidate.lastName}
                                                             </h6>
-                                                            <span className="badge bg-primary-transparent">
-                                                                tt
-                                                            </span>
                                                         </div>
                                                         <p className="text-gray fs-13 fw-normal">
                                                             {candidate.email}
@@ -130,17 +132,23 @@ const CandidateGrid = () => {
                                             </div>
                                             <div className="bg-light rounder p-2">
                                                 <div className="d-flex align-items-center justify-content-between mb-2">
-                                                    <h6 className="text-gray fs-14 fw-normal">Applied Role</h6>
+                                                    <h6 className="text-gray fs-14 fw-normal">Role</h6>
                                                     <span className="text-dark fs-14 fw-medium">{candidate.role}</span>
                                                 </div>
                                                 <div className="d-flex align-items-center justify-content-between mb-2">
                                                     <h6 className="text-gray fs-14 fw-normal">Applied Date</h6>
-                                                    <span className="text-dark fs-14 fw-medium">{candidate.createDate}</span>
+                                                    <span className="text-dark fs-14 fw-medium">{formatDate(candidate.createDate || '')}</span>
                                                 </div>
-                                                <div className="d-flex align-items-center justify-content-between">
+                                                <div className="d-flex align-items-center justify-content-between mb-2">
                                                     <h6 className="text-gray fs-14 fw-normal">Phone Number</h6>
                                                     <span className="fs-10 fw-medium badge bg-purple">
                                                         <i className="ti ti-point-filled" /> {candidate.phoneNumber}
+                                                    </span>
+                                                </div>
+                                                <div className="d-flex align-items-center justify-content-between">
+                                                    <h6 className="text-gray fs-14 fw-normal">Department</h6>
+                                                    <span className="fs-10 fw-medium badge bg-primary">
+                                                        <i className="ti ti-point-filled" /> {candidate.department}
                                                     </span>
                                                 </div>
                                             </div>

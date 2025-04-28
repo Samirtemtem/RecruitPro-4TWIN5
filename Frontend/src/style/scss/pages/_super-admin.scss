@@ -1,0 +1,42 @@
+.welcome-wrap {
+    padding: 40px 40px 24px;
+    background: $primary-gradient;
+    @include rounded(5px);
+    position: relative;
+    z-index: 1;
+    @include respond-below(md) {
+        padding: 20px 20px 4px;
+    }
+    .welcome-bg-01 {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .welcome-bg-01 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+    .welcome-bg-02 {
+        position: absolute;
+        top: 20%;
+        left: 40%;
+        z-index: -1;
+    }
+    .welcome-bg-03 {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        z-index: -1;
+    }
+}
+#company-chart {
+    .apexcharts-bar-series {
+        .apexcharts-series path {
+            &:hover {
+                fill: $primary;
+            }
+        }
+    }
+}

@@ -1,0 +1,126 @@
+{
+    "data":[
+        {
+            "Image":"user-32.jpg",
+            "EmpID": "Emp-001",
+            "Name": "Anthony Lewis",
+            "Department": "Finance",
+            "Email": "anthony@example.com",
+            "Phone": "(123) 4567 890",
+            "Designation": "Finance",
+            "JoiningDate": "12/09/2024",
+            "Salary": "$40000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-09.jpg",
+            "EmpID": "Emp-002",
+            "Name": "Brian Villalobos",
+            "Department": "Developer",
+            "Email": "brian@example.com",
+            "Phone": "(179) 7382 829",
+            "Designation": "Developer",
+            "JoiningDate": "24/10/2024",
+            "Salary": "$35000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-01.jpg",
+            "EmpID": "Emp-003",
+            "Name": "Harvey Smith",
+            "Department": "Developer",
+            "Email": "harvey@example.com",
+            "Phone": "(184) 2719 738",
+            "Designation": "Executive",
+            "JoiningDate": "18/02/2024",
+            "Salary": "$20000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-33.jpg",
+            "EmpID": "Emp-004",
+            "Name": "Stephan Peralt",
+            "Department": "Executive Officer",
+            "Email": "peral@example.com",
+            "Phone": "(193) 7839 748",
+            "Designation": "Executive",
+            "JoiningDate": "17/10/2024",
+            "Salary": "$22000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-34.jpg",
+            "EmpID": "Emp-005",
+            "Name": "Doglas Martini",
+            "Department": "Manager",
+            "Email": "martniwr@example.com",
+            "Phone": "(183) 9302 890",
+            "Designation": "Manager",
+            "JoiningDate": "20/07/2024",
+            "Salary": "$25000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-02.jpg",
+            "EmpID": "Emp-006",
+            "Name": "Linda Ray",
+            "Department": "Finance",
+            "Email": "ray456@example.com",
+            "Phone": "(120) 3728 039",
+            "Designation": "Finance",
+            "JoiningDate": "10/04/2024",
+            "Salary": "$30000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-35.jpg",
+            "EmpID": "Emp-007",
+            "Name": "Elliot Murray",
+            "Department": "Developer",
+            "Email": "murray@example.com",
+            "Phone": "(102) 8480 832",
+            "Designation": "Finance",
+            "JoiningDate": "29/08/2024",
+            "Salary": "$35000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-36.jpg",
+            "EmpID": "Emp-008",
+            "Name": "Rebecca Smith",
+            "Department": "Executive",
+            "Email": "smtih@example.com",
+            "Phone": "(162) 8920 713",
+            "Designation": "Executive",
+            "JoiningDate": "22/02/2024",
+            "Salary": "$45000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-37.jpg",
+            "EmpID": "Emp-009",
+            "Name": "Connie Waters",
+            "Department": "Developer",
+            "Email": "connie@example.com",
+            "Phone": "(189) 0920 723",
+            "Designation": "Finance",
+            "JoiningDate": "03/11/2024",
+            "Salary": "$50000",
+            "PaySlip": "Generate Slip"
+        },
+        {
+            "Image":"user-38.jpg",
+            "EmpID": "Emp-010",
+            "Name": "Lori Broaddus",
+            "Department": "Finance",
+            "Email": "broaddus@example.com",
+            "Phone": "(168) 8392 823",
+            "Designation": "Developer",
+            "JoiningDate": "17/12/2024",
+            "Salary": "$25000",
+            "PaySlip": "Generate Slip"
+        }
+    ]
+    ,
+    "totaldata":10
+}

@@ -1,0 +1,133 @@
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+	background-color: $primary;
+	text-shadow: unset;
+}
+.bootstrap-datetimepicker-widget table {
+	th {
+		font-size: $font-size-14;
+		font-weight: $font-weight-semibold;
+		color: $gray-900;
+		width: 30px;
+		height: 30px;
+		line-height: 30px;
+		&.prev, &.next {
+			padding-bottom: 16px;
+			span {
+				width: 24px;
+				height: 24px;
+				font-size: $font-size-12;
+				border: 1px solid $light-900;
+				@include rounded(50%);
+				display: -webkit-inline-box;
+				display: -ms-inline-flexbox;
+				display: inline-flex;
+				align-items: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				justify-content: center;
+				-webkit-justify-content: center;
+				-ms-flex-pack: center;
+				&:hover {
+					background: $dark;
+					border-color: $dark;
+					color: $white;
+				}
+			}
+		}
+	}
+	td {
+		font-size: $font-size-14;
+		color: $gray-500;
+		&.day {
+			width: 30px;
+			height: 32px;
+			line-height: 32px;
+		}
+	}
+} 
+.bootstrap-datetimepicker-widget {
+	z-index: 999 !important;
+	.picker-switch {
+		padding-bottom: 16px;
+	}
+}
+.bootstrap-datetimepicker-widget table td.today:before {
+	border-bottom-color: $primary;
+}
+.bootstrap-datetimepicker-widget table thead tr:first-child th:hover {
+    background: transparent;
+}
+.border-success {
+	border-color: $success !important;
+}
+.shadow-sm {
+    box-shadow: $box-shadow-sm !important;
+}
+.shadow-md {
+    box-shadow: $box-shadow-md !important;
+}
+.list-group-item {
+	border-color: $light-900 !important;
+	color: inherit;
+}
+.list-group {
+    a {
+        &.active {
+            background: $primary-100;
+            color: $primary;
+        }
+        &:hover {
+            background: $primary-100;
+            color: $primary;
+        }
+    }
+}
+.list-styled-dotted {
+    li {
+        list-style-type: disc;
+    }
+}
+.link-default {
+	color: $gray-500;
+	&:hover {
+		color: $primary;
+	}
+}
+.custom-offcanvas {
+    &.offcanvas.offcanvas-end {
+        width: 600px !important;
+        .offcanvas-header {
+            .close-btn {
+                width: 20px;
+                height: 20px;
+                color: $white;
+                @include rounded(50%);
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                align-items: center;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                justify-content: center;
+                -webkit-justify-content: center;
+                -ms-flex-pack: center;
+                background-color: $gray-500;
+                border: 1px solid $gray-500;
+                &:hover {
+                    background: $danger;
+                    border-color: $danger;
+                }
+            }
+        }
+    }
+}
+.w-40 {
+    width: 40%;
+    @include respond-below(md) {
+        width: 100%;
+    }
+}
+hr {
+    border-color: $light-900;
+}

@@ -1,0 +1,103 @@
+body {
+	font-family: $font-family-primary;
+	font-size: $font-size-14;
+	color: $text-color;
+	line-height: 1.5;
+	background-color: $light;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+::selection {
+  background: $primary;
+  color: $white;
+  text-shadow: none;
+}
+img {
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+}
+*{
+	outline: none;
+}
+button {
+	@include transition(all 0.5s ease);
+	&:focus {
+		box-shadow: none !important;
+	}
+}
+p {
+	margin-bottom:20px;
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+strong {
+	font-weight: $font-weight-bold;
+}
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+  	color: $title-color;
+  	font-family: $font-family-primary;
+	font-weight: $font-weight-bold;
+  	margin-bottom: 0;
+}
+ol, ul {
+  list-style: none;
+  margin-block-end: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+	&.list-disc {
+	  list-style: disc;
+	  padding-left: 15px;
+	  ul {
+	    list-style-type: circle;
+	  }
+	}
+	&.list-decimal {
+	  list-style: decimal;
+	  padding-left: 15px;
+	  ul{
+	    list-style-type: decimal;
+	  }
+	}
+	&.list-icon {
+	  list-style: none;
+	  padding-left: 0;
+	  > li {
+	    padding-left: 1.875rem;
+	    counter-increment: li;
+	    i,
+	    .feather-icon,
+	    .svg-icon {
+	      display: inline-block;
+	      height: 20px;
+	      width: 20px;
+	      text-align: center;
+	      margin-left: -1.25rem;
+	      position: relative;
+	      left: -10px;
+	      padding: 1px;
+	      top: -1px;
+	      
+	    }
+	    i {
+	      font-size: $font-size-20;
+	      top: 5px;
+	    }
+	  }
+	}
+	.btn {
+	  &-primary {
+	      &:not(:disabled):not(.disabled) {
+	          &:active,
+	          &.active {
+	              &:focus {
+	                  box-shadow: none;
+	              	}
+	          	}
+	      	}
+	  	}
+	}
+}

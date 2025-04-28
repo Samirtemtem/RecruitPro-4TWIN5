@@ -1,0 +1,86 @@
+{
+    "data":[
+        {
+            "Image":"user-32.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Anthony Lewis",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Success",
+            "createdDate": "14/01/2024"
+        },
+        {
+            "Image":"user-09.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Brian Villalobos",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Rejected",
+            "createdDate": "21/01/2024"
+        },
+        {
+            "Image":"user-01.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Harvey Smith",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Success",
+            "createdDate": "20/02/2024"
+        },
+        {
+            "Image":"user-33.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Stephan Peralt",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Success",
+            "createdDate": "15/03/2024"
+        },
+        {
+            "Image":"user-34.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Doglas Martini",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Warning",
+            "createdDate": "12/04/2024"
+        },
+        {
+            "Image":"user-02.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Linda Ray",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Success",
+            "createdDate": "20/05/2024"
+        },
+        {
+            "Image":"user-35.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Elliot Murray",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Warning",
+            "createdDate": "06/07/2024"
+        },
+        {
+            "Image":"user-36.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Rebecca Smtih",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Rejected",
+            "createdDate": "02/09/2024"
+        },
+        {
+            "Image":"user-37.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Connie Waters",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Success",
+            "createdDate": "15/11/2024"
+        },
+        {
+            "Image":"user-38.jpg",
+            "serviceName": "Paytm",
+            "createdBy": "Lori Broaddus",
+            "apiKey": "paytm1234567890abcdef",
+            "status": "Success",
+            "createdDate": "10/12/2024"
+        }
+    ],
+  "totalData":10
+  
+  }

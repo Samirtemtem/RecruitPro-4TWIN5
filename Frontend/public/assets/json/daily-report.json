@@ -1,0 +1,85 @@
+{
+    "data":[
+        {
+          "Image": "user-32.jpg",
+          "Name": "Anthony Lewis",
+          "Role": "Finance",
+          "Date": "14/01/2024",
+          "Department": "Finance",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-09.jpg",
+          "Name": "Brian Villalobos",
+          "Role": "Developer",
+          "Date": "14/01/2024",
+          "Department": "Application Development",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-01.jpg", 
+          "Name": "Harvey Smith",
+          "Role": "Developer",
+          "Date": "14/01/2024",
+          "Department": "IT Management",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-33.jpg",
+          "Name": "Stephan Peralt",
+          "Role": "Executive Officer",
+          "Date": "14/01/2024",
+          "Department": "Web Development",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-33.jpg", 
+          "Name": "Doglas Martini",
+          "Role": "Manager",
+          "Date": "14/01/2024",
+          "Department": "Sales",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-02.jpg", 
+          "Name": "Linda Ray",
+          "Role": "Finance",
+          "Date": "14/01/2024",
+          "Department": "UI / UX",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-35.jpg",
+          "Name": "Elliot Murray",
+          "Role": "Finance",
+          "Date": "14/01/2024",
+          "Department": "Account Management",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-36.jpg", 
+          "Name": "Rebecca Smtih",
+          "Role": "Executive",
+          "Date": "14/01/2024",
+          "Department": "Marketing",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-37.jpg",
+          "Name": "Connie Waters",
+          "Role": "Developer",
+          "Date": "14/01/2024",
+          "Department": "Administration",
+          "Status": "Present"
+        },
+        {
+          "Image": "user-38.jpg",
+          "Name": "Lori Broaddus",
+          "Role": "Developer",
+          "Date": "14/01/2024",
+          "Department": "Business Development",
+          "Status": "Absent"
+        }
+       ],
+    "totaldata":10
+}

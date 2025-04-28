@@ -1,0 +1,96 @@
+{
+    "data":[
+        {
+          "Employee": "Anthony Lewis",
+          "Image": "user-32.jpg",
+          "Role": "UI/UX Team",
+          "Date": "14/01/2024",
+          "Project": "Office Management",
+          "AssignedHours": "32",
+          "WorkedHours": "13"
+        },
+        {
+          "Employee": "Brian Villalobos",
+          "Image": "user-09.jpg",
+          "Role": "Development",
+          "Date": "21/01/2024",
+          "Project": "Project Management",
+          "AssignedHours": "45",
+          "WorkedHours": "14"
+        },
+        {
+          "Employee": "Harvey Smith",
+          "Image": "user-01.jpg",
+          "Role": "HR",
+          "Date": "20/02/2024",
+          "Project": "Project Management",
+          "AssignedHours": "45",
+          "WorkedHours": "22"
+        },
+        {
+          "Employee": "Stephan Peralt",
+          "Image": "user-33.jpg",
+          "Role": "Management",
+          "Date": "15/03/2024",
+          "Project": "Hospital Administration",
+          "AssignedHours": "45",
+          "WorkedHours": "78"
+        },
+        {
+          "Employee": "Doglas Martini",
+          "Image": "user-34.jpg",
+          "Role": "Development",
+          "Date": "12/04/2024",
+          "Project": "Office Management",
+          "AssignedHours": "36",
+          "WorkedHours": "45"
+        },
+        {
+          "Employee": "Linda Ray",
+          "Image": "user-02.jpg",
+          "Role": "UI/UX Team",
+          "Date": "20/05/2024",
+          "Project": "Hospital Administration",
+          "AssignedHours": "49",
+          "WorkedHours": "14"
+        },
+        {
+          "Employee": "Elliot Murray",
+          "Image": "user-35.jpg",
+          "Role": "Developer",
+          "Date": "06/07/2024",
+          "Project": "Video Calling App",
+          "AssignedHours": "57",
+          "WorkedHours": "16"
+        },
+        {
+          "Employee": "Rebecca Smtih",
+          "Image": "user-36.jpg",
+          "Role": "UI/UX Team",
+          "Date": "02/09/2024",
+          "Project": "Office Management",
+          "AssignedHours": "21",
+          "WorkedHours": "18"
+        },
+        {
+          "Employee": "Connie Waters",
+          "Image": "user-37.jpg",
+          "Role": "Management",
+          "Date": "15/11/2024",
+          "Project": "Project Management",
+          "AssignedHours": "32",
+          "WorkedHours": "19"
+        },
+        {
+          "Employee": "Connie Waters",
+          "Image": "user-38.jpg",
+          "Role": "Management",
+          "Date": "15/11/2024",
+          "Project": "Project Management",
+          "AssignedHours": "32",
+          "WorkedHours": "19"
+        }
+      ],
+      "totaldata":10
+      
+}

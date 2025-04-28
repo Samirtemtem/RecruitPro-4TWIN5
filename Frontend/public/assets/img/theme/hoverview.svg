@@ -1,0 +1,55 @@
+<svg width="213" height="150" viewBox="0 0 213 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1_1083_29500" fill="white">
+<path d="M0 0H213V11H0V0Z"/>
+</mask>
+<path d="M0 0H213V11H0V0Z" fill="white"/>
+<path d="M0 0V-0.5H-0.5V0H0ZM213 0H213.5V-0.5H213V0ZM0 0.5H213V-0.5H0V0.5ZM212.5 0V11H213.5V0H212.5ZM0.5 11V0H-0.5V11H0.5Z" fill="#E5E7EB" mask="url(#path-1-inside-1_1083_29500)"/>
+<circle cx="6.5" cy="5.5" r="1.5" fill="#D00C0C"/>
+<circle cx="11.5" cy="5.5" r="1.5" fill="#03C95A"/>
+<circle cx="16.5" cy="5.5" r="1.5" fill="#FFC107"/>
+<path d="M0.25 11.25H212.75V149.75H0.25V11.25Z" fill="white"/>
+<path d="M0.25 11.25H212.75V149.75H0.25V11.25Z" stroke="#E5E7EB" stroke-width="0.5"/>
+<mask id="path-7-inside-2_1083_29500" fill="white">
+<path d="M0 11H13V150H0V11Z"/>
+</mask>
+<path d="M12.5 11V150H13.5V11H12.5Z" fill="#E5E7EB" mask="url(#path-7-inside-2_1083_29500)"/>
+<rect x="3.5" y="21" width="6" height="4" rx="2" fill="#F37438"/>
+<rect x="3.5" y="37" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="42" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="47" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="52" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="57" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="62" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="67" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="72" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="77" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="3.5" y="82" width="6" height="3" rx="1.5" fill="#DCE5E8"/>
+<line x1="3.5" y1="128.9" x2="9.5" y2="128.9" stroke="#E5E7EB" stroke-width="0.2"/>
+<circle cx="6.5" cy="133" r="2" fill="#DCE5E8"/>
+<circle cx="6.5" cy="138" r="2" fill="#DCE5E8"/>
+<circle cx="6.5" cy="143" r="2" fill="#DCE5E8"/>
+<mask id="path-24-inside-3_1083_29500" fill="white">
+<path d="M13 11H50V150H13V11Z"/>
+</mask>
+<path d="M49.5 11V150H50.5V11H49.5Z" fill="#E5E7EB" mask="url(#path-24-inside-3_1083_29500)"/>
+<rect x="18" y="21" width="27" height="4" rx="2" fill="#DCE5E8"/>
+<rect x="18" y="37" width="12.5" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="32.5" y="37" width="12.5" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="18" y="44" width="12.5" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="32.5" y="44" width="12.5" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="18" y="51" width="12.5" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="32.5" y="51" width="12.5" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="18" y="58" width="12.5" height="3" rx="1.5" fill="#DCE5E8"/>
+<rect x="32.5" y="58" width="12.5" height="3" rx="1.5" fill="#DCE5E8"/>
+<mask id="path-35-inside-4_1083_29500" fill="white">
+<path d="M50 11H213V19H50V11Z"/>
+</mask>
+<path d="M50 11.5H213V10.5H50V11.5Z" fill="#E5E7EB" mask="url(#path-35-inside-4_1083_29500)"/>
+<rect x="55" y="13" width="41" height="4" rx="2" fill="#EDF2F4"/>
+<circle cx="194" cy="15" r="2" fill="#DCE5E8"/>
+<circle cx="200" cy="15" r="2" fill="#DCE5E8"/>
+<circle cx="206" cy="15" r="2" fill="#DCE5E8"/>
+<rect x="50" y="19" width="162.5" height="125" fill="#EDF2F4"/>
+<path d="M50 144.25H213V143.75H50V144.25Z" fill="#E5E7EB"/>
+<rect width="41" height="2" rx="1" transform="matrix(1 0 0 -1 108.5 148)" fill="#EDF2F4"/>
+</svg>

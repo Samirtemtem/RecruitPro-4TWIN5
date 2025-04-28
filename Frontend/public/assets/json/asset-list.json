@@ -1,0 +1,95 @@
+{
+    "data":[
+        {
+            "Image":"user-32.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Anthony Lewis",
+            "PurchaseDate": "12/09/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "12/09/2024",
+            "Status": "Active"
+        },
+        {
+            "Image":"user-09.jpg",
+            "AssetName": "Canon Portable Printer",
+            "AssetUser": "Brian Villalobos",
+            "PurchaseDate": "24/10/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "24/10/2024",
+            "Status": "Active"
+        },
+        {
+            "Image":"user-38.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Sophie Headrick",
+            "PurchaseDate": "18/02/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "18/02/2024",
+            "Status": "Active"
+        },
+        {
+            "Image":"user-33.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Stephan Peralt",
+            "PurchaseDate": "17/10/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "17/10/2024",
+            "Status": "Active"
+        },
+        {
+            "Image":"user-27.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Thomas Bordelon",
+            "PurchaseDate": "20/07/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "20/07/2024",
+            "Status": "Active"
+        },
+        {
+            "Image":"user-32.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Doglas Martini",
+            "PurchaseDate": "10/04/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "10/04/2024",
+            "Status": "Active"
+        },
+        {
+            "Image":"user-05.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Cameron Drake",
+            "PurchaseDate": "29/08/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "29/08/2024",
+            "Status": "Active"
+        },
+        {
+            "Image":"user-30.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Harvey Smith",
+            "PurchaseDate": "22/02/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "22/02/2024",
+            "Status": "Inactive"
+        },
+        {
+            "Image":"user-16.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Michael Walker",
+            "PurchaseDate": "03/11/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "03/11/2024",
+            "Status": "Active"
+        },
+        {
+            "Image":"user-07.jpg",
+            "AssetName": "Dell Laptop",
+            "AssetUser": "Doris Crowley",
+            "PurchaseDate": "17/12/2024",
+            "Warranty": "12 months",
+            "WarrantyEndDate": "17/12/2024",
+            "Status": "Active"
+        }
+    ],
+    "totaldata":10
+}

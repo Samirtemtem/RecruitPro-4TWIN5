@@ -1,0 +1,56 @@
+{
+    "data":[
+        {
+          "Department": "Finance",
+          "NoOfEmployees": "20",
+          "Status": "Active"
+        },
+        {
+          "Department": "Application Development",
+          "NoOfEmployees": "30",
+          "Status": "Active"
+        },
+        {
+          "Department": "IT Management",
+          "NoOfEmployees": "15",
+          "Status": "Active"
+        },
+        {
+          "Department": "Web Development",
+          "NoOfEmployees": "20",
+          "Status": "Active"
+        },
+        {
+          "Department": "Sales",
+          "NoOfEmployees": "20",
+          "Status": "Active"
+        },
+        {
+          "Department": "UI / UX",
+          "NoOfEmployees": "30",
+          "Status": "Active"
+        },
+        {
+          "Department": "Account Management",
+          "NoOfEmployees": "15",
+          "Status": "Active"
+        },
+        {
+          "Department": "Marketing",
+          "NoOfEmployees": "10",
+          "Status": "Inactive"
+        },
+        {
+          "Department": "Administration",
+          "NoOfEmployees": "05",
+          "Status": "Active"
+        },
+        {
+          "Department": "Business Development",
+          "NoOfEmployees": "07",
+          "Status": "Active"
+        }
+      ],
+      "totaldata":10
+      
+}

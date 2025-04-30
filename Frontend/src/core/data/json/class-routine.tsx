@@ -1,0 +1,122 @@
+export const classRoutine= [
+	{
+		id: "RT167648",
+		class: "I",
+		section: "A",
+		teacher: "Erickson",
+		subject: "English",
+		day: "Monday",
+		startTime: "09:30 AM",
+		endTime: "10:45 AM",
+		classRoom: "101",
+		key:1
+	},
+	{
+		id: "RT167647",
+		class: "I",
+		section: "B",
+		teacher: "Mori",
+		subject: "Math",
+		day: "Tuesday",
+		startTime: "10:45 AM",
+		endTime: "12:00 PM",
+		classRoom: "102",
+		key:2
+	},
+	{
+		id: "RT167646",
+		class: "II",
+		section: "A",
+		teacher: "Joseph",
+		subject: "Physics",
+		day: "Wednesday",
+		startTime: "12:00 PM",
+		endTime: "01:15 PM",
+		classRoom: "103",
+		key:3
+	},
+	{
+		id: "RT167645",
+		class: "II",
+		section: "B",
+		teacher: "James",
+		subject: "Chemistry",
+		day: "Thursday",
+		startTime: "01:15 PM",
+		endTime: "02:30 PM",
+		classRoom: "104",
+		key:4
+	},
+	{
+		id: "RT167644",
+		class: "II",
+		section: "C",
+		teacher: "Biology",
+		subject: "Biology",
+		day: "Friday",
+		startTime: "02:30 PM",
+		endTime: "03:45 PM",
+		classRoom: "105",
+		key:5
+	},
+	{
+		id: "RT167643",
+		class: "III",
+		section: "A",
+		teacher: "Teresa",
+		subject: "Higher Math",
+		day: "Saturday",
+		startTime: "03:45 PM",
+		endTime: "05:00 PM",
+		classRoom: "106",
+		key:6
+	},
+	{
+		id: "RT167642",
+		class: "III",
+		section: "B",
+		teacher: "James",
+		subject: "Information Technology",
+		day: "Monday",
+		startTime: "09:30 AM",
+		endTime: "10:45 AM",
+		classRoom: "107",
+		key:7
+	},
+	{
+		id: "RT167641",
+		class: "IV",
+		section: "A",
+		teacher: "Hendrita",
+		subject: "Moral Education",
+		day: "Tuesday",
+		startTime: "10:45 AM",
+		endTime: "12:00 PM",
+		classRoom: "108",
+		key:8
+	},
+	{
+		id: "RT167640",
+		class: "IV",
+		section: "B",
+		teacher: "Morgan",
+		subject: "Finance",
+		day: "Wednesday",
+		startTime: "12:00 PM",
+		endTime: "01:15 PM",
+		classRoom: "109",
+		key:9
+	},
+	{
+		id: "RT167639",
+		class: "V",
+		section: "A",
+		teacher: "Ramsey",
+		subject: "Economics",
+		day: "Thursday",
+		startTime: "01:15 PM",
+		endTime: "02:30 PM",
+		classRoom: "110",
+		key:10
+	}
+];

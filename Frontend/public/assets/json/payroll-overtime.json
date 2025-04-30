@@ -1,0 +1,17 @@
+{
+    "data":[
+        {
+          "Name": "Normal day OT 1.5x",
+          "Rate": "Hourly 1.5"
+        },
+        {
+          "Name": "Public holiday OT 3.0x",
+          "Rate": "Hourly 3"
+        },
+        {
+          "Name": "Rest day OT 2.0x",
+          "Rate": "Hourly 2"
+        }
+      ],
+    "totaldata":3
+}

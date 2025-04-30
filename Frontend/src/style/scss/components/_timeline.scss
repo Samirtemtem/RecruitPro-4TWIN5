@@ -1,0 +1,116 @@
+
+.timeline {
+    position: relative;
+    list-style: none;
+    max-width: 1200px;
+    margin:0 auto ;
+    padding: 20px 0 20px;
+    margin: 0 auto;
+    padding:20px 0 20px ;
+    &:before {
+      content: " ";
+      position: absolute;
+      width: 3px;
+      margin-left: -1.5px;
+      background-color: $gray-200;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+    }
+    > li {
+      position: relative;
+      margin-bottom: 20px;
+      &::before, &::after {
+          content: " ";
+         display: table;
+      }
+      >.timeline-panel {
+          float: left;
+          position: relative;
+          width: 46%;
+          padding: 20px;
+          border: 1px solid $gray-200;
+            @include rounded(0.25rem);
+            @include box-shadow(null, 0, 1px, 6px, null, rgba(0, 0, 0, .05));
+            &::before {
+                content: " ";
+                display: inline-block;
+                position: absolute;
+                border-top: 8px solid transparent;
+                border-right: 0 solid $gray-200;
+                border-bottom: 8px solid transparent;
+                border-left: 8px solid $gray-200;
+                  position: absolute;
+                  top: 26px;
+                  right: -8px;
+              }
+              &::after {
+                  content: " ";
+                  display: inline-block;
+                    position: absolute;
+                    top: 27px;
+                    right: -7px;
+                  border-top: 7px solid transparent;
+                  border-right: 0 solid $white;
+                  border-bottom: 7px solid transparent;
+                  border-left: 7px solid $white;
+                }
+        }
+    }
+}
+.timeline > li:after {
+  clear: both; 
+}
+.timeline>li>.timeline-badge {
+  z-index: 1;
+  width: 50px;
+  height: 50px;
+  margin-left: -25px;
+  text-align: center;
+  font-size: 1.4em;
+  line-height: 50px;
+  color: $white;
+  overflow: hidden;
+    @include rounded(50%);
+    position: absolute;
+    top: 16px;
+    left: 50%;
+}
+.timeline>li.timeline-inverted>.timeline-panel {
+  float: right;
+  &::before {
+      right: auto;
+      left: -8px;
+      border-right-width: 8px;
+      border-left-width: 0;
+    }
+    &::after {
+        right: auto;
+        left: -7px;
+        border-right-width: 7px;
+        border-left-width: 0;
+      }
+}
+.timeline-badge.primary {
+  background-color: $primary;
+}
+.timeline-badge.success {
+  background-color: $success;
+}
+.timeline-badge.warning {
+  background-color: $warning; 
+}
+.timeline-badge.danger {
+  background-color: $danger; 
+}
+.timeline-badge.info {
+  background-color: $info; 
+}
+.timeline-body > p,
+.timeline-body > ul {
+  margin-bottom: 0; 
+}
+.timeline-body > p + p {
+  margin-top: 5px; 
+}

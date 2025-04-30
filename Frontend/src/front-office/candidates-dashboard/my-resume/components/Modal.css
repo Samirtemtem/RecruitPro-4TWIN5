@@ -1,0 +1,313 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+.modal-overlay {
+  transition: opacity 0.2s ease-out;
+  background: rgba(15, 23, 42, 0.8);
+  position: fixed;
+  opacity: 1;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 0.5em;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  width: 30em;
+  max-width: 90%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #6b7280;
+  transform: translate(0, 0);
+  pointer-events: all;
+  padding: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  border-bottom: 1px solid #e0e0e0;
+  margin: -20px -20px 0 -20px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: normal;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #111827;
+  font-size: 24px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  opacity: 1;
+}
+
+form {
+  padding: 20px;
+  overflow: auto;
+  margin: 0 -20px;
+}
+
+.form-group {
+  margin-bottom: 1.5em;
+  padding: 0 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5em;
+  font-weight: 500;
+  color: #111827;
+  font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75em 1em;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.25em;
+  font-size: 0.875rem;
+  color: #111827;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  font-family: "Inter", sans-serif;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: #9ca3af;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #16a34a;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.1);
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-group .required {
+  color: #ef4444;
+  margin-left: 0.25em;
+}
+
+/* Footer with buttons */
+.form-group:last-child {
+  margin: 0 -20px -20px -20px;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 1em;
+  border-top: 1px solid #e0e0e0;
+  background-color: #ffffff;
+}
+
+.theme-btn {
+  appearance: none;
+  height: 3em;
+  padding: 0 1em;
+  border-radius: 0.25em;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 3em;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-block;
+  min-width: 120px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+}
+
+.btn-style-one {
+  background: #16a34a;
+  color: white;
+  border: none;
+}
+
+.btn-style-one:hover:not(:disabled) {
+  background-color: #15803d;
+}
+
+.btn-style-two {
+  background-color: transparent;
+  color: #374151;
+  border: none;
+}
+
+.btn-style-two:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.theme-btn:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* Date input specific styles */
+input[type="date"] {
+  padding-right: 8px;
+  background-color: #f9fafb;
+}
+
+input[type="date"]:focus {
+  background-color: white;
+}
+
+/* Skills specific styles */
+.skills-block {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.skill-item {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.skill-header h5 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.edit-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btns button {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-btns button:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.edit-btns .la {
+  font-size: 16px;
+}
+
+.skill-bar {
+  display: none; /* Remove the progress bar */
+}
+
+.skill-percentage {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* Different styles for each level */
+.beginner .skill-percentage .count-box {
+  color: #60a5fa;
+}
+
+.intermediate .skill-percentage .count-box {
+  color: #34d399;
+}
+
+.advanced .skill-percentage .count-box {
+  color: #f59e0b;
+}
+
+.expert .skill-percentage .count-box {
+  color: #ef4444;
+}
+
+.count-box {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .modal-content {
+    font-size: 70%;
+    margin: 1em;
+  }
+
+  .modal-header,
+  form,
+  .form-group:last-child {
+    padding: 1.5em;
+  }
+
+  .close-btn {
+    height: 3.5em;
+    width: 3.5em;
+  }
+
+  .skills-block {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+} 

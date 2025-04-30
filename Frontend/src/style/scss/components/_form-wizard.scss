@@ -1,0 +1,16 @@
+.twitter-bs-wizard {
+    .twitter-bs-wizard-nav {
+        .nav-link {
+            &.active {
+                .step-icon {
+                    background: $primary-100;
+                    border-color: $primary-200;
+                }
+            }
+        }
+        .step-icon {
+            color: $primary;
+            border-color: $primary-200;
+        }
+    }
+}

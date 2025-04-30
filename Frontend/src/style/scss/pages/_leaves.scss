@@ -1,0 +1,66 @@
+.bg-green-img {
+    background-image: url(../../../../public/assets/img/bg/bg-green-01.svg);
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg-pink-img {
+    background-image: url(../../../../public/assets/img/bg/bg-pink-01.svg);
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg-yellow-img {
+    background-image: url(../../../../public/assets/img/bg/bg-yellow-01.svg);
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg-blue-img {
+    background-image: url(../../../../public/assets/img/bg/bg-blue-01.svg);
+    background-position: left top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg-black-le{
+    background-image: url(../../../../public/assets/img/bg/bg-black-le.svg);
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg-blue-le{
+    background-image: url(../../../../public/assets/img/bg/bg-blue-le.svg);
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg-purple-le{
+    background-image: url(../../../../public/assets/img/bg/bg-purple-le.svg);
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.bg-pink-le{
+    background-image: url(../../../../public/assets/img/bg/bg-pink-le.svg);
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.card-body {
+    .edit-leave-details{
+        display: none;
+    }
+    &.show{
+        .edit-leave-details {
+            display: block;
+        }
+
+    }
+}

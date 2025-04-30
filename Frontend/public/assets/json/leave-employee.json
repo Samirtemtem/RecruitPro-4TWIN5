@@ -1,0 +1,106 @@
+{
+    "data":[
+        {
+          "LeaveType": "Medical Leave",
+          "Image": "user-34.jpg",
+          "From": "14/01/2024",
+          "ApprovedBy": "Doglas Martini",
+          "Roll": "Manager",
+          "To": "15/01/2024",
+          "NoOfDays": "2 Days",
+          "Status": "Approved"
+        },
+        {
+          "LeaveType": "Annual Leave",
+          "Image": "user-34.jpg",
+          "From": "21/01/2024",
+          "ApprovedBy": "Doglas Martini",
+          "Roll": "Manager",
+          "To": "25/01/2024",
+          "NoOfDays": "5 Days",
+          "Status": "Approved"
+        },
+        {
+          "LeaveType": "Medical Leave",
+          "Image": "user-58.jpg",
+          "From": "20/02/2024",
+          "ApprovedBy": "Warren Morales",
+          "Roll": "Admin",
+          "To": "22/02/2024",
+          "NoOfDays": "3 Days",
+          "Status": "Approved"
+        },
+        {
+          "LeaveType": "Annual Leave",
+          "Image": "user-34.jpg",
+          "From": "15/03/2024",
+          "ApprovedBy": "Doglas Martini",
+          "Roll": "Manager",
+          "To": "17/03/2024",
+          "NoOfDays": "3 Days",
+          "Status": "Approved"
+        },
+        {
+          "LeaveType": "Casual Leave",
+          "Image": "user-34.jpg",
+          "From": "12/04/2024",
+          "ApprovedBy": "Doglas Martini",
+          "Roll": "Manager",
+          "To": "16/04/2024",
+          "NoOfDays": "5 Days",
+          "Status": "Declined"
+        },
+        {
+          "LeaveType": "Medical Leave",
+          "Image": "user-58.jpg",
+          "From": "20/05/2024",
+          "ApprovedBy": "Warren Morales",
+          "Roll": "Admin",
+          "To": "21/05/2024",
+          "NoOfDays": "2 Days",
+          "Status": "Declined"
+        },
+        {
+          "LeaveType": "Casual Leave",
+          "Image": "user-34.jpg",
+          "From": "06/07/2024",
+          "ApprovedBy": "Doglas Martini",
+          "Roll": "Manager",
+          "To": "06/07/2024",
+          "NoOfDays": "1 Days",
+          "Status": "Approved"
+        },
+        {
+          "LeaveType": "Medical Leave",
+          "Image": "user-34.jpg",
+          "From": "02/09/2024",
+          "ApprovedBy": "Doglas Martini",
+          "Roll": "Manager",
+          "To": "04/09/2024",
+          "NoOfDays": "3 Days",
+          "Status": "New"
+        },
+        {
+          "LeaveType": "Annual Leave",
+          "Image": "user-58.jpg",
+          "From": "15/11/2024",
+          "ApprovedBy": "Warren Morales",
+          "Roll": "Admin",
+          "To": "15/11/2024",
+          "NoOfDays": "1 Days",
+          "Status": "New"
+        },
+        {
+          "LeaveType": "Casual Leave",
+          "Image": "user-34.jpg",
+          "From": "10/12/2024",
+          "ApprovedBy": "Doglas Martini",
+          "Roll": "Manager",
+          "To": "11/12/2024",
+          "NoOfDays": "2 Days",
+          "Status": "New"
+        }
+       ]
+       ,
+    "totaldata":10
+}

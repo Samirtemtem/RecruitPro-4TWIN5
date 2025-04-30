@@ -1,0 +1,123 @@
+export const paymentReport = [
+  {
+    checkbox: true,
+    invoice_id: "Inv-001",
+    image_url:"assets/img/users/user-39.jpg",
+    client_name: "Michael Walker",
+    position:"CEO",
+    company_name: "BrightWave Innovations",
+    payment_type: "Paypal",
+    paid_date: "15 Jan 2024",
+    amount:"$3000",
+    key: "1"
+  },
+  {
+    checkbox: true,
+    invoice_id: "Inv-002",
+    image_url:"assets/img/users/user-40.jpg",
+    client_name: "Sophie Headrick",
+    position:"Manager",
+    company_name: "Stellar Dynamics",
+    payment_type: "Paypal",
+    paid_date: "25 Jan 2024",
+    amount:"$2500",
+    key: "2"
+  },
+  {
+    checkbox: true,
+    invoice_id: "	Inv-003",
+    image_url:"assets/img/users/user-41.jpg",
+    client_name: "Cameron Drake",
+    position:"Director",
+    company_name: "Quantum Nexus",
+    payment_type: "Paypal",
+    paid_date: "22 Feb 2024",
+    amount:"$2800",
+    key: "3"
+  },
+  {
+    checkbox: true,
+    invoice_id: "Inv-004",
+    image_url:"assets/img/users/user-42.jpg",
+    client_name: "Doris Crowley",
+    position:"Consultant",
+    payment_type: "Paypal",
+    company_name: "EcoVision Enterprises",
+    paid_date: "15 Mar 2024",
+    amount:"$3300",
+    key: "4"
+  },
+  {
+    checkbox: true,
+    invoice_id: "Inv-005",
+    image_url:"assets/img/users/user-43.jpg",
+    client_name: "Thomas Bordelon",
+    position:"Manager",
+    company_name: "Aurora Technologies",
+    payment_type: "Paypal",
+    paid_date: "16 Apr 2024",
+    amount:"$3600",
+    key: "5"
+  },
+  {
+    checkbox: true,
+    invoice_id: "Inv-006",
+    image_url:"assets/img/users/user-44.jpg",
+    client_name: "Kathleen Gutierrez",
+    position:"Director",
+    company_name: "BlueSky Ventures",
+    payment_type: "Paypal",
+    paid_date: "16 Apr 2024",
+    amount:"$2000",
+    key: "6"
+  },
+  {
+    checkbox: true,
+    invoice_id: "Inv-007",
+    image_url:"assets/img/users/user-45.jpg",
+    client_name: "Bruce Wright",
+    position:"CEO",
+    company_name: "TerraFusion Energy",
+    payment_type: "Paypal",
+    paid_date: "06 Jul 2024",
+    amount:"$3400",
+    key: "7"
+  },
+  {
+    checkbox: true,
+    invoice_id: "Inv-008",
+    image_url:"assets/img/users/user-46.jpg",
+    client_name: "Estelle Morgan",
+    position:"Manager",
+    company_name: "UrbanPulse Design",
+    payment_type: "Paypal",
+    paid_date: "04 Sep 2024",
+    amount:"$4000",
+    key: "8"
+  },
+  {
+    checkbox: true,
+    invoice_id: "Inv-009",
+    image_url:"assets/img/users/user-47.jpg",
+    client_name: "Stephen Dias",
+    position:"CEO",
+    company_name: "Nimbus Networks",
+    payment_type: "Paypal",
+    paid_date: "15 Nov 2024",
+    amount:"$4500",
+    key: "9"
+  },
+  {
+    checkbox: true,
+    invoice_id: "Inv-010",
+    image_url:"assets/img/users/user-48.jpg",
+    client_name: "Angela Thomas",
+    position:"Consultant",
+    company_name: "Epicurean Delights",
+    payment_type: "Paypal",
+    paid_date: "11 Dec 2024",
+    amount:"$3800",
+    key: "10"
+  },
+
+];

@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "Role": "Admin",
+      "CreatedDate": "12/09/2024",
+      "Status": "Active"
+    },
+    {
+      "Role": "HR Manager",
+      "CreatedDate": "24/10/2024",
+      "Status": "Active"
+    },
+    {
+      "Role": "Recruitment Manager",
+      "CreatedDate": "18/02/2024",
+      "Status": "Active"
+    },
+    {
+      "Role": "Payroll Manager",
+      "CreatedDate": "17/10/2024",
+      "Status": "Active"
+    },
+    {
+      "Role": "Leave Manager",
+      "CreatedDate": "20/07/2024",
+      "Status": "Active"
+    },
+    {
+      "Role": "Performance Manager",
+      "CreatedDate": "10/04/2024",
+      "Status": "Active"
+    },
+    {
+      "Role": "Reports Analyst",
+      "CreatedDate": "29/08/2024",
+      "Status": "Active"
+    },
+    {
+      "Role": "Employee",
+      "CreatedDate": "22/02/2024",
+      "Status": "Inactive"
+    },
+    {
+      "Role": "Client",
+      "CreatedDate": "03/11/2024",
+      "Status": "Active"
+    },
+    {
+      "Role": "Department Head",
+      "CreatedDate": "17/12/2024",
+      "Status": "Active"
+    }
+  ],
+  "totalData": 10
+}

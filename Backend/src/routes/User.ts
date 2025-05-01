@@ -13,7 +13,12 @@ import {
   getUserJobPosts ,
   getCandidateById,
   getUsers,
-  getUsersROLEUSER
+  getUsersROLEUSER,
+  fetchDepartmentManagers,
+  fetchDepartmentManagerById,
+  deleteDepartmentManager,
+  updateDepartmentManager,
+  createDepartmentManager
 } from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
@@ -106,5 +111,23 @@ router.get('/get/getUsers', getUsers);
 
 
 router.get('/getROLEUSER', getUsersROLEUSER);
+
+
+// Route to fetch users with the role DEPARTMENT-MANAGER
+router.get('/department-managers', fetchDepartmentManagers);
+
+
+router.get('/department-managers/:id', fetchDepartmentManagerById);
+
+
+// Route to create a new DEPARTMENT-MANAGER
+router.post("/department-managers", createDepartmentManager);
+
+// Route to update an existing DEPARTMENT-MANAGER (including their image)
+router.put("/department-managers/:id", upload.single("image"), updateDepartmentManager);
+
+// Route to delete a DEPARTMENT-MANAGER
+router.delete("/department-managers/:id", deleteDepartmentManager);
+
 // Export the router
 export default router;

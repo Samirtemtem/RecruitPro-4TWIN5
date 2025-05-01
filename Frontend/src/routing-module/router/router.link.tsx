@@ -92,6 +92,8 @@ import Needs from "../../back-office/team-lead-dashboard/Need";
 import NeedDetails from "../../back-office/team-lead-dashboard/NeedDetail";
 import NeedsList from "../../back-office/department-manager-dashboard/NeedsList";
 import NeedDetailsDep from "../../back-office/department-manager-dashboard/NeedDetail";
+import ManagersList from "../../back-office/hr-manager-dashboard/Managers-List";
+import ManagerDetails from "../../back-office/hr-manager-dashboard/Manger-Detail";
 
 const routes = all_routes;
 
@@ -376,6 +378,23 @@ export const authRoutes = [
     element: <Navigate to="/index" />,
     route: Route,
   },
+
+
+ // HR Mnagaer Dashboard routes
+ {
+  path:"/Managers-List",
+  element: <ManagersList />,
+  route: Route,
+},
+{
+  path:"/manager-detail/:id",
+  element: <ManagerDetails />,
+  route: Route,
+},
+
+ 
+
+
 
   // Department Manager Dashboard routes
   {

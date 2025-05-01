@@ -129,6 +129,21 @@ const useSidebarData = () => {
             ],
           },
           {
+            tittle: 'Departments',
+            icon: 'airplay', 
+            separateRoute: false,
+            submenuItems: [
+              {
+                label: 'Managers',
+                icon: 'user-shield',
+                base: 'dashboard',
+                materialicons: 'start',
+                link: "Managers-List" 
+              },
+              
+            ],
+          },
+          {
             tittle: 'RECRUITMENT',
             icon: 'file',
             showAsTab: false,

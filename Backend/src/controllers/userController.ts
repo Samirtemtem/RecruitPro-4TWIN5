@@ -517,5 +517,110 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
 
 
 
+// Controller to fetch users with the role DEPARTMENT-MANAGER
+export const fetchDepartmentManagers = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const departmentManagers = await User.find({ role: Role.DEPARTMENT_MANAGER });
+    res.status(200).json(departmentManagers);
+  } catch (error) {
+    console.error('Error fetching department managers:', error);
+    res.status(500).json({ message: 'Failed to fetch department managers' });
+  }
+};
+
+// Controller to fetch a single DEPARTMENT-MANAGER by ID
+export const fetchDepartmentManagerById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const departmentManager = await User.findOne({ _id: id, role: Role.DEPARTMENT_MANAGER });
+
+    if (!departmentManager) {
+      res.status(404).json({ message: 'Department manager not found' });
+      return;
+    }
+
+    res.status(200).json(departmentManager);
+  } catch (error) {
+    console.error('Error fetching department manager by ID:', error);
+    res.status(500).json({ message: 'Failed to fetch department manager' });
+  }
+};
 
 
+
+
+// Controller to create a new DEPARTMENT-MANAGER
+export const createDepartmentManager = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { firstName, lastName, email, phoneNumber, department, password } = req.body;
+
+    const newDepartmentManager = new User({
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      department,
+      password,
+      isVerified: false,
+      role: Role.DEPARTMENT_MANAGER, // Ensure the role is set to DEPARTMENT_MANAGER
+    });
+
+    await newDepartmentManager.save();
+    res.status(201).json({ message: "Department manager created successfully", data: newDepartmentManager });
+  } catch (error) {
+    console.error("Error creating department manager:", error);
+    res.status(500).json({ message: "Failed to create department manager" });
+  }
+};
+
+// Controller to update an existing DEPARTMENT-MANAGER, including their image
+export const updateDepartmentManager = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, email, phoneNumber, department } = req.body;
+    let image = req.body.image; // Default to the image provided in the body
+
+    // Check if an image file is uploaded
+    if (req.file) {
+      // Assuming `req.file` contains the uploaded file (use a library like multer for file uploads)
+      image = req.file.path; // Path to the uploaded file
+    }
+
+    const updatedDepartmentManager = await User.findOneAndUpdate(
+      { _id: id, role: Role.DEPARTMENT_MANAGER },
+      { firstName, lastName, email, phoneNumber, department, image },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedDepartmentManager) {
+      res.status(404).json({ message: "Department manager not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Department manager updated successfully", data: updatedDepartmentManager });
+  } catch (error) {
+    console.error("Error updating department manager:", error);
+    res.status(500).json({ message: "Failed to update department manager" });
+  }
+};
+// Controller to delete a DEPARTMENT-MANAGER
+export const deleteDepartmentManager = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const deletedDepartmentManager = await User.findOneAndDelete({
+      _id: id,
+      role: Role.DEPARTMENT_MANAGER,
+    });
+
+    if (!deletedDepartmentManager) {
+      res.status(404).json({ message: "Department manager not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Department manager deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting department manager:", error);
+    res.status(500).json({ message: "Failed to delete department manager" });
+  }
+};

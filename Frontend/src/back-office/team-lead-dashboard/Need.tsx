@@ -689,6 +689,8 @@ const handleDelete = async (id: string) => {
                 </div>
                 <div className="row">
                   <div className="col-md-6">
+
+
                     <div className="mb-3">
                       <label className="form-label">Status</label>
                       <div>
@@ -702,6 +704,24 @@ const handleDelete = async (id: string) => {
                         </span>
                       </div>
                     </div>
+
+                   
+                    <div className="mb-2">
+                      <label className="form-label">Type Contrat</label>
+                      <select
+                        className="form-select"
+                        
+                       
+                      >
+                        <option value="">Select Contrat</option>
+                        <option value="">VACATAIRE</option>
+                        <option value="">PERMANENT</option>
+                  
+                      </select>
+                    </div>
+                   
+
+
                   </div>
                 </div>
                 {/* Hidden field to ensure jobPostCreated is always sent as false */}
@@ -884,6 +904,9 @@ const handleDelete = async (id: string) => {
                       </div>
                     </div>
                   </div>
+
+
+                  
                 </div>
                 {/* Hidden field to ensure jobPostCreated is always sent as false */}
                 <input type="hidden" name="jobPostCreated" value="false" />

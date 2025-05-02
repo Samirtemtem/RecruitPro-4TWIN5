@@ -94,6 +94,8 @@ import NeedsList from "../../back-office/department-manager-dashboard/NeedsList"
 import NeedDetailsDep from "../../back-office/department-manager-dashboard/NeedDetail";
 import ManagersList from "../../back-office/hr-manager-dashboard/Managers-List";
 import ManagerDetails from "../../back-office/hr-manager-dashboard/Manger-Detail";
+import TeamLeadersList from "../../back-office/department-manager-dashboard/Team-Leaders-List";
+import TeamLeaderDetails from "../../back-office/department-manager-dashboard/Team-Leader-Detail";
 
 const routes = all_routes;
 
@@ -426,6 +428,16 @@ export const authRoutes = [
   },
 
 
+  {
+    path:"/department-manager-dashboard/team-leaders-list",
+    element: <TeamLeadersList />,
+    route: Route,
+  },
+  {
+    path:"/department-manager-dashboard/team-leader-detail/:id",
+    element: <TeamLeaderDetails />,
+    route: Route,
+  },
   
 
 

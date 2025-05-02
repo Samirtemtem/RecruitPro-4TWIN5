@@ -144,21 +144,12 @@ const useSidebarData = () => {
             ],
           },
           {
-            tittle: 'RECRUITMENT',
+            tittle: 'USERS',
             icon: 'file',
             showAsTab: false,
             separateRoute: false,
             submenuItems: [
-              {
-                label: 'Jobs',
-                link: routes.jobgrid,
-                submenu: false,
-                showSubRoute: false,
-                icon: 'timeline',
-                base: 'jobs',
-                materialicons: 'confirmation_number',
-                submenuItems: [],
-              },
+            
               {
                 label: 'Candidates',
                 link: routes.candidatesGrid,
@@ -179,6 +170,16 @@ const useSidebarData = () => {
                 materialicons: 'shopping_bag',
                 submenuItems: [],
               },
+              
+            ],
+          },
+          {
+            tittle: 'RECRUITMENT',
+            icon: 'file',
+            showAsTab: false,
+            separateRoute: false,
+            submenuItems: [
+              
               {
                 label: 'Requests',
                 link: "/requests",
@@ -189,6 +190,17 @@ const useSidebarData = () => {
                 materialicons: 'shopping_bag',
                 submenuItems: [],
               },
+              {
+                label: 'Job Posts',
+                link: routes.jobgrid,
+                submenu: false,
+                showSubRoute: false,
+                icon: 'timeline',
+                base: 'jobs',
+                materialicons: 'confirmation_number',
+                submenuItems: [],
+              },
+          
             ],
           },
         ] : []),
@@ -204,6 +216,20 @@ const useSidebarData = () => {
                 base: 'dashboard',
                 materialicons: 'start',
                 link: "/department-manager-dashboard",
+              },
+            ],
+          },
+          {
+            tittle: 'Team Leaders',
+            icon: 'airplay', 
+            separateRoute: false,
+            submenuItems: [
+              {
+                label: 'Team Leaders',
+                icon: 'user-shield',
+                base: 'dashboard',
+                materialicons: 'start',
+                link: "/department-manager-dashboard/team-leaders-list",
               },
             ],
           },

@@ -113,24 +113,31 @@ useEffect(() => {
 
 const fetchRequests = async () => {
   try {
+    // Fetch data from the API
     const response = await axios.get('http://localhost:5000/request/');
     const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
 
+    // Retrieve user information from local storage
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
 
-    console.log("User ID:", user?.id);
+    console.log("User Department:", user?.department);
     console.log("Sample fetched request object:", fetchedData[0]);
 
+    // Filter requests based on the user's department
     const filteredData = user 
       ? fetchedData.filter(request => {
-          const managerId = request?.department_Manager?.id; // ✅ Changed from _id to id
-          const isMatch = String(managerId) === String(user.id);
-          console.log(`Comparing request.manager.id: ${managerId} with user.id: ${user.id} => ${isMatch}`);
+          const requestDepartment = request?.department || null; // Safely access request department
+          const userDepartment = user?.department || null; // Safely access user's department
+
+          // Compare only if both departments are defined
+          const isMatch = requestDepartment && userDepartment && String(requestDepartment) === String(userDepartment);
+          console.log(`Comparing request department: ${requestDepartment} with user's department: ${userDepartment} => ${isMatch}`);
           return isMatch;
         })
       : [];
 
+    // Update the state with the filtered data
     setData(filteredData);
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -141,8 +148,6 @@ const fetchRequests = async () => {
 useEffect(() => {
   fetchRequests();
 }, []);
-
-
 
 
   

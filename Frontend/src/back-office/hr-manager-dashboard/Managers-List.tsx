@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Datatable from "../../core/common/dataTable/index";
-import { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast"; // Ensure you have react-hot-toast installed
+import { Modal } from "react-bootstrap"; // Add Bootstrap for modal
 
 // Define the interface for manager data
 interface ManagerData {
@@ -17,7 +18,6 @@ interface ManagerData {
   isVerified: boolean; // Added isVerified field
 }
 
-// Component for managing the Managers list
 const ManagersList: React.FC = () => {
   const [data, setData] = useState<ManagerData[]>([]);
   const [showForm, setShowForm] = useState<boolean>(false);
@@ -32,13 +32,24 @@ const ManagersList: React.FC = () => {
     password: "",
   });
 
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    department: "",
+    password: "",
+  });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Modal visibility
+  const [deleteManagerId, setDeleteManagerId] = useState<string | null>(null); // ID of manager to delete
+
   // Fetch data from the API
   const fetchManagers = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/user/department-managers");
       const fetchedData: ManagerData[] = Array.isArray(response.data) ? response.data : [];
       setData(fetchedData);
-      console.log(fetchedData);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch managers");
@@ -49,39 +60,84 @@ const ManagersList: React.FC = () => {
     fetchManagers();
   }, []);
 
-  // Handle creating a new manager
-  const handleCreateManager = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      await axios.post("http://localhost:5000/api/user/department-managers", newManager);
-      toast.success("Manager created successfully");
-      setShowForm(false);
-      fetchManagers(); // Refresh the list after creation
-      setNewManager({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phoneNumber: "",
-        department: "",
-        password: "",
-      });
-    } catch (error) {
-      console.error("Error creating manager:", error);
-      toast.error("Failed to create manager");
-    }
+  // Validation Functions
+  const validateFirstName = (value: string) => {
+    return value.trim().length >= 3 ? "" : "First name must be at least 3 characters.";
   };
 
-  // Handle deleting a manager
-  const handleDeleteManager = async (id: string) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/user/department-managers/${id}`);
-      toast.success("Manager deleted successfully");
-      fetchManagers(); // Refresh the list after deletion
-    } catch (error) {
-      console.error("Error deleting manager:", error);
-      toast.error("Failed to delete manager");
-    }
+  const validateLastName = (value: string) => {
+    return value.trim().length >= 3 ? "" : "Last name must be at least 3 characters.";
+  };
+
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value) ? "" : "Invalid email format.";
+  };
+
+  const validatePhoneNumber = (value: string) => {
+    return /^\d{8}$/.test(value) ? "" : "Phone number must be exactly 8 digits.";
+  };
+
+  const validatePassword = (value: string) => {
+    return value.trim().length >= 6 ? "" : "Password must be at least 6 characters.";
+  };
+
+  const validateDepartment = (value: string) => {
+    return value.trim() ? "" : "Department is required.";
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      firstName: validateFirstName(newManager.firstName),
+      lastName: validateLastName(newManager.lastName),
+      email: validateEmail(newManager.email),
+      phoneNumber: validatePhoneNumber(newManager.phoneNumber),
+      department: validateDepartment(newManager.department),
+      password: validatePassword(newManager.password),
+    };
+    setErrors(newErrors);
+    return Object.values(newErrors).every((error) => error === "");
+  };
+
+  // Handle creating a new manager
+  // Handle creating a new manager
+const handleCreateManager = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!validateForm()) {
+    return;
+  }
+
+  try {
+    await axios.post("http://localhost:5000/api/user/department-managers", newManager);
+    toast.success("Manager created successfully!"); // Success toast message
+    setShowForm(false);
+    window.location.reload(); // Refresh the page
+  } catch (error) {
+    console.error("Error creating manager:", error);
+    toast.error("Failed to create manager");
+  }
+};
+
+// Handle deleting a manager
+const handleDeleteManager = async () => {
+  if (!deleteManagerId) return;
+
+  try {
+    await axios.delete(`http://localhost:5000/api/user/department-managers/${deleteManagerId}`);
+    toast.success("Manager deleted successfully");
+    setShowDeleteModal(false); // Close the modal
+    window.location.reload(); // Refresh the page
+  } catch (error) {
+    console.error("Error deleting manager:", error);
+    toast.error("Failed to delete manager");
+  }
+};
+
+  // Open delete confirmation modal
+  const confirmDelete = (id: string) => {
+    setDeleteManagerId(id);
+    setShowDeleteModal(true);
   };
 
   // Columns for the data table
@@ -150,7 +206,7 @@ const ManagersList: React.FC = () => {
             <i className="ti ti-eye"></i>
           </Link>
           <button
-            onClick={() => handleDeleteManager(record.id)}
+            onClick={() => confirmDelete(record.id)}
             className="btn btn-sm btn-icon btn-outline-danger"
             title="Delete"
           >
@@ -174,7 +230,7 @@ const ManagersList: React.FC = () => {
               className="btn btn-primary"
               onClick={() => setShowForm((prev) => !prev)}
             >
-              {showForm ? "Hide Form" : "Create Manager"}
+              {showForm ? "Hide Form" : "+ Create Manager"}
             </button>
           </div>
         </div>
@@ -190,11 +246,13 @@ const ManagersList: React.FC = () => {
                   type="text"
                   className="form-control"
                   value={newManager.firstName}
-                  onChange={(e) =>
-                    setNewManager({ ...newManager, firstName: e.target.value })
-                  }
-                  required
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewManager({ ...newManager, firstName: value });
+                    setErrors({ ...errors, firstName: validateFirstName(value) });
+                  }}
                 />
+                {errors.firstName && <small className="text-danger">{errors.firstName}</small>}
               </div>
               <div className="mb-3">
                 <label className="form-label">Last Name</label>
@@ -202,11 +260,13 @@ const ManagersList: React.FC = () => {
                   type="text"
                   className="form-control"
                   value={newManager.lastName}
-                  onChange={(e) =>
-                    setNewManager({ ...newManager, lastName: e.target.value })
-                  }
-                  required
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewManager({ ...newManager, lastName: value });
+                    setErrors({ ...errors, lastName: validateLastName(value) });
+                  }}
                 />
+                {errors.lastName && <small className="text-danger">{errors.lastName}</small>}
               </div>
               <div className="mb-3">
                 <label className="form-label">Email</label>
@@ -214,11 +274,13 @@ const ManagersList: React.FC = () => {
                   type="email"
                   className="form-control"
                   value={newManager.email}
-                  onChange={(e) =>
-                    setNewManager({ ...newManager, email: e.target.value })
-                  }
-                  required
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewManager({ ...newManager, email: value });
+                    setErrors({ ...errors, email: validateEmail(value) });
+                  }}
                 />
+                {errors.email && <small className="text-danger">{errors.email}</small>}
               </div>
               <div className="mb-3">
                 <label className="form-label">Password</label>
@@ -226,11 +288,13 @@ const ManagersList: React.FC = () => {
                   type="password"
                   className="form-control"
                   value={newManager.password}
-                  onChange={(e) =>
-                    setNewManager({ ...newManager, password: e.target.value })
-                  }
-                  required
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewManager({ ...newManager, password: value });
+                    setErrors({ ...errors, password: validatePassword(value) });
+                  }}
                 />
+                {errors.password && <small className="text-danger">{errors.password}</small>}
               </div>
               <div className="mb-3">
                 <label className="form-label">Phone Number</label>
@@ -238,21 +302,24 @@ const ManagersList: React.FC = () => {
                   type="text"
                   className="form-control"
                   value={newManager.phoneNumber}
-                  onChange={(e) =>
-                    setNewManager({ ...newManager, phoneNumber: e.target.value })
-                  }
-                  required
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewManager({ ...newManager, phoneNumber: value });
+                    setErrors({ ...errors, phoneNumber: validatePhoneNumber(value) });
+                  }}
                 />
+                {errors.phoneNumber && <small className="text-danger">{errors.phoneNumber}</small>}
               </div>
               <div className="mb-3">
                 <label className="form-label">Department</label>
                 <select
                   className="form-select"
                   value={newManager.department}
-                  onChange={(e) =>
-                    setNewManager({ ...newManager, department: e.target.value })
-                  }
-                  required
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNewManager({ ...newManager, department: value });
+                    setErrors({ ...errors, department: validateDepartment(value) });
+                  }}
                 >
                   <option value="">Select Department</option>
                   <option value="TIC">TIC</option>
@@ -260,6 +327,7 @@ const ManagersList: React.FC = () => {
                   <option value="GENIE-CIVIL">GENIE-CIVIL</option>
                   <option value="OTHER">OTHER</option>
                 </select>
+                {errors.department && <small className="text-danger">{errors.department}</small>}
               </div>
               <div>
                 <button type="submit" className="btn btn-primary">
@@ -285,6 +353,24 @@ const ManagersList: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete this manager?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </button>
+          <button className="btn btn-danger" onClick={handleDeleteManager}>
+            Delete
+          </button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

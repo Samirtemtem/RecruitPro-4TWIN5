@@ -624,3 +624,129 @@ export const deleteDepartmentManager = async (req: Request, res: Response): Prom
     res.status(500).json({ message: "Failed to delete department manager" });
   }
 };
+
+
+
+
+
+
+// Team Leaders
+
+
+export const fetchTeamLeads = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const teamLeads = await User.find({ role: Role.TEAM_LEAD });
+    res.status(200).json(teamLeads);
+  } catch (error) {
+    console.error('Error fetching team leads:', error);
+    res.status(500).json({ message: 'Failed to fetch team leads' });
+  }
+};
+
+// Controller to fetch a single TEAM-LEAD by ID
+export const fetchTeamLeadById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const teamLead = await User.findOne({ _id: id, role: Role.TEAM_LEAD });
+
+    if (!teamLead) {
+      res.status(404).json({ message: 'Team lead not found' });
+      return;
+    }
+
+    res.status(200).json(teamLead);
+  } catch (error) {
+    console.error('Error fetching team lead by ID:', error);
+    res.status(500).json({ message: 'Failed to fetch team lead' });
+  }
+};
+
+// Controller to create a new TEAM-LEAD
+export const createTeamLead = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { firstName, lastName, email, phoneNumber, department, password, team } = req.body;
+
+    const newTeamLead = new User({
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      department,
+      password,
+      isVerified: false,
+      role: Role.TEAM_LEAD, // Ensure the role is set to TEAM_LEAD
+      team, // Add the team attribute
+    });
+
+    await newTeamLead.save();
+    res.status(201).json({ message: "Team lead created successfully", data: newTeamLead });
+  } catch (error) {
+    console.error("Error creating team lead:", error);
+    res.status(500).json({ message: "Failed to create team lead" });
+  }
+};
+
+export const updateTeamLead = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, phoneNumber } = req.body; // Only include allowed fields
+    let image = req.body.image; // Default to the image provided in the body
+
+    // Check if an image file is uploaded
+    if (req.file) {
+      // Assuming `req.file` contains the uploaded file (use a library like multer for file uploads)
+      image = req.file.path; // Path to the uploaded file
+    }
+
+    const updatedFields: Partial<{ firstName: string; lastName: string; phoneNumber: string; image: string }> = {
+      firstName,
+      lastName,
+      phoneNumber,
+      image,
+    };
+
+    // Remove undefined fields so we only update what is provided
+    Object.keys(updatedFields).forEach((key) => {
+      if (updatedFields[key as keyof typeof updatedFields] === undefined) {
+        delete updatedFields[key as keyof typeof updatedFields];
+      }
+    });
+
+    const updatedTeamLead = await User.findOneAndUpdate(
+      { _id: id, role: Role.TEAM_LEAD }, // Ensure the user is a TEAM_LEAD
+      updatedFields,
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedTeamLead) {
+      res.status(404).json({ message: "Team lead not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Team lead updated successfully", data: updatedTeamLead });
+  } catch (error) {
+    console.error("Error updating team lead:", error);
+    res.status(500).json({ message: "Failed to update team lead" });
+  }
+};
+// Controller to delete a TEAM-LEAD
+export const deleteTeamLead = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const deletedTeamLead = await User.findOneAndDelete({
+      _id: id,
+      role: Role.TEAM_LEAD,
+    });
+
+    if (!deletedTeamLead) {
+      res.status(404).json({ message: "Team lead not found" });
+      return;
+    }
+
+    res.status(200).json({ message: "Team lead deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting team lead:", error);
+    res.status(500).json({ message: "Failed to delete team lead" });
+  }
+};

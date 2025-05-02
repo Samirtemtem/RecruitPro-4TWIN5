@@ -18,7 +18,12 @@ import {
   fetchDepartmentManagerById,
   deleteDepartmentManager,
   updateDepartmentManager,
-  createDepartmentManager
+  createDepartmentManager,
+  fetchTeamLeads,
+  fetchTeamLeadById,
+  createTeamLead,
+  updateTeamLead,
+  deleteTeamLead
 } from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
@@ -128,6 +133,24 @@ router.put("/department-managers/:id", upload.single("image"), updateDepartmentM
 
 // Route to delete a DEPARTMENT-MANAGER
 router.delete("/department-managers/:id", deleteDepartmentManager);
+
+
+// Team Leaders
+
+
+// Route to fetch users with the role TEAM-LEAD
+router.get('/team-leads', fetchTeamLeads);
+
+router.get('/team-leads/:id', fetchTeamLeadById);
+
+// Route to create a new TEAM-LEAD
+router.post("/team-leads", createTeamLead);
+
+// Route to update an existing TEAM-LEAD (including their image)
+router.put("/team-leads/:id", upload.single("image"), updateTeamLead);
+
+// Route to delete a TEAM-LEAD
+router.delete("/team-leads/:id", deleteTeamLead);
 
 // Export the router
 export default router;

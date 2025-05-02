@@ -151,7 +151,7 @@ const NeedDetailsDep = () => {
                     <div className="row align-items-center mb-4">
                         <div className="d-md-flex d-sm-block justify-content-between align-items-center flex-wrap">
                             <h6 className="fw-medium d-inline-flex align-items-center mb-3 mb-sm-0">
-                                <Link to="/team-lead-dashboard/needs">
+                                <Link to="/department-manager-dashboard/needs">
                                     <i className="ti ti-arrow-left me-2" />
                                     Back to List
                                 </Link>

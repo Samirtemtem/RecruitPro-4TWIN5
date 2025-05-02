@@ -53,7 +53,10 @@ const RequestList: React.FC = () => {
         String(field).toLowerCase().includes(searchText.toLowerCase())
       )
     );
-    setFilteredDataSource(filteredData);
+  
+    // Sort to bring jobPostCreated = false to the top
+    const sortedData = filteredData.sort((a, b) => Number(a.jobPostCreated) - Number(b.jobPostCreated));
+    setFilteredDataSource(sortedData);
   }, [data, searchText]);
 
   // Define columns for the table

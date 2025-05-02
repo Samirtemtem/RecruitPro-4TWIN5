@@ -31,6 +31,8 @@ export interface IUser extends Document {
   isVerified: boolean;
   verificationToken?: string;
 
+  team?: 'web' | 'devops' | 'Other' | null; // New attribute added
+
   // Methods
   comparePassword(password: string): Promise<boolean>;
   login(): Promise<void>;
@@ -96,7 +98,8 @@ const userSchema = new Schema<IUser>({
   jobPosts: [{ type: Schema.Types.ObjectId, ref: 'JobPost' }],
   provider: { type: String, enum: ['local', 'google', 'linkedin'] },
   isVerified: { type: Boolean, required: true },
-  verificationToken: { type: String }
+  verificationToken: { type: String },
+  team: { type: String, enum: ['web', 'devops', 'Other'], default: null }, // New field added
 }, {
   timestamps: true,
   discriminatorKey: 'role' // This allows us to use inheritance

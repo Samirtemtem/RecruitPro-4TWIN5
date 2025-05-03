@@ -11,6 +11,7 @@ interface INeed extends Document {
     quantity: number;
     importance: 'HIGH' | 'MEDIUM' | 'LOW';
     requestCreated: boolean; // Added JobPostCreated attribute
+    typeContrat: 'VACATAIRE' | 'PERMANENT'; // New attribute
 }
 
 const NeedSchema: Schema<INeed> = new Schema({
@@ -23,7 +24,8 @@ const NeedSchema: Schema<INeed> = new Schema({
     experience: { type: Number, required: true },
     quantity: { type: Number, required: true },
     importance: { type: String, enum: ['HIGH', 'MEDIUM', 'LOW'], required: true },
-    requestCreated: { type: Boolean, default: false } // Default value for JobPostCreated
+    requestCreated: { type: Boolean, default: false }, // Default value for JobPostCreated
+    typeContrat: { type: String, enum: ['VACATAIRE', 'PERMANENT'], required: true } // New attribute added
 }, { timestamps: true });
 
 const Need = mongoose.model<INeed>('Need', NeedSchema);

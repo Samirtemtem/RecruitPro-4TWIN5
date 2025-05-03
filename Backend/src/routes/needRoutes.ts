@@ -5,7 +5,8 @@ import {
     getNeeds,
     updateNeed,
     deleteNeed,
-    updateJobPostCreated
+    updateJobPostCreated,
+    getNeedsByTeamLead
 } from '../controllers/NeedController'; // Updated import to match the new controller name
 
 const router = Router();
@@ -27,5 +28,9 @@ router.delete('/:id', deleteNeed);
 
 // Route to update jobPostCreated status
 router.patch('/:id/jobPostCreated', updateJobPostCreated);
+
+
+// Route to get needs by teamLead ID
+router.get('/needs/teamLead/:teamLeadId', getNeedsByTeamLead);
 
 export default router;

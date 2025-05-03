@@ -7,6 +7,7 @@ import PredefinedDateRanges from "../../core/common/datePicker";
 import TooltipOption from "../../core/common/tooltipOption";
 import { useAuth } from "../../routing-module/AuthContext";
 import { toast } from "react-hot-toast";
+import { request } from "https";
 
 // Define the interface for request data
 interface RequestData {
@@ -53,7 +54,7 @@ const JobPostRequests: React.FC = () => {
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
   
   // Form states
-  const [formData, setFormData] = useState<Omit<RequestData, '_id' | 'createdAt' | 'updatedAt'>>(
+  const [formData, setFormData] = useState<Omit<RequestData, '_id' | 'createdAt' | 'updatedAt' >>(
     createEmptyRequest(userId, profileData?.department || user?.department)
   );
   const [currentRequestId, setCurrentRequestId] = useState<string>("");
@@ -122,18 +123,27 @@ const fetchRequests = async () => {
     const user = userString ? JSON.parse(userString) : null;
 
     console.log("User Department:", user?.department);
+    console.log("User ID:", user?._id);
     console.log("Sample fetched request object:", fetchedData[0]);
 
-    // Filter requests based on the user's department
+    // Filter requests based on the user's department and department manager ID
     const filteredData = user 
       ? fetchedData.filter(request => {
           const requestDepartment = request?.department || null; // Safely access request department
           const userDepartment = user?.department || null; // Safely access user's department
+          const requestManagerId = request?.department_Manager?.id || null; // Safely access department manager ID
 
-          // Compare only if both departments are defined
-          const isMatch = requestDepartment && userDepartment && String(requestDepartment) === String(userDepartment);
-          console.log(`Comparing request department: ${requestDepartment} with user's department: ${userDepartment} => ${isMatch}`);
-          return isMatch;
+          // Log department_Manager._id for debugging
+          console.log(`Request department_Manager._id: ${requestManagerId}`);
+
+          // Compare departments and department manager IDs
+          const isDepartmentMatch = requestDepartment && userDepartment && String(requestDepartment) === String(userDepartment);
+          const isManagerIdMatch = requestManagerId && user._id && String(requestManagerId) === String(user._id);
+
+          console.log(`Comparing request department: ${requestDepartment} with user's department: ${userDepartment} => ${isDepartmentMatch}`);
+          console.log(`Comparing request manager ID: ${requestManagerId} with user's ID: ${user._id} => ${isManagerIdMatch}`);
+
+          return isDepartmentMatch && isManagerIdMatch; // Both conditions must be true
         })
       : [];
 
@@ -148,7 +158,6 @@ const fetchRequests = async () => {
 useEffect(() => {
   fetchRequests();
 }, []);
-
 
   
   // Delete request handler

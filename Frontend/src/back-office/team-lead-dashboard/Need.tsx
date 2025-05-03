@@ -25,6 +25,7 @@ interface RequestData {
   experience: number;
   jobPostCreated: boolean;
   status: string;
+  typeContrat: string; // Added type_contrat
   createdAt: string;
   updatedAt: string;
 }
@@ -40,11 +41,11 @@ const createEmptyRequest = (userId: string | null, department?: string): Omit<Re
   requirements: [],
   experience: 0,
   jobPostCreated: false,
-  status: "PENDING"
+  status: "PENDING",
+  typeContrat: "PERMANENT" // Initialize with default value
 });
 
 const Needs: React.FC = () => {
-  // Get authentication context with profileData for department
   const { user, userId, profileData } = useAuth();
   const navigate = useNavigate();
   const [data, setData] = useState<RequestData[]>([]);
@@ -52,7 +53,6 @@ const Needs: React.FC = () => {
   const [selectedImportance, setSelectedImportance] = useState<string>("");
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
   
-  // Form states
   const [formData, setFormData] = useState<Omit<RequestData, '_id' | 'createdAt' | 'updatedAt'>>(
     createEmptyRequest(userId, profileData?.department || user?.department)
   );
@@ -60,7 +60,6 @@ const Needs: React.FC = () => {
   const [requirementInput, setRequirementInput] = useState<string>("");
   const [requestToDelete, setRequestToDelete] = useState<string>("");
 
-  // Update formData when user logs in or profile data changes
   useEffect(() => {
     if (userId) {
       setFormData(prev => ({
@@ -71,21 +70,13 @@ const Needs: React.FC = () => {
     }
   }, [userId, profileData, user]);
 
-  // Fetch data from the API
   const fetchRequests = async () => {
     try {
       const response = await axios.get('http://localhost:5000/need/');
-      console.log("API Response:", response.data); // Debug log
       const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
-      
-      // Filter requests to only show those from the current user
-      console.log("User ID:", userId); // Debug log
-      console.log("Fetched Data:", fetchedData); // Debug log
       const userRequests = fetchedData.filter(request => 
         request.teamLead?.id === userId
       );
-      
-      console.log("Setting filtered data to:", userRequests); // Debug log
       setData(userRequests);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -97,19 +88,17 @@ const Needs: React.FC = () => {
     fetchRequests();
   }, []);
 
- // Delete request handler
-const handleDelete = async (id: string) => {
-  try {
-    await axios.delete(`http://localhost:5000/need/${id}`);
-    toast.success("Request deleted successfully");
-    
-    // Refresh the page after deletion
-    window.location.reload();
-  } catch (error) {
-    console.error("Error deleting request:", error);
-    toast.error("Failed to delete request");
-  }
-};
+  const handleDelete = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:5000/need/${id}`);
+      toast.success("Request deleted successfully");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting request:", error);
+      toast.error("Failed to delete request");
+    }
+  };
+
   
   // Execute delete after confirmation
   const executeDelete = () => {
@@ -119,17 +108,7 @@ const handleDelete = async (id: string) => {
     }
   };
 
-  // Update request status handler
-  const handleStatusUpdate = async (id: string, status: string) => {
-    try {
-      await axios.put(`http://localhost:5000/need/${id}`, { status });
-      toast.success("Status updated successfully");
-      fetchRequests();
-    } catch (error) {
-      console.error("Error updating status:", error);
-      toast.error("Failed to update status");
-    }
-  };
+  
 
   const handleApplyClick = () => {
     if (dropdownMenuRef.current) {
@@ -166,29 +145,18 @@ const handleDelete = async (id: string) => {
   };
 
 
-
-
-
-
-
-
-  // Form submit handlers
+ 
   const handleAddSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!userId) {
       toast.error("You must be logged in to create a request");
       return;
     }
-    
     try {
-      // Ensure the department_Manager is set to the current user
       const requestData = {
         ...formData,
         teamLead: userId
       };
-      
-      console.log("Creating request with data:", requestData);
       await axios.post('http://localhost:5000/need/create', requestData);
       toast.success("Request created successfully");
       setFormData(createEmptyRequest(userId, profileData?.department || user?.department));
@@ -200,48 +168,27 @@ const handleDelete = async (id: string) => {
     }
   };
 
-
-
-
-
-
-
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Don't allow changing the department_Manager
       const requestData = {
         ...formData,
         department_Manager: userId
       };
-      
       await axios.put(`http://localhost:5000/need/${currentRequestId}`, requestData);
       toast.success("Request updated successfully");
       setFormData(createEmptyRequest(userId, profileData?.department || user?.department));
       fetchRequests();
       navigate('/team-lead-dashboard/needs');
-      // Refresh the page after deletion
-    window.location.reload();
+      window.location.reload();
     } catch (error) {
       console.error("Error updating request:", error);
       toast.error("Failed to update request");
     }
   };
 
-
-
-
-
-
-
-
-
-
-  // Open edit modal with request data
   const openEditModal = (request: RequestData) => {
     setCurrentRequestId(request._id);
-    
-    // Keep the original department_Manager but update other fields
     setFormData({
       department_Manager: request.department_Manager,
       position: request.position,
@@ -252,11 +199,11 @@ const handleDelete = async (id: string) => {
       requirements: request.requirements,
       experience: request.experience,
       jobPostCreated: false,
-      status: request.status
+      status: request.status,
+      typeContrat: request.typeContrat // Added type_contrat
     });
   };
 
-  // Reset form when closing modals
   const resetForm = () => {
     setFormData(createEmptyRequest(userId, profileData?.department || user?.department));
     setCurrentRequestId("");
@@ -286,6 +233,12 @@ const handleDelete = async (id: string) => {
         </span>
       ),
       sorter: (a: RequestData, b: RequestData) => a.importance.localeCompare(b.importance),
+    },
+    {
+      title: "Type Contrat",
+      dataIndex: "typeContrat",
+      render: (text: string) => <span>{text}</span>,
+      sorter: (a: RequestData, b: RequestData) => a.typeContrat.localeCompare(b.typeContrat),
     },
     {
       title: "Status",
@@ -320,7 +273,6 @@ const handleDelete = async (id: string) => {
           >
             <i className="ti ti-eye"></i>
           </Link>
-          
           {record.status === "PENDING" && (
             <>
               <a 
@@ -333,7 +285,6 @@ const handleDelete = async (id: string) => {
               >
                 <i className="ti ti-edit-circle"></i>
               </a>
-              
               <a
                 href="#"
                 className="btn btn-sm btn-icon btn-outline-danger"
@@ -351,17 +302,6 @@ const handleDelete = async (id: string) => {
     },
   ];
 
-
-
-
-
-
-  useEffect(() => {
-    console.log("Current data state:", data);
-    console.log("Columns:", columns);
-  }, [data, columns]);
-
-  // Add this effect to log when data changes
   useEffect(() => {
     console.log("Current data state:", data);
   }, [data]);
@@ -369,7 +309,6 @@ const handleDelete = async (id: string) => {
   return (
     <div className="page-wrapper">
       <div className="content">
-        {/* Page Header */}
         <div className="d-md-flex d-block align-items-center justify-content-between mb-3">
           <div className="my-auto mb-2">
             <h3 className="page-title mb-1"> Articulate your needs</h3>
@@ -404,7 +343,6 @@ const handleDelete = async (id: string) => {
           </div>
         </div>
 
-        {/* Filter Section */}
         <div className="card">
           <div className="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
             <h4 className="mb-3">Needs List</h4>
@@ -514,7 +452,6 @@ const handleDelete = async (id: string) => {
             </div>
           </div>
 
-          {/* Request List */}
           <div className="card-body p-0 py-3">
             {data.length > 0 ? (
               <Datatable 
@@ -536,16 +473,9 @@ const handleDelete = async (id: string) => {
           </div>
         </div>
       </div>
-      
-  
 
-
-
-
-
-
-    {/* Add Request Modal */}
-    <div className="modal fade" id="add_request">
+      {/* Add Request Modal */}
+      <div className="modal fade" id="add_request">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content" style={{ minWidth: "700px" }}>
             <div className="modal-header">
@@ -562,8 +492,6 @@ const handleDelete = async (id: string) => {
             </div>
             <form onSubmit={handleAddSubmit}>
               <div className="modal-body">
-                {/* Display current user as department manager (read-only) */}
-              
                 <div className="row">
                   <div className="col-md-6">
                     <div className="mb-3">
@@ -689,8 +617,6 @@ const handleDelete = async (id: string) => {
                 </div>
                 <div className="row">
                   <div className="col-md-6">
-
-
                     <div className="mb-3">
                       <label className="form-label">Status</label>
                       <div>
@@ -704,27 +630,22 @@ const handleDelete = async (id: string) => {
                         </span>
                       </div>
                     </div>
-
-                   
-                    <div className="mb-2">
+                    <div className="mb-3">
                       <label className="form-label">Type Contrat</label>
                       <select
                         className="form-select"
-                        
-                       
+                        name="type_contrat"
+                        value={formData.typeContrat}
+                        onChange={handleInputChange}
+                        required
                       >
                         <option value="">Select Contrat</option>
-                        <option value="">VACATAIRE</option>
-                        <option value="">PERMANENT</option>
-                  
+                        <option value="VACATAIRE">Vacataire</option>
+                        <option value="PERMANENT">Permanent</option>
                       </select>
                     </div>
-                   
-
-
                   </div>
                 </div>
-                {/* Hidden field to ensure jobPostCreated is always sent as false */}
                 <input type="hidden" name="jobPostCreated" value="false" />
               </div>
               <div className="modal-footer">
@@ -744,7 +665,7 @@ const handleDelete = async (id: string) => {
           </div>
         </div>
       </div>
-      
+
       {/* Edit Request Modal */}
       <div className="modal fade" id="edit_request">
         <div className="modal-dialog modal-dialog-centered modal-lg">
@@ -763,8 +684,6 @@ const handleDelete = async (id: string) => {
             </div>
             <form onSubmit={handleEditSubmit}>
               <div className="modal-body">
-                {/* Display current user as department manager (read-only) */}
-                
                 <div className="row">
                   <div className="col-md-6">
                     <div className="mb-3">
@@ -814,14 +733,14 @@ const handleDelete = async (id: string) => {
                   <div className="input-group mb-2">
                     <input 
                       type="text" 
-                      className="form-control " 
+                      className="form-control" 
                       value={requirementInput}
                       onChange={(e) => setRequirementInput(e.target.value)}
                       placeholder="Add a requirement"
                     />
                     <button 
                       type="button" 
-                      className="btn " 
+                      className="btn" 
                       onClick={handleRequirementAdd}
                     >
                       Add
@@ -903,12 +822,22 @@ const handleDelete = async (id: string) => {
                         </span>
                       </div>
                     </div>
+                    <div className="mb-3">
+                      <label className="form-label">Type Contrat</label>
+                      <select
+                        className="form-select"
+                        name="type_contrat"
+                        value={formData.typeContrat}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="">Select Contrat</option>
+                        <option value="VACATAIRE">Vacataire</option>
+                        <option value="PERMANENT">Permanent</option>
+                      </select>
+                    </div>
                   </div>
-
-
-                  
                 </div>
-                {/* Hidden field to ensure jobPostCreated is always sent as false */}
                 <input type="hidden" name="jobPostCreated" value="false" />
               </div>
               <div className="modal-footer">
@@ -928,7 +857,7 @@ const handleDelete = async (id: string) => {
           </div>
         </div>
       </div>
-      
+
       {/* Delete Modal */}
       <div className="modal fade" id="delete_modal">
         <div className="modal-dialog modal-dialog-centered">
@@ -962,21 +891,12 @@ const handleDelete = async (id: string) => {
           </div>
         </div>
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
   );
 };
 
 export default Needs;
+
+
+
+ 

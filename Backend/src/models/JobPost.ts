@@ -4,7 +4,7 @@ interface IJobPost extends Document {
   title: string;
   description: string;
   requirements: string[];
-  department?: 'ELECTROMECANIQUE' | 'GENIE-CIVIL' | 'TIC';
+  department?: 'ELECTROMECANIQUE' | 'GENIE-CIVIL' | 'TIC' | 'OTHER';
   status?: 'OPEN' | 'CLOSED' | 'PENDING';
   publishDate?: Date;
   deadline: Date;
@@ -19,7 +19,7 @@ const JobPostSchema: Schema<IJobPost> = new Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     requirements: { type: [String], required: true },
-    department: { type: String, enum: ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC'] },
+    department: { type: String, enum: ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC', 'OTHER'] },
     status: { type: String, enum: ['OPEN', 'CLOSED', 'PENDING'], default: 'OPEN' },
     publishDate: { type: Date, default: Date.now },
     deadline: { type: Date, required: true },

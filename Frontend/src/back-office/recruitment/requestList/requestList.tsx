@@ -8,8 +8,10 @@ import { Table } from "antd";
 interface RequestData {
   _id: string;
   department_Manager: {
+    id?:string;
     firstName?: string;
     lastName?: string;
+    email?: string; // Added email field
   } | null;
   position: string;
   department: string;
@@ -64,13 +66,22 @@ const RequestList: React.FC = () => {
     {
       title: "Department Manager",
       dataIndex: "department_Manager",
-      render: (manager: { firstName?: string; lastName?: string } | null) => {
+      render: (manager: { firstName?: string; lastName?: string; email?: string } | null, record: RequestData) => {
         const firstName = manager?.firstName || "Unknown";
         const lastName = manager?.lastName || "Manager";
-        return <span>{firstName} {lastName}</span>;
+        return (
+          <Link to={`/manager-detail/${record.department_Manager?.id}`}>
+            {firstName} {lastName}
+          </Link>
+        );
       },
       sorter: (a: RequestData, b: RequestData) =>
         (a.department_Manager?.firstName || "").localeCompare(b.department_Manager?.firstName || ""),
+    },
+    {
+      title: "Email",
+      dataIndex: "department_Manager",
+      render: (manager: { email?: string } | null) => manager?.email || "N/A",
     },
     {
       title: "Position",

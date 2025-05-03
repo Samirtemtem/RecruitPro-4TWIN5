@@ -161,34 +161,42 @@ const fetchRequests = async () => {
       title: "Team Lead",
       dataIndex: "teamLead",
       render: (manager: { firstName?: string; lastName?: string; id?: string } | null) => {
-        // If the manager is the current user, show "You"
         if (manager?.id === userId) {
           return <span className="badge badge-soft-primary">You</span>;
         }
-        
+  
         const firstName = manager?.firstName || "Unknown";
         const lastName = manager?.lastName || "Manager";
-        return <Link to="#" className="link-primary">{firstName} {lastName}</Link>;
+        const teamLeadId = manager?.id || "unknown";
+  
+        // Redirect to the specified path with the team lead's ID
+        return (
+          <Link
+            to={`/department-manager-dashboard/team-leader-detail/${teamLeadId}`}
+            className="link-primary"
+          >
+            {firstName} {lastName}
+          </Link>
+        );
       },
       sorter: (a: RequestData, b: RequestData) =>
         (a.department_Manager?.firstName || "").localeCompare(b.department_Manager?.firstName || ""),
     },
     {
-        title: "Email",
-        dataIndex: "teamLead",
-        render: (manager: { email?: string;  id?: string } | null) => {
-          // If the manager is the current user, show "You"
-          if (manager?.id === userId) {
-            return <span className="badge badge-soft-primary">You</span>;
-          }
-          
-          const firstName = manager?.email || "Unknown";
-        
-          return <Link to="#" className="link-primary">{firstName} </Link>;
-        },
-        sorter: (a: RequestData, b: RequestData) =>
-          (a.department_Manager?.firstName || "").localeCompare(b.department_Manager?.firstName || ""),
+      title: "Email",
+      dataIndex: "teamLead",
+      render: (manager: { email?: string; id?: string } | null) => {
+        if (manager?.id === userId) {
+          return <span className="badge badge-soft-primary">You</span>;
+        }
+  
+        const email = manager?.email || "Unknown";
+  
+        return <Link to="#" className="link-primary">{email}</Link>;
       },
+      sorter: (a: RequestData, b: RequestData) =>
+        (a.department_Manager?.firstName || "").localeCompare(b.department_Manager?.firstName || ""),
+    },
     {
       title: "Position",
       dataIndex: "position",
@@ -228,11 +236,11 @@ const fetchRequests = async () => {
       sorter: (a: RequestData, b: RequestData) => a.status.localeCompare(b.status),
     },
     {
-        title: "Created At",
-        dataIndex: "createdAt",
-        render: (text: string) => new Date(text).toLocaleDateString(), // Format date as needed
-        sorter: (a: RequestData, b: RequestData) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      },
+      title: "Created At",
+      dataIndex: "createdAt",
+      render: (text: string) => new Date(text).toLocaleDateString(),
+      sorter: (a: RequestData, b: RequestData) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -245,8 +253,6 @@ const fetchRequests = async () => {
           >
             <i className="ti ti-eye"></i>
           </Link>
-          
-          
         </div>
       ),
     },

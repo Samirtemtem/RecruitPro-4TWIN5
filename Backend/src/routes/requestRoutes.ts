@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { 
-    createRequest,getRequestById,getRequests,updateRequest,deleteRequest,updateJobPostCreated
+    createRequest,getRequestById,getRequests,updateRequest,deleteRequest,updateJobPostCreated,
+    getRequestsByDepartmentManager,
+    getRequestStats
 } from '../controllers/RequestController';
 
 const router = Router();
@@ -22,5 +24,14 @@ router.delete('/:id', deleteRequest);
 
 
 router.patch('/requests/:id/jobPostCreated', updateJobPostCreated);
+
+
+
+// Route to fetch requests based on department manager ID
+router.get('/requests/manager/:departmentManagerId', getRequestsByDepartmentManager);
+
+
+// Route to get statistics
+router.get('/stat/request-stats', getRequestStats);
 
 export default router;

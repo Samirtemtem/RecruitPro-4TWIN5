@@ -14,41 +14,72 @@ interface Manager {
   createdAt: string;
 }
 
+interface Request {
+  id: string;
+  position: string;
+  description: string;
+  status: string;
+  createdAt: string;
+}
+
 const ManagerDetails = () => {
   const { id } = useParams<{ id: string }>();
   const [manager, setManager] = useState<Manager | null>(null);
+  const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchManagerDetails = async () => {
-      console.log("Fetching manager details for ID:", id);
       try {
         const response = await axios.get(`http://localhost:5000/api/user/department-managers/${id}`);
         if (response.status === 200) {
           setManager(response.data);
-          console.log("Manager details fetched:", response.data);
         } else {
           throw new Error(`Failed to fetch manager details: ${response.status}`);
         }
       } catch (err) {
         if (err instanceof Error) {
-          console.error("Error fetching manager details:", err);
           setError(err.message);
         }
       } finally {
         setLoading(false);
-        console.log("Loading finished");
+      }
+    };
+
+    const fetchManagerRequests = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/request/requests/manager/${id}`
+        );
+        if (response.status === 200) {
+          const fetchedRequests = response.data;
+          if (fetchedRequests.length === 0) {
+            setRequests([]); // Set an empty array if there are no requests
+          } else {
+            setRequests(fetchedRequests);
+          }
+        } else {
+          throw new Error(`Failed to fetch manager requests: ${response.status}`);
+        }
+      } catch (err: any) {
+        if (err.response?.status === 404) {
+          // Don't set an error; handle empty requests gracefully in the UI
+          setRequests([]); // Ensure requests is empty if none are found
+        } else if (err instanceof Error) {
+          setError(err.message);
+        }
+        console.error("Error fetching manager requests:", err);
       }
     };
 
     fetchManagerDetails();
+    fetchManagerRequests();
   }, [id]);
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this manager?")) {
-      console.log("Deleting manager with ID:", id);
       try {
         await axios.delete(`http://localhost:5000/managers/${id}`);
         alert("Manager deleted successfully!");
@@ -95,6 +126,22 @@ const ManagerDetails = () => {
                 <div className="card-body">
                   <h5 className="mb-3">Manager Details</h5>
                   <div className="list-group details-list-group mb-4">
+
+
+                  {manager.image && (
+                    <div className="text-center">
+                      <img
+                        src={manager.image}
+                        alt="Manager"
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    </div>
+                  )}
+                  <br />
                     <div className="list-group-item">
                       <span>First Name</span>
                       <p className="text-gray-9">{manager.firstName}</p>
@@ -122,18 +169,31 @@ const ManagerDetails = () => {
                       </p>
                     </div>
                   </div>
-                  {manager.image && (
-                    <div className="text-center">
-                      <img
-                        src={manager.image}
-                        alt="Manager"
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          borderRadius: "50%",
-                        }}
-                      />
-                    </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div className="col-xxl-9 col-xl-8">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="mb-3">Requests Sent by Manager</h5>
+                  {requests.length > 0 ? (
+                    <ul className="list-group">
+                      {requests.map((request) => (
+                        <li key={request.id} className="list-group-item " style={{ marginBottom: "15px" }}>
+                          <h6>Position : {request.position}</h6>
+                          <p>Description : {request.description}</p>
+                          
+                          
+                          <span>
+                            Created on:{" "}
+                            {new Date(request.createdAt).toLocaleDateString()}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No requests found for this manager.</p>
                   )}
                 </div>
               </div>

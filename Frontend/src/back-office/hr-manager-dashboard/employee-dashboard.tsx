@@ -6,8 +6,8 @@ import { all_routes } from "../../routing-module/router/all_routes";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ReactApexChart from "react-apexcharts";
-import CircleProgressSmall from "../employeeDashboard/circleProgressSmall";
-import CircleProgress from "../employeeDashboard/circleProgress";
+import CircleProgressSmall from "./circleProgressSmall";
+
 import { Calendar } from 'primereact/calendar';
 import { DatePicker } from "antd";
 import CommonSelect from "../../core/common/commonSelect";
@@ -31,6 +31,61 @@ interface JobPostCount {
   total: number;   // Total job posts in that department
 
 }
+
+
+
+
+// Define the interface for request data
+interface RequestData {
+  _id: string;
+  department_Manager: {
+    id?:string;
+    firstName?: string;
+    lastName?: string;
+    email?: string; // Added email field
+  } | null;
+  position: string;
+  department: string;
+  importance: string;
+  quantity: number;
+  description: string;
+  requirements: string[];
+  experience: number;
+  jobPostCreated: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+
+
+
+interface EmpDepartmentState {
+  series: { name: string; data: number[] }[];
+  options: {
+      chart: {
+          type: 'bar'; // Change this to 'bar' explicitly
+          height: number;
+      };
+      plotOptions: {
+          bar: {
+              horizontal: boolean;
+              endingShape: string;
+          };
+      };
+      dataLabels: {
+          enabled: boolean;
+      };
+      xaxis: {
+          categories: string[];
+      };
+      title: {
+          text: string;
+      };
+  };
+}
+
+
 
 // Define UserData interface to match the API response structure
 interface UserData {
@@ -72,15 +127,12 @@ interface User {
   department: string;
   image: string | null; // image can be a string or null if not provided
 }
-
-
-
-
-const DepartmentManagerDashboard = () => {
+const HRDashboard = () => {
   const routes = all_routes;
 
   const [date, setDate] = useState(new Date('2024'));
 
+  
 
   const [performanceChartData, setPerformanceChartData] = useState<ApexOptions>({
     series: [{
@@ -125,23 +177,9 @@ const DepartmentManagerDashboard = () => {
 
 
   
-  const [skills, setSkills] = useState<Skill[]>([]);
+ 
 
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/skills/top-skills'); // Adjust the URL if needed
-        const data = await response.json();
-        setSkills(data);
-      } catch (error) {
-        console.error("Error fetching skills:", error);
-      }
-    };
-
-    fetchSkills();
-  }, []);
-
-// Backend 
+  
 
 const [jobPosts, setJobPosts] = useState<JobPost[]>([]); // Array of JobPost objects
 
@@ -270,8 +308,6 @@ useEffect(() => {
 const imageUrl = userData?.image;
 console.log('Image URL:', imageUrl);
 
-const dep = userData?.department;
-console.log('Depaapa:',dep);
 
 
 
@@ -336,6 +372,135 @@ const [counts, setCounts] = useState({
 
 
 
+  const [data, setData] = useState<RequestData[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
+  const [filteredDataSource, setFilteredDataSource] = useState<RequestData[]>([]);
+
+ // Fetch data from the API
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/request/');
+      const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
+      
+      // Sort the data by createdAt in descending order (latest first)
+      const sortedData = fetchedData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      // Take only the last 5 items
+      const lastFiveData = sortedData.slice(0, 5);
+
+      setData(fetchedData);
+      setFilteredDataSource(lastFiveData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  fetchData();
+}, []);
+
+
+
+
+
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
+const [chartData, setChartData] = useState<{
+  options: ApexOptions;
+  series: { name: string; data: number[] }[];
+}>({
+  options: {
+    chart: {
+      type: "bar",
+      height: 220,
+    },
+    xaxis: {
+      categories: [],
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    colors: ["#008FFB"],
+    plotOptions: {
+      bar: {
+        borderRadius: 4,
+        horizontal: false,
+      },
+    },
+  },
+  series: [
+    {
+      name: "Requests",
+      data: [],
+    },
+  ],
+});
+
+const [totalRequests, setTotalRequests] = useState(0);
+const [selectedFilter, setSelectedFilter] = useState("This Week");
+
+const fetchData2 = (filter: string) => {
+  setLoading(true);
+  setError(null);
+
+  // Example API call with filter as query parameter
+  fetch(`http://localhost:5000/request/stat/request-stats?filter=${filter}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const categories = data.departmentStats.map((dept: { _id: string }) => dept._id);
+      const seriesData = data.departmentStats.map((dept: { count: number }) => dept.count);
+
+      setChartData({
+        options: {
+          chart: {
+            type: "bar",
+            height: 220,
+          },
+          xaxis: {
+            categories: categories,
+          },
+          dataLabels: {
+            enabled: false,
+          },
+          colors: ["#008FFB"],
+          plotOptions: {
+            bar: {
+              borderRadius: 4,
+              horizontal: false,
+            },
+          },
+        },
+        series: [
+          {
+            name: "Requests",
+            data: seriesData,
+          },
+        ],
+      });
+
+      setTotalRequests(data.totalRequests);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error("Error fetching request stats:", error);
+      setError(error.message);
+      setLoading(false);
+    });
+};
+
+useEffect(() => {
+  fetchData2(selectedFilter); // Fetch data on initial load with the default filter
+}, [selectedFilter]);
+
+const handleFilterChange = (filter: string) => {
+  setSelectedFilter(filter);
+};
 
   return (
     <>
@@ -345,7 +510,7 @@ const [counts, setCounts] = useState({
           {/* Breadcrumb */}
           <div className="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
             <div className="my-auto mb-2">
-              <h2 className="mb-1">Department Manager Dashboard</h2>
+              <h2 className="mb-1">HR Dashboard</h2>
               <nav>
                 <ol className="breadcrumb mb-0">
                   <li className="breadcrumb-item">
@@ -361,61 +526,14 @@ const [counts, setCounts] = useState({
               </nav>
             </div>
             <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
-              <div className="me-2 mb-2">
-                <div className="dropdown">
-                  <Link
-                    to="#"
-                    className="dropdown-toggle btn btn-white d-inline-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i className="ti ti-file-export me-1" />
-                    Export
-                  </Link>
-                  <ul className="dropdown-menu  dropdown-menu-end p-3">
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        <i className="ti ti-file-type-pdf me-1" />
-                        Export as PDF
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        <i className="ti ti-file-type-xls me-1" />
-                        Export as Excel{" "}
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="input-icon w-120 position-relative mb-2">
-                <span className="input-icon-addon">
-                  <i className="ti ti-calendar text-gray-9" />
-                </span>
-                <Calendar value={date} onChange={(e: any) => setDate(e.value)} view="year" dateFormat="yy" className="Calendar-form" />
-              </div>
+            
+              
               <div className="ms-2 head-icons">
                 <CollapseHeader />
               </div>
             </div>
           </div>
-          {/* /Breadcrumb */}
-          <div className="alert bg-secondary-transparent alert-dismissible fade show mb-4">
-            Your Leave Request on“24th April 2024”has been Approved!!!
-            <button
-              type="button"
-              className="btn-close fs-14"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-            >
-              <i className="ti ti-x" />
-            </button>
-          </div>
+          
           <div className="row">
       
 
@@ -461,10 +579,6 @@ const [counts, setCounts] = useState({
             <span className="d-block mb-1 fs-13">Joined on</span>
             <p className="text-gray-9">{new Date(userData?.createDate).toLocaleDateString() || 'Loading...'}</p>
           </div>
-          <div className="mb-3">
-            <span className="d-block mb-1 fs-13"> Department </span>
-            <p className="text-gray-9">{userData?.department || 'Loading...'}</p>
-          </div>
         </div>
       </div>
     </div>
@@ -472,88 +586,74 @@ const [counts, setCounts] = useState({
 
 
 
-
-            <div className="col-xl-4 d-flex">
-            <div className="card flex-fill">
-      <div className="card-header">
-        <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-2">
-          <h5>Job Posts</h5>
-          <div className="dropdown">
-            <Link
-              to="#"
+    <div className="col-xxl-4 d-flex">
+      <div className="card flex-fill">
+        <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+          <h5 className="mb-2">Requests By Department</h5>
+          <div className="dropdown mb-2">
+            <button
               className="btn btn-white border btn-sm d-inline-flex align-items-center"
               data-bs-toggle="dropdown"
             >
               <i className="ti ti-calendar me-1" />
-              2024
-            </Link>
-            <ul className="dropdown-menu dropdown-menu-end p-3">
+              {selectedFilter}
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
               <li>
-                <Link to="#" className="dropdown-item rounded-1">2024</Link>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleFilterChange("This Week")}
+                >
+                  This Week
+                </button>
               </li>
               <li>
-                <Link to="#" className="dropdown-item rounded-1">2023</Link>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleFilterChange("This Month")}
+                >
+                  This Month
+                </button>
               </li>
               <li>
-                <Link to="#" className="dropdown-item rounded-1">2022</Link>
+                <button
+                  className="dropdown-item"
+                  onClick={() => handleFilterChange("Last Month")}
+                >
+                  Last Month
+                </button>
               </li>
             </ul>
           </div>
         </div>
-      </div>
-      <div className="card-body">
-        <div className="row align-items-center">
-          <div className="col-md-6">
-            <div className="mb-4">
-              <div className="mb-3">
-               
-                <p className="d-flex align-items-center">
-                  <i className="ti ti-circle-filled fs-8 text-dark me-1" />
-                  <h4 className="text-gray-9 text-xl fw-semibold me-1">{jobPostCounts2.total}</h4>
-                  Total
-                </p>
-              </div>
-              <div className="mb-3">
-                <p className="d-flex align-items-center">
-                  <i className="ti ti-circle-filled fs-8 text-success me-1" />
-                  <h4 className="text-gray-9 fw-semibold me-1">{jobPostCounts2.published}</h4>
-                  Published
-                </p>
-              </div>
-              <div className="mb-3">
-                <p className="d-flex align-items-center">
-                  <i className="ti ti-circle-filled fs-8 text-primary me-1" />
-                  <h4 className="text-gray-9 fw-semibold me-1">{jobPostCounts2.closed}</h4>
-                  Closed
-                </p>
-              </div>
-              <div className="mb-3">
-                <p className="d-flex align-items-center">
-                  <i className="ti ti-circle-filled fs-8 text-warning me-1" />
-                  <h4 className="text-gray-9 fw-semibold me-1">{jobPostCounts2.pending}</h4>
-                  Pending
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="mb-4 d-flex justify-content-md-end">
+        <div className="card-body">
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="text-danger">Error: {error}</p>
+          ) : (
+            <>
               <ReactApexChart
-                id="leaves_chart"
-                options={leavesChart}
-                series={leavesChart.series}
-                type="donut"
-                height={195}
+                id="emp-department"
+                type="bar"
+                options={chartData.options}
+                series={chartData.series}
+                height={220}
               />
-            </div>
-          </div>
-          <div className="col-md-12">
-            
-          </div>
+              <p className="fs-13">
+                <i className="ti ti-circle-filled me-2 fs-8 text-primary" />
+                Total Requests:{" "}
+                <span className="text-primary fw-bold">{totalRequests}</span>
+              </p>
+              <p className="fs-13">
+                Showing data for <strong>{selectedFilter}</strong>.
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>
-            </div>
+            
 
 
             <div className="col-xl-4 d-flex">
@@ -614,168 +714,195 @@ const [counts, setCounts] = useState({
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           <div className="row">
+     
 
-
-
-
-
-                  <div className="col-xl-6  d-flex">
-      <div className="card flex-fill">
-        <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-          <h5 className="mb-2">Needs</h5>
-          <Link to="/jobgrid" className="btn btn-light btn-md mb-2">
-            View All
-          </Link>
-        </div>
-        <div className="card-body p-0">
-          <div className="table-responsive">
-            <table className="table table-nowrap mb-0">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Department</th>
-                  <th>Status</th>
-                  <th>DeadLine</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobPosts.length > 0 ? (
-                  jobPosts.map((job) => (
-                    <tr key={job._id}> {/* Assuming job has a unique _id */}
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <Link to="/jobgrid" className="avatar">
-                            <ImageWithBasePath
-                              src="assets/img/icons/logo.png" // Placeholder image
-                              className="img-fluid  w-auto h-auto"
-                              alt="Job Icon"
-                            />
+          <div className="col-xl-6 d-flex">
+  <div className="card flex-fill">
+    <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+      <h5 className="mb-2">Requests Received</h5>
+      <Link to="/requests" className="btn btn-light btn-md mb-2">
+        View All
+      </Link>
+    </div>
+    <div className="card-body p-0">
+      <div className="table-responsive">
+        <table className="table table-nowrap mb-0">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Department</th>
+              <th>Importance</th>
+              <th>Job Post Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredDataSource.length > 0 ? (
+              filteredDataSource.map((job) => (
+                <tr key={job._id}>
+                  <td>
+                    <div className="d-flex align-items-center">
+                      <Link to={`/manager-detail/${job.department_Manager?.id || '#'}`} className="avatar">
+                        <ImageWithBasePath
+                          src="assets/img/icons/logo.png" // Placeholder image
+                          className="img-fluid w-auto h-auto"
+                          alt="Job Icon"
+                        />
+                      </Link>
+                      <div className="ms-2">
+                        <h6 className="fw-medium">
+                          <Link to={`/manager-detail/${job.department_Manager?.id || '#'}`}>
+                            {job.position}
                           </Link>
-                          <div className="ms-2">
-                            <h6 className="fw-medium">
-                              <Link to="#">{job.title}</Link>
-                            </h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <span className="badge badge-secondary-transparent badge-xs">
-                          {job.department}
-                        </span>
-                      </td>
-                      <td>
-                      <span
-                          className={`badge badge-${
-                            job.status === 'OPEN'
-                              ? 'success'
-                              : job.status === 'CLOSED'
-                              ? 'danger'
-                              : 'warning' // For PENDING status
-                          }-transparent badge-xs`}
-                        >
-                          {job.status}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="badge badge-secondary-transparent badge-s">
-                          {job.deadline}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={3}>No job posts available</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                        </h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span className="badge badge-secondary-transparent badge-xs">
+                      {job.department}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`badge badge-${
+                        job.importance === 'LOW'
+                          ? 'success'
+                          : job.importance === 'HIGH'
+                          ? 'danger'
+                          : 'warning' // For MEDIUM importance
+                      }-transparent badge-xs`}
+                    >
+                      {job.importance}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      className={`badge badge-${
+                        job.jobPostCreated ? 'success' : 'danger'
+                      }-transparent badge-s`}
+                    >
+                      {job.jobPostCreated ? 'Yes' : 'No'}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4}>No job posts available</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
-
-
-            <div className="col-xl-6  d-flex">
-      <div className="card flex-fill">
-        <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-          <h5 className="mb-2">Requests</h5>
-          <Link to="/jobgrid" className="btn btn-light btn-md mb-2">
-            View All
-          </Link>
-        </div>
-        <div className="card-body p-0">
-          <div className="table-responsive">
-            <table className="table table-nowrap mb-0">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Department</th>
-                  <th>Status</th>
-                  <th>DeadLine</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobPosts.length > 0 ? (
-                  jobPosts.map((job) => (
-                    <tr key={job._id}> {/* Assuming job has a unique _id */}
-                      <td>
-                        <div className="d-flex align-items-center">
-                          <Link to="/jobgrid" className="avatar">
-                            <ImageWithBasePath
-                              src="assets/img/icons/logo.png" // Placeholder image
-                              className="img-fluid  w-auto h-auto"
-                              alt="Job Icon"
-                            />
-                          </Link>
-                          <div className="ms-2">
-                            <h6 className="fw-medium">
-                              <Link to="#">{job.title}</Link>
-                            </h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <span className="badge badge-secondary-transparent badge-xs">
-                          {job.department}
-                        </span>
-                      </td>
-                      <td>
-                      <span
-                          className={`badge badge-${
-                            job.status === 'OPEN'
-                              ? 'success'
-                              : job.status === 'CLOSED'
-                              ? 'danger'
-                              : 'warning' // For PENDING status
-                          }-transparent badge-xs`}
-                        >
-                          {job.status}
-                        </span>
-                      </td>
-                      <td>
-                        <span className="badge badge-secondary-transparent badge-s">
-                          {job.deadline}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={3}>No job posts available</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
+  </div>
+</div>
            
+
+    <div className="col-xl-6  d-flex">
+      <div className="card flex-fill">
+        <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
+          <h5 className="mb-2">Job Posts</h5>
+          <Link to="/jobgrid" className="btn btn-light btn-md mb-2">
+            View All
+          </Link>
+        </div>
+        <div className="card-body p-0">
+          <div className="table-responsive">
+            <table className="table table-nowrap mb-0">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                  <th>DeadLine</th>
+                </tr>
+              </thead>
+              <tbody>
+                {jobPosts.length > 0 ? (
+                  jobPosts.map((job) => (
+                    <tr key={job._id}> {/* Assuming job has a unique _id */}
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <Link to="/jobgrid" className="avatar">
+                            <ImageWithBasePath
+                              src="assets/img/icons/logo.png" // Placeholder image
+                              className="img-fluid  w-auto h-auto"
+                              alt="Job Icon"
+                            />
+                          </Link>
+                          <div className="ms-2">
+                            <h6 className="fw-medium">
+                              <Link to="#">{job.title}</Link>
+                            </h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="badge badge-secondary-transparent badge-xs">
+                          {job.department}
+                        </span>
+                      </td>
+                      <td>
+                      <span
+                          className={`badge badge-${
+                            job.status === 'OPEN'
+                              ? 'success'
+                              : job.status === 'CLOSED'
+                              ? 'danger'
+                              : 'warning' // For PENDING status
+                          }-transparent badge-xs`}
+                        >
+                          {job.status}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="badge badge-secondary-transparent badge-s">
+                          {job.deadline}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={3}>No job posts available</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
           </div>
 
   {/* /Performance */}
@@ -863,4 +990,4 @@ const [counts, setCounts] = useState({
   );
 };
 
-export default DepartmentManagerDashboard;
+export default HRDashboard;

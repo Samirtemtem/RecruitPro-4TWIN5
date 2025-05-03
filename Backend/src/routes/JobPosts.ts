@@ -288,4 +288,40 @@ router.get('/FrontOfficelatestTen', async (req: Request, res: Response): Promise
 
 
 
+
+
+
+
+
+
+
+
+router.get('/jobs/filterJobs', async (req: Request, res: Response): Promise<void> => {
+    const { department } = req.query;
+  
+    // Validate department
+    const validDepartments = ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC', 'OTHER'];
+    if (department && !validDepartments.includes(department as string)) {
+       res.status(400).json({ error: 'Invalid department specified' });
+       return;
+    }
+  
+    try {
+      // Apply filter based on department
+      const filter = department ? { department } : {};
+      const jobs = await JobPost.find(filter);
+      res.status(200).json(jobs);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch job posts' });
+    }
+  });
+
+
+
+
+
+
+
+
+
 export default router;

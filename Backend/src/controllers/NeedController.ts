@@ -78,3 +78,25 @@ export const updateJobPostCreated = async (req: Request, res: Response): Promise
         res.status(500).json({ message: error.message });
     }
 };
+
+
+
+// Controller to get needs based on teamLead ID
+export const getNeedsByTeamLead = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { teamLeadId } = req.params;
+
+        // Fetch needs based on the teamLead ID
+        const needs = await NeedModel.find({ teamLead: teamLeadId });
+
+        if (!needs.length) {
+            res.status(404).json({ message: 'No needs found for this team lead' });
+            return;
+        }
+
+        res.status(200).json(needs);
+    } catch (error) {
+        console.error('Error fetching needs:', error);
+        res.status(500).json({ message: 'Internal server error', error });
+    }
+};

@@ -176,7 +176,7 @@ const ManagerDetails = () => {
             <div className="col-xxl-9 col-xl-8">
               <div className="card">
                 <div className="card-body">
-                  <h5 className="mb-3">Requests Sent by Manager</h5>
+                  <h5 className="mb-3">Requests Received</h5>
                   {requests.length > 0 ? (
                     <ul className="list-group">
                       {requests.map((request) => (

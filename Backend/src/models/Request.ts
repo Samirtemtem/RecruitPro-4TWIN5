@@ -11,6 +11,7 @@ interface IRequest extends Document {
     quantity: number;
     importance: 'HIGH' | 'MEDIUM' | 'LOW';
     jobPostCreated: boolean; // Added JobPostCreated attribute
+    typeContrat: 'PERMANENT' | 'VACATAIRE'; // Added typeContrat attribute
 }
 
 const RequestSchema: Schema<IRequest> = new Schema({
@@ -23,7 +24,8 @@ const RequestSchema: Schema<IRequest> = new Schema({
     experience: { type: Number, required: true },
     quantity: { type: Number, required: true },
     importance: { type: String, enum: ['HIGH', 'MEDIUM', 'LOW'], required: true },
-    jobPostCreated: { type: Boolean, default: false } // Default value for JobPostCreated
+    jobPostCreated: { type: Boolean, default: false }, // Default value for JobPostCreated
+    typeContrat: { type: String, enum: ['PERMANENT', 'VACATAIRE'], required: true } // Added typeContrat with enum
 }, { timestamps: true });
 
 const Request = mongoose.model<IRequest>('Request', RequestSchema);

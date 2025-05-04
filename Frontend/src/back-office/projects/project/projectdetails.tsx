@@ -18,6 +18,7 @@ interface JobPost {
     status: "OPEN" | "CLOSED" | "PENDING";
     publishDate: string;
     deadline: string;
+    typeContrat?: "PERMANENT" | "VACATAIRE"; // Added optional typeContrat
 }
 
 interface Application {
@@ -49,6 +50,7 @@ const ProjectDetails = () => {
         deadline: "",
         experience: "",
         status: "",
+        typeContrat: "PERMANENT" // Added typeContrat with default
     });
     const [showEditForm, setShowEditForm] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -100,6 +102,7 @@ const ProjectDetails = () => {
                 experience: job.experience,
                 deadline: job.deadline,
                 status: job.status,
+                typeContrat: job.typeContrat || "PERMANENT" // Set typeContrat with fallback
             });
         }
     }, [job]);
@@ -163,6 +166,7 @@ const ProjectDetails = () => {
             experience: formData.experience,
             deadline: formData.deadline,
             status: formData.status,
+            typeContrat: formData.typeContrat // Added typeContrat to update payload
         };
     
         try {
@@ -177,11 +181,6 @@ const ProjectDetails = () => {
             alert("Failed to update job post.");
         }
     };
-
-
-
-
-
 
     const formatDescription = (description: string | undefined) => {
         console.log("Description to format:", description); // Log the description
@@ -251,9 +250,6 @@ const ProjectDetails = () => {
         }
     }, [id]);
 
-
-
-
     if (loading) return <p>Loading job details...</p>;
     if (error) return <p>Error: {error}</p>;
     if (!job) return <p>Job not found</p>;
@@ -289,12 +285,6 @@ const ProjectDetails = () => {
                                         Delete
                                     </button>
                                 </div>
-                                {/*<div className="ms-2">
-                                    <Link to={`/candidates-grid/${id}`} className="btn btn-secondary">
-                                        <i className="ti ti-user me-1" />
-                                        Candidates
-                                    </Link>
-                                </div>*/}
                                 <div className="ms-2">
                                     <Link to={`/candidates-grid-recomand/${id}`} className="btn btn-primary">
                                         <i className="ti ti-user me-1" />
@@ -352,6 +342,12 @@ const ProjectDetails = () => {
                                                 <div className="d-flex align-items-center">
                                                     <p className="text-gray-9 mb-0">{job.experience} Years</p>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div className="list-group-item">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <span>Type Contrat</span>
+                                                <p className="text-gray-9">{job.typeContrat ? (job.typeContrat === "PERMANENT" ? "Permanent" : "Vacataire") : "No type mentioned"}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -544,6 +540,18 @@ const ProjectDetails = () => {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="col-md-6 mb-3">
+                                    <label className="form-label">Type Contrat</label>
+                                    <select
+                                        className="form-select"
+                                        name="typeContrat"
+                                        value={formData.typeContrat}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="PERMANENT">Permanent</option>
+                                        <option value="VACATAIRE">Vacataire</option>
+                                    </select>
+                                </div>
                                 <div className="modal-footer">
                                     <button
                                         type="button"
@@ -560,41 +568,14 @@ const ProjectDetails = () => {
                         </div>
                     </div>
                 )}
-                           {/* <div className="row">
-                                {applications.length > 0 ? (
-                                    applications.map((application) => (
-                                        <div key={application._id} className="col-xxl-3 col-xl-4 col-md-6 mb-4">
-                                            <div className="card shadow-sm border-light">
-                                                <div className="card-body">
-                                                    <h6 className="fw-semibold text-primary">Status: {application.status}</h6>
-                                                    <br />
-                                                    <p className="text-muted">Compatibility Score: <strong>{application.compatibilityScore}</strong></p>
-                                                    <p className="text-muted">Submission Date: <strong>{new Date(application.submissionDate).toLocaleDateString()}</strong></p>
-                                                    <Link to={`/candidate-details2/${application.candidate}`} className="btn btn-primary m-2" id="btn">
-                                                        View Candidate
-                                                    </Link>
-                                                    <Link to={`/application/${application._id}`} className="btn btn-secondary m-2" id="btn">
-                                                        View Application
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="text-center">No applications found.</p>
-                                )}
-                            </div>*/}
                         </div>
                     </div>
-               
                 </div>
 
-             
-                
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
                     <p className="mb-0"> 2025 © RecruitPro.</p>
                     <p>
-                        Designed &amp; Developed By{" "}
+                        Designed & Developed By{" "}
                         <Link to="#" className="text-primary">
                             InfiniteLoopers
                         </Link>

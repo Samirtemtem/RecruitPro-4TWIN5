@@ -97,6 +97,7 @@ import ManagerDetails from "../../back-office/hr-manager-dashboard/Manger-Detail
 import TeamLeadersList from "../../back-office/department-manager-dashboard/Team-Leaders-List";
 import TeamLeaderDetails from "../../back-office/department-manager-dashboard/Team-Leader-Detail";
 import HRDashboard from "../../back-office/hr-manager-dashboard/employee-dashboard";
+import OrgChart from "../../back-office/Organigram";
 
 const routes = all_routes;
 
@@ -572,6 +573,12 @@ export const authRoutes = [
   {
     path: "/applications-kanban/:jobPostId",
     element: <ApplicationsKanban />,
+    route: Route,
+  },
+  
+  {
+    path: "/organigram",
+    element: <OrgChart />,
     route: Route,
   },
   

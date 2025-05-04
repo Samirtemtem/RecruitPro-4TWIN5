@@ -7,7 +7,6 @@ import PredefinedDateRanges from "../../core/common/datePicker";
 import TooltipOption from "../../core/common/tooltipOption";
 import { useAuth } from "../../routing-module/AuthContext";
 import { toast } from "react-hot-toast";
-import { request } from "https";
 
 // Define the interface for request data
 interface RequestData {
@@ -28,6 +27,7 @@ interface RequestData {
   status: string;
   createdAt: string;
   updatedAt: string;
+  typeContrat?: "PERMANENT" | "VACATAIRE"; // Made typeContrat optional to handle missing cases
 }
 
 // Empty request template
@@ -41,7 +41,8 @@ const createEmptyRequest = (userId: string | null, department?: string): Omit<Re
   requirements: [],
   experience: 0,
   jobPostCreated: false,
-  status: "PENDING"
+  status: "PENDING",
+  typeContrat: "PERMANENT" // Default value for typeContrat
 });
 
 const JobPostRequests: React.FC = () => {
@@ -54,7 +55,7 @@ const JobPostRequests: React.FC = () => {
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
   
   // Form states
-  const [formData, setFormData] = useState<Omit<RequestData, '_id' | 'createdAt' | 'updatedAt' >>(
+  const [formData, setFormData] = useState<Omit<RequestData, '_id' | 'createdAt' | 'updatedAt'>>(
     createEmptyRequest(userId, profileData?.department || user?.department)
   );
   const [currentRequestId, setCurrentRequestId] = useState<string>("");
@@ -72,94 +73,92 @@ const JobPostRequests: React.FC = () => {
     }
   }, [userId, profileData, user]);
 
+  const [userData, setUserData] = useState<any>(null); 
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token'); // Replace 'token' with the actual key if different
 
-
-const [userData, setUserData] = useState<any>(null); 
-
-useEffect(() => {
-  const fetchUserData = async () => {
-    const token = localStorage.getItem('token'); // Replace 'token' with the actual key if different
-
-    if (!token) {
-      console.error('No token found in session storage.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:5000/api/auth/user/${token}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+      if (!token) {
+        console.error('No token found in session storage.');
+        return;
       }
 
-      const data = await response.json();
-      console.log('API Response:', data); // Log the API response
-      setUserData(data.user); // Accessing the nested user object
+      try {
+        const response = await fetch(`http://localhost:5000/api/auth/user/${token}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const data = await response.json();
+        console.log('API Response:', data); // Log the API response
+        setUserData(data.user); // Accessing the nested user object
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const fetchRequests = async () => {
+    try {
+      // Fetch data from the API
+      const response = await axios.get('http://localhost:5000/request/');
+      const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
+
+      // Retrieve user information from local storage
+      const userString = localStorage.getItem('user');
+      const user = userString ? JSON.parse(userString) : null;
+
+      console.log("User Department:", user?.department);
+      console.log("User ID:", user?._id);
+      console.log("Sample fetched request object:", fetchedData[0]);
+
+      // Filter requests based on the user's department and department manager ID
+      const filteredData = user 
+        ? fetchedData
+            .map((request: any) => ({
+              ...request,
+              typeContrat: request.typeContrat || undefined // Preserve undefined if missing, handled in interface
+            }))
+            .filter((request: any) => {
+              const requestDepartment = request?.department || null; // Safely access request department
+              const userDepartment = user?.department || null; // Safely access user's department
+              const requestManagerId = request?.department_Manager?.id || null; // Safely access department manager ID
+
+              // Log department_Manager._id for debugging
+              console.log(`Request department_Manager._id: ${requestManagerId}`);
+
+              // Compare departments and department manager IDs
+              const isDepartmentMatch = requestDepartment && userDepartment && String(requestDepartment) === String(userDepartment);
+              const isManagerIdMatch = requestManagerId && user._id && String(requestManagerId) === String(user._id);
+
+              console.log(`Comparing request department: ${requestDepartment} with user's department: ${userDepartment} => ${isDepartmentMatch}`);
+              console.log(`Comparing request manager ID: ${requestManagerId} with user's ID: ${user._id} => ${isManagerIdMatch}`);
+
+              return isDepartmentMatch && isManagerIdMatch; // Both conditions must be true
+            })
+        : [];
+
+      // Update the state with the filtered data
+      setData(filteredData as RequestData[]);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch requests");
     }
   };
 
-  fetchUserData();
-}, []);
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
-
-
-
-const fetchRequests = async () => {
-  try {
-    // Fetch data from the API
-    const response = await axios.get('http://localhost:5000/request/');
-    const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
-
-    // Retrieve user information from local storage
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
-
-    console.log("User Department:", user?.department);
-    console.log("User ID:", user?._id);
-    console.log("Sample fetched request object:", fetchedData[0]);
-
-    // Filter requests based on the user's department and department manager ID
-    const filteredData = user 
-      ? fetchedData.filter(request => {
-          const requestDepartment = request?.department || null; // Safely access request department
-          const userDepartment = user?.department || null; // Safely access user's department
-          const requestManagerId = request?.department_Manager?.id || null; // Safely access department manager ID
-
-          // Log department_Manager._id for debugging
-          console.log(`Request department_Manager._id: ${requestManagerId}`);
-
-          // Compare departments and department manager IDs
-          const isDepartmentMatch = requestDepartment && userDepartment && String(requestDepartment) === String(userDepartment);
-          const isManagerIdMatch = requestManagerId && user._id && String(requestManagerId) === String(user._id);
-
-          console.log(`Comparing request department: ${requestDepartment} with user's department: ${userDepartment} => ${isDepartmentMatch}`);
-          console.log(`Comparing request manager ID: ${requestManagerId} with user's ID: ${user._id} => ${isManagerIdMatch}`);
-
-          return isDepartmentMatch && isManagerIdMatch; // Both conditions must be true
-        })
-      : [];
-
-    // Update the state with the filtered data
-    setData(filteredData);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    toast.error("Failed to fetch requests");
-  }
-};
-
-useEffect(() => {
-  fetchRequests();
-}, []);
-
-  
   // Delete request handler
   const handleDelete = async (id: string) => {
     try {
@@ -287,7 +286,8 @@ useEffect(() => {
       requirements: request.requirements,
       experience: request.experience,
       jobPostCreated: false,
-      status: request.status
+      status: request.status,
+      typeContrat: request.typeContrat || "PERMANENT" // Fallback for missing typeContrat in edit form
     });
   };
 
@@ -337,6 +337,21 @@ useEffect(() => {
         </span>
       ),
       sorter: (a: RequestData, b: RequestData) => a.importance.localeCompare(b.importance),
+    },
+    {
+      title: "Type Contrat",
+      dataIndex: "typeContrat",
+      render: (text: "PERMANENT" | "VACATAIRE" | undefined) => (
+        <span className={`badge badge-soft-${text === 'PERMANENT' ? 'success' : text === 'VACATAIRE' ? 'info' : 'secondary'} d-inline-flex align-items-center`}>
+          <i className="ti ti-circle-filled fs-5 me-1"></i>
+          {text ? (text === 'PERMANENT' ? 'Permanent' : 'Vacataire') : 'No type mentioned'}
+        </span>
+      ),
+      sorter: (a: RequestData, b: RequestData) => {
+        const aValue = a.typeContrat || "No type mentioned";
+        const bValue = b.typeContrat || "No type mentioned";
+        return aValue.localeCompare(bValue);
+      },
     },
     {
       title: "Status",
@@ -723,6 +738,21 @@ useEffect(() => {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="mb-3">
+                      <label className="form-label">Type Contrat</label>
+                      <select
+                        className="form-select"
+                        name="typeContrat"
+                        value={formData.typeContrat}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="PERMANENT">Permanent</option>
+                        <option value="VACATAIRE">Vacataire</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
                       <label className="form-label">Status</label>
                       <div>
                         <span className={`badge ${
@@ -902,6 +932,21 @@ useEffect(() => {
                   </div>
                 </div>
                 <div className="row">
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Type Contrat</label>
+                      <select
+                        className="form-select"
+                        name="typeContrat"
+                        value={formData.typeContrat}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="PERMANENT">Permanent</option>
+                        <option value="VACATAIRE">Vacataire</option>
+                      </select>
+                    </div>
+                  </div>
                   <div className="col-md-6">
                     <div className="mb-3">
                       <label className="form-label">Status</label>

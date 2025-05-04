@@ -14,6 +14,7 @@ interface RequestData {
   department_Manager: {
     firstName?: string;
     lastName?: string;
+    email?: string;
     _id?: string;
   } | null;
   position: string;
@@ -25,6 +26,11 @@ interface RequestData {
   experience: number;
   jobPostCreated: boolean;
   status: string;
+  teamLead: {
+    team?: string; // Nested team field under teamLead
+    // Include other teamLead fields as needed (e.g., firstName, lastName, etc.)
+  };
+  typeContrat: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -40,11 +46,12 @@ const createEmptyRequest = (userId: string | null, department?: string): Omit<Re
   requirements: [],
   experience: 0,
   jobPostCreated: false,
-  status: "PENDING"
+  status: "PENDING",
+  teamLead: { team: "" }, // Initialize nested team
+  typeContrat: ""
 });
 
 const NeedsList: React.FC = () => {
-  // Get authentication context with profileData for department
   const { user, userId, profileData } = useAuth();
   
   const [data, setData] = useState<RequestData[]>([]);
@@ -52,7 +59,6 @@ const NeedsList: React.FC = () => {
   const [selectedImportance, setSelectedImportance] = useState<string>("");
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
   
-  // Form states
   const [formData, setFormData] = useState<Omit<RequestData, '_id' | 'createdAt' | 'updatedAt'>>(
     createEmptyRequest(userId, profileData?.department || user?.department)
   );
@@ -60,7 +66,6 @@ const NeedsList: React.FC = () => {
   const [requirementInput, setRequirementInput] = useState<string>("");
   const [requestToDelete, setRequestToDelete] = useState<string>("");
 
-  // Update formData when user logs in or profile data changes
   useEffect(() => {
     if (userId) {
       setFormData(prev => ({
@@ -71,66 +76,59 @@ const NeedsList: React.FC = () => {
     }
   }, [userId, profileData, user]);
 
+  const [userData, setUserData] = useState<any>(null); 
 
-
-
-const [userData, setUserData] = useState<any>(null); 
-
-useEffect(() => {
-  const fetchUserData = async () => {
-    const token = localStorage.getItem('token'); // Replace 'token' with the actual key if different
-
-    if (!token) {
-      console.error('No token found in session storage.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:5000/api/auth/user/${token}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found in session storage.');
+        return;
       }
+      try {
+        const response = await fetch(`http://localhost:5000/api/auth/user/${token}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        const data = await response.json();
+        console.log('API Response (User):', data);
+        setUserData(data.user);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchUserData();
+  }, []);
 
-      const data = await response.json();
-      console.log('API Response:', data); // Log the API response
-      setUserData(data.user); // Accessing the nested user object
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-
-  fetchUserData();
-}, []);
-
-
-
-const fetchRequests = async () => {
+  const fetchRequests = async () => {
     try {
       const response = await axios.get('http://localhost:5000/need/');
-      console.log("API Response:", response.data); // Debug log
+      console.log("API Response (Needs):", response.data);
       const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
-  
-      // Retrieve user from local storage
       const userString = localStorage.getItem('user');
       const user = userString ? JSON.parse(userString) : null;
-  
-      // Log user information
-      console.log("User ID:", userId); // Debug log
-      console.log("Fetched Data:", fetchedData); // Debug log
-      console.log("User Object:", user); // Debug log
-      console.log("User Department:", user ? user.department : "User not found"); // Log user department
-  
-      // Filter data based on user department
+      
+      // Log team field specifically from teamLead
+      console.log("Team Fields in Fetched Data:", fetchedData.map(request => request.teamLead?.team));
+      
+      console.log("User ID:", userId);
+      console.log("Fetched Data:", fetchedData);
+      console.log("User Object:", user);
+      console.log("User Department:", user ? user.department : "User not found");
       const filteredData = user ? fetchedData.filter(request => request.department === user.department) : [];
-      console.log("Filtered Data:", filteredData); // Debug log
-  
-      setData(filteredData);
+      console.log("Filtered Data:", filteredData);
+      
+      // Map the response to match RequestData structure
+      const mappedData = filteredData.map(item => ({
+        ...item,
+        teamLead: item.teamLead || { team: "" } // Ensure teamLead exists with default team
+      }));
+      setData(mappedData);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch requests");
@@ -141,21 +139,12 @@ const fetchRequests = async () => {
     fetchRequests();
   }, []);
 
-
-
-
-
-
- 
-
   const handleApplyClick = () => {
     if (dropdownMenuRef.current) {
       dropdownMenuRef.current.classList.remove("show");
     }
   };
 
-
-  
   const columns = [
     {
       title: "Team Lead",
@@ -164,12 +153,9 @@ const fetchRequests = async () => {
         if (manager?.id === userId) {
           return <span className="badge badge-soft-primary">You</span>;
         }
-  
         const firstName = manager?.firstName || "Unknown";
         const lastName = manager?.lastName || "Manager";
         const teamLeadId = manager?.id || "unknown";
-  
-        // Redirect to the specified path with the team lead's ID
         return (
           <Link
             to={`/department-manager-dashboard/team-leader-detail/${teamLeadId}`}
@@ -189,19 +175,20 @@ const fetchRequests = async () => {
         if (manager?.id === userId) {
           return <span className="badge badge-soft-primary">You</span>;
         }
-  
         const email = manager?.email || "Unknown";
-  
         return <Link to="#" className="link-primary">{email}</Link>;
       },
       sorter: (a: RequestData, b: RequestData) =>
         (a.department_Manager?.firstName || "").localeCompare(b.department_Manager?.firstName || ""),
     },
     {
-      title: "Position",
-      dataIndex: "position",
-      render: (text: string) => <h6 className="fw-medium">{text}</h6>,
-      sorter: (a: RequestData, b: RequestData) => a.position.localeCompare(b.position),
+      title: "Team",
+      dataIndex: "team",
+      render: (text: string, record: RequestData) => {
+        console.log(`Rendering team for record ${record._id}:`, record.teamLead?.team);
+        return <span>{record.teamLead?.team || "No Team Assigned"}</span>;
+      },
+      sorter: (a: RequestData, b: RequestData) => (a.teamLead?.team || "").localeCompare(b.teamLead?.team || ""),
     },
     {
       title: "Department",
@@ -209,6 +196,21 @@ const fetchRequests = async () => {
       render: (text: string) => <span>{text}</span>,
       sorter: (a: RequestData, b: RequestData) => a.department.localeCompare(b.department),
     },
+    {
+      title: "Type Contrat",
+      dataIndex: "typeContrat",
+      render: (text: string) => (
+        <span>{text || "N/A"}</span>
+      ),
+      sorter: (a: RequestData, b: RequestData) => a.typeContrat.localeCompare(b.typeContrat),
+    },
+    {
+      title: "Position",
+      dataIndex: "position",
+      render: (text: string) => <h6 className="fw-medium">{text}</h6>,
+      sorter: (a: RequestData, b: RequestData) => a.position.localeCompare(b.position),
+    },
+    
     {
       title: "Importance",
       dataIndex: "importance",
@@ -263,15 +265,9 @@ const fetchRequests = async () => {
     console.log("Columns:", columns);
   }, [data, columns]);
 
-  // Add this effect to log when data changes
-  useEffect(() => {
-    console.log("Current data state:", data);
-  }, [data]);
-
   return (
     <div className="page-wrapper">
       <div className="content">
-        {/* Page Header */}
         <div className="d-md-flex d-block align-items-center justify-content-between mb-3">
           <div className="my-auto mb-2">
             <h3 className="page-title mb-1">Needs List</h3>
@@ -291,11 +287,9 @@ const fetchRequests = async () => {
           </div>
           <div className="d-flex my-xl-auto right-content align-items-center flex-wrap">
             <TooltipOption />
-            
           </div>
         </div>
 
-        {/* Filter Section */}
         <div className="card">
           <div className="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
             <h4 className="mb-3">Needs List</h4>
@@ -405,7 +399,6 @@ const fetchRequests = async () => {
             </div>
           </div>
 
-          {/* Request List */}
           <div className="card-body p-0 py-3">
             {data.length > 0 ? (
               <Datatable 
@@ -427,8 +420,6 @@ const fetchRequests = async () => {
           </div>
         </div>
       </div>
-      
-     
     </div>
   );
 };

@@ -13,6 +13,7 @@ interface IJobPost extends Document {
   applications: Schema.Types.ObjectId[];  // References to Applications
   interviews: Schema.Types.ObjectId[];  // References to Interviews
   employmentOffers: Schema.Types.ObjectId[];  // References to EmploymentOffers
+  typeContrat?: 'PERMANENT' | 'VACATAIRE'; // Added optional typeContrat
 }
 
 const JobPostSchema: Schema<IJobPost> = new Schema({
@@ -24,7 +25,8 @@ const JobPostSchema: Schema<IJobPost> = new Schema({
     publishDate: { type: Date, default: Date.now },
     deadline: { type: Date, required: true },
     experience: { type: Number, required: true },
-    image: { type: String, default: 'images/logo.png' }
+    image: { type: String, default: 'images/logo.png' },
+    typeContrat: { type: String, enum: ['PERMANENT', 'VACATAIRE'], default: 'PERMANENT' } // Added typeContrat with default
 }, { timestamps: true });
 
 const JobPost = mongoose.model<IJobPost>('JobPost', JobPostSchema);

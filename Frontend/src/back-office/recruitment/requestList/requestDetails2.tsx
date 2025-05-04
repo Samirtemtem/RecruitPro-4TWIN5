@@ -14,6 +14,7 @@ interface Request {
     status: "OPEN" | "CLOSED" | "PENDING";
     createdAt: string; // Changed from publishDate to createdAt
     deadline: string;
+    typeContrat?: "PERMANENT" | "VACATAIRE"; // Added optional typeContrat
 }
 
 interface JobPost {
@@ -25,6 +26,7 @@ interface JobPost {
     status: "OPEN" | "CLOSED" | "PENDING";
     publishDate: string;
     deadline: string;
+    typeContrat: "PERMANENT" | "VACATAIRE"; // Added typeContrat
 }
 
 const RequestDetails = () => {
@@ -42,6 +44,7 @@ const RequestDetails = () => {
         status: "OPEN",
         publishDate: new Date().toISOString(),
         deadline: new Date().toISOString(),
+        typeContrat: "PERMANENT" // Default value for typeContrat
     });
     const navigate = useNavigate();
     useEffect(() => {
@@ -71,6 +74,7 @@ const RequestDetails = () => {
                     status: "OPEN",
                     publishDate: createdAt.toISOString(), // Assuming you still need to keep publishDate for job posts
                     deadline: new Date().toISOString(),
+                    typeContrat: data.typeContrat || "PERMANENT" // Fallback for missing typeContrat
                 });
             } catch (err) {
                 if (err instanceof Error) {
@@ -231,6 +235,12 @@ const RequestDetails = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                        <div className="list-group-item">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <span>Type Contrat</span>
+                                                <p className="text-gray-9">{request.typeContrat ? (request.typeContrat === "PERMANENT" ? "Permanent" : "Vacataire") : "No type mentioned"}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -347,6 +357,18 @@ const RequestDetails = () => {
                                                     required
                                                 />
                                             </div>
+                                            <div className="mb-3">
+                                                <label className="form-label">Type Contrat</label>
+                                                <select
+                                                    className="form-select"
+                                                    value={formData.typeContrat}
+                                                    onChange={(e) => setFormData({ ...formData, typeContrat: e.target.value as "PERMANENT" | "VACATAIRE" })}
+                                                    required
+                                                >
+                                                    <option value="PERMANENT">Permanent</option>
+                                                    <option value="VACATAIRE">Vacataire</option>
+                                                </select>
+                                            </div>
                                             <button type="submit" className="btn btn-primary">Create Job Post</button>
                                         </form>
                                     </div>
@@ -358,7 +380,7 @@ const RequestDetails = () => {
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
                     <p className="mb-0">2025 © RecruitPro.</p>
                     <p>
-                        Designed &amp; Developed By{" "}
+                        Designed & Developed By{" "}
                         <Link to="#" className="text-primary">
                             InfiniteLoopers
                         </Link>

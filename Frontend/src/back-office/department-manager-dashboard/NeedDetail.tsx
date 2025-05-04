@@ -16,6 +16,7 @@ interface Request {
     quantity: number;
     importance: string;
     department_Manager?: string; // Optional field for department manager
+    typeContrat: "PERMANENT" | "VACATAIRE"; // Restrict typeContrat to specific values
 }
 
 const NeedDetailsDep = () => {
@@ -35,6 +36,7 @@ const NeedDetailsDep = () => {
         quantity: 0,
         importance: "",
         status: "OPEN",
+        typeContrat: "PERMANENT", // Default to PERMANENT
     });
 
     const navigate = useNavigate();
@@ -84,7 +86,7 @@ const NeedDetailsDep = () => {
             requestData.department_Manager = userId; // Add department manager
             const response = await axios.post('http://localhost:5000/request/create', requestData);
             alert("Request created successfully");
-    navigate('/department-manager-dashboard/requests');
+            navigate('/department-manager-dashboard/requests');
             // Reset form data
             setFormData({
                 _id: "", // Keep _id empty
@@ -97,6 +99,7 @@ const NeedDetailsDep = () => {
                 quantity: 0,
                 importance: "",
                 status: "OPEN",
+                typeContrat: "PERMANENT", // Reset to default
             });
     
             // Fetch updated request details
@@ -203,6 +206,12 @@ const NeedDetailsDep = () => {
                                             <div className="d-flex align-items-center justify-content-between">
                                                 <span>Experience</span>
                                                 <p className="text-gray-9 mb-0">{request.experience} Years</p>
+                                            </div>
+                                        </div>
+                                        <div className="list-group-item">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <span>Type Contrat</span>
+                                                <p className="text-gray-9 mb-0">{request.typeContrat || "N/A"}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -335,6 +344,19 @@ const NeedDetailsDep = () => {
                                                     <option value="LOW">Low</option>
                                                 </select>
                                             </div>
+                                            <div className="mb-3">
+                                                <label className="form-label">Type Contrat</label>
+                                                <select
+                                                    className="form-control"
+                                                    value={formData.typeContrat}
+                                                    onChange={(e) => setFormData({ ...formData, typeContrat: e.target.value as "PERMANENT" | "VACATAIRE" })}
+                                                    required
+                                                >
+                                                    <option value="">Select Contract Type</option>
+                                                    <option value="PERMANENT">Permanent</option>
+                                                    <option value="VACATAIRE">Vacataire</option>
+                                                </select>
+                                            </div>
                                             <button type="submit" className="btn btn-primary">Create Request</button>
                                         </form>
                                     </div>
@@ -346,7 +368,7 @@ const NeedDetailsDep = () => {
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
                     <p className="mb-0">2025 © RecruitPro.</p>
                     <p>
-                        Designed &amp; Developed By{" "}
+                        Designed & Developed By{" "}
                         <Link to="#" className="text-primary">
                             InfiniteLoopers
                         </Link>

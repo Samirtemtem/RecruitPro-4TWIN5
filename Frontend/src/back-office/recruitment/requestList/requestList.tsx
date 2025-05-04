@@ -24,6 +24,7 @@ interface RequestData {
   status: string;
   createdAt: string;
   updatedAt: string;
+  typeContrat?: "PERMANENT" | "VACATAIRE"; // Added optional typeContrat
 }
 
 const RequestList: React.FC = () => {
@@ -66,7 +67,7 @@ const RequestList: React.FC = () => {
     {
       title: "Department Manager",
       dataIndex: "department_Manager",
-      render: (manager: { firstName?: string; lastName?: string; email?: string } | null, record: RequestData) => {
+      render: (manager: { firstName?: string; lastName?: string; email?: string; id?: string } | null, record: RequestData) => {
         const firstName = manager?.firstName || "Unknown";
         const lastName = manager?.lastName || "Manager";
         return (
@@ -110,6 +111,20 @@ const RequestList: React.FC = () => {
       dataIndex: "quantity",
       render: (text: number) => <span>{text}</span>,
       sorter: (a: RequestData, b: RequestData) => a.quantity - b.quantity,
+    },
+    {
+      title: "Type Contrat",
+      dataIndex: "typeContrat",
+      render: (text: "PERMANENT" | "VACATAIRE" | undefined) => (
+        <span className={`badge ${text === 'PERMANENT' ? 'badge-success' : text === 'VACATAIRE' ? 'badge-info' : 'badge-secondary'}`}>
+          {text ? (text === 'PERMANENT' ? 'Permanent' : 'Vacataire') : 'No type mentioned'}
+        </span>
+      ),
+      sorter: (a: RequestData, b: RequestData) => {
+        const aValue = a.typeContrat || "No type mentioned";
+        const bValue = b.typeContrat || "No type mentioned";
+        return aValue.localeCompare(bValue);
+      },
     },
     {
       title: "Job Post Created",
@@ -199,7 +214,7 @@ const RequestList: React.FC = () => {
         <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
           <p className="mb-0">2025 © RecruitPro.</p>
           <p>
-            Designed &amp; Developed By{" "}
+            Designed & Developed By{" "}
             <Link to="#" className="text-primary">
               Infinite Loopers
             </Link>

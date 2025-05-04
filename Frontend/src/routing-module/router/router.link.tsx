@@ -98,6 +98,7 @@ import TeamLeadersList from "../../back-office/department-manager-dashboard/Team
 import TeamLeaderDetails from "../../back-office/department-manager-dashboard/Team-Leader-Detail";
 import HRDashboard from "../../back-office/hr-manager-dashboard/employee-dashboard";
 import OrgChart from "../../back-office/Organigram";
+import EmployeesList from "../../back-office/employeesList";
 
 const routes = all_routes;
 
@@ -524,7 +525,7 @@ export const authRoutes = [
   },
   {
     path: routes.employeeList,
-    element: <EmployeeList />,
+    element: <EmployeesList />,
     route: Route,
   },
   {

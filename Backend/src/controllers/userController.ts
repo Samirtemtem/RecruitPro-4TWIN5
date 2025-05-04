@@ -750,3 +750,40 @@ export const deleteTeamLead = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: "Failed to delete team lead" });
   }
 };
+
+
+
+
+
+
+export const countUsersByRole = async (req: Request, res: Response) => {
+  try {
+    // Count users with role CANDIDATE
+    const candidatesCount = await User.countDocuments({ role: "CANDIDATE" });
+
+    // Count users with role USER
+    const userOnlyCount = await User.countDocuments({ role: "USER" });
+
+    // Calculate total user count (USER + CANDIDATE)
+    const userCount = userOnlyCount + candidatesCount;
+
+    // Prepare response
+    const response = {
+      userCount, // Total users (USER + CANDIDATE)
+      candidatesCount // Number of users with role CANDIDATE
+    };
+
+    // Send response
+    res.status(200).json({
+      success: true,
+      data: response,
+      message: "User role counts retrieved successfully"
+    });
+  } catch (error) {
+    console.error("Error counting users by role:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};

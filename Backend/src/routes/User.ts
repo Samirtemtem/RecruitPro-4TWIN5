@@ -23,7 +23,8 @@ import {
   fetchTeamLeadById,
   createTeamLead,
   updateTeamLead,
-  deleteTeamLead
+  deleteTeamLead,
+  countUsersByRole
 } from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
@@ -151,6 +152,14 @@ router.put("/team-leads/:id", upload.single("image"), updateTeamLead);
 
 // Route to delete a TEAM-LEAD
 router.delete("/team-leads/:id", deleteTeamLead);
+
+
+
+
+
+router.get('/countUsers', countUsersByRole);
+
+
 
 // Export the router
 export default router;

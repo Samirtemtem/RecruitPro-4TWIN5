@@ -26,7 +26,7 @@ const JobPostSchema: Schema<IJobPost> = new Schema({
     deadline: { type: Date, required: true },
     experience: { type: Number, required: true },
     image: { type: String, default: 'images/logo.png' },
-    typeContrat: { type: String, enum: ['PERMANENT', 'VACATAIRE'], default: 'PERMANENT' } // Added typeContrat with default
+    typeContrat: { type: String, enum: ['PERMANENT', 'VACATAIRE'], default: 'NOTSPECIFIED' } // Added typeContrat with default
 }, { timestamps: true });
 
 const JobPost = mongoose.model<IJobPost>('JobPost', JobPostSchema);

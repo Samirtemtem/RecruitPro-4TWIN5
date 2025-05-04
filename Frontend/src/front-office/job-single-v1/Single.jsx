@@ -435,6 +435,7 @@ const toggleShortlist = async () => {
                       publishDate={job.publishDate} 
                       deadline={job.deadline} 
                       requirements={job.requirements} 
+                      typeContrat={job.typeContrat}
                     />
                     <h4 className="widget-title mt-5">Job Location</h4>
                     <div className="widget-content">

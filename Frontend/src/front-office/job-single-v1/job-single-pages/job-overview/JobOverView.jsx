@@ -1,6 +1,6 @@
 import React from 'react';
 
-const JobOverView = ({ title, publishDate, deadline, location }) => {
+const JobOverView = ({ title, publishDate, deadline, location,typeContrat }) => {
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -35,6 +35,12 @@ const JobOverView = ({ title, publishDate, deadline, location }) => {
           <i className="icon icon-user-2"></i>
           <h5>Job Title:</h5>
           <span>{title}</span>
+        </li>
+
+        <li>
+          <i className="icon icon-user-2"></i>
+          <h5>Type Contrat:</h5>
+          <span>{typeContrat}</span>
         </li>
         {/* You can add more details here if needed */}
       </ul>

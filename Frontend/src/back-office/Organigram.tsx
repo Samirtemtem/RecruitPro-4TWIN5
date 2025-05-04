@@ -23,7 +23,6 @@ const OrgChart: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [expandedNodes, setExpandedNodes] = useState<{ [key: string]: boolean }>({});
 
-  // Fetch users from API and build hierarchy
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -47,38 +46,74 @@ const OrgChart: React.FC = () => {
           children: [],
         });
 
-        // Define role hierarchy
-        const hierarchy = [
-          { role: 'ADMIN', users: users.filter(u => u.role === 'ADMIN') },
-          { role: 'HR-MANAGER', users: users.filter(u => u.role === 'HR-MANAGER') },
-          { role: 'DEPARTMENT-MANAGER', users: users.filter(u => u.role === 'DEPARTMENT-MANAGER') },
-          { role: 'TEAM-LEAD', users: users.filter(u => u.role === 'TEAM-LEAD') },
-        ];
-        console.log('Hierarchy:', hierarchy);
-
-        // Build tree
-        let currentParents = [root];
-        hierarchy.forEach((level) => {
-          const newNodes = level.users.map(createNode);
-          console.log(`Adding ${level.role} nodes:`, newNodes);
-          currentParents.forEach(parent => {
-            parent.children = [...parent.children, ...newNodes];
-          });
-          currentParents = newNodes;
+        // Deep copy function to avoid shared references
+        const deepCopy = (obj: OrgNode): OrgNode => ({
+          ...obj,
+          children: obj.children.map(child => deepCopy(child))
         });
 
-        // If no admins, start with HR Managers
-        if (!hierarchy[0].users.length && hierarchy[1].users.length) {
-          root.children = hierarchy[1].users.map(createNode);
-          currentParents = root.children;
-          hierarchy.slice(2).forEach(level => {
-            const newNodes = level.users.map(createNode);
-            console.log(`Adding ${level.role} nodes (no admins):`, newNodes);
-            currentParents.forEach(parent => {
-              parent.children = [...parent.children, ...newNodes];
+        // Group users by role
+        const hierarchy = {
+          ADMIN: users.filter(u => u.role === 'ADMIN'),
+          'HR-MANAGER': users.filter(u => u.role === 'HR-MANAGER'),
+          'DEPARTMENT-MANAGER': users.filter(u => u.role === 'DEPARTMENT-MANAGER'),
+          'TEAM-LEAD': users.filter(u => u.role === 'TEAM-LEAD'),
+        };
+
+        // Build tree hierarchically
+        if (hierarchy.ADMIN.length > 0) {
+          root.children = hierarchy.ADMIN.map(createNode);
+        }
+
+        let hrNodes: OrgNode[] = [];
+        if (hierarchy['HR-MANAGER'].length > 0) {
+          const hrManagers = hierarchy['HR-MANAGER'].map(createNode);
+          if (root.children.length > 0) {
+            root.children[0].children = hrManagers;
+          } else {
+            root.children = hrManagers;
+          }
+          hrNodes = hrManagers;
+        } else {
+          hrNodes = root.children;
+        }
+
+        if (hierarchy['DEPARTMENT-MANAGER'].length > 0) {
+          const departmentManagersTemplate = hierarchy['DEPARTMENT-MANAGER'].map(createNode);
+          if (hrNodes.length > 0) {
+            hrNodes.forEach(hr => {
+              // Create a deep copy of departmentManagers for each HR Manager
+              hr.children = departmentManagersTemplate.map(dept => deepCopy(dept));
             });
-            currentParents = newNodes;
+          } else {
+            root.children = departmentManagersTemplate;
+          }
+        }
+
+        if (hierarchy['TEAM-LEAD'].length > 0) {
+          const teamLeads = hierarchy['TEAM-LEAD'].map(createNode);
+          // Collect all Department Managers across all HR Managers
+          const allDeptNodes: OrgNode[] = [];
+          hrNodes.forEach(hr => {
+            if (hr.children.length > 0) {
+              allDeptNodes.push(...hr.children);
+            }
           });
+
+          if (allDeptNodes.length > 0) {
+            // Distribute Team Leads across all Department Managers uniquely
+            teamLeads.forEach((teamLead, index) => {
+              const deptIndex = index % allDeptNodes.length;
+              allDeptNodes[deptIndex].children.push(teamLead);
+            });
+          } else {
+            // Fallback if no Department Managers
+            if (hrNodes.length > 0) {
+              hrNodes.forEach(hr => {
+                hr.children = teamLeads;
+              });
+            }
+          }
         }
 
         console.log('Final tree:', root);
@@ -171,7 +206,6 @@ const OrgChart: React.FC = () => {
           lineWidth="3px"
           lineColor="#6B7280"
           lineBorderRadius="12px"
-
           label={
             <div className="node root">
               <div className="node-title">{orgData.name}</div>
@@ -198,11 +232,6 @@ export default OrgChart;
 
 // Inline CSS for premium design
 const styles = `
-  body {
-    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-    min-height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
   .chart-container {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;

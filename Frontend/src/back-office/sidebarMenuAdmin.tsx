@@ -44,6 +44,17 @@ const useSidebarData = () => {
             showAsTab: false,
             separateRoute: false,
             submenuItems: [
+
+              {
+                label: 'Organigram',
+                link: "/organigram",
+                submenu: false,
+                showSubRoute: false,
+                icon: 'timeline',
+                base: 'jobs',
+                materialicons: 'confirmation_number',
+                submenuItems: [],
+              },
               {
                 label: 'Employees',
                 link: routes.employeeList,

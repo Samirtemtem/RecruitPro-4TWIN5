@@ -171,7 +171,8 @@ const LoginUser = () => {
         image: user.image || "",
         createDate: user.createDate,
         lastLogin: user.lastLogin,
-        isVerified: user.isVerified
+        isVerified: user.isVerified,
+        team:user.team
       };
   
       // Store token, role, userId and the complete user object in AuthContext

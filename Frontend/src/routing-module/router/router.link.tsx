@@ -99,6 +99,7 @@ import TeamLeaderDetails from "../../back-office/department-manager-dashboard/Te
 import HRDashboard from "../../back-office/hr-manager-dashboard/employee-dashboard";
 import OrgChart from "../../back-office/Organigram";
 import EmployeesList from "../../back-office/employeesList";
+import Profilesettings from "../../settings/Profilesettings";
 
 const routes = all_routes;
 
@@ -384,6 +385,13 @@ export const authRoutes = [
     route: Route,
   },
 
+
+  
+  {
+    path:routes.profilesettings,
+    element: <Profilesettings />,
+    route: Route,
+  },
 
  // HR Mnagaer Dashboard routes
  {

@@ -85,8 +85,7 @@ const TeamLeaderDetails = () => {
     }
   };
 
-  if (loading) return <p>Loading team leader details...</p>;
-  if (error) return <p>Error: {error}</p>;
+
   if (!teamLeader) return <p>Team leader not found</p>;
 
   return (

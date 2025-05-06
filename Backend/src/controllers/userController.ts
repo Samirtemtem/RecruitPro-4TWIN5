@@ -3,13 +3,12 @@ import "dotenv/config";
 import { Request, Response } from "express";
 import { User } from "../models/User";
 import cloudinary from "cloudinary";
-import multer from "multer";
 import { Role } from "../models/types";
-import Profile from "../models/Profile";
 import Education from "../models/Education"; // Adjust the import based on your file structure
 import Experience from "../models/Experience"; // Adjust the import based on your file structure
 import Skill from "../models/Skill"; // Adjust the import based on your file structure
-import JobPost from "../models/JobPost";
+import bcrypt from "bcryptjs";
+import { uploadToCloudinary } from "../utils/cloudinary";
 
 // Initialize Cloudinary configuration (if not already done)
 cloudinary.v2.config({
@@ -125,7 +124,8 @@ export const getLatestUsers = async (
   res: Response
 ): Promise<void> => {
   try {
-    const users = await User.find()
+    const roles = ["HR-MANAGER", "DEPARTMENT-MANAGER", "EMPLOYEE","TEAM-LEAD"];
+    const users = await User.find({ role: { $in: roles } })
       .sort({ creationDate: -1 }) // Sort by creation date in descending order
       .limit(5); // Get the last 5 users added
     res.status(200).json(users);
@@ -785,5 +785,173 @@ export const countUsersByRole = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error"
     });
+  }
+};
+
+
+
+
+
+
+interface UpdateProfileBody {
+  userId?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+  image?: string;
+}
+
+// Interface for password update request body
+interface UpdatePasswordBody {
+  userId?: string;
+  password: string;
+}
+
+
+
+// Type definition for Cloudinary upload result
+export const updateProfile = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Get user ID from request body or JWT token
+    const { userId, firstName, lastName, email, phoneNumber }: UpdateProfileBody = req.body;
+    const tokenUserId = (req as any).user?.id;
+
+    if (!userId && !tokenUserId) {
+      res.status(401).json({ message: "Unauthorized: No user ID found" });
+      return;
+    }
+
+    const effectiveUserId = userId || tokenUserId;
+
+    // Validate required fields
+    if (!firstName || !lastName || !email || !phoneNumber) {
+      res.status(400).json({ message: "First name, last name, email, and phone number are required" });
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      res.status(400).json({ message: "Invalid email format" });
+      return;
+    }
+
+    // Find the user
+    const user = await User.findById(effectiveUserId);
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    // Check if email is already used by another user
+    if (email !== user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser && existingUser.id.toString() !== effectiveUserId) {
+        res.status(400).json({ message: "Email already in use" });
+        return;
+      }
+    }
+
+    // Handle image upload to Cloudinary if provided
+    let imageUrl: string = user.image || "";
+    if (req.file) {
+      console.log("Uploaded file:", req.file);
+      const result = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "user_profiles",
+        resource_type: "image",
+      });
+      imageUrl = result.secure_url;
+      console.log("Uploaded image URL:", imageUrl);
+    } else {
+      console.log("No file uploaded.");
+    }
+
+    // Update user fields
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.phoneNumber = phoneNumber;
+    user.image = imageUrl;
+
+    // Save updated user
+    const updatedUser = await user.save();
+
+    // Return updated user data (excluding sensitive fields like password)
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        email: updatedUser.email,
+        phoneNumber: updatedUser.phoneNumber,
+        image: updatedUser.image,
+        department: updatedUser.department,
+        team: updatedUser.team,
+        role: updatedUser.role,
+        is2FAEnabled: updatedUser.is2FAEnabled,
+        isVerified: updatedUser.isVerified,
+        createDate: updatedUser.createDate,
+      },
+    });
+  } catch (error: any) {
+    console.error("Update profile error:", error);
+    res.status(500).json({ message: error.message || "Server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+// Update user password controller
+export const updatePassword = async (req: Request, res: Response) : Promise<void> => {
+  try {
+    // Get user ID from request body or JWT token
+    const { userId, password }: UpdatePasswordBody = req.body;
+    const tokenUserId = (req as any).user?.id;
+
+    if (!userId && !tokenUserId ) {
+       res.status(401).json({ message: "Unauthorized: No user ID found" });
+       return;
+    }
+
+    const effectiveUserId = userId || tokenUserId;
+
+    // Validate password
+    if (!password) {
+       res.status(400).json({ message: "Password is required" });
+       return;
+    }
+    if (password.length < 8) {
+       res.status(400).json({ message: "Password must be at least 8 characters long" });
+      return;
+    }
+
+    // Find the user
+    const user = await User.findById(effectiveUserId);
+    if (!user) {
+       res.status(404).json({ message: "User not found" });
+       return;
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Update user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error: any) {
+    console.error("Update password error:", error);
+    res.status(500).json({ message: error.message || "Server error" });
   }
 };

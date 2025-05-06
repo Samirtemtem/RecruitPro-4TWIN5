@@ -805,7 +805,7 @@ const handleFilterChange = (filter: string) => {
               ))
             ) : (
               <tr>
-                <td colSpan={4}>No job posts available</td>
+                <td colSpan={4}>No Requests Received</td>
               </tr>
             )}
           </tbody>

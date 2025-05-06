@@ -914,7 +914,8 @@ export const login = async (
           phoneNumber: user.phoneNumber,
           createDate: user.createDate,
           lastLogin: user.lastLogin,
-          department:user.department
+          department:user.department,
+          team:user.team
         },
       });
     }
@@ -932,7 +933,8 @@ export const login = async (
         phoneNumber: user.phoneNumber,
         createDate: user.createDate,
         lastLogin: user.lastLogin,
-        department:user.department
+        department:user.department,
+        team:user.team
       },
     });
   } catch (error) {

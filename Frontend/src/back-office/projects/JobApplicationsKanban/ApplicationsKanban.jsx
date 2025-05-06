@@ -14,18 +14,19 @@ const ApplicationsKanban = () => {
         const fetchGroupedCandidates = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/api/jobs/grouped/${jobPostId}`);
+                console.log('API Response:', response.data);
                 setGroupedCandidates(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching candidates:', error);
             }
         };
 
         fetchGroupedCandidates();
-    }, [jobPostId]); // Fetch when jobPostId changes
+    }, [jobPostId]);
 
     useEffect(() => {
         const containers = containerRefs.current.filter(ref => ref !== null);
+        console.log('Dragula containers:', containers.length, containers);
         const drake = dragula(containers);
         return () => {
             drake.destroy();
@@ -34,9 +35,19 @@ const ApplicationsKanban = () => {
 
     // Function to format date to month-day
     const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const options = { month: 'long', day: 'numeric' };
-        return date.toLocaleDateString(undefined, options);
+        if (!dateString) {
+            return 'Unknown';
+        }
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return 'Unknown';
+            }
+            const options = { month: 'long', day: 'numeric' };
+            return date.toLocaleDateString(undefined, options);
+        } catch {
+            return 'Unknown';
+        }
     };
 
     return (
@@ -62,7 +73,7 @@ const ApplicationsKanban = () => {
                                 </ol>
                             </nav>
                         </div>
-                        <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
+                        <div className="d-flex my-xl-auto right-content align-items-center flex-wrap">
                             <div className="me-2 mb-2">
                                 <div className="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
                                     <Link
@@ -76,7 +87,6 @@ const ApplicationsKanban = () => {
                                     </Link>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                     {/* /Breadcrumb */}
@@ -92,8 +102,8 @@ const ApplicationsKanban = () => {
                                                 <span className="bg-soft-pink p-1 d-flex rounded-circle me-2">
                                                     <span className="bg-purple rounded-circle d-block p-1" />
                                                 </span>
-                                                <h5 className="me-2">{status}</h5>
-                                                <span className="badge bg-light rounded-pill">{candidates.length}</span>
+                                                <h5 className="me-2">{status || 'Unknown'}</h5>
+                                                <span className="badge bg-light rounded-pill">{candidates?.length || 0}</span>
                                             </div>
                                             <div className="dropdown">
                                                 <Link
@@ -111,7 +121,7 @@ const ApplicationsKanban = () => {
                                                         </Link>
                                                     </li>
                                                     <li>
-                                                        <Link to="#" className="dropdown-item rounded-1" >
+                                                        <Link to="#" className="dropdown-item rounded-1">
                                                             <i className="ti ti-trash me-2" />
                                                             Delete
                                                         </Link>
@@ -121,66 +131,72 @@ const ApplicationsKanban = () => {
                                         </div>
                                     </div>
                                     <div className="kanban-drag-wrap">
-                                        {candidates.map(candidate => (
-                                            <div className="card kanban-card mb-2" key={candidate._id}>
-                                                <div className="card-body">
-                                                    <div className="d-flex align-items-center flex-shrink-0 mb-3">
-                                                        <Link
-                                                            to={`/application/${candidate._id}`}
-                                                            onClick={() => {
-                                                                localStorage.setItem('selectedApplication', JSON.stringify(candidate));
-                                                            }}
-                                                            className="avatar avatar-lg avatar rounded-circle me-2"
-                                                           
-                                                        >
-                                                            <img
-                                                                src={candidate.candidate.image}
-                                                                className="img-fluid h-20 w-20"
-                                                                alt="img"
-                                                            />
-                                                        </Link>
-                                                        <div className="d-flex flex-column">
-                                                            <div className="d-flex flex-wrap">
-                                                                <h6 className="text-dark fs-16 fw-semibold">
-                                                                    <Link
-                                                                        to={`/application/${candidate._id}`}
-                                                                        onClick={() => {
-                                                                            localStorage.setItem('selectedApplication', JSON.stringify(candidate));
-                                                                        }}
-                                                                    >
-                                                                        {candidate.candidate.firstName} {candidate.candidate.lastName}
-                                                                    </Link>
-                                                                </h6>
+                                        {(candidates || []).map(candidate => {
+                                            console.log('Candidate data:', candidate);
+                                            return (
+                                                <div className="card kanban-card mb-2" key={candidate?._id || `candidate-${index}`}>
+                                                    <div className="card-body">
+                                                        <div className="d-flex align-items-center flex-shrink-0 mb-3">
+                                                            <Link
+                                                                to={`/application/${candidate?._id || ''}`}
+                                                                onClick={() => {
+                                                                    localStorage.setItem('selectedApplication', JSON.stringify(candidate || {}));
+                                                                }}
+                                                                className="avatar avatar-lg avatar rounded-circle me-2"
+                                                            >
+                                                                {candidate?.candidate?.image ? (
+                                                                    <img
+                                                                        src={candidate.candidate.image}
+                                                                        className="img-fluid h-20 w-20"
+                                                                        alt="Candidate"
+                                                                    />
+                                                                ) : (
+                                                                    <i className="ti ti-user-circle text-gray-3 fs-16" />
+                                                                )}
+                                                            </Link>
+                                                            <div className="d-flex flex-column">
+                                                                <div className="d-flex flex-wrap">
+                                                                    <h6 className="text-dark fs-16 fw-semibold">
+                                                                        <Link
+                                                                            to={`/application/${candidate?._id || ''}`}
+                                                                            onClick={() => {
+                                                                                localStorage.setItem('selectedApplication', JSON.stringify(candidate || {}));
+                                                                            }}
+                                                                        >
+                                                                            {candidate?.candidate?.firstName || 'Not provided'} {candidate?.candidate?.lastName || ''}
+                                                                        </Link>
+                                                                    </h6>
+                                                                </div>
+                                                                <p className="text-gray fs-13 fw-normal">
+                                                                    {candidate?.candidate?.email || 'Not provided'}
+                                                                </p>
                                                             </div>
-                                                            <p className="text-gray fs-13 fw-normal">
-                                                                {candidate.candidate.email}
-                                                            </p>
                                                         </div>
-                                                    </div>
-                                                    <div className="d-flex justify-content-between">
-                                                        <div>
-                                                            <h6 className="text-gray fs-14 fw-normal mb-2">
-                                                                Applied Role
-                                                            </h6>
-                                                            <span className="text-dark fs-14 fw-medium">
-    <Link to={`/projects-details/${jobPostId}`} className="text-dark">
-        {candidate.jobPost?.title || 'No title provided'}
-    </Link>
-</span>
-                                                        </div>
-                                                        <span className="border-start text-gray fs-14 fw-normal" />
-                                                        <div>
-                                                            <h6 className="text-gray fs-14 fw-normal mb-2">
-                                                                Applied Date
-                                                            </h6>
-                                                            <span className="text-dark fs-14 fw-medium">
-                                                                {formatDate(candidate.submissionDate)}
-                                                            </span>
+                                                        <div className="d-flex justify-content-between">
+                                                            <div>
+                                                                <h6 className="text-gray fs-14 fw-normal mb-2">
+                                                                    Applied Role
+                                                                </h6>
+                                                                <span className="text-dark fs-14 fw-medium">
+                                                                    <Link to={`/projects-details/${jobPostId}`} className="text-dark">
+                                                                        {candidate?.jobPost?.title || 'Not provided'}
+                                                                    </Link>
+                                                                </span>
+                                                            </div>
+                                                            <span className="border-start text-gray fs-14 fw-normal" />
+                                                            <div>
+                                                                <h6 className="text-gray fs-14 fw-normal mb-2">
+                                                                    Applied Date
+                                                                </h6>
+                                                                <span className="text-dark fs-14 fw-medium">
+                                                                    {formatDate(candidate?.submissionDate)}
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             ))}
@@ -191,7 +207,7 @@ const ApplicationsKanban = () => {
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
                     <p className="mb-0"> 2025 © RecruitPro.</p>
                     <p>
-                        Designed &amp; Developed By{" "}
+                        Designed & Developed By{" "}
                         <Link to="#" className="text-primary">
                             Infinite Loopers
                         </Link>
@@ -201,6 +217,6 @@ const ApplicationsKanban = () => {
             {/* /Page Wrapper */}
         </>
     );
-}
+};
 
 export default ApplicationsKanban;

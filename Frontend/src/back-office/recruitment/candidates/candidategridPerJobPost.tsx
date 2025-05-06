@@ -11,13 +11,29 @@ interface Candidate {
         lastName: string;
         email: string;
         role: string;
-        image: string; // Add image property
-        id:String;
+        image: string;
+        id: string;
     };
     CV: string;
     status: string;
     submissionDate: string;
 }
+
+// Helper function to format date
+const formatDate = (dateString?: string) => {
+    if (!dateString) {
+        return 'Not provided';
+    }
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return 'Not provided';
+        }
+        return date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    } catch {
+        return 'Not provided';
+    }
+};
 
 const CandidateGridPerJobPost = () => {
     const { id } = useParams<{ id: string }>(); // Get the id from the URL
@@ -26,23 +42,25 @@ const CandidateGridPerJobPost = () => {
 
     useEffect(() => {
         const fetchCandidates = async () => {
+            console.log('Fetching candidates for jobPostId:', id);
             try {
-                const response = await fetch(`http://localhost:5000/app/jobposts/${id}/candidates`); // Use the id in the URL
+                const response = await fetch(`http://localhost:5000/app/jobposts/${id}/candidates`);
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`Network response was not ok: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log('Fetched candidates:', data); // Log the fetched candidates
+                console.log('Fetched candidates:', data);
                 setCandidates(data);
             } catch (error) {
                 console.error('Error fetching candidates:', error);
             } finally {
+                console.log('Loading state:', false);
                 setLoading(false);
             }
         };
 
         fetchCandidates();
-    }, [id]); // Dependency array includes id
+    }, [id]);
 
     return (
         <>
@@ -67,23 +85,27 @@ const CandidateGridPerJobPost = () => {
                                 </ol>
                             </nav>
                         </div>
-                        <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
-                                                    <div className="me-2 mb-2">
-                                                        <div className="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
-                                                            <Link
-                                                                to={`/applications-kanban/${id}`}
-                                                                className="btn btn-icon btn-sm active bg-primary text-white me-1"
-                                                            >
-                                                                <i className="ti ti-layout-kanban" />
-                                                            </Link>
-                                                            <Link to={`/candidates-grid/${id}`} className="btn btn-icon btn-sm">
-                                                                <i className="ti ti-layout-grid" />
-                                                            </Link>
-                                                        </div>
-                                                    </div>
-                                                   
-                                                </div>
-                       
+                        <div className="d-flex my-xl-auto right-content align-items-center flex-wrap">
+                            <div className="me-2 mb-2">
+                                <div className="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
+                                    <Link
+                                        to={`/applications-kanban/${id}`}
+                                        className="btn btn-icon btn-sm"
+                                    >
+                                        <i className="ti ti-layout-kanban" />
+                                    </Link>
+                                    <Link
+                                        to={`/candidates-grid/${id}`}
+                                        className="btn btn-icon btn-sm active bg-primary text-white me-1"
+                                    >
+                                        <i className="ti ti-layout-grid" />
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="head-icons">
+                                <CollapseHeader />
+                            </div>
+                        </div>
                     </div>
                     {/* /Breadcrumb */}
                     <div className="card">
@@ -101,67 +123,86 @@ const CandidateGridPerJobPost = () => {
                     
                     {/* Candidates Grid */}
                     <div className="row">
-    {loading ? (
-        <div className="col-md-12 text-center">
-            <p>Loading candidates...</p>
-        </div>
-    ) : (
-        candidates.map((candidate) => (
-            <div key={candidate._id} className="col-xxl-3 col-xl-4 col-md-6">
-                <Link to={`/candidate-details2/${candidate.candidate.id}`} className="card"> {/* Wrap the card with Link */}
-                    <div className="card-body">
-                        <div className="d-flex justify-content-between align-items-start mb-3">
-                            <div className="d-flex align-items-center flex-shrink-0">
-                                <div className="avatar avatar-lg avatar rounded-circle me-2">
-                                    <img 
-                                        src={candidate.candidate.image || "assets/img/users/user-01.jpg"} 
-                                        alt="User Image" 
-                                        className="img-fluid rounded-circle" 
-                                    />
-                                </div>
-                                <div className="d-flex flex-column">
-                                    <div className="d-flex flex-wrap mb-1">
-                                        <h6 className="fs-16 fw-semibold me-1">
-                                            {candidate.candidate.firstName} {candidate.candidate.lastName} 
-                                        </h6>
-                                        <span className="badge bg-primary-transparent">
-                                            {candidate.candidate.role}
-                                        </span>
+                        {loading ? (
+                            <div className="col-md-12 text-center">
+                                <p>Loading candidates...</p>
+                            </div>
+                        ) : candidates.length === 0 ? (
+                            <div className="col-md-12 text-center">
+                                <p>No candidates found.</p>
+                            </div>
+                        ) : (
+                            candidates.map((candidate) => {
+                                console.log('Candidate data:', candidate);
+                                return (
+                                    <div key={candidate?._id || `candidate-${Math.random()}`} className="col-xxl-3 col-xl-4 col-md-6">
+                                        <Link to={`/candidate-details2/${candidate?.candidate?.id || ''}`} className="card">
+                                            <div className="card-body">
+                                                <div className="d-flex justify-content-between align-items-start mb-3">
+                                                    <div className="d-flex align-items-center flex-shrink-0">
+                                                        <div className="avatar avatar-lg avatar rounded-circle me-2">
+                                                            {candidate?.candidate?.image ? (
+                                                                <img
+                                                                    src={candidate.candidate.image}
+                                                                    alt="User Image"
+                                                                    className="img-fluid rounded-circle"
+                                                                />
+                                                            ) : (
+                                                                <i className="ti ti-user-circle text-gray-3 fs-16" />
+                                                            )}
+                                                        </div>
+                                                        <div className="d-flex flex-column">
+                                                            <div className="d-flex flex-wrap mb-1">
+                                                                <h6 className="fs-16 fw-semibold me-1">
+                                                                    {candidate?.candidate?.firstName || 'Not provided'} {candidate?.candidate?.lastName || ''}
+                                                                </h6>
+                                                                <span className="badge bg-primary-transparent">
+                                                                    {candidate?.candidate?.role || 'Not provided'}
+                                                                </span>
+                                                            </div>
+                                                            <p className="text-gray fs-13 fw-normal">
+                                                                {candidate?.candidate?.email || 'Not provided'}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="bg-light rounded p-2">
+                                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                                        <h6 className="text-gray fs-14 fw-normal">Applied Role</h6>
+                                                        <span className="text-dark fs-14 fw-medium">
+                                                            {candidate?.candidate?.role || 'Not provided'}
+                                                        </span>
+                                                    </div>
+                                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                                        <h6 className="text-gray fs-14 fw-normal">Submission Date</h6>
+                                                        <span className="text-dark fs-14 fw-medium">
+                                                            {formatDate(candidate?.submissionDate)}
+                                                        </span>
+                                                    </div>
+                                                    <div className="d-flex align-items-center justify-content-between">
+                                                        <h6 className="text-gray fs-14 fw-normal">CV</h6>
+                                                        {candidate?.CV ? (
+                                                            <a href={candidate.CV} target="_blank" rel="noopener noreferrer" className="text-primary">
+                                                                View CV
+                                                            </a>
+                                                        ) : (
+                                                            <span className="text-gray">Not available</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Link>
                                     </div>
-                                    <p className="text-gray fs-13 fw-normal">
-                                        {candidate.candidate.email}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bg-light rounder p-2">
-                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                <h6 className="text-gray fs-14 fw-normal">Applied Role</h6>
-                                <span className="text-dark fs-14 fw-medium">{candidate.candidate.role}</span>
-                            </div>
-                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                <h6 className="text-gray fs-14 fw-normal">Submission Date</h6>
-                                <span className="text-dark fs-14 fw-medium">{new Date(candidate.submissionDate).toLocaleDateString()}</span>
-                            </div>
-                            <div className="d-flex align-items-center justify-content-between">
-                                <h6 className="text-gray fs-14 fw-normal">CV</h6>
-                                <a href={candidate.CV} target="_blank" rel="noopener noreferrer" className="text-primary">
-                                    View CV
-                                </a>
-                            </div>
-                        </div>
+                                );
+                            })
+                        )}
                     </div>
-                </Link>
-            </div>
-        ))
-    )}
-</div>
                     {/* /Candidates Grid */}
                 </div>
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
                     <p className="mb-0">2025 © RECRUITPRO.</p>
                     <p>
-                        Designed &amp; Developed By{" "}
+                        Designed & Developed By{' '}
                         <Link to="#" className="text-primary">
                             INFINITE LOOPERS
                         </Link>
@@ -171,6 +212,6 @@ const CandidateGridPerJobPost = () => {
             {/* /Page Wrapper */}
         </>
     );
-}
+};
 
 export default CandidateGridPerJobPost;

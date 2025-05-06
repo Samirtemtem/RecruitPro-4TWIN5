@@ -118,7 +118,7 @@ const JobPostRequests: React.FC = () => {
       const user = userString ? JSON.parse(userString) : null;
 
       console.log("User Department:", user?.department);
-      console.log("User ID:", user?._id);
+      console.log("User ID:", user?.id);
       console.log("Sample fetched request object:", fetchedData[0]);
 
       // Filter requests based on the user's department and department manager ID

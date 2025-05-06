@@ -654,19 +654,7 @@ const CandidateDetails2: React.FC = () => {
                                                             id="myTab"
                                                             role="tablist"
                                                         >
-                                                            <li className="nav-item" role="presentation">
-                                                                <button
-                                                                    className="nav-link active"
-                                                                    id="info-tab2"
-                                                                    data-bs-toggle="tab"
-                                                                    data-bs-target="#basic-info2"
-                                                                    type="button"
-                                                                    role="tab"
-                                                                    aria-selected="true"
-                                                                >
-                                                                    Job Posts
-                                                                </button>
-                                                            </li>
+                                                        
                                                             <li className="nav-item" role="presentation">
                                                                 <button
                                                                     className="nav-link"
@@ -691,69 +679,7 @@ const CandidateDetails2: React.FC = () => {
     aria-labelledby="info-tab2"
     tabIndex={0}
 >
-    <div className="row">
-        {candidate.jobPosts.map((job) => (
-            <div className="col-md-6 d-flex" key={job._id}>
-                <div className="card flex-fill mb-4 mb-md-0">
-                    <div className="card-body">
-                        <div className="d-flex align-items-center pb-3 mb-3 border-bottom">
-                            <Link
-                                to={all_routes.projectdetails}
-                                className="flex-shrink-0 me-2"
-                            >
-                                <ImageWithBasePath
-                                    src="assets/img/social/project-03.svg" // Update this with a dynamic image source if available
-                                    alt="Img"
-                                />
-                            </Link>
-                            <div>
-                                <h6 className="mb-1">
-                                <Link to={`/projects-details/${job._id}`}>
-    {job.title}
-</Link>
-                                </h6>
-                                <div className="d-flex align-items-center">
-                                    <p className="mb-0 fs-13">{job.department}</p>
-                                    <p className="fs-13">
-                                        <span className="mx-1">
-                                            <i className="ti ti-point-filled text-primary" />
-                                        </span>
-                                        {job.status}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div>
-                                    <span className="mb-1 d-block">
-                                        Publish Date
-                                    </span>
-                                    <p className="text-dark">
-                                        {new Date(job.publishDate).toLocaleDateString()} 
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div>
-                                    <span className="mb-1 d-block">
-                                        DeadLine
-                                    </span>
-                                    <Link
-                                        to="#"
-                                        className="fw-normal d-flex align-items-center"
-                                    >
-                                        
-                                        {new Date(job.deadline).toLocaleDateString()}
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        ))}
-    </div>
+   
 </div>
 
 

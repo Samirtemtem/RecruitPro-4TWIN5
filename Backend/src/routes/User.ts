@@ -24,10 +24,13 @@ import {
   createTeamLead,
   updateTeamLead,
   deleteTeamLead,
-  countUsersByRole
+  countUsersByRole,
+  updateProfile,
+  updatePassword
 } from '../controllers/userController';
 import { upload } from '../utils/cloudinary';
 import bodyParser from 'body-parser';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 
 const router = express.Router();
@@ -102,6 +105,13 @@ router.get('/usersListLatest', getLatestUsers);
 router.get('/users/:id', getUserById);
 router.put('/update/:id', updateUser);
 router.delete('/delete/:id', deleteUser);
+// Update user profile route
+router.put("/profile", upload.single('image'), authMiddleware, updateProfile);
+
+// Update user password route
+router.put("/password", authMiddleware, updatePassword);
+
+
 router.get('/get/candidates', getCandidates);
 // Route to get a candidate by ID
 router.get('/candidates/:id', getCandidateById);

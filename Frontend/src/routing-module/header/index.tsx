@@ -136,62 +136,7 @@ const Header = () => {
 									<kbd>CTRL + / </kbd>
 								</span>
 							</div>
-							<div className="dropdown crm-dropdown">
-								<Link to="#" className="btn btn-menubar me-1" data-bs-toggle="dropdown">
-									<i className="ti ti-layout-grid"></i>
-								</Link>
-								<div className="dropdown-menu dropdown-lg dropdown-menu-start">
-									<div className="card mb-0 border-0 shadow-none">
-										<div className="card-header">
-											<h4>CRM</h4>
-										</div>
-										<div className="card-body pb-1">		
-											<div className="row">
-												<div className="col-sm-6">							
-													<Link to={routes.contactList} className="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
-														<span className="d-flex align-items-center me-3">
-															<i className="ti ti-user-shield text-default me-2"></i>Contacts
-														</span>
-														<i className="ti ti-arrow-right"></i>
-													</Link>							
-													<Link to={routes.dealsGrid} className="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
-														<span className="d-flex align-items-center me-3">
-															<i className="ti ti-heart-handshake text-default me-2"></i>Deals
-														</span>
-														<i className="ti ti-arrow-right"></i>
-													</Link>								
-													<Link to={routes.pipeline} className="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
-														<span className="d-flex align-items-center me-3">
-															<i className="ti ti-timeline-event-text text-default me-2"></i>Pipeline
-														</span>
-														<i className="ti ti-arrow-right"></i>
-													</Link>		
-												</div>
-												<div className="col-sm-6">							
-													<Link to={routes.companiesGrid} className="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
-														<span className="d-flex align-items-center me-3">
-															<i className="ti ti-building text-default me-2"></i>Companies
-														</span>
-														<i className="ti ti-arrow-right"></i>
-													</Link>								
-													<Link to={routes.leadsGrid} className="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
-														<span className="d-flex align-items-center me-3">
-															<i className="ti ti-user-check text-default me-2"></i>Leads
-														</span>
-														<i className="ti ti-arrow-right"></i>
-													</Link>								
-													<Link to={routes.activity} className="d-flex align-items-center justify-content-between p-2 crm-link mb-3">
-														<span className="d-flex align-items-center me-3">
-															<i className="ti ti-activity text-default me-2"></i>Activities
-														</span>
-														<i className="ti ti-arrow-right"></i>
-													</Link>		
-												</div>
-											</div>		
-										</div>
-									</div>
-								</div>
-							</div>
+							
 							<Link to={routes.profilesettings} className="btn btn-menubar">
 								<i className="ti ti-settings-cog"></i>
 							</Link>	
@@ -428,37 +373,14 @@ const Header = () => {
 								</Link>
 								<div className="dropdown-menu shadow-none">
 									<div className="card mb-0">
-										<div className="card-header">
-											<div className="d-flex align-items-center">
-												<span className="avatar avatar-lg me-2 avatar-rounded">
-													<ImageWithBasePath src="assets/img/profiles/avatar-12.jpg" alt="img"/>
-												</span>
-												<div>
-													<h5 className="mb-0">Username</h5>
-													<p className="fs-12 fw-medium mb-0"></p>
-												</div>
-											</div>
-										</div>
+										
 										<div className="card-body">
-											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to={routes.profile}>
+											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to={routes.profilesettings}>
 												<i className="ti ti-user-circle me-1"></i>My Profile
 											</Link>
-											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to={routes.bussinessSettings}>
-												<i className="ti ti-settings me-1"></i>Settings
-											</Link>
-											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to={routes.securitysettings}>
-												<i className="ti ti-status-change me-1"></i>Status
-											</Link>
-											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to={routes.profilesettings}>
-												<i className="ti ti-circle-arrow-up me-1"></i>My Account
-											</Link>
-											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to={routes.knowledgebase}>
-												<i className="ti ti-question-mark me-1"></i>Knowledge Base
-											</Link>
-										</div>
-										<div className="card-footer">
 											<Link className="dropdown-item d-inline-flex align-items-center p-0 py-2" to="/LoginUser" onClick={handleLogout}><i className="ti ti-login me-2"></i>Logout</Link>
 										</div>
+										
 									</div>
 								</div>
 							</div>

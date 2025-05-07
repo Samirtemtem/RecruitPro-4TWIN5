@@ -911,42 +911,38 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
 
 
 // Update user password controller
-export const updatePassword = async (req: Request, res: Response) : Promise<void> => {
+export const updatePassword = async (req: Request, res: Response): Promise<void> => {
   try {
     // Get user ID from request body or JWT token
     const { userId, password }: UpdatePasswordBody = req.body;
     const tokenUserId = (req as any).user?.id;
 
-    if (!userId && !tokenUserId ) {
-       res.status(401).json({ message: "Unauthorized: No user ID found" });
-       return;
+    if (!userId && !tokenUserId) {
+      res.status(401).json({ message: "Unauthorized: No user ID found" });
+      return;
     }
 
     const effectiveUserId = userId || tokenUserId;
 
     // Validate password
     if (!password) {
-       res.status(400).json({ message: "Password is required" });
-       return;
+      res.status(400).json({ message: "Password is required" });
+      return;
     }
     if (password.length < 8) {
-       res.status(400).json({ message: "Password must be at least 8 characters long" });
+      res.status(400).json({ message: "Password must be at least 8 characters long" });
       return;
     }
 
     // Find the user
     const user = await User.findById(effectiveUserId);
     if (!user) {
-       res.status(404).json({ message: "User not found" });
-       return;
+      res.status(404).json({ message: "User not found" });
+      return;
     }
 
-    // Hash the new password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Update user's password
-    user.password = hashedPassword;
+    // Update user's password (assuming password is already hashed or handled)
+    user.password = password;
     await user.save();
 
     res.status(200).json({ message: "Password updated successfully" });

@@ -131,7 +131,7 @@ const Header = () => {
 								<span className="input-icon-addon">
 									<i className="ti ti-search"></i>
 								</span>
-								<input type="text" className="form-control" placeholder="Search in HRMS" />
+								<input type="text" className="form-control" placeholder="Search in Dashboard" />
 								<span className="input-group-text">
 									<kbd>CTRL + / </kbd>
 								</span>
@@ -212,49 +212,9 @@ const Header = () => {
 									<i className="ti ti-maximize"></i>
 								</Link>
 							</div>
-							<div className="dropdown me-1">
-								<Link to="#" className="btn btn-menubar" data-bs-toggle="dropdown">
-									<i className="ti ti-layout-grid-remove"></i>
-								</Link>
-								<div className="dropdown-menu dropdown-menu-end">
-									<div className="card mb-0 border-0 shadow-none">
-										<div className="card-header">
-											<h4>Applications</h4>
-										</div>
-										<div className="card-body">											
-											<Link to={routes.calendar} className="d-block pb-2">
-												<span className="avatar avatar-md bg-transparent-dark me-2"><i className="ti ti-calendar text-gray-9"></i></span>Calendar
-											</Link>										
-											<Link to={routes.todo} className="d-block py-2">
-												<span className="avatar avatar-md bg-transparent-dark me-2"><i className="ti ti-subtask text-gray-9"></i></span>To Do
-											</Link>										
-											<Link to={routes.notes} className="d-block py-2">
-												<span className="avatar avatar-md bg-transparent-dark me-2"><i className="ti ti-notes text-gray-9"></i></span>Notes
-											</Link>										
-											<Link to={routes.fileManager} className="d-block py-2">
-												<span className="avatar avatar-md bg-transparent-dark me-2"><i className="ti ti-folder text-gray-9"></i></span>File Manager
-											</Link>								
-											<Link to={routes.kanbanView} className="d-block py-2">
-												<span className="avatar avatar-md bg-transparent-dark me-2"><i className="ti ti-layout-kanban text-gray-9"></i></span>Kanban
-											</Link>								
-											<Link to={routes.invoice} className="d-block py-2 pb-0">
-												<span className="avatar avatar-md bg-transparent-dark me-2"><i className="ti ti-file-invoice text-gray-9"></i></span>Invoices
-											</Link>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div className="me-1">
-								<Link to={routes.chat} className="btn btn-menubar position-relative">
-									<i className="ti ti-brand-hipchat"></i>
-									<span className="badge bg-info rounded-pill d-flex align-items-center justify-content-center header-badge">5</span>
-								</Link>
-							</div>
-							<div className="me-1">
-								<Link to={routes.email} className="btn btn-menubar">
-									<i className="ti ti-mail"></i>
-								</Link>
-							</div>
+							
+							
+						
 							<div className="me-1 notification_item">
 								<Link to="#" className="btn btn-menubar position-relative me-1" id="notification_popup"
 									data-bs-toggle="dropdown">

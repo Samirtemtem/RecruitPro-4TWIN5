@@ -65,16 +65,7 @@ const JobPosts = () => {
               </nav>
             </div>
             <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
-              <div className="me-2 mb-2">
-                <div className="d-flex align-items-center border bg-white rounded p-1 me-2 icon-list">
-                  <Link
-                    to={all_routes.jobgrid}
-                    className="btn btn-icon btn-sm active bg-primary text-white"
-                  >
-                    <i className="ti ti-layout-grid" />
-                  </Link>
-                </div>
-              </div>
+              
               <div className="head-icons ms-2">
                 <CollapseHeader />
               </div>
@@ -87,12 +78,7 @@ const JobPosts = () => {
                 <h5>Job Grid</h5>
                 <div className="d-flex my-xl-auto right-content align-items-center flex-wrap row-gap-3">
                   <div className="me-3">
-                    <div className="input-icon-end position-relative">
-                      <PredefinedDateRanges />
-                      <span className="input-icon-addon">
-                        <i className="ti ti-chevron-down" />
-                      </span>
-                    </div>
+                  
                   </div>
                 </div>
               </div>
@@ -165,7 +151,7 @@ const JobPosts = () => {
           )}
         </div>
         <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
-          <p className="mb-0">2014 - 2025 © SmartHR.</p>
+          <p className="mb-0">2025 © RecruitPro.</p>
           <p>
             Designed &amp; Developed By{" "}
             <Link to="#" className="text-primary">
@@ -174,6 +160,7 @@ const JobPosts = () => {
           </p>
         </div>
       </div>
+      
       {/* /Page Wrapper */}
     </>
   );

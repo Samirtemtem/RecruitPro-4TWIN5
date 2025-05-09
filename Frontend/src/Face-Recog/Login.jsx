@@ -3,18 +3,17 @@ import { useEffect, useRef, useState, useContext } from "react";
 import * as faceapi from "face-api.js";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { all_routes } from "../routing-module/router/all_routes";
-import axios from "axios";
 import { AuthContext } from "../routing-module/AuthContext";
 
 function Login() {
-  const [tempAccount, setTempAccount] = useState("");
+  const [tempAccount, setTempAccount] = useState(null);
   const [localUserStream, setLocalUserStream] = useState(null);
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [faceApiLoaded, setFaceApiLoaded] = useState(false);
   const [loginResult, setLoginResult] = useState("PENDING");
   const [imageError, setImageError] = useState(false);
   const [counter, setCounter] = useState(5);
-  const [labeledFaceDescriptors, setLabeledFaceDescriptors] = useState({});
+  const [labeledFaceDescriptors, setLabeledFaceDescriptors] = useState([]);
   const videoRef = useRef();
   const canvasRef = useRef();
   const faceApiIntervalRef = useRef();
@@ -31,131 +30,174 @@ function Login() {
     return <Navigate to="/" replace={true} />;
   }
 
+  // Load face-api.js models
   const loadModels = async () => {
     console.log("Loading models...");
     const uri = "/models";
-    await faceapi.nets.ssdMobilenetv1.loadFromUri(uri);
-    await faceapi.nets.faceLandmark68Net.loadFromUri(uri);
-    await faceapi.nets.faceRecognitionNet.loadFromUri(uri);
-    console.log("Models loaded successfully.");
+    try {
+      await Promise.all([
+        faceapi.nets.ssdMobilenetv1.loadFromUri(uri),
+        faceapi.nets.faceLandmark68Net.loadFromUri(uri),
+        faceapi.nets.faceRecognitionNet.loadFromUri(uri),
+      ]);
+      console.log("Models loaded successfully.");
+    } catch (error) {
+      console.error("Error loading models:", error);
+      setImageError(true);
+    }
   };
 
+  // Set tempAccount from location state
   useEffect(() => {
     console.log("Setting tempAccount from location state.");
     setTempAccount(location?.state?.account);
-  }, []);
+  }, [location]);
 
+  // Load models and labeled images when tempAccount is set
   useEffect(() => {
     if (tempAccount) {
       console.log("tempAccount found, loading models...");
       loadModels()
         .then(async () => {
           console.log("Loading labeled images...");
-          const labeledFaceDescriptors = await loadLabeledImages();
-          setLabeledFaceDescriptors(labeledFaceDescriptors);
+          const descriptors = await loadLabeledImages();
+          setLabeledFaceDescriptors(descriptors);
         })
         .then(() => {
           setModelsLoaded(true);
           console.log("Models loaded state updated.");
+        })
+        .catch((error) => {
+          console.error("Error in model or image loading:", error);
+          setImageError(true);
         });
     }
   }, [tempAccount]);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  // Handle countdown and user data storage on successful login
   useEffect(() => {
     if (loginResult === "SUCCESS") {
       console.log("Login successful, starting countdown...");
       const counterInterval = setInterval(() => {
         setCounter((prevCounter) => {
-          console.log("Counter:", prevCounter);
-          return prevCounter - 1;
+          const newCounter = prevCounter - 1;
+          console.log("Counter:", newCounter);
+          if (newCounter <= 0) {
+            console.log("Counter reached zero, stopping video stream...");
+            if (videoRef.current) {
+              videoRef.current.pause();
+              videoRef.current.srcObject = null;
+            }
+            localUserStream?.getTracks().forEach((track) => track.stop());
+            clearInterval(counterInterval);
+            clearInterval(faceApiIntervalRef.current);
+            generateTokenAndSave();
+          }
+          return newCounter;
         });
       }, 1000);
 
-      if (counter === 0) {
-        console.log("Counter reached zero, stopping video stream and generating token...");
-        videoRef.current.pause();
-        videoRef.current.srcObject = null;
-        localUserStream?.getTracks().forEach((track) => {
-          track.stop();
-        });
-        clearInterval(counterInterval);
-        clearInterval(faceApiIntervalRef.current);
-
-        // Generate token and save user data
-        generateTokenAndSave();
-      }
-
       return () => clearInterval(counterInterval);
     }
-  }, [loginResult, counter, localUserStream]);
+  }, [loginResult, localUserStream]);
 
+  // Cleanup video stream and intervals on component unmount
+  useEffect(() => {
+    return () => {
+      if (localUserStream) {
+        localUserStream.getTracks().forEach((track) => track.stop());
+      }
+      if (faceApiIntervalRef.current) {
+        clearInterval(faceApiIntervalRef.current);
+      }
+    };
+  }, [localUserStream]);
+
+  // Start webcam stream
   const getLocalUserVideo = async () => {
     console.log("Getting local user video...");
-    navigator.mediaDevices
-      .getUserMedia({ audio: false, video: true })
-      .then((stream) => {
-        console.log("Video stream obtained.");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+      console.log("Video stream obtained.");
+      if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        setLocalUserStream(stream);
-      })
-      .catch((err) => {
-        console.error("Error obtaining video stream:", err);
-      });
+      }
+      setLocalUserStream(stream);
+    } catch (err) {
+      console.error("Error obtaining video stream:", err);
+      setLoginResult("FAILED");
+    }
   };
 
+  // Scan face and match against labeled descriptors
   const scanFace = async () => {
     console.log("Scanning face...");
+    if (!canvasRef.current || !videoRef.current) return;
     faceapi.matchDimensions(canvasRef.current, videoRef.current);
+    let failedAttempts = 0;
+    const maxFailedAttempts = 10;
+
     const faceApiInterval = setInterval(async () => {
-      const detections = await faceapi
-        .detectAllFaces(videoRef.current)
-        .withFaceLandmarks()
-        .withFaceDescriptors();
+      try {
+        const detections = await faceapi
+          .detectAllFaces(videoRef.current)
+          .withFaceLandmarks()
+          .withFaceDescriptors();
 
-      const resizedDetections = faceapi.resizeResults(detections, {
-        width: videoWidth,
-        height: videoHeight,
-      });
-
-      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
-
-      const results = resizedDetections.map((d) => {
-        if (d.descriptor) {
-          const match = faceMatcher.findBestMatch(d.descriptor);
-          return match;
+        if (!detections.length) {
+          failedAttempts++;
+          if (failedAttempts >= maxFailedAttempts) {
+            setLoginResult("FAILED");
+          }
+          return;
         }
-        return null;
-      }).filter(Boolean);
 
-      if (!canvasRef.current) {
-        console.log("Canvas ref is not defined.");
-        return;
-      }
+        const resizedDetections = faceapi.resizeResults(detections, {
+          width: videoWidth,
+          height: videoHeight,
+        });
 
-      canvasRef.current
-        .getContext("2d")
-        .clearRect(0, 0, videoWidth, videoHeight);
+        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5);
+        const results = resizedDetections.map((d) => {
+          if (d.descriptor) {
+            return faceMatcher.findBestMatch(d.descriptor);
+          }
+          return null;
+        }).filter(Boolean);
 
-      faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
-      faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
+        if (!canvasRef.current) return;
 
-      if (results.length > 0 && tempAccount.firstName === results[0].label) {
-        console.log("Face recognized successfully.");
-        setLoginResult("SUCCESS");
-      } else {
-        console.log("Face recognition failed.");
+        canvasRef.current
+          .getContext("2d")
+          .clearRect(0, 0, videoWidth, videoHeight);
+
+        faceapi.draw.drawDetections(canvasRef.current, resizedDetections);
+        faceapi.draw.drawFaceLandmarks(canvasRef.current, resizedDetections);
+
+        if (results.length > 0 && tempAccount?.firstName === results[0].label) {
+          console.log("Face recognized successfully.");
+          setLoginResult("SUCCESS");
+          clearInterval(faceApiInterval);
+        } else {
+          failedAttempts++;
+          if (failedAttempts >= maxFailedAttempts) {
+            console.log("Face recognition failed.");
+            setLoginResult("FAILED");
+          }
+        }
+
+        if (!faceApiLoaded) {
+          setFaceApiLoaded(true);
+        }
+      } catch (error) {
+        console.error("Error during face scanning:", error);
         setLoginResult("FAILED");
       }
-
-      if (!faceApiLoaded) {
-        setFaceApiLoaded(true);
-        console.log("Face API loaded state updated.");
-      }
-    }, 1000 / 15);
+    }, 1000 / 10);
     faceApiIntervalRef.current = faceApiInterval;
   };
 
+  // Load labeled face descriptors from reference image
   async function loadLabeledImages() {
     console.log("Loading labeled images...");
     if (!tempAccount) {
@@ -164,25 +206,22 @@ function Login() {
     }
 
     const descriptions = [];
-    let img;
-
-    try {
-      const imgPath = tempAccount.image;
-      img = await faceapi.fetchImage(imgPath);
-      console.log("Image fetched successfully.");
-    } catch {
-      setImageError(true);
-      console.error("Error loading image.");
-      return [];
-    }
-
-    const detections = await faceapi
-      .detectSingleFace(img)
-      .withFaceLandmarks()
-      .withFaceDescriptor();
-
-    if (detections) {
-      descriptions.push(detections.descriptor);
+    const imagePaths = [tempAccount.image];
+    for (const imgPath of imagePaths) {
+      try {
+        const img = await faceapi.fetchImage(imgPath);
+        console.log("Image fetched successfully:", imgPath);
+        const detections = await faceapi
+          .detectSingleFace(img)
+          .withFaceLandmarks()
+          .withFaceDescriptor();
+        if (detections) {
+          descriptions.push(detections.descriptor);
+        }
+      } catch (error) {
+        console.error(`Error loading image ${imgPath}:`, error);
+        setImageError(true);
+      }
     }
 
     const label = tempAccount.firstName || tempAccount.lastName || "Unknown User";
@@ -192,53 +231,40 @@ function Login() {
     }
 
     console.log("Labeled images loaded:", label);
-    return [new faceapi.LabeledFaceDescriptors(label, descriptions)];
+    return descriptions.length > 0
+      ? [new faceapi.LabeledFaceDescriptors(label, descriptions)]
+      : [];
   }
 
+  // Store user data and redirect without API
   const generateTokenAndSave = async () => {
-    console.log("Generating token and saving...");
+    console.log("Saving user data...");
     try {
-      const response = await fetch("http://localhost:5000/faceRecog/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: tempAccount.email,
-          password: tempAccount.password,
-        }),
-      });
+      // Simulate token and user data from tempAccount
+      const userId = tempAccount._id || `temp-${Date.now()}`; // Fallback ID if _id is missing
+      const userRole = tempAccount.role || "ADMIN"; // Use role from tempAccount or default to ADMIN
+      const token = `mock-token-${userId}`; // Mock token
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-      console.log("Login response data:", data);
-      const userId = data.userId;
-      const userRole = data.userRole;
-      const user = data.user; // Assuming the API returns a user object
-
-      // Store token in localStorage
-      localStorage.setItem("token", data.token);
-
-      // Create the complete user object
+      // Create user object from tempAccount
       const userObject = {
         id: userId,
-        _id: user._id || userId,
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        email: user.email,
+        _id: userId,
+        firstName: tempAccount.firstName || "",
+        lastName: tempAccount.lastName || "",
+        email: tempAccount.email || "",
         role: userRole,
-        department: user.department || "",
-        phoneNumber: user.phoneNumber || "",
-        is2FAEnabled: user.is2FAEnabled || false,
-        image: user.image || "",
-        createDate: user.createDate || new Date().toISOString(),
-        lastLogin: user.lastLogin || new Date().toISOString(),
-        isVerified: user.isVerified || false,
-        team: user.team || "",
+        department: tempAccount.department || "",
+        phoneNumber: tempAccount.phoneNumber || "",
+        is2FAEnabled: tempAccount.is2FAEnabled || false,
+        image: tempAccount.image || "",
+        createDate: tempAccount.createDate || new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+        isVerified: tempAccount.isVerified || false,
+        team: tempAccount.team || "",
       };
+
+      // Store token in localStorage
+      localStorage.setItem("token", token);
 
       // Store in AuthContext
       setRole(userRole);
@@ -250,29 +276,19 @@ function Login() {
       localStorage.setItem("userId", userId);
       localStorage.setItem("user", JSON.stringify(userObject));
 
-      // Fetch and update profile data
-      const fetchSocialLoginProfile = async () => {
-        try {
-          const profileResponse = await axios.post("http://localhost:5000/api/profile/me", {
-            userId,
-          });
-          console.log("Profile API response:", profileResponse.data);
-
-          const profileData = {
-            ...profileResponse.data,
-            id: userId,
-            _id: profileResponse.data._id || userId,
-          };
-
-          localStorage.setItem("profileData", JSON.stringify(profileData));
-          updateProfileData(profileData);
-          console.log("Profile data fetched and stored successfully");
-        } catch (error) {
-          console.error("Error fetching profile data:", error);
-        }
+      // Mock profile data (simplified, since no API)
+      const profileData = {
+        id: userId,
+        _id: userId,
+        firstName: userObject.firstName,
+        lastName: userObject.lastName,
+        email: userObject.email,
+        role: userRole,
       };
 
-      await fetchSocialLoginProfile();
+      localStorage.setItem("profileData", JSON.stringify(profileData));
+      updateProfileData(profileData);
+      console.log("Profile data stored successfully");
 
       // Role-based redirection
       switch (userRole) {
@@ -290,7 +306,7 @@ function Login() {
           break;
       }
     } catch (error) {
-      console.error("Error generating token:", error);
+      console.error("Error saving user data:", error);
       setLoginResult("FAILED");
     }
   };
@@ -298,13 +314,18 @@ function Login() {
   return (
     <div className="container">
       <div className="content">
-        {!localUserStream && !modelsLoaded && (
+        {imageError && (
+          <h2 className="error">
+            <span>Failed to load reference image or models. Please try again or contact support.</span>
+          </h2>
+        )}
+        {!localUserStream && !modelsLoaded && !imageError && (
           <h2 className="loading">
             <span>Processing your login request...</span>
             <span className="loading-subtext">Preparing facial recognition models...</span>
           </h2>
         )}
-        {!localUserStream && modelsLoaded && (
+        {!localUserStream && modelsLoaded && !imageError && (
           <h2 className="prompt">
             <span>Position your face in front of the camera.</span>
           </h2>
@@ -390,11 +411,11 @@ function Login() {
           <div
             onClick={() => {
               console.log("Retrying face recognition...");
-              videoRef.current.pause();
-              videoRef.current.srcObject = null;
-              localUserStream?.getTracks().forEach((track) => {
-                track.stop();
-              });
+              if (videoRef.current) {
+                videoRef.current.pause();
+                videoRef.current.srcObject = null;
+              }
+              localUserStream?.getTracks().forEach((track) => track.stop());
               clearInterval(faceApiIntervalRef.current);
               localStorage.removeItem("faceAuth");
               navigate("/");

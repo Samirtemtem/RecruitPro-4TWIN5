@@ -172,11 +172,11 @@ const ContactMessagesGrid: React.FC = () => {
 
         {/* Search Bar */}
         <div className="row mb-3">
-          <div className="col-md-6">
+          <div className="col-md-3">
             <input
               type="text"
               className="form-control"
-              placeholder="Search by name, email, or subject..."
+              placeholder="..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

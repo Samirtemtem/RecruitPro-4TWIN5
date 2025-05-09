@@ -67,19 +67,9 @@ const UsersList = () => {
                             <CollapseHeader />
                         </div>
                     </div>
-                    {/* /Breadcrumb */}
-                    <div className="card">
-                        <div className="card-body p-3">
-                            <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
-                                <h5>Candidates Grid</h5>
-                                <div className="d-flex align-items-center flex-wrap row-gap-3">
-                                    <div className="me-3">
-                                        <PredefinedDateRanges />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+               
+
+               
                     {/* Candidates Grid */}
                     <div className="row">
                         {loading ? (

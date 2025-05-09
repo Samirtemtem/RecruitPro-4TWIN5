@@ -736,36 +736,14 @@ const [statsApp, setStatsApp] = useState<ApplicationStats | null>(null);
                 <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                     <h5 className="mb-2">Employees By Department</h5>
                     <div className="dropdown mb-2">
-                        <Link to="#"
+                        <Link to="/employees"
                             className="btn btn-white border btn-sm d-inline-flex align-items-center"
-                            data-bs-toggle="dropdown"
+                            
                         >
-                            <i className="ti ti-calendar me-1" />
-                            This Week
+                            <i className="ti ti-user me-1" />
+                            View All
                         </Link>
-                        <ul className="dropdown-menu dropdown-menu-end p-3">
-                            <li>
-                                <Link to="#"
-                                    className="dropdown-item rounded-1"
-                                >
-                                    This Month
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#"
-                                    className="dropdown-item rounded-1"
-                                >
-                                    This Week
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#"
-                                    className="dropdown-item rounded-1"
-                                >
-                                    Last Week
-                                </Link>
-                            </li>
-                        </ul>
+                        
                     </div>
                 </div>
                 <div className="card-body">

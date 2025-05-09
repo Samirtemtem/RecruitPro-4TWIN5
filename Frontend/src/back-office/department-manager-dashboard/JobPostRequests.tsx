@@ -353,21 +353,7 @@ const JobPostRequests: React.FC = () => {
         return aValue.localeCompare(bValue);
       },
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      render: (text: string, record: RequestData) => {
-        const statusClass = text === 'APPROVED' ? 'bg-success' : 
-                            text === 'REJECTED' ? 'bg-danger' : 
-                            'bg-warning';
-        return (
-          <span className={`badge ${statusClass}`}>
-            {text}
-          </span>
-        );
-      },
-      sorter: (a: RequestData, b: RequestData) => a.status.localeCompare(b.status),
-    },
+ 
     {
       title: "Action",
       dataIndex: "action",
@@ -443,7 +429,7 @@ const JobPostRequests: React.FC = () => {
             </nav>
           </div>
           <div className="d-flex my-xl-auto right-content align-items-center flex-wrap">
-            <TooltipOption />
+            
             <div className="mb-2">
               <a 
                 href="#"
@@ -461,113 +447,7 @@ const JobPostRequests: React.FC = () => {
 
         {/* Filter Section */}
         <div className="card">
-          <div className="card-header d-flex align-items-center justify-content-between flex-wrap pb-0">
-            <h4 className="mb-3">Requests List</h4>
-            <div className="d-flex align-items-center flex-wrap">
-              <div className="input-icon-start mb-3 me-2 position-relative">
-                <PredefinedDateRanges />
-              </div>
-              <div className="dropdown mb-3 me-2">
-                <Link
-                  to="#"
-                  className="btn btn-outline-light bg-white dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  data-bs-auto-close="outside"
-                >
-                  <i className="ti ti-filter me-2" />
-                  Filter
-                </Link>
-                <div className="dropdown-menu drop-width" ref={dropdownMenuRef}>
-                  <form>
-                    <div className="d-flex align-items-center border-bottom p-3">
-                      <h4>Filter</h4>
-                    </div>
-                    <div className="p-3 border-bottom">
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="mb-3">
-                            <label className="form-label">Department</label>
-                            <select
-                              className="form-select"
-                              value={selectedDepartment}
-                              onChange={(e) => setSelectedDepartment(e.target.value)}
-                            >
-                              <option value="">All Departments</option>
-                              <option value="ELECTROMECANIQUE">Electromécanique</option>
-                              <option value="GENIE-CIVIL">Génie Civil</option>
-                              <option value="TIC">TIC</option>
-                              <option value="OTHER">Other</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="mb-3">
-                            <label className="form-label">Importance</label>
-                            <select
-                              className="form-select"
-                              value={selectedImportance}
-                              onChange={(e) => setSelectedImportance(e.target.value)}
-                            >
-                              <option value="">All Levels</option>
-                              <option value="HIGH">High</option>
-                              <option value="MEDIUM">Medium</option>
-                              <option value="LOW">Low</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-3 d-flex align-items-center justify-content-end">
-                      <Link 
-                        to="#" 
-                        className="btn btn-light me-3"
-                        onClick={() => {
-                          setSelectedDepartment("");
-                          setSelectedImportance("");
-                        }}
-                      >
-                        Reset
-                      </Link>
-                      <Link
-                        to="#"
-                        className="btn btn-primary"
-                        onClick={handleApplyClick}
-                      >
-                        Apply
-                      </Link>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div className="dropdown mb-3">
-                <Link
-                  to="#"
-                  className="btn btn-outline-light bg-white dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                >
-                  <i className="ti ti-sort-ascending-2 me-2" />
-                  Sort by A-Z
-                </Link>
-                <ul className="dropdown-menu p-3">
-                  <li>
-                    <Link to="#" className="dropdown-item rounded-1 active">
-                      Ascending
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="#" className="dropdown-item rounded-1">
-                      Descending
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="#" className="dropdown-item rounded-1">
-                      Recently Added
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          
 
           {/* Request List */}
           <div className="card-body p-0 py-3">

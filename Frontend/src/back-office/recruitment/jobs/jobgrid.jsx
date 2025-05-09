@@ -162,26 +162,7 @@ const JobGrid = () => {
                                             ))}
                                         </ul>
                                     </div>
-                                    <div className="dropdown">
-                                        <Link
-                                            to="#"
-                                            className="dropdown-toggle btn btn-white d-inline-flex align-items-center"
-                                            data-bs-toggle="dropdown"
-                                        >
-                                            Sort By: {sortBy === 'recentlyAdded' ? 'Last 7 Days' : sortBy}
-                                        </Link>
-                                        <ul className="dropdown-menu dropdown-menu-end p-3">
-                                            <li onClick={() => handleSortChange('recentlyAdded')}>
-                                                <Link to="#" className="dropdown-item rounded-1">Recently Added</Link>
-                                            </li>
-                                            <li onClick={() => handleSortChange('ascending')}>
-                                                <Link to="#" className="dropdown-item rounded-1">Ascending</Link>
-                                            </li>
-                                            <li onClick={() => handleSortChange('descending')}>
-                                                <Link to="#" className="dropdown-item rounded-1">Descending</Link>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                   
                                 </div>
                             </div>
                         </div>

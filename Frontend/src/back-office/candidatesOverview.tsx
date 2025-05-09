@@ -13,7 +13,6 @@ const CandidatesOverview: React.FC = () => {
   const [chartData, setChartData] = useState({
     years: [] as number[],
     totalCandidates: [] as number[],
-    hiredCandidates: [] as number[],
   });
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -38,13 +37,11 @@ const CandidatesOverview: React.FC = () => {
 
       const years = counts.map(item => item._id); // Extract years dynamically
       const totalCandidates = counts.map(item => item.count);
-      const hiredCandidates = totalCandidates.map(count => Math.floor(count * 0.25)); // Example logic
 
       console.log('Processed Years:', years);
       console.log('Total Candidates:', totalCandidates);
-      console.log('Hired Candidates:', hiredCandidates);
 
-      setChartData({ years, totalCandidates, hiredCandidates });
+      setChartData({ years, totalCandidates });
     } catch (error) {
       setError('Error fetching data. Please try again later.');
       console.error('Fetch error:', error); // Log the error to the console for debugging
@@ -63,19 +60,16 @@ const CandidatesOverview: React.FC = () => {
         .map((year, index) => ({
           year,
           total: chartData.totalCandidates[index],
-          hired: chartData.hiredCandidates[index],
         }))
         .filter(item => item.year === selectedYear) // Only keep items that match the selected year
     : chartData.years.map((year, index) => ({
         year,
         total: chartData.totalCandidates[index],
-        hired: chartData.hiredCandidates[index],
       }));
 
   const candidatesOverviewOptions: ApexOptions = {
     chart: {
       type: 'bar',
-      stacked: true,
       toolbar: {
         show: false,
       },
@@ -89,7 +83,7 @@ const CandidatesOverview: React.FC = () => {
     dataLabels: {
       enabled: true,
     },
-    colors: ['#1E90FF', '#FF6347'], // Blue for total candidates, red for hired
+    colors: ['#1E90FF'], // Blue for total candidates
     xaxis: {
       categories: filteredData.length > 0 ? filteredData.map(data => data.year) : [], // Dynamic categories based on filtered data
     },
@@ -97,10 +91,6 @@ const CandidatesOverview: React.FC = () => {
       {
         name: 'Total Candidates',
         data: filteredData.length > 0 ? filteredData.map(data => data.total) : [], // Total candidates from filtered data
-      },
-      {
-        name: 'Hired Candidates',
-        data: filteredData.length > 0 ? filteredData.map(data => data.hired) : [], // Hired candidates from filtered data
       },
     ],
   };

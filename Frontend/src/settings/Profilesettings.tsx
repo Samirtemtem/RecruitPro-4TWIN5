@@ -129,58 +129,66 @@ const Profilesettings = () => {
     }
   };
 
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    setSuccess("");
 
-    if (!passwordData.password || !passwordData.confirmPassword) {
-      setError("Please fill in both password fields.");
-      setIsLoading(false);
-      return;
-    }
-    if (passwordData.password !== passwordData.confirmPassword) {
-      setError("Passwords do not match.");
-      setIsLoading(false);
-      return;
-    }
-    if (passwordData.password.length < 8) {
-      setError("Password must be at least 8 characters long.");
-      setIsLoading(false);
-      return;
-    }
 
-    const token = localStorage.getItem("token");
-    if (!token) return handleAuthError("Missing token.");
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/password`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ password: passwordData.password }),
-      });
-      const responseData = await response.json();
+ const handlePasswordSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
+  setSuccess("");
 
-      if (!response.ok) {
-        if (["Unauthorized: No user ID found", "Invalid token", "User not found"].includes(responseData.message)) {
-          return handleAuthError("Session expired or invalid user.");
-        }
-        throw new Error(responseData.message || "Failed to update password.");
+  if (!passwordData.password || !passwordData.confirmPassword) {
+    setError("Please fill in both password fields.");
+    setIsLoading(false);
+    return;
+  }
+  if (passwordData.password !== passwordData.confirmPassword) {
+    setError("Passwords do not match.");
+    setIsLoading(false);
+    return;
+  }
+  if (passwordData.password.length < 8) {
+    setError("Password must be at least 8 characters long.");
+    setIsLoading(false);
+    return;
+  }
+
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId"); // Retrieve userId
+  if (!token || !userId) return handleAuthError("Missing token or user ID.");
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/password`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        userId, // Include userId
+        password: passwordData.password,
+      }),
+    });
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      if (["Unauthorized: No user ID found", "Invalid token", "User not found"].includes(responseData.message)) {
+        return handleAuthError("Session expired or invalid user.");
       }
-
-      setSuccess("Password updated successfully!");
-      setPasswordData({ password: "", confirmPassword: "" });
-      setView("profile");
-    } catch (err: any) {
-      setError(err.message || "Failed to update password.");
-    } finally {
-      setIsLoading(false);
+      throw new Error(responseData.message || "Failed to update password.");
     }
-  };
+
+    setSuccess("Password updated successfully!");
+    setPasswordData({ password: "", confirmPassword: "" });
+    setView("profile");
+  } catch (err: any) {
+    console.error("Password update error:", err); // Add console logging for debugging
+    setError(err.message || "Failed to update password.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="page-wrapper">

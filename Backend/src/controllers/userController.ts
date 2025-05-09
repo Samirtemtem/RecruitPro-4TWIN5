@@ -413,7 +413,7 @@ export const countEmployeesByDepartment = async (
     const departmentCounts = await User.aggregate([
       {
         $match: {
-          role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER"] },
+          role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER","TEAM-LEAD"] },
           // Ensure we are only counting departments that are not null or empty
           department: { $exists: true, $ne: null }, // Exclude null and empty departments
         },
@@ -435,12 +435,12 @@ export const countEmployeesByDepartment = async (
 
     // Get total number of employees
     const totalEmployees = await User.countDocuments({
-      role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER"] }, // Corrected closing brace
+      role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER","TEAM-LEAD"] }, // Corrected closing brace
     });
 
     // Get the count of employees from the last year
     const lastYearCount = await User.countDocuments({
-      role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER"] },
+      role: { $in: ["EMPLOYEE", "HR-MANAGER", "DEPARTMENT-MANAGER","TEAM-LEAD"] },
       createDate: {
         $gte: new Date(`${lastYear}-01-01`),
         $lt: new Date(`${currentYear}-01-01`),

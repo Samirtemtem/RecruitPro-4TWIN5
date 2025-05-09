@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import PredefinedDateRanges from '../../../core/common/datePicker';
 import CollapseHeader from '../../../core/common/collapse-header/collapse-header';
 import { all_routes } from '../../../routing-module/router/all_routes';
 

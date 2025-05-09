@@ -84,7 +84,7 @@
   /* Adjust content padding to make room for the match indicator */
   .content {
     position: relative;
-    padding-right: 70px !important;
+   /* padding-right: 70px !important;*/
   }
   
   /* Match explanation styles */

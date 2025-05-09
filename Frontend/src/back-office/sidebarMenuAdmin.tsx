@@ -26,16 +26,7 @@ const useSidebarData = () => {
                 materialicons: 'start',
         
               },
-              {
-                label: 'Messages de Contact',
-                link: routes.contactManagement,
-                submenu: false,
-                showSubRoute: false,
-                icon: 'message-square',
-                base: 'contact-messages',
-                materialicons: 'email',
-                submenuItems: [],
-              },
+      
             ],
           },
           {
@@ -120,6 +111,27 @@ const useSidebarData = () => {
                 materialicons: 'shopping_bag',
                 submenuItems: [],
               },
+            ],
+          },
+
+          {
+            tittle: 'Review',
+            icon: 'file',
+            showAsTab: false,
+            separateRoute: false,
+            submenuItems: [
+
+              {
+                label: 'Contact Messages',
+                link: routes.contactManagement,
+                submenu: false,
+                showSubRoute: false,
+                icon: 'timeline',
+                base: 'jobs',
+                materialicons: 'confirmation_number',
+                submenuItems: [],
+              },
+            
             ],
           },
         ] : []),

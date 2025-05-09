@@ -1,4 +1,3 @@
-// models/ContactMessage.ts
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IContactMessage extends Document {
@@ -6,6 +5,7 @@ export interface IContactMessage extends Document {
   email: string;
   subject: string;
   message: string;
+  createdAt: Date;
 }
 
 const ContactMessageSchema: Schema = new Schema({
@@ -13,6 +13,7 @@ const ContactMessageSchema: Schema = new Schema({
   email: { type: String, required: true },
   subject: { type: String, required: true },
   message: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const ContactMessage = mongoose.model<IContactMessage>('ContactMessage', ContactMessageSchema);

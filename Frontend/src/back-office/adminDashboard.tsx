@@ -15,6 +15,15 @@ import CollapseHeader from "../core/common/collapse-header/collapse-header";
 import { ApexOptions } from 'apexcharts';
 import CandidatesOverview from "./candidatesOverview";
 
+
+interface ApplicationStats {
+  currentYear: {
+    count: number;
+  };
+  percentageAugmentation: number;
+}
+
+
 interface DepartmentCount {
   department: string;
   count: number;
@@ -415,6 +424,29 @@ useEffect(() => {
 
 
 
+const [statsApp, setStatsApp] = useState<ApplicationStats | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchApplicationStats = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/app/count-applications');
+        if (!response.ok) {
+          throw new Error('Failed to fetch application stats');
+        }
+        const data: ApplicationStats = await response.json();
+        setStatsApp(data);
+      } catch (err) {
+        setError('Error fetching data');
+        console.error(err);
+      }
+    };
+
+    fetchApplicationStats();
+  }, []);
+
+
+
   return (
     <>
       {/* Page Wrapper */}
@@ -439,51 +471,19 @@ useEffect(() => {
               </nav>
             </div>
             <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
-              <div className="me-2 mb-2">
-                <div className="dropdown">
-                  <Link to="#"
-                    className="dropdown-toggle btn btn-white d-inline-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i className="ti ti-file-export me-1" />
-                    Export
-                  </Link>
-                  <ul className="dropdown-menu  dropdown-menu-end p-3">
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        <i className="ti ti-file-type-pdf me-1" />
-                        Export as PDF
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        <i className="ti ti-file-type-xls me-1" />
-                        Export as Excel{" "}
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mb-2">
-                <div className="input-icon w-120 position-relative">
-                  <span className="input-icon-addon">
-                    <i className="ti ti-calendar text-gray-9" />
-                  </span>
-                  <Calendar value={date} onChange={(e: any) => setDate(e.value)} view="year" dateFormat="yy" className="Calendar-form" />
-                </div>
-              </div>
+             
+            
               <div className="ms-2 head-icons">
                 <CollapseHeader />
               </div>
+
+
             </div>
           </div>
+
           {/* /Breadcrumb */}
+
+          
           {/* Welcome Wrap */}
           <div className="card border-0">
             <div className="card-body d-flex align-items-center justify-content-between flex-wrap pb-1">
@@ -494,20 +494,12 @@ useEffect(() => {
                 <div className="ms-3">
                   <h3 className="mb-2">
                     Welcome Back {userData ? `${userData.firstName} ${userData.lastName}` : 'Loading...'}
-                    <Link to="#" className="edit-icon">
+                    <Link to="/general-settings/profile-settings" className="edit-icon">
                       <i className="ti ti-edit fs-14" />
                     </Link>
                   </h3>
                   <p>
-                    You have{" "}
-                    <span className="text-primary text-decoration-underline">
-                      21
-                    </span>{" "}
-                    Pending Approvals &amp;{" "}
-                    <span className="text-primary text-decoration-underline">
-                      14
-                    </span>{" "}
-                    Leave Requests
+                    {userData ? userData.email : 'Loading...'}
                   </p>
                 </div>
               </div>
@@ -552,28 +544,54 @@ useEffect(() => {
     </div>
                   </div>
                 </div>
+
+
+
+
+
                 <div className="col-md-3 d-flex">
-                  <div className="card flex-fill">
-                    <div className="card-body">
-                      <span className="avatar rounded-circle bg-secondary mb-2">
-                        <i className="ti ti-browser fs-16" />
-                      </span>
-                      <h6 className="fs-13 fw-medium text-default mb-1">
-                      Job Applicants
-                      </h6>
-                      <h3 className="mb-3">
-                        320{" "}
-                        <span className="fs-12 fw-medium text-success">
-                          <i className="fa-solid fa-caret-up me-1" />
-                          +2.1%
-                        </span>
-                      </h3>
-                      <Link to="/jobgrid" className="link-default">
-                        View All
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+      <div className="card flex-fill">
+        <div className="card-body">
+          <span className="avatar rounded-circle bg-secondary mb-2">
+            <i className="ti ti-browser fs-16" />
+          </span>
+          <h6 className="fs-13 fw-medium text-default mb-1">Job Applicants</h6>
+          <h3 className="mb-3">
+            {statsApp ? statsApp.currentYear.count : 'Loading...'}
+            {' '}
+            {statsApp && (
+              <span className="fs-12 fw-medium text-success">
+                <i className="fa-solid fa-caret-up me-1" />
+                {statsApp.percentageAugmentation >= 0
+                  ? `+${statsApp.percentageAugmentation}%`
+                  : `${statsApp.percentageAugmentation}%`}
+              </span>
+            )}
+            {error && (
+              <span className="fs-12 fw-medium text-danger">
+                Error
+              </span>
+            )}
+          </h3>
+          <Link to="/jobgrid" className="link-default">
+            View All
+          </Link>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div className="col-md-3 d-flex">
                   <div className="card flex-fill">
                     <div className="card-body">

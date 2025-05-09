@@ -922,4 +922,60 @@ router.get('/Count/count/:jobPostId', async (req: Request, res: Response) : Prom
 
 
 
+
+router.get('/count-applications', async (req: Request, res: Response) => {
+  try {
+    // Get current year and last year
+    const currentYear = new Date().getFullYear();
+    const lastYear = currentYear - 1;
+
+    // Count applications for current year
+    const currentYearCount = await Application.countDocuments({
+      submissionDate: {
+        $gte: new Date(currentYear, 0, 1),
+        $lte: new Date(currentYear, 11, 31)
+      }
+    });
+
+    // Count applications for last year
+    const lastYearCount = await Application.countDocuments({
+      submissionDate: {
+        $gte: new Date(lastYear, 0, 1),
+        $lte: new Date(lastYear, 11, 31)
+      }
+    });
+
+    // Calculate percentage augmentation
+    let percentageAugmentation: number;
+    if (lastYearCount === 0) {
+      percentageAugmentation = currentYearCount > 0 ? 100 : 0;
+    } else {
+      percentageAugmentation = ((currentYearCount - lastYearCount) / lastYearCount) * 100;
+    }
+
+    // Round to 2 decimal places
+    percentageAugmentation = Math.round(percentageAugmentation * 100) / 100;
+
+    res.status(200).json({
+      currentYear: {
+        year: currentYear,
+        count: currentYearCount
+      },
+      lastYear: {
+        year: lastYear,
+        count: lastYearCount
+      },
+      percentageAugmentation
+    });
+  } catch (error) {
+    console.error('Error counting applications:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
 export default router;

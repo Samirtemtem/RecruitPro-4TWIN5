@@ -29,7 +29,6 @@ const ProjectModals = () => {
     { value: "DEPARTMENT-MANAGER", label: "DEPARTMENT-MANAGER" },
     { value: "TEAM-LEAD", label: "TEAM-LEAD" },
     { value: "EMPLOYEE", label: "EMPLOYEE" },
-
   ];
 
   const departmentChoose = [
@@ -106,7 +105,7 @@ const ProjectModals = () => {
       tempErrors.password = "Password must be at least 6 characters.";
       isValid = false;
     } else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(formData.password)) {
-      tempErrors.password = "Password must include both letters and numbers.";
+      tempErrors.password = "適用於字母和數字的密碼.";
       isValid = false;
     }
     
@@ -121,7 +120,7 @@ const ProjectModals = () => {
 
     setErrors(tempErrors);
     return isValid;
-};
+  };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -189,7 +188,7 @@ const ProjectModals = () => {
     <>
       {/* Add Project */}
       <div className="modal fade" id="add_project" role="dialog">
-        <div className="modal-dialog modal-dialog-centered modal-fullheight">
+        <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header align-items-center justify-content-between">
               <h5 className="modal-title">Add Employee</h5>
@@ -246,7 +245,7 @@ const ProjectModals = () => {
                                 />
                               </div>
                               <Link
-                                to="#"
+                                to=""
                                 className="btn btn-light btn-sm"
                                 onClick={() => setFormData({ ...formData, image: null })}
                               >
@@ -256,8 +255,6 @@ const ProjectModals = () => {
                           </div>
                         </div>
                       </div>
-
-                      {/* Other form fields... */}
 
                       <div className="col-md-6">
                         <div className="mb-3">
@@ -356,7 +353,7 @@ const ProjectModals = () => {
                       </div>
                       <div className="col-md-6">
                         <div className="mb-3">
-                          <label className="form-label">Department</label>
+                          <div className="form-label">Department</div>
                           <select
                             className="form-select"
                             name="department"
@@ -394,7 +391,7 @@ const ProjectModals = () => {
                       <div className="d-flex align-items-center justify-content-end">
                         <Link
                           type="button"
-                          to="#"
+                          to=""
                           className="btn btn-outline-light border me-2"
                           data-bs-dismiss="modal"
                         >
@@ -423,11 +420,14 @@ const ProjectModals = () => {
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 1rem);
+    max-width: 1000px !important; /* Increased width for the modal */
+    width: 100%;
   }
 
   .modal-content {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
   }
 
   .modal-body {

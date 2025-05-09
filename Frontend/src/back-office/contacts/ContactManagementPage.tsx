@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-// Interface for contact message data
+// Define ContactMessage type
 interface ContactMessage {
   _id: string;
   username: string;
   email: string;
   subject: string;
   message: string;
-  createdAt?: string;
+  createdAt: string;
 }
 
-const ContactManagementPage: React.FC = () => {
+const ContactMessagesGrid: React.FC = () => {
   const [contacts, setContacts] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,6 +28,7 @@ const ContactManagementPage: React.FC = () => {
       setLoading(true);
       try {
         const response = await axios.get('http://localhost:5000/api/contact/contacts');
+        console.log('API Response:', response.data); // Log the full API response
         setContacts(response.data);
         setError(null);
       } catch (err: any) {
@@ -60,11 +61,11 @@ const ContactManagementPage: React.FC = () => {
   // Function to handle contact deletion
   const handleDeleteContact = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this message?')) return;
-    
+
     try {
       await axios.delete(`http://localhost:5000/api/contact/contact/${id}`);
       setContacts(prevContacts => prevContacts.filter(contact => contact._id !== id));
-      
+
       if (selectedContact && selectedContact._id === id) {
         setSelectedContact(null);
         setShowDetailModal(false);
@@ -81,744 +82,268 @@ const ContactManagementPage: React.FC = () => {
     setShowDetailModal(true);
   };
 
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Inline date formatting with error handling
+  const formatDate = (dateString: string): string => {
+    console.log('Parsing date:', dateString); // Log the date string
+    if (!dateString) {
+      console.warn('Empty date string received');
+      return 'Invalid Date';
+    }
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      console.warn(`Invalid date format: ${dateString}`);
+      return 'Invalid Date';
+    }
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
   return (
     <div className="page-wrapper">
-      <div className="content container-fluid">
-        {/* Page Header */}
-        <div className="page-header">
-          <div className="row align-items-center">
-            <div className="col">
-              <h3 className="page-title">Contact Management</h3>
-              <ul className="breadcrumb">
+      <style>{`
+        .card {
+          min-height: 250px; /* Smaller minimum height for cards */
+          display: flex;
+          flex-direction: column;
+        }
+        .card-body {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          flex-grow: 1;
+        }
+        .bg-light .text-dark {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 150px; /* Adjusted for smaller card size */
+        }
+        .card-body h6, .card-body p, .card-body span {
+          margin-bottom: 0.5rem; /* Consistent spacing */
+        }
+        .modal {
+          display: none; /* Hidden by default */
+        }
+        .modal.show {
+          display: flex !important; /* Use flex to center */
+          align-items: center;
+          justify-content: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1050;
+          background-color: rgba(0, 0, 0, 0.5); /* Backdrop */
+        }
+        .modal-dialog {
+          margin: auto; /* Center the modal */
+        }
+      `}</style>
+      <div className="content">
+        {/* Breadcrumb */}
+        <div className="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+          <div className="my-auto mb-2">
+            <h2 className="mb-1">Contact Messages</h2>
+            <nav>
+              <ol className="breadcrumb mb-0">
                 <li className="breadcrumb-item">
-                  <Link to="/adminDashboard">Dashboard</Link>
+                  <Link to="/dashboard">
+                    <i className="ti ti-smart-home" />
+                  </Link>
                 </li>
-                <li className="breadcrumb-item active">Contact Messages</li>
-              </ul>
-            </div>
-            <div className="col-auto">
-              <div className="contact-count">
-                <h3>{contacts.length}</h3>
-                <p>Total Messages</p>
-              </div>
-            </div>
+                <li className="breadcrumb-item">Administration</li>
+                <li className="breadcrumb-item active" aria-current="page">
+                  Contact Messages Grid
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+        {/* /Breadcrumb */}
+
+        {/* Search Bar */}
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search by name, email, or subject..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
 
-        {/* Search Row */}
-        <div className="row mb-4">
-          <div className="col-sm-6">
-            <div className="form-group mb-0 position-relative">
-              <i className="fas fa-search search-icon"></i>
-              <input 
-                type="text" 
-                className="form-control search-input" 
-                placeholder="Search by name, email or subject..." 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="col-sm-6 text-end">
-            <div className="search-result-info">
-              <span>Found: {filteredContacts.length} messages</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Messages List */}
+        {/* Contact Messages Grid */}
         <div className="row">
-          <div className="col-md-12">
-            <div className="card contact-card">
-              <div className="card-body">
-                {loading ? (
-                  <div className="text-center p-4">
-                    <div className="spinner-border text-primary" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <p className="mt-3">Loading contact messages...</p>
-                  </div>
-                ) : error ? (
-                  <div className="alert alert-danger" role="alert">
-                    <i className="fas fa-exclamation-triangle me-2"></i> {error}
-                  </div>
-                ) : filteredContacts.length === 0 ? (
-                  <div className="text-center p-4">
-                    <div className="empty-state-icon">
-                      <i className="far fa-envelope-open"></i>
-                    </div>
-                    <h4>No contact messages found</h4>
-                    <p>There are no messages matching your search criteria.</p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="grid-container">
-                      {currentContacts.map((contact) => (
-                        <div 
-                          key={contact._id} 
-                          className="contact-card-item"
-                          onClick={() => handleViewContact(contact)}
-                        >
-                          <div className="contact-card-header">
-                            <div className="contact-avatar">
-                              {contact.username.charAt(0).toUpperCase()}
-                            </div>
-                            <div className="contact-info">
-                              <h3 className="contact-name">{contact.username}</h3>
-                              <a 
-                                href={`mailto:${contact.email}`} 
-                                className="contact-email"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {contact.email}
-                              </a>
-                            </div>
-                            <div className="contact-actions">
-                              <button 
-                                className="btn-icon btn-view"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleViewContact(contact);
-                                }}
-                              >
-                                <i className="far fa-eye"></i>
-                              </button>
-                              <button 
-                                className="btn-icon btn-delete"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleDeleteContact(contact._id);
-                                }}
-                              >
-                                <i className="far fa-trash-alt"></i>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="contact-card-body">
-                            <div className="contact-subject">
-                              <h4>Subject:</h4>
-                              <p>{contact.subject}</p>
-                            </div>
-                            <div className="contact-preview">
-                              <p>
-                                {contact.message.length > 120
-                                  ? `${contact.message.substring(0, 120)}...`
-                                  : contact.message}
-                              </p>
-                            </div>
-                          </div>
+          {loading ? (
+            <div className="col-md-12 text-center">
+              <p>Loading contact messages...</p>
+            </div>
+          ) : error ? (
+            <div className="col-md-12 text-center">
+              <p className="text-danger">{error}</p>
+            </div>
+          ) : currentContacts.length === 0 ? (
+            <div className="col-md-12 text-center">
+              <p>No contact messages found.</p>
+            </div>
+          ) : (
+            currentContacts.map((contact) => (
+              <div key={contact._id} className="col-xxl-3 col-xl-4 col-md-6">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex justify-content-between align-items-start mb-3">
+                      <div className="d-flex flex-column">
+                        <div className="d-flex flex-wrap mb-1">
+                          <h6 className="fs-16 fw-semibold me-1">{contact.username}</h6>
                         </div>
-                      ))}
-                    </div>
-                    
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                      <div className="pagination-container">
-                        <div className="pagination-info">
-                          Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredContacts.length)} of {filteredContacts.length} messages
-                        </div>
-                        <nav aria-label="Page navigation">
-                          <ul className="pagination">
-                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                              <a 
-                                href="#" 
-                                className="page-link"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  if (currentPage > 1) setCurrentPage(currentPage - 1);
-                                }}
-                              >
-                                <i className="fas fa-chevron-left"></i>
-                              </a>
-                            </li>
-                            
-                            {[...Array(totalPages)].map((_, i) => (
-                              <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
-                                <a 
-                                  href="#" 
-                                  className="page-link"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setCurrentPage(i + 1);
-                                  }}
-                                >
-                                  {i + 1}
-                                </a>
-                              </li>
-                            ))}
-                            
-                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                              <a 
-                                href="#" 
-                                className="page-link"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                                }}
-                              >
-                                <i className="fas fa-chevron-right"></i>
-                              </a>
-                            </li>
-                          </ul>
-                        </nav>
+                        <p className="text-gray fs-13 fw-normal">{contact.email}</p>
                       </div>
-                    )}
-                  </>
-                )}
+                    </div>
+                    <div className="bg-light rounded p-2">
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <h6 className="text-gray fs-14 fw-normal">Subject</h6>
+                        <span className="text-dark fs-14 fw-medium">{contact.subject}</span>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <h6 className="text-gray fs-14 fw-normal">Received</h6>
+                        <span className="text-dark fs-14 fw-medium">
+                          {formatDate(contact.createdAt)}
+                        </span>
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <h6 className="text-gray fs-14 fw-normal">Message Preview</h6>
+                        <span className="text-dark fs-14 fw-medium">
+                          {contact.message.slice(0, 30)}...
+                        </span>
+                      </div>
+                    </div>
+                    <div className="d-flex justify-content-end mt-3">
+                      <button
+                        className="btn btn-primary btn-sm me-2"
+                        onClick={() => handleViewContact(contact)}
+                      >
+                        View Details
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDeleteContact(contact._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
+            ))
+          )}
+        </div>
+        {/* /Contact Messages Grid */}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="col-md-12">
+            <div className="text-center mb-4">
+              <nav>
+                <ul className="pagination justify-content-center">
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <li
+                      key={index + 1}
+                      className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => handlePageChange(index + 1)}
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Load More (Optional) */}
+        {filteredContacts.length > currentContacts.length && (
+          <div className="col-md-12">
+            <div className="text-center mb-4">
+              <button
+                className="btn btn-primary"
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <i className="ti ti-loader-3 me-1" />
+                Load More
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Message Detail Modal */}
+      {/* Footer */}
+      <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
+        <p className="mb-0">2025 © RECRUITPRO.</p>
+        <p>
+          Designed & Developed By{' '}
+          <Link to="#" className="text-primary">
+            InfiniteLoopers
+          </Link>
+        </p>
+      </div>
+
+      {/* Details Modal */}
       {showDetailModal && selectedContact && (
-        <div className="modal-backdrop">
-          <div className="modal-dialog">
+        <div className={`modal fade ${showDetailModal ? 'show' : ''}`}>
+          <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
-                <div className="modal-title-container">
-                  <div className="modal-avatar">
-                    {selectedContact.username.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <h5 className="modal-title">{selectedContact.username}</h5>
-                    <a href={`mailto:${selectedContact.email}`} className="modal-email">
-                      {selectedContact.email}
-                    </a>
-                  </div>
-                </div>
-                <button 
-                  type="button" 
+                <h5 className="modal-title">Contact Message Details</h5>
+                <button
+                  type="button"
                   className="btn-close"
                   onClick={() => setShowDetailModal(false)}
-                >
-                  <i className="fas fa-times"></i>
-                </button>
+                ></button>
               </div>
               <div className="modal-body">
-                <div className="message-subject">
-                  <h4>Subject</h4>
-                  <div className="subject-value">{selectedContact.subject}</div>
-                </div>
-
-                <div className="message-content">
-                  <h4>Message</h4>
-                  <div className="message-value">
-                    {selectedContact.message.split('\n').map((line, i) => (
-                      <React.Fragment key={i}>
-                        {line}
-                        <br />
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
+                <p><strong>Name:</strong> {selectedContact.username}</p>
+                <p><strong>Email:</strong> {selectedContact.email}</p>
+                <p><strong>Subject:</strong> {selectedContact.subject}</p>
+                <p><strong>Message:</strong> {selectedContact.message}</p>
+                <p><strong>Received:</strong> {formatDate(selectedContact.createdAt)}</p>
               </div>
               <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="btn btn-outline-secondary"
+                <button
+                  type="button"
+                  className="btn btn-secondary me-1"
                   onClick={() => setShowDetailModal(false)}
                 >
                   Close
                 </button>
-                <button 
+                <button
                   type="button"
                   className="btn btn-danger"
                   onClick={() => handleDeleteContact(selectedContact._id)}
                 >
-                  <i className="far fa-trash-alt me-2"></i> Delete
-                </button>
-                <button 
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => window.location.href = `mailto:${selectedContact.email}?subject=Re: ${selectedContact.subject}`}
-                >
-                  <i className="fas fa-reply me-2"></i> Reply
+                  Delete
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* CSS styles */}
-      <style>
-        {`
-          /* General Styles */
-          .page-header {
-            margin-bottom: 24px;
-            padding: 20px;
-            background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
-            border-radius: 10px;
-            color: white;
-            box-shadow: 0 4px 20px rgba(0, 13, 255, 0.15);
-          }
-          
-          .page-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-          }
-          
-          .breadcrumb {
-            padding: 0;
-            margin: 0;
-            background: transparent;
-          }
-          
-          .breadcrumb-item a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-          }
-          
-          .breadcrumb-item.active {
-            color: rgba(255, 255, 255, 0.9);
-          }
-          
-          .contact-count {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-align: center;
-          }
-          
-          .contact-count h3 {
-            margin: 0;
-            font-weight: 600;
-            font-size: 28px;
-          }
-          
-          .contact-count p {
-            margin: 0;
-            font-size: 14px;
-            opacity: 0.9;
-          }
-          
-          /* Search Styles */
-          .search-input {
-            height: 50px;
-            border-radius: 25px;
-            padding-left: 50px;
-            font-size: 16px;
-            border: none;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-          }
-          
-          .search-input:focus {
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.12);
-          }
-          
-          .search-icon {
-            position: absolute;
-            left: 20px;
-            top: 17px;
-            color: #6b73ff;
-            font-size: 16px;
-          }
-          
-          .search-result-info {
-            padding: 10px;
-            font-size: 14px;
-            color: #666;
-            background: #f8f9fa;
-            border-radius: 8px;
-            display: inline-block;
-            padding: 8px 16px;
-          }
-          
-          /* Grid Layout */
-          .contact-card {
-            border-radius: 10px;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-            border: none;
-            overflow: hidden;
-          }
-          
-          .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 10px;
-          }
-          
-          .contact-card-item {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            transition: all 0.3s;
-            cursor: pointer;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #f0f0f0;
-          }
-          
-          .contact-card-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-          }
-          
-          .contact-card-header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            position: relative;
-            background: #f8faff;
-            border-bottom: 1px solid #f0f0f0;
-          }
-          
-          .contact-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 18px;
-            color: white;
-            font-weight: bold;
-            flex-shrink: 0;
-          }
-          
-          .contact-info {
-            flex-grow: 1;
-          }
-          
-          .contact-name {
-            font-weight: 600;
-            font-size: 16px;
-            margin: 0 0 5px 0;
-            color: #333;
-          }
-          
-          .contact-email {
-            color: #6b73ff;
-            font-weight: 500;
-            text-decoration: none;
-            font-size: 14px;
-            display: block;
-          }
-          
-          .contact-email:hover {
-            text-decoration: underline;
-          }
-          
-          .contact-actions {
-            display: flex;
-            gap: 8px;
-          }
-          
-          .contact-card-body {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-          }
-          
-          .contact-subject {
-            margin-bottom: 15px;
-          }
-          
-          .contact-subject h4 {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-            font-weight: 500;
-          }
-          
-          .contact-subject p {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin: 0;
-          }
-          
-          .contact-preview {
-            flex-grow: 1;
-          }
-          
-          .contact-preview p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
-            margin: 0;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-          }
-          
-          /* Action Buttons */
-          .btn-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-          }
-          
-          .btn-view {
-            background: #e8eaff;
-            color: #6b73ff;
-          }
-          
-          .btn-view:hover {
-            background: #d0d4ff;
-            transform: scale(1.05);
-          }
-          
-          .btn-delete {
-            background: #ffe8e8;
-            color: #ff4d4d;
-          }
-          
-          .btn-delete:hover {
-            background: #ffd0d0;
-            transform: scale(1.05);
-          }
-          
-          /* Modal Styles */
-          .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1050;
-          }
-          
-          .modal-dialog {
-            width: 600px;
-            max-width: 95%;
-            max-height: 90vh;
-          }
-          
-          .modal-content {
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-          }
-          
-          .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: #f8faff;
-            border-bottom: 1px solid #f0f0f0;
-          }
-          
-          .modal-title-container {
-            display: flex;
-            align-items: center;
-          }
-          
-          .modal-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-size: 20px;
-            color: white;
-            font-weight: bold;
-          }
-          
-          .modal-title {
-            font-weight: 600;
-            font-size: 18px;
-            margin: 0 0 5px 0;
-          }
-          
-          .modal-email {
-            color: #6b73ff;
-            text-decoration: none;
-            font-size: 14px;
-          }
-          
-          .btn-close {
-            background: none;
-            border: none;
-            color: #999;
-            font-size: 20px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            transition: all 0.2s;
-          }
-          
-          .btn-close:hover {
-            background: #f0f0f0;
-            color: #333;
-          }
-          
-          .modal-body {
-            padding: 25px;
-          }
-          
-          .message-subject, .message-content {
-            margin-bottom: 25px;
-          }
-          
-          .message-subject h4, .message-content h4 {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-            font-weight: 500;
-          }
-          
-          .subject-value {
-            font-size: 18px;
-            font-weight: 600;
-            background: #f0f3ff;
-            padding: 15px 20px;
-            border-radius: 10px;
-            color: #333;
-          }
-          
-          .message-value {
-            border: 1px solid #f0f0f0;
-            border-radius: 10px;
-            padding: 20px;
-            background: white;
-            min-height: 150px;
-            line-height: 1.6;
-            font-size: 15px;
-            color: #444;
-          }
-          
-          .modal-footer {
-            padding: 20px;
-            border-top: 1px solid #f0f0f0;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-          }
-          
-          .btn {
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 500;
-            transition: all 0.2s;
-          }
-          
-          .btn-outline-secondary {
-            border: 1px solid #e0e0e0;
-            background: white;
-            color: #666;
-          }
-          
-          .btn-outline-secondary:hover {
-            background: #f8f9fa;
-          }
-          
-          .btn-danger {
-            background: #ff4d4d;
-            color: white;
-            border: none;
-          }
-          
-          .btn-danger:hover {
-            background: #ff3333;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
-          }
-          
-          .btn-primary {
-            background: #6b73ff;
-            color: white;
-            border: none;
-          }
-          
-          .btn-primary:hover {
-            background: #5a64ff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(107, 115, 255, 0.3);
-          }
-          
-          /* Pagination */
-          .pagination-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-            padding: 0 10px;
-          }
-          
-          .pagination {
-            display: flex;
-            gap: 5px;
-          }
-          
-          .page-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #e0e0e0;
-            color: #666;
-            font-weight: 500;
-            transition: all 0.2s;
-            padding: 0;
-          }
-          
-          .page-link:hover {
-            background: #f8f9fa;
-          }
-          
-          .page-item.active .page-link {
-            background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
-            border-color: transparent;
-            color: white;
-          }
-          
-          .pagination-info {
-            color: #666;
-            font-size: 14px;
-          }
-          
-          /* Empty State */
-          .empty-state-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #f0f3ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 30px;
-            color: #6b73ff;
-          }
-        `}
-      </style>
     </div>
   );
 };
 
-export default ContactManagementPage; 
+export default ContactMessagesGrid;

@@ -37,12 +37,25 @@ const TeamLeadersList: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [teamLeaderIdToDelete, setTeamLeaderIdToDelete] = useState<string | null>(null);
 
-  // Fetch data from the API
+  // Fetch data from the API and filter by user's department
   const fetchTeamLeads = async () => {
     try {
+      // Retrieve user department from localStorage
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const userDepartment = user.department || "";
+
+      if (!userDepartment) {
+        console.error("User department not found in localStorage");
+        toast.error("User department not found");
+        return;
+      }
+
       const response = await axios.get("http://localhost:5000/api/user/team-leads");
-      const fetchedData: TeamLeaderData[] = Array.isArray(response.data) ? response.data : [];
+      const fetchedData: TeamLeaderData[] = Array.isArray(response.data)
+        ? response.data.filter((leader: TeamLeaderData) => leader.department === userDepartment)
+        : [];
       setData(fetchedData);
+      console.log(fetchedData);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Failed to fetch team leaders");
@@ -134,7 +147,7 @@ const TeamLeadersList: React.FC = () => {
       toast.success("Team leader deleted successfully");
       setShowDeleteModal(false);
       fetchTeamLeads(); // Refresh list after deletion
-      window.location.reload(); // Refresh the entire page after creation
+      window.location.reload(); // Refresh the entire page after deletion
     } catch (error) {
       console.error("Error deleting team leader:", error);
       toast.error("Failed to delete team leader");

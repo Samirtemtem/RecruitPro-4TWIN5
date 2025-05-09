@@ -119,26 +119,7 @@ const EmployeesList: React.FC = () => {
     setSelectedRole(e.target.value.trim());
   };
 
-  const handleAddSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userId) {
-      toast.error("You must be logged in to create an employee");
-      return;
-    }
-   
-    try {
-      console.log("Submitting form data:", JSON.stringify(formData, null, 2));
-      await axios.post('http://localhost:5000/api/user/users', formData);
-      toast.success("Employee created successfully");
-      setFormData(createEmptyEmployee(profileData?.department || user?.department));
-      fetchEmployees();
-      window.location.reload(); // Force reload from server (bypassing cache)
-    } catch (error: any) {
-      console.error("Error creating employee:", error);
-      const errorMessage = error.response?.data?.error || "Failed to create employee";
-      toast.error(errorMessage);
-    }
-  };
+
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -302,21 +283,8 @@ const EmployeesList: React.FC = () => {
               </ol>
             </nav>
           </div>
-          <div className="d-flex my-xl-auto right-content align-items-center flex-wrap">
-            <TooltipOption />
-            <div className="mb-2">
-              <a 
-                href="#"
-                className="btn btn-primary d-flex align-items-center"
-                data-bs-toggle="modal"
-                data-bs-target="#add_employee"
-                onClick={resetForm}
-              >
-                <i className="ti ti-square-rounded-plus me-2" />
-                Add Employee
-              </a>
-            </div>
-          </div>
+         
+         
         </div>
 
         <div className="card">
@@ -531,163 +499,8 @@ const EmployeesList: React.FC = () => {
         </div>
       </div>
 
-      {/* Add Employee Modal */}
-      <div className="modal fade" id="add_employee">
-        <div className="modal-dialog modal-dialog-centered modal-lg">
-          <div className="modal-content" style={{ minWidth: "700px" }}>
-            <div className="modal-header">
-              <h4 className="modal-title">Add Employee</h4>
-              <button
-                type="button"
-                className="btn-close custom-btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                onClick={resetForm}
-              >
-                <i className="ti ti-x" />
-              </button>
-            </div>
-            <form onSubmit={handleAddSubmit}>
-              <div className="modal-body">
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">First Name</label>
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Last Name</label>
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Email</label>
-                      <input 
-                        type="email" 
-                        className="form-control" 
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Password</label>
-                      <input 
-                        type="password" 
-                        className="form-control" 
-                        name="password"
-                        value={formData.password || ""}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Phone Number</label>
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Department</label>
-                      <select
-                        className="form-select"
-                        name="department"
-                        value={formData.department}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="">Select Department</option>
-                        <option value="ELECTROMECANIQUE">Electromécanique</option>
-                        <option value="GENIE-CIVIL">Génie Civil</option>
-                        <option value="TIC">TIC</option>
-                        
-                        <option value="OTHER">Other</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Role</label>
-                      <select
-                        className="form-select"
-                        name="role"
-                        value={formData.role}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="EMPLOYEE">Employee</option>
-                        <option value="DEPARTMENT-MANAGER">Department Manager</option>
-                        <option value="HR-MANAGER">HR Manager</option>
-                        <option value="TEAM-LEAD">Team Lead</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="mb-3">
-                      <label className="form-label">Team (TeamLeaders Only)</label>
-                      <input 
-                        type="text" 
-                        className="form-control" 
-                        name="team"
-                        value={formData.team || ""}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-white border me-2"
-                  data-bs-dismiss="modal"
-                  onClick={resetForm}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  Add Employee
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+     
+
 
       {/* Edit Employee Modal */}
       <div className="modal fade" id="edit_employee">

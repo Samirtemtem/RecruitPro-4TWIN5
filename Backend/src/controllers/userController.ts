@@ -7,8 +7,7 @@ import { Role } from "../models/types";
 import Education from "../models/Education"; // Adjust the import based on your file structure
 import Experience from "../models/Experience"; // Adjust the import based on your file structure
 import Skill from "../models/Skill"; // Adjust the import based on your file structure
-import bcrypt from "bcryptjs";
-import { uploadToCloudinary } from "../utils/cloudinary";
+import { sendCredentialsEmail } from '../utils/email'; // Import the utility function
 
 // Initialize Cloudinary configuration (if not already done)
 cloudinary.v2.config({
@@ -74,6 +73,8 @@ export const createUser = async (
     res
       .status(201)
       .json({ message: "User created successfully", user: newUser });
+
+      await sendCredentialsEmail({ firstName, lastName, email, password });
   } catch (error: any) {
     console.error("Error creating user:", error.message);
     res.status(400).json({ error: error.message });
@@ -549,11 +550,11 @@ export const fetchDepartmentManagerById = async (req: Request, res: Response): P
 
 
 
-// Controller to create a new DEPARTMENT-MANAGER
 export const createDepartmentManager = async (req: Request, res: Response): Promise<void> => {
   try {
     const { firstName, lastName, email, phoneNumber, department, password } = req.body;
 
+    // Create new department manager
     const newDepartmentManager = new User({
       firstName,
       lastName,
@@ -562,16 +563,22 @@ export const createDepartmentManager = async (req: Request, res: Response): Prom
       department,
       password,
       isVerified: false,
-      role: Role.DEPARTMENT_MANAGER, // Ensure the role is set to DEPARTMENT_MANAGER
+      role: Role.DEPARTMENT_MANAGER,
     });
 
     await newDepartmentManager.save();
-    res.status(201).json({ message: "Department manager created successfully", data: newDepartmentManager });
+
+    // Send email with login credentials
+    await sendCredentialsEmail({ firstName, lastName, email, password });
+
+    res.status(201).json({ message: "Department manager created successfully and email sent", data: newDepartmentManager });
   } catch (error) {
-    console.error("Error creating department manager:", error);
-    res.status(500).json({ message: "Failed to create department manager" });
+    console.error("Error creating department manager or sending email:", error);
+    res.status(500).json({ message: "Failed to create department manager or send email" });
   }
 };
+
+
 
 // Controller to update an existing DEPARTMENT-MANAGER, including their image
 export const updateDepartmentManager = async (req: Request, res: Response): Promise<void> => {
@@ -661,11 +668,11 @@ export const fetchTeamLeadById = async (req: Request, res: Response): Promise<vo
   }
 };
 
-// Controller to create a new TEAM-LEAD
 export const createTeamLead = async (req: Request, res: Response): Promise<void> => {
   try {
     const { firstName, lastName, email, phoneNumber, department, password, team } = req.body;
 
+    // Create new team lead
     const newTeamLead = new User({
       firstName,
       lastName,
@@ -674,15 +681,19 @@ export const createTeamLead = async (req: Request, res: Response): Promise<void>
       department,
       password,
       isVerified: false,
-      role: Role.TEAM_LEAD, // Ensure the role is set to TEAM_LEAD
-      team, // Add the team attribute
+      role: Role.TEAM_LEAD,
+      team,
     });
 
     await newTeamLead.save();
-    res.status(201).json({ message: "Team lead created successfully", data: newTeamLead });
+
+    // Send email with login credentials
+    await sendCredentialsEmail({ firstName, lastName, email, password });
+
+    res.status(201).json({ message: "Team lead created successfully and email sent", data: newTeamLead });
   } catch (error) {
-    console.error("Error creating team lead:", error);
-    res.status(500).json({ message: "Failed to create team lead" });
+    console.error("Error creating team lead or sending email:", error);
+    res.status(500).json({ message: "Failed to create team lead or send email" });
   }
 };
 

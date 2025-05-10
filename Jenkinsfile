@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         nodejs 'node'
-        tool name: 'python3.9', type: 'PythonInstallation'
+        python 'python3.9'
     }
 
     environment {

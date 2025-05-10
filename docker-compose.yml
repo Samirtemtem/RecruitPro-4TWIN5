@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./Frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./Backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./Backend/.env
+    depends_on:
+      - mongo
+      - ats
+
+  ats:
+    build: ./Backend/applicant_tracking_system
+    ports:
+      - "5001:5001"
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

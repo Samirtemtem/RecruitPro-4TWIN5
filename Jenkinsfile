@@ -62,12 +62,16 @@ pipeline {
             parallel {
                 stage('Frontend') {
                     steps {
-                        sh 'npm install --force && npm run build'
+                        dir('Frontend') {
+                            sh 'npm install --force && npm run build'
+                        }
                     }
                 }
                 stage('Backend') {
                     steps {
-                        sh 'npm install --force && npm run build'
+                        dir('Backend') {
+                            sh 'npm install --force && npm run build'
+                        }
                     }
                 }
                 stage('ATS') {

@@ -13,6 +13,15 @@ import RequestModals from "../core/modals/requestModal";
 import TodoModal from "../core/modals/todoModal";
 import CollapseHeader from "../core/common/collapse-header/collapse-header";
 import { ApexOptions } from 'apexcharts';
+import CandidatesOverview from "./candidatesOverview";
+
+
+interface ApplicationStats {
+  currentYear: {
+    count: number;
+  };
+  percentageAugmentation: number;
+}
 
 
 interface DepartmentCount {
@@ -87,38 +96,6 @@ const AdminDashboard = () => {
    // Define state with type User[]
    const [users, setUsers] = useState<User[]>([]);
 
-  const candidatesOverviewOptions: ApexOptions = {
-    chart: {
-      type: 'bar',
-      stacked: true,
-      toolbar: {
-        show: false,
-      },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-      },
-    },
-    dataLabels: {
-      enabled: true,
-    },
-    colors: ['#1E90FF', '#FF6347'], // Blue for total candidates, red for hired
-    xaxis: {
-      categories: ['2022', '2023', '2024', '2025'], // Last four years
-    },
-    series: [
-      {
-        name: 'Total Candidates',
-        data: [400, 500, 600, 700], // Example total candidates for each year
-      },
-      {
-        name: 'Hired Candidates',
-        data: [100, 150, 200, 250], // Example hired candidates for each year
-      },
-    ],
-  };
 
 
 
@@ -131,76 +108,7 @@ const AdminDashboard = () => {
 
  
 
-  const [salesIncome] = useState<any>({
-    chart: {
-      height: 290,
-      type: 'bar',
-      stacked: true,
-      toolbar: {
-        show: false,
-      }
-    },
-    colors: ['#FF6F28', '#F8F9FA'],
-    responsive: [{
-      breakpoint: 480,
-      options: {
-        legend: {
-          position: 'bottom',
-          offsetX: -10,
-          offsetY: 0
-        }
-      }
-    }],
-    plotOptions: {
-      bar: {
-        borderRadius: 5,
-        borderRadiusWhenStacked: 'all',
-        horizontal: false,
-        endingShape: 'rounded'
-      },
-    },
-    series: [{
-      name: 'Income',
-      data: [40, 30, 45, 80, 85, 90, 80, 80, 80, 85, 20, 80]
-    }, {
-      name: 'Expenses',
-      data: [60, 70, 55, 20, 15, 10, 20, 20, 20, 15, 80, 20]
-    }],
-    xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      labels: {
-        style: {
-          colors: '#6B7280',
-          fontSize: '13px',
-        }
-      }
-    },
-    yaxis: {
-      labels: {
-        offsetX: -15,
-        style: {
-          colors: '#6B7280',
-          fontSize: '13px',
-        }
-      }
-    },
-    grid: {
-      borderColor: '#E5E7EB',
-      strokeDashArray: 5,
-      padding: {
-        left: -8,
-      },
-    },
-    legend: {
-      show: false
-    },
-    dataLabels: {
-      enabled: false // Disable data labels
-    },
-    fill: {
-      opacity: 1
-    },
-  })
+ 
 
   //Attendance ChartJs
   const [chartData, setChartData] = useState({});
@@ -311,7 +219,7 @@ const [jobPosts, setJobPosts] = useState<JobPost[]>([]); // Array of JobPost obj
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/jobs/latest");
+        const response = await axios.get("http://localhost:5000/api/jobs/latest-Five");
         setJobPosts(response.data); // Assuming response contains an array of job posts
       } catch (error) {
         console.error("Error fetching job posts:", error);
@@ -358,7 +266,7 @@ const { totalJobPosts, openJobPosts, percentageChange } = stats;
 
 
 
-
+// Employees List
 const fetchUsers = async () => {
   try {
     const response = await axios.get('http://localhost:5000/api/user/usersListLatest');
@@ -410,7 +318,7 @@ const [userData, setUserData] = useState<any>(null);
 
 useEffect(() => {
   const fetchUserData = async () => {
-    const token = sessionStorage.getItem('token'); // Replace 'token' with the actual key if different
+    const token = localStorage.getItem('token'); // Replace 'token' with the actual key if different
 
     if (!token) {
       console.error('No token found in session storage.');
@@ -485,6 +393,7 @@ useEffect(() => {
   const fetchEmployeeData = async () => {
       try {
           const response = await axios.get('http://localhost:5000/api/user/count-employees-by-department');
+          console.log(response);
           const { totalEmployees: total, percentageChange: change, departmentCounts }: { totalEmployees: number; percentageChange: number; departmentCounts: DepartmentCount[] } = response.data;
 
           // Prepare data for the chart
@@ -515,6 +424,29 @@ useEffect(() => {
 
 
 
+const [statsApp, setStatsApp] = useState<ApplicationStats | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchApplicationStats = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/app/count-applications');
+        if (!response.ok) {
+          throw new Error('Failed to fetch application stats');
+        }
+        const data: ApplicationStats = await response.json();
+        setStatsApp(data);
+      } catch (err) {
+        setError('Error fetching data');
+        console.error(err);
+      }
+    };
+
+    fetchApplicationStats();
+  }, []);
+
+
+
   return (
     <>
       {/* Page Wrapper */}
@@ -539,51 +471,19 @@ useEffect(() => {
               </nav>
             </div>
             <div className="d-flex my-xl-auto right-content align-items-center flex-wrap ">
-              <div className="me-2 mb-2">
-                <div className="dropdown">
-                  <Link to="#"
-                    className="dropdown-toggle btn btn-white d-inline-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i className="ti ti-file-export me-1" />
-                    Export
-                  </Link>
-                  <ul className="dropdown-menu  dropdown-menu-end p-3">
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        <i className="ti ti-file-type-pdf me-1" />
-                        Export as PDF
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="#"
-                        className="dropdown-item rounded-1"
-                      >
-                        <i className="ti ti-file-type-xls me-1" />
-                        Export as Excel{" "}
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mb-2">
-                <div className="input-icon w-120 position-relative">
-                  <span className="input-icon-addon">
-                    <i className="ti ti-calendar text-gray-9" />
-                  </span>
-                  <Calendar value={date} onChange={(e: any) => setDate(e.value)} view="year" dateFormat="yy" className="Calendar-form" />
-                </div>
-              </div>
+             
+            
               <div className="ms-2 head-icons">
                 <CollapseHeader />
               </div>
+
+
             </div>
           </div>
+
           {/* /Breadcrumb */}
+
+          
           {/* Welcome Wrap */}
           <div className="card border-0">
             <div className="card-body d-flex align-items-center justify-content-between flex-wrap pb-1">
@@ -594,20 +494,12 @@ useEffect(() => {
                 <div className="ms-3">
                   <h3 className="mb-2">
                     Welcome Back {userData ? `${userData.firstName} ${userData.lastName}` : 'Loading...'}
-                    <Link to="#" className="edit-icon">
+                    <Link to="/general-settings/profile-settings" className="edit-icon">
                       <i className="ti ti-edit fs-14" />
                     </Link>
                   </h3>
                   <p>
-                    You have{" "}
-                    <span className="text-primary text-decoration-underline">
-                      21
-                    </span>{" "}
-                    Pending Approvals &amp;{" "}
-                    <span className="text-primary text-decoration-underline">
-                      14
-                    </span>{" "}
-                    Leave Requests
+                    {userData ? userData.email : 'Loading...'}
                   </p>
                 </div>
               </div>
@@ -652,28 +544,54 @@ useEffect(() => {
     </div>
                   </div>
                 </div>
+
+
+
+
+
                 <div className="col-md-3 d-flex">
-                  <div className="card flex-fill">
-                    <div className="card-body">
-                      <span className="avatar rounded-circle bg-secondary mb-2">
-                        <i className="ti ti-browser fs-16" />
-                      </span>
-                      <h6 className="fs-13 fw-medium text-default mb-1">
-                      Job Applicants
-                      </h6>
-                      <h3 className="mb-3">
-                        320{" "}
-                        <span className="fs-12 fw-medium text-success">
-                          <i className="fa-solid fa-caret-up me-1" />
-                          +2.1%
-                        </span>
-                      </h3>
-                      <Link to="projects.html" className="link-default">
-                        View All
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+      <div className="card flex-fill">
+        <div className="card-body">
+          <span className="avatar rounded-circle bg-secondary mb-2">
+            <i className="ti ti-browser fs-16" />
+          </span>
+          <h6 className="fs-13 fw-medium text-default mb-1">Job Applicants</h6>
+          <h3 className="mb-3">
+            {statsApp ? statsApp.currentYear.count : 'Loading...'}
+            {' '}
+            {statsApp && (
+              <span className="fs-12 fw-medium text-success">
+                <i className="fa-solid fa-caret-up me-1" />
+                {statsApp.percentageAugmentation >= 0
+                  ? `+${statsApp.percentageAugmentation}%`
+                  : `${statsApp.percentageAugmentation}%`}
+              </span>
+            )}
+            {error && (
+              <span className="fs-12 fw-medium text-danger">
+                Error
+              </span>
+            )}
+          </h3>
+          <Link to="/jobgrid" className="link-default">
+            View All
+          </Link>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <div className="col-md-3 d-flex">
                   <div className="card flex-fill">
                     <div className="card-body">
@@ -818,36 +736,14 @@ useEffect(() => {
                 <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
                     <h5 className="mb-2">Employees By Department</h5>
                     <div className="dropdown mb-2">
-                        <Link to="#"
+                        <Link to="/employees"
                             className="btn btn-white border btn-sm d-inline-flex align-items-center"
-                            data-bs-toggle="dropdown"
+                            
                         >
-                            <i className="ti ti-calendar me-1" />
-                            This Week
+                            <i className="ti ti-user me-1" />
+                            View All
                         </Link>
-                        <ul className="dropdown-menu dropdown-menu-end p-3">
-                            <li>
-                                <Link to="#"
-                                    className="dropdown-item rounded-1"
-                                >
-                                    This Month
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#"
-                                    className="dropdown-item rounded-1"
-                                >
-                                    This Week
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="#"
-                                    className="dropdown-item rounded-1"
-                                >
-                                    Last Week
-                                </Link>
-                            </li>
-                        </ul>
+                        
                     </div>
                 </div>
                 <div className="card-body">
@@ -1072,53 +968,7 @@ useEffect(() => {
           
           <div className="row">
            {/* Candidates Overview */}
-           <div className="col-xl-12 d-flex">
-      <div className="card flex-fill">
-        <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
-          <h5 className="mb-2">Candidates Overview</h5>
-          <div className="d-flex align-items-center">
-            <div className="dropdown mb-2">
-              <Link
-                to="#"
-                className="dropdown-toggle btn btn-white border-0 btn-sm d-inline-flex align-items-center fs-13 me-2"
-                data-bs-toggle="dropdown"
-              >
-                Candidates by Year
-              </Link>
-              <ul className="dropdown-menu dropdown-menu-end p-3">
-                <li><Link to="#" className="dropdown-item rounded-1">2021</Link></li>
-                <li><Link to="#" className="dropdown-item rounded-1">2022</Link></li>
-                <li><Link to="#" className="dropdown-item rounded-1">2023</Link></li>
-                <li><Link to="#" className="dropdown-item rounded-1">2024</Link></li>
-                <li><Link to="#" className="dropdown-item rounded-1">2025</Link></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="card-body pb-0">
-          <div className="d-flex align-items-center justify-content-between flex-wrap">
-            <div className="d-flex align-items-center mb-1">
-              <p className="fs-13 text-gray-9 me-3 mb-0">
-                <i className="ti ti-square-filled me-2 text-primary" />
-                Total Candidates
-              </p>
-              <p className="fs-13 text-gray-9 mb-0">
-                <i className="ti ti-square-filled me-2 text-danger" />
-                Hired
-              </p>
-            </div>
-            <p className="fs-13 mb-1">Last Updated at 11:30PM</p>
-          </div>
-          <ReactApexChart
-            id="candidates-overview"
-            options={candidatesOverviewOptions}
-            series={candidatesOverviewOptions.series}
-            type="bar"
-            height={270}
-          />
-        </div>
-      </div>
-    </div>
+        <CandidatesOverview />
 {/* /Candidates Overview */}
            
           </div>

@@ -8,16 +8,17 @@ import CallToAction from "../common/CallToAction";
 import AuthModal from "./components/AuthModal";
 import PartnerSlider from "./components/PartnerSlider";
 import FooterDefault from "../common/Footer";
-import Funfact from "./components/Funfact";
+//import Funfact from "./components/Funfact";
 import DefaulHeader2 from "../common/Header";
-// import MobileMenu from "./components/MobileMenu";
+import MobileMenu from "../common/MobileMenu";
 import JobSearchBanner from "./components/JobSearchBanner";
 import JobCategorie1 from "./components/JobCategorie";
 import JobFeatured1 from "./components/JobFeatured";
-import Testimonial from "./components/Testimonial";
+//import Testimonial from "./components/Testimonial";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import ScrollToTop from "../common/ScrollTop";
 
 const Home = () => {
   useEffect(() => {
@@ -35,6 +36,7 @@ const Home = () => {
       {/* End Header with upload cv btn */}
 
       {/* <MobileMenu /> */}
+      <MobileMenu />
       {/* End MobileMenu */}
 
       <JobSearchBanner />
@@ -43,8 +45,8 @@ const Home = () => {
       <section className="job-categories ui-job-categories" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2 style={{ color: '#D50000' }}>Popular Job Categories</h2>
-            <div className="text">2020 jobs live - 293 added today.</div>
+          <h2 style={{ color: '#D50000' }}>Popular Job Categories</h2>
+          <div className="text">Explore thousands of job opportunities available now!</div>
           </div>
 
           <div
@@ -73,7 +75,7 @@ const Home = () => {
 
           <div className="btn-box">
             <Link
-              to="/job-list/job-list-v1"
+              to="/JobListFront"
               className="theme-btn btn-style-one"
               style={{ 
                 backgroundColor: '#D50000', 
@@ -96,9 +98,10 @@ const Home = () => {
       </section>
       {/* End Job Featured Section */}
 
+       {/* 
       <section className="testimonial-section" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="container-fluid">
-          {/* Sec Title */}
+          
           <div className="sec-title text-center">
             <h2 style={{ color: '#D50000' }}>Testimonials From Our Customers</h2>
             <div className="text">
@@ -107,14 +110,15 @@ const Home = () => {
           </div>
         </div>
         <div className="carousel-outer" data-aos="fade-up">
-          {/* Testimonial Carousel */}
+         
           <div className="testimonial-carousel gap-x25 center-item-active slick-list-visible">
-            <Testimonial />
+           <Testimonial /> 
           </div>
         </div>
       </section>
-      {/* End Testimonial Section */}
 
+
+      */}
       <section className="clients-section" style={{ backgroundColor: '#F5F5F5', border: '1px solid #D50000' }}>
         <div className="sponsors-outer" data-aos="fade">
           {/* Sponsors Carousel */}
@@ -134,7 +138,7 @@ const Home = () => {
           {/* Fun Fact Section */}
           <div className="fun-fact-section">
             <div className="row">
-              <Funfact />
+           
             </div>
           </div>
           {/* Fun Fact Section */}
@@ -157,17 +161,15 @@ const Home = () => {
         </div>
       </section>
       {/* End News Section */}
-
-      <section className="app-section" style={{ backgroundColor: '#FFFFFF' }}>
-        <div className="auto-container">
-          <AppSection />
-        </div>
-      </section>
+<div className="mt-5">
+<CallToAction />
+</div>
+<br />
       {/* End App Section */}
 
-      <CallToAction />
+      
       {/* End Call To Action */}
-
+ <ScrollToTop />
       <FooterDefault />
       {/* End Main Footer */}
     </>

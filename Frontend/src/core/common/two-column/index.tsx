@@ -10,9 +10,9 @@ const TwoColumnSidebar = () => {
     const [showSubMenusTab, SetShowSubMenusTab] = useState(true);
     const [isActive, SetIsActive] = useState<any>();
     const [subOpen, setSubopen] = useState<any>("");
-    const savedMenuValue = sessionStorage.getItem('menuValue2')|| '';
+    const savedMenuValue = localStorage.getItem('menuValue2')|| '';
     const showTabs = (res:any) => {
-        sessionStorage.setItem('menuValue2', res.menuValue);
+        localStorage.setItem('menuValue2', res.menuValue);
         TowColData.forEach((menus:any)=>{
             menus.menu.forEach((mainMenus:any) => {
                 if (res.menuValue === mainMenus.menuValue) {
@@ -35,7 +35,7 @@ const TwoColumnSidebar = () => {
       };
       useEffect(() => {
         if(Location.pathname === '/layout-twocolumn') {
-            sessionStorage.setItem('menuValue2', 'Layouts');
+            localStorage.setItem('menuValue2', 'Layouts');
             SetIsActive('Layouts') 
             
             
@@ -93,7 +93,7 @@ const TwoColumnSidebar = () => {
             <div className="sidebar-right">
                 <div className="sidebar-logo mb-4">
                     <Link to={routes.adminDashboard} className="logo logo-normal">
-                        <ImageWithBasePath src="assets/img/logo.svg" alt="Logo"/>
+                        <ImageWithBasePath src="LogoEsprit2.png" alt="Logo"/>
                     </Link>
                     <Link to={routes.adminDashboard} className="dark-logo">
                         <ImageWithBasePath src="assets/img/logo-white.svg" alt="Logo"/>

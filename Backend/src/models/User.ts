@@ -15,20 +15,23 @@ export interface IUser extends Document {
   createDate: Date;
   lastLogin: Date;
   image: string;
+  githubId: string;
   googleId: string;
   linkedinId: string;
-  githubId: string;
   is2FAEnabled?: boolean;
   resetToken?:string;
-  department?: 'ELECTROMECANIQUE' | 'GENIE-CIVIL' | 'TIC';
+  department?:Department;
+
   OneTimePassword?: Number,
     profile: Schema.Types.ObjectId;  // Reference to Profile
   applications: Schema.Types.ObjectId[];  // References to Applications
   interviews: Schema.Types.ObjectId[];  // References to Interviews
   jobPosts: Schema.Types.ObjectId[];  // References to JobPosts
-  provider?: 'local' | 'google' | 'linkedin' | 'github';
+  provider?: 'local' | 'google' | 'linkedin';
   isVerified: boolean;
   verificationToken?: string;
+
+  team?: 'web' | 'devops' | 'Other' | null; // New attribute added
 
   // Methods
   comparePassword(password: string): Promise<boolean>;
@@ -78,24 +81,25 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true , default: 'SUPERSECRET'},
   role: { type: String, enum: Object.values(Role), default: Role.CANDIDATE },
+  department: { type: String, enum: Object.values(Department), default: Department.OTHER },
   phoneNumber: { type: String, required: true, default: '0000000000' },
   createDate: { type: Date, default: Date.now },
   lastLogin: { type: Date },
-  department: { type: String, enum: ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC'] },
   image: { type: String },
   googleId: { type: String },
   linkedinId: { type: String },
-  githubId: { type: String },
   OneTimePassword: { type: Number },
   is2FAEnabled: {type: Boolean},
   resetToken: { type: String },
+  githubId: { type: String },
   profile: { type: Schema.Types.ObjectId, ref: 'Profile' },
   applications: [{ type: Schema.Types.ObjectId, ref: 'Application' }],
   interviews: [{ type: Schema.Types.ObjectId, ref: 'Interview' }],
   jobPosts: [{ type: Schema.Types.ObjectId, ref: 'JobPost' }],
-  provider: { type: String, enum: ['local', 'google', 'linkedin', 'github'] },
+  provider: { type: String, enum: ['local', 'google', 'linkedin'] },
   isVerified: { type: Boolean, required: true },
-  verificationToken: { type: String }
+  verificationToken: { type: String },
+  team: { type: String, enum: ['web', 'devops', 'Other'], default: null }, // New field added
 }, {
   timestamps: true,
   discriminatorKey: 'role' // This allows us to use inheritance

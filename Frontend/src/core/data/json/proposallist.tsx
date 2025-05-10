@@ -27,7 +27,7 @@ export const proposallistData = [
     totalValue: "$2,105",
     Date: "16 Jan 2024",
     openTill: "15 Sep 2024",
-    Project: "Dreamsports",
+    Project: "InfiniteLoopersports",
     createdDate: "15 Apr 2024",
     status: "Declined",
     key: "2"
@@ -140,7 +140,7 @@ export const proposallistData = [
     totalValue: "$1,10,145",
     Date: "14 Aug 2024",
     openTill: "07 Dec 2024",
-    Project: "Dreamschat",
+    Project: "InfiniteLooperschat",
     createdDate: "15 Aug 2023",
     status: "Declined",
     key: "9"

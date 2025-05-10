@@ -12,6 +12,7 @@ import {
 import usePreviousRoute from "./usePreviousRoute";
 //import { SidebarDataTest } from "../../../back-office/sidebarMenuAdmin";
 import { AuthContext } from "../../routing-module/AuthContext";
+import useSidebarData from "../../back-office/sidebarMenuAdmin";
 
 const Sidebar = () => {
   const Location = useLocation();
@@ -19,7 +20,29 @@ const Sidebar = () => {
   const [subOpen, setSubopen] = useState<any>("Dashboard");
   const [subsidebar, setSubsidebar] = useState("");
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const { role, setRole } = useContext(AuthContext); // Get role from AuthContext
+
+const SidebarData = useSidebarData(); // Use the custom hook
+/*
+// ... existing code ...
+  const { role } = useContext(AuthContext);
+  const [SidebarData, setSidebarData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadSidebarData = async (currentRole: string) => {
+      if (currentRole === "ADMIN" || currentRole === "HR-MANAGER") {
+        const { SidebarMenuAdmin } = await import("../../back-office/sidebarMenuAdmin");
+        const data = SidebarMenuAdmin(); // Ensure this is a function returning data
+        setSidebarData(data);
+      }
+    };
+
+    if (role) {
+      loadSidebarData(role);
+    }
+  }, [role]);
+*/
+// ... existing code ...
+/*  const { role, setRole } = useContext(AuthContext); // Get role from AuthContext
   const [SidebarData, setSidebarData] = useState<any[]>([]);
 
   // Function to dynamically load sidebar data based on role
@@ -27,8 +50,8 @@ const Sidebar = () => {
     if (currentRole === "ADMIN") {
       const { SidebarDataTest } = await import("../../back-office/sidebarMenuAdmin");
       setSidebarData(SidebarDataTest);
-    } else if (currentRole === "CANDIDATE") {
-      const { SidebarDataTest } = await import("../../front-office/sidebarMenuCandidate");
+    } else if (currentRole === "HR-MANAGER") {
+      const { SidebarDataTest } = await import("../../back-office/sidebarMenuAdmin");
       setSidebarData(SidebarDataTest);
     }
   };
@@ -41,7 +64,7 @@ const Sidebar = () => {
 
     // Function to handle role changes and update the sidebar
     const handleRoleChange = () => {
-      const updatedUserRole = sessionStorage.getItem("userRole") || "CANDIDATE";
+      const updatedUserRole = localStorage.getItem("userRole") || "CANDIDATE";
       if (updatedUserRole !== role) {
         setRole(updatedUserRole); // Update role in AuthContext
         loadSidebarData(updatedUserRole); // Reload sidebar data
@@ -51,7 +74,7 @@ const Sidebar = () => {
     // Listen to storage changes (for other tabs)
     window.addEventListener("storage", handleRoleChange);
 
-    // Trigger role change handler when sessionStorage updates
+    // Trigger role change handler when localStorage updates
     handleRoleChange();
 
     // Cleanup event listener on component unmount
@@ -59,7 +82,7 @@ const Sidebar = () => {
       window.removeEventListener("storage", handleRoleChange);
     };
   }, [role, setRole]);
-   
+  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const toggleSidebar = (title: any) => {
@@ -166,105 +189,12 @@ const Sidebar = () => {
       >
   <div className="sidebar-logo">
     <Link to="routes.index" className="logo logo-normal">
-      <ImageWithBasePath src="assets/img/logo.svg" alt="Logo" />
+      <ImageWithBasePath src="assets/img/logoremovebg.png" alt="Logo" />
     </Link>
-    <Link to="routes.index" className="logo-small">
-      <ImageWithBasePath src="assets/img/logo-small.svg" alt="Logo" />
-    </Link>
-    <Link to="routes.index" className="dark-logo">
-      <ImageWithBasePath src="assets/img/logo-white.svg" alt="Logo" />
-    </Link>
+
   </div>
-  <div className="modern-profile p-3 pb-0">
-    <div className="text-center rounded bg-light p-3 mb-4 user-profile">
-      <div className="avatar avatar-lg online mb-3">
-        <ImageWithBasePath
-          src="assets/img/profiles/avatar-02.jpg"
-          alt="Img"
-          className="img-fluid rounded-circle"
-        />
-      </div>
-      <h6 className="fs-12 fw-normal mb-1">Adrian Herman</h6>
-      <p className="fs-10">System Admin</p>
-    </div>
-    <div className="sidebar-nav mb-3">
-      <ul
-        className="nav nav-tabs nav-tabs-solid nav-tabs-rounded nav-justified bg-transparent"
-        role="tablist"
-      >
-        <li className="nav-item">
-          <Link className="nav-link active border-0" to="#">Menu</Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link border-0" to="#">Chats</Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link border-0" to="#">Inbox</Link>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div className="sidebar-header p-3 pb-0 pt-2">
-    <div
-      className="text-center rounded bg-light p-2 mb-4 sidebar-profile d-flex align-items-center"
-    >
-      <div className="avatar avatar-md onlin">
-        <ImageWithBasePath
-          src="assets/img/profiles/avatar-02.jpg"
-          alt="Img"
-          className="img-fluid rounded-circle"
-        />
-      </div>
-      <div className="text-start sidebar-profile-info ms-2">
-        <h6 className="fs-12 fw-normal mb-1">Adrian Herman</h6>
-        <p className="fs-10">System Admin</p>
-      </div>
-    </div>
-    <div className="input-group input-group-flat d-inline-flex mb-4">
-      <span className="input-icon-addon">
-        <i className="ti ti-search"></i>
-      </span>
-      <input type="text" className="form-control" placeholder="Search in HRMS" />
-      <span className="input-group-text">
-        <kbd>CTRL + / </kbd>
-      </span>
-    </div>
-    <div
-      className="d-flex align-items-center justify-content-between menu-item mb-3"
-    >
-      <div className="me-3">
-        <Link to="#" className="btn btn-menubar position-relative">
-          <i className="ti ti-shopping-bag"></i>
-          <span className="badge bg-success rounded-pill d-flex align-items-center justify-content-center header-badge"
-            >5</span>
-        </Link>
-      </div>
-      <div className="me-3">
-        <Link to="#" className="btn btn-menubar">
-          <i className="ti ti-layout-grid-remove"></i>
-        </Link>
-      </div>
-      <div className="me-3">
-        <Link to="#" className="btn btn-menubar position-relative">
-          <i className="ti ti-brand-hipchat"></i>
-          <span
-            className="badge bg-info rounded-pill d-flex align-items-center justify-content-center header-badge"
-            >5</span>
-        </Link>
-      </div>
-      <div className="me-3 notification-item">
-        <Link to="#" className="btn btn-menubar position-relative me-1">
-          <i className="ti ti-bell"></i>
-          <span className="notification-status-dot"></span>
-        </Link>
-      </div>
-      <div className="me-0">
-        <Link to="#" className="btn btn-menubar">
-          <i className="ti ti-message"></i>
-        </Link>
-      </div>
-    </div>
-  </div>
+ 
+
         <Scrollbars>
           <div className="sidebar-inner slimscroll">
             <div id="sidebar-menu" className="sidebar-menu">

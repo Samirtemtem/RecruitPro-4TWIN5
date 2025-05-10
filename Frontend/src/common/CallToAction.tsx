@@ -5,10 +5,9 @@ const CallToAction = () => {
           <div className="outer-box" data-aos="fade-up">
             <div className="content-column">
               <div className="sec-title">
-                <h2>Recruiting?</h2>
+                <h2>Find Your Dream Job!</h2>
                 <div className="text">
-                  Advertise your jobs to millions of monthly users and search 15.8
-                  million CVs in our database.
+                Explore exciting opportunities and connect with top employers looking for talent like yours.
                 </div>
                 <a 
                   href="#" 
@@ -28,7 +27,7 @@ const CallToAction = () => {
                     e.currentTarget.style.borderColor = '#D50000';
                   }}
                 >
-                  <span className="btn-title">Start Recruiting Now</span>
+                  <span className="btn-title">Start Your Journey Now</span>
                 </a>
               </div>
             </div>

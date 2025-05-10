@@ -1,42 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import blogContent from "../data/blogs";
+
+// Define the Event interface and EventsResponse type here
+interface Event {
+  status: boolean;
+  accepted: boolean;
+  related: string;
+  _id: string;
+  title: string;
+  cover: string;
+  images: string[];
+  type: string;
+  description: string;
+  url: string;
+  content: string;
+  slug: string;
+  userCreated: string;
+  userUpdated: string;
+  createdAt: string;
+  lastUpdateAt: string;
+}
+
+type EventsResponse = [Event[], number];
 
 const Blog = () => {
+  const [events, setEvents] = useState<Event[]>([]); // Use the Event interface
+  const [loading, setLoading] = useState(true);
+  const baseUrl = "https://esprit.tn/uploads"; // Base URL for images
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("https://esprit.tn/api/events/actualite/esprit/6/0");
+        const data: EventsResponse = await response.json();
+        setEvents(data[0]); // Access the events array from the response
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading state while fetching
+  }
+
   return (
     <>
-      {blogContent.slice(0, 3).map((item) => (
-        <div className="news-block col-lg-4 col-md-6 col-sm-12" key={item.id}>
+      {events.slice(0, 3).map((item) => (
+        <div className="news-block col-lg-4 col-md-6 col-sm-12" key={item._id}>
           <div className="inner-box">
             <div className="image-box">
               <figure className="image">
-                <img src={item.img} alt="blog post" />
+                <img src={`${baseUrl}/${item.cover}`} alt="blog post" /> {/* Prepend base URL */}
               </figure>
             </div>
             <div className="lower-content">
-              <ul className="post-meta">
-                <li>
-                  <a href="#">August 31, 2021</a>
-                </li>
-                <li>
-                  <a href="#">12 Comments</a>
-                </li>
-              </ul>
               <h3>
-                <Link to={`/blog-details/${item.id}`}>
-                  {/* ✅ JSX moved to `Blog.tsx` */}
-                  {item.title.includes("Free advertising") ? (
-                    <>
-                      Free advertising for your <br /> online business
-                    </>
-                  ) : (
-                    item.title
-                  )}
+                <Link to={`/blog-details/${item._id}`}>
+                  {item.title}
                 </Link>
               </h3>
-              <p className="text">{item.blogText}</p>
+              <p className="text">{item.description}</p>
               <Link 
-                to={`/blog-details/${item.id}`} 
+                to={`/blog-details/${item._id}`} 
                 className="read-more"
                 style={{ 
                   color: '#D50000', 

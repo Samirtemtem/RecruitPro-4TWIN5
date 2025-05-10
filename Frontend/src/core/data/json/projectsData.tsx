@@ -27,7 +27,7 @@ export const projectData = [
     id: "#12146",
     si_no: "",
     star: "",
-    name: "Dreamschat",
+    name: "InfiniteLooperschat",
     client: "BlueSky Industries",
     pro_img: "assets/img/priority/dreamchat.svg",
     client_img: "assets/img/icons/company-icon-02.svg",

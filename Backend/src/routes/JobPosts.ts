@@ -1,9 +1,33 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import JobPost from '../models/JobPost';
+import Application, { IApplication } from '../models/Application';
+import { ApplicationStatus } from '../models/types';
 dotenv.config();
 
 const router = express.Router();
+
+
+// API endpoint to get job posts by search term
+router.get("/search", async (req, res) => {
+    const searchTerm = req.query.search || "";
+    
+    // Log the received search term
+    console.log("Search term:", searchTerm);
+
+    try {
+        const jobPosts = await JobPost.find({
+            $or: [
+                { title: { $regex: searchTerm, $options: "i" } }, // Case-insensitive search in title
+                { description: { $regex: searchTerm, $options: "i" } } // Case-insensitive search in description
+            ]
+        });
+        res.json(jobPosts);
+    } catch (error) {
+        console.error("Error fetching job posts:", error); // Log the error
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
 // ✅ CREATE a new job post
 router.post('/', async (req: Request, res: Response): Promise<void> => {
@@ -28,8 +52,20 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 
 });
 
-// ✅ READ latest 5 job posts
+// ✅ READ latest 6 job posts
 router.get('/latest', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find()
+            .sort({ createdAt: -1 })  
+            .limit(6);                
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+// ✅ READ latest 5 job posts
+router.get('/latest-Five', async (req: Request, res: Response): Promise<void> => {
     try {
         const jobs = await JobPost.find()
             .sort({ createdAt: -1 })  
@@ -39,6 +75,62 @@ router.get('/latest', async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: (error as Error).message });
     }
 });
+
+
+
+
+
+
+
+// ✅ READ all job posts with status OPEN
+router.get('/FrontOffice', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find({ status: 'OPEN' });
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+// ✅ READ latest 6 job posts with status OPEN
+router.get('/FrontOfficelatest', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find({ status: 'OPEN' })
+            .sort({ createdAt: -1 })  
+            .limit(6);                
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+// ✅ READ latest 5 job posts with status OPEN
+router.get('/FrontOfficelatest-Five', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find({ status: 'OPEN' })
+            .sort({ createdAt: -1 })  
+            .limit(5);                
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ✅ READ a single job post by ID
 router.get('/:id', async (req: Request, res: Response): Promise<any> => {
@@ -62,6 +154,15 @@ router.put('/:id', async (req: Request, res: Response): Promise<any> => {
     }
 });
 
+
+
+
+
+
+
+
+
+
 // ✅ DELETE a job post by ID
 router.delete('/:id', async (req: Request, res: Response): Promise<any> => {
     try {
@@ -72,6 +173,13 @@ router.delete('/:id', async (req: Request, res: Response): Promise<any> => {
         res.status(500).json({ error: (error as Error).message });
     }
 });
+
+
+
+
+
+
+
 
 router.get('/job-posts/statistics', async (req: Request, res: Response): Promise<any> => {
     try {
@@ -108,5 +216,112 @@ router.get('/job-posts/statistics', async (req: Request, res: Response): Promise
       return res.status(500).json({ error: 'Error fetching statistics' });
     }
 });
+
+
+
+const countOpenJobPosts = async (req: Request, res: Response) : Promise<any> => {
+    try {
+        const count = await JobPost.countDocuments({ status: 'OPEN' });
+        return res.status(200).json({ count });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Route to count open job posts
+router.get('/job-posts/count/open', countOpenJobPosts);
+
+
+
+
+
+
+
+
+
+// Controller to fetch applications grouped by status for a specific job post
+const fetchApplicationsGroupedByStatus = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const jobPostId = req.params.jobPostId;
+  
+      const applications = await Application.find({ jobPost: jobPostId })
+        .populate('candidate') // Populate candidate details
+        .populate('jobPost')
+        .exec();
+  
+      // Group applications by status
+      const groupedApplications = applications.reduce((acc, application) => {
+        const status = application.status as ApplicationStatus;
+        if (!acc[status]) {
+          acc[status] = [];
+        }
+        acc[status].push(application);
+        return acc;
+      }, {} as Record<ApplicationStatus, IApplication[]>);
+      
+      res.status(200).json(groupedApplications);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
+  // Route to handle GET requests for grouped applications with jobPostId in the path
+  router.get('/grouped/:jobPostId', fetchApplicationsGroupedByStatus);
+
+
+
+
+
+// ✅ READ latest 10 job posts with status OPEN
+router.get('/FrontOfficelatestTen', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const jobs = await JobPost.find({ status: 'OPEN' })
+            .sort({ createdAt: -1 })  
+            .limit(10);                
+        res.json(jobs);
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+router.get('/jobs/filterJobs', async (req: Request, res: Response): Promise<void> => {
+    const { department } = req.query;
+  
+    // Validate department
+    const validDepartments = ['ELECTROMECANIQUE', 'GENIE-CIVIL', 'TIC', 'OTHER'];
+    if (department && !validDepartments.includes(department as string)) {
+       res.status(400).json({ error: 'Invalid department specified' });
+       return;
+    }
+  
+    try {
+      // Apply filter based on department
+      const filter = department ? { department } : {};
+      const jobs = await JobPost.find(filter);
+      res.status(200).json(jobs);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch job posts' });
+    }
+  });
+
+
+
+
+
+
+
+
 
 export default router;

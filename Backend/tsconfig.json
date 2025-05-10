@@ -9,8 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
     "allowJs": true,
-    "resolveJsonModule": true,
-    "baseUrl": "./src"  // Adjust according to your structure
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"]
 }

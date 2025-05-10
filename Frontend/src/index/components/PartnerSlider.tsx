@@ -21,13 +21,13 @@ const PartnerSlider: React.FC = () => {
   };
 
   const sliderGallery = [
-    { id: 1, link: "#", imgNumber: "1-1" },
-    { id: 2, link: "#", imgNumber: "1-2" },
-    { id: 3, link: "#", imgNumber: "1-3" },
-    { id: 4, link: "#", imgNumber: "1-4" },
-    { id: 5, link: "#", imgNumber: "1-5" },
-    { id: 6, link: "#", imgNumber: "1-6" },
-    { id: 7, link: "#", imgNumber: "1-7" },
+    { id: 1, link: "#", imgNumber: "LOGO_SAGEMCOM" },
+    { id: 2, link: "#", imgNumber: "sopra-removebg-preview" },
+    { id: 3, link: "#", imgNumber: "LOGO_SAGEMCOM" },
+    { id: 4, link: "#", imgNumber: "sopra-removebg-preview" },
+    { id: 5, link: "#", imgNumber: "LOGO_SAGEMCOM" },
+    { id: 6, link: "#", imgNumber: "sopra-removebg-preview" },
+  
   ];
 
   return (

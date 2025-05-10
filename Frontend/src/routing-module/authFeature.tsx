@@ -1,6 +1,6 @@
 
 import { useSelector } from "react-redux";
-import { Outlet, useLocation , useNavigate } from "react-router";
+import { Navigate, Outlet, useLocation , useNavigate } from "react-router";
 import Header from "./header";
 import Sidebar from "./sidebar";
 import ThemeSettings from "../core/common/theme-settings";
@@ -14,23 +14,16 @@ import StackedSidebar from "../core/common/stacked-sidebar";
 
 import React, { useContext } from "react"; // Add useContext to the import statement
 // Import AuthProvider for managing authentication
-import { AuthContext } from "./AuthContext";
+import { AuthContext, useAuth } from "./AuthContext";
 
 
 const AuthFeature = () => {
 
-  const { token } = useContext(AuthContext); // Use token from AuthContext
+  //const { token } = useContext(AuthContext); // Use token from AuthContext
   const navigate = useNavigate();
   const location = useLocation();
 
   const [showLoader, setShowLoader] = useState(true);
-
-  // Redirect to login if no token is found
-  useEffect(() => {
-    if (!token) {
-      navigate("/LoginUser", { replace: true });
-    }
-  }, [token, navigate]);
 
   // Theme and layout settings logic (unchanged)
   useEffect(() => {
@@ -89,72 +82,79 @@ const AuthFeature = () => {
       </div>
     );
   };
-  return (
+  const { token } = useAuth();
+ // const { user } = useAuth();
+  const context = useContext(AuthContext);
+  console.log(context);
+  //console.log(user);
+  if(context?.role === "CANDIDATE"){
+    return <Navigate to="/DashboardCandidate" />;
+  }
+  return token ?    <>
+  <style>
+     {`
+   :root {
+     --sidebar--rgb-picr: ${dataSidebarAll};
+     --topbar--rgb-picr:${dataTopbarAll};
+     --topbarcolor--rgb-picr:${dataTopBarColorAll};
+     --primary-rgb-picr:${dataColorAll};
+   }
+ `}
+   </style>
+ <div
+   className={`
+    ${dataLayout === "mini" || dataWidth === 'box' ? "mini-sidebar" : ''}
+    ${dataLayout === "horizontal" || dataLayout === "horizontal-single" || dataLayout === "horizontal-overlay" || dataLayout === "horizontal-box" ? 'menu-horizontal':''}
+   ${miniSidebar && dataLayout !== "mini" ? "mini-sidebar" : ""}
+   ${dataWidth === 'box' ? 'layout-box-mode':''} ${headerCollapse ? "header-collapse" : ""}
+  ${
+    (expandMenu && miniSidebar) ||
+    (expandMenu && dataLayout === "mini")
+      ? "expand-menu"
+      : ""
+  }
+   
+   `}
+ >
     <>
-     <style>
-        {`
-      :root {
-        --sidebar--rgb-picr: ${dataSidebarAll};
-        --topbar--rgb-picr:${dataTopbarAll};
-        --topbarcolor--rgb-picr:${dataTopBarColorAll};
-        --primary-rgb-picr:${dataColorAll};
-      }
-    `}
-      </style>
-    <div
-      className={`
-       ${dataLayout === "mini" || dataWidth === 'box' ? "mini-sidebar" : ''}
-       ${dataLayout === "horizontal" || dataLayout === "horizontal-single" || dataLayout === "horizontal-overlay" || dataLayout === "horizontal-box" ? 'menu-horizontal':''}
-      ${miniSidebar && dataLayout !== "mini" ? "mini-sidebar" : ""}
-      ${dataWidth === 'box' ? 'layout-box-mode':''} ${headerCollapse ? "header-collapse" : ""}
-     ${
-       (expandMenu && miniSidebar) ||
-       (expandMenu && dataLayout === "mini")
-         ? "expand-menu"
-         : ""
-     }
-      
-      `}
-    >
+       {showLoader ? 
        <>
-          {showLoader ? 
-          <>
+    
+       <div
+         className={`main-wrapper 
+     ${mobileSidebar ? "slide-nav" : ""}`}
+       >
+         <Header />
+         <Sidebar />
+         <HorizontalSidebar />
+         <TwoColumnSidebar/>
+         <StackedSidebar/>
+         <Outlet />
+         {/* {!location.pathname.includes("layout") && <ThemeSettings />} */}
+       </div>
+       </> :
+       <>
+       <div
+         className={`main-wrapper 
+     ${mobileSidebar ? "slide-nav" : ""}`}
+       >
+         <Header />
+         <Sidebar  />
+         <HorizontalSidebar />
+         <TwoColumnSidebar/>
+         <StackedSidebar/>
+         <Outlet />
+         {/* {!location.pathname.includes("layout") && <ThemeSettings />} */}
+       </div>
+       </>}
        
-          <div
-            className={`main-wrapper 
-        ${mobileSidebar ? "slide-nav" : ""}`}
-          >
-            <Header />
-            <Sidebar />
-            <HorizontalSidebar />
-            <TwoColumnSidebar/>
-            <StackedSidebar/>
-            <Outlet />
-            {/* {!location.pathname.includes("layout") && <ThemeSettings />} */}
-          </div>
-          </> :
-          <>
-          <div
-            className={`main-wrapper 
-        ${mobileSidebar ? "slide-nav" : ""}`}
-          >
-            <Header />
-            <Sidebar  />
-            <HorizontalSidebar />
-            <TwoColumnSidebar/>
-            <StackedSidebar/>
-            <Outlet />
-            {/* {!location.pathname.includes("layout") && <ThemeSettings />} */}
-          </div>
-          </>}
-          
-        </>
-      {/* <Loader/> */}
+     </>
+   {/* <Loader/> */}
 
-      <div className="sidebar-overlay"></div>
-    </div>
-    </>
-  );
+   <div className="sidebar-overlay"></div>
+ </div>
+ </>
+: <Navigate to="/loginuser" />;
 };
 
 export default AuthFeature;

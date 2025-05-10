@@ -1,9 +1,11 @@
 export enum Role {
   HR_MANAGER = 'HR-MANAGER',
   DEPARTMENT_MANAGER = 'DEPARTMENT-MANAGER',
+  TEAM_LEAD = 'TEAM-LEAD',
   ADMIN = 'ADMIN',
   CANDIDATE = 'CANDIDATE',
-  EMPLOYEE = 'EMPLOYEE'
+  EMPLOYEE = 'EMPLOYEE',
+ // USER = 'USER'
 }
 
 export enum Privilege {
@@ -46,9 +48,9 @@ export enum JobPostingStatus {
 
 export enum Department {
   ELECTROMECANIQUE = 'ELECTROMECANIQUE',
-  GENIECIVIL = 'GENIE-CIVIL',
-  TIC= 'TIC'
-
+  GENIE_CIVIL = 'GENIE-CIVIL',
+  TIC ='TIC',
+  OTHER='OTHER'
 }
 
 export enum Socials {

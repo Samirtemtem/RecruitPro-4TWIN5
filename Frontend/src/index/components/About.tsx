@@ -6,7 +6,7 @@ const About = () => {
       <div className="content-column col-lg-6 col-md-12 col-sm-12 order-2">
         <div className="inner-column" data-aos="fade-left">
           <div className="sec-title">
-            <h2>Millions of Jobs. Find the one that suits you.</h2>
+            <h2>Hundred of Jobs. Find the one that suits you.</h2>
             <div className="text">
               Search all the open positions on the web. Get your own
               personalized salary estimate. Read reviews on over 600,000
@@ -43,7 +43,7 @@ const About = () => {
 
       <div className="image-column col-lg-6 col-md-12 col-sm-12">
         <figure className="image" data-aos="fade-right">
-          <img src="/images/resource/image-2.jpg" alt="about" />
+          <img src="/images/resource/imagee.jpg" alt="about" />
         </figure>
 
         {/* <!-- Count Employers --> */}
@@ -53,7 +53,7 @@ const About = () => {
           </div>
           <span className="title">300k+ Employers</span>
           <figure className="image">
-            <img src="/images/resource/multi-logo.png" alt="resource" />
+            <img src="/images/resource/Logooo.png" alt="resource" />
           </figure>
         </div>
       </div>

@@ -2,11 +2,12 @@ import 'dotenv/config'; // TypeScript equivalent of `require('dotenv').config()`
 import passport from 'passport';
 import { Strategy as GoogleStrategy, VerifyCallback as GoogleVerifyCallback } from 'passport-google-oauth20';
 import { Strategy as LinkedInStrategy, Profile as LinkedInProfile } from 'passport-linkedin-oauth2';
-import { Strategy as GitHubStrategy } from 'passport-github2';
 import { User } from '../models/User';
 import { sendWelcomeEmail } from '../utils/emailService';
 import axios from 'axios';
 import { Role } from '../models/types';
+import { Strategy as GitHubStrategy } from 'passport-github2';
+
 
 // Google Strategy
 passport.use(
@@ -101,6 +102,8 @@ passport.use(
     }
   )
 );
+
+
 
 // GitHub Strategy
 passport.use(

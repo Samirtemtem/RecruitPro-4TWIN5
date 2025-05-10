@@ -991,7 +991,7 @@ useEffect(() => {
                     />
                     <label htmlFor="pattern3" className="d-block rounded">
                       <ImageWithBasePath
-                        src="assets/img/theme/pattern-03.svg"
+                        src="assets/img/theme/pattern-03.png"
                         alt="img"
                         className="rounded"
                       />
@@ -1155,14 +1155,7 @@ useEffect(() => {
                       checked={dataSidebarBg === "sidebarbg3" ? true : false}
                       onChange={() => handleDataSidebarBgChange("sidebarbg3")}
                     />
-                    <label htmlFor="sidebarBg3" className="d-block rounded">
-                      <ImageWithBasePath
-                        src="assets/img/theme/sidebar-bg-03.svg"
-                        alt="img"
-                        className="rounded"
-                      />
-                    </label>
-                  </div>
+                    </div>
                   <div className="theme-sidebarbg me-3 mb-3">
                     <input
                       type="radio"

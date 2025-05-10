@@ -14,7 +14,7 @@ export const projectReportsData = [
     key: "1"
   },
   {
-    name: "Dreamschat",
+    name: "InfiniteLooperschat",
     client: "BlueSky Industries",
     priority: "Medium",
     startDate: "2023-09-29",

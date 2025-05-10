@@ -1,10 +1,14 @@
-
 export const all_routes = {
 
   // main
   //main: "/index",
   // main page
   IndexPage: "/index",
+
+  // home page menu 
+  AboutUs: "/AboutUs",
+  Contact: "/Contact",
+  Terms: "/Terms",
 
   // Other sections for the front for landing page
   Home: "/home",
@@ -21,6 +25,18 @@ export const all_routes = {
   JobSearchBanner: "/job-search-banner",
   PartnerSlider: "/partner-slider",
   Testimonial: "/testimonial",
+
+  // Candidate Dashboard Routes
+  candidatesDashboard: "/DashboardCandidate",
+  candidatesMyProfile: "/candidates-dashboard/my-profile",
+  candidatesMyResume: "/candidates-dashboard/my-resume",
+  candidatesAppliedJobs: "/candidates-dashboard/applied-jobs",
+  candidatesJobAlerts: "/candidates-dashboard/job-alerts",
+  candidatesShortlistedJobs: "/candidates-dashboard/shortlisted-jobs",
+  candidatesCvManager: "/candidates-dashboard/cv-manager",
+  candidatesPackages: "/candidates-dashboard/packages",
+  candidatesMessages: "/candidates-dashboard/messages",
+  candidatesChangePassword: "/candidates-dashboard/change-password",
 
 
   // job listing routes
@@ -41,11 +57,14 @@ export const all_routes = {
   JobListFront:"/JobListFront",
 
   DashboardCandidate: "/DashboardCandidate",
-
+  usersList:"/UsersList",
 
   // dashboard routes
   adminDashboard: "/adminDashboard",
   UserHome: "/UserHome",
+
+  // Contact management route
+  contactManagement: "/contact-management",
 
   //profile routes
   profile: "/profile",
@@ -67,9 +86,14 @@ export const all_routes = {
 
 
   /// dump
-  employeeDashboard: "/employee-dashboard",
+  employeeDashboard: "/HR-Dashboard",
   leadsDashboard: "/leads-dashboard",
   dealsDashboard: "/deals-dashboard",
+
+
+// department manager routes 
+departmentManagerDashboard: "/department-manager-dashboard",
+teamLeadDashboard:"/team-lead-dashboard",
 
   //Application routes
   chat: "/application/chat",
@@ -471,6 +495,15 @@ export const all_routes = {
   attendancereport: "/attendance-report",
   leavereport: "/leave-report",
   dailyreport: "/daily-report",
+
+
+
+
+
+
+
+ 
+
 
 
 

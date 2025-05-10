@@ -196,7 +196,7 @@ const Termination = () => {
           <p>
             Designed &amp; Developed By{" "}
             <Link to="#" className="text-primary">
-              Dreams
+              InfiniteLoopers
             </Link>
           </p>
         </div>

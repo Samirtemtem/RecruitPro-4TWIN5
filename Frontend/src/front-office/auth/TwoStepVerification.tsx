@@ -31,9 +31,9 @@ const TwoStepVerification = () => {
       setToken(response.data.token);
       setRole(response.data.user.role); 
 
-      // Also persist in sessionStorage (optional)
-      sessionStorage.setItem("token", response.data.token);
-      sessionStorage.setItem("userRole", response.data.user.role);
+      // Also persist in localStorage (optional)
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userRole", response.data.user.role);
         navigation(routes.DashboardCandidate); // Redirect to UserHome on success
       }
     } catch (err) {

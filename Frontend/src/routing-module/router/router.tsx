@@ -4,6 +4,13 @@ import { publicRoutes, authRoutes, authRoutesfront,publicRoutesFront } from "./r
 import Feature from "../feature";
 import AuthFeature from "../authFeature";
 
+
+
+import Login from "../../Face-Recog/Login";
+import UserSelect from "../../Face-Recog/UserSelect";
+import Protected from "../../Face-Recog/Protected";
+
+
 // Import AuthProvider for managing authentication
 import AuthProvider from "../AuthContext";
 
@@ -14,6 +21,8 @@ const ALLRoutes: React.FC = () => {
   return (
     <AuthProvider>
       <Routes>
+
+
 
         {/* Public Routes (No Authentication Required) */}
         <Route element={<Feature />}>

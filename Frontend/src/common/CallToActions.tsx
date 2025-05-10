@@ -5,13 +5,12 @@ import React from 'react';
 const CallToActions = () => {
   return (
     <div className="call-to-action-four">
-      <h5>Recruiting?</h5>
+      <h5>Find Your Dream Job!</h5>
       <p>
-        Advertise your jobs to millions of monthly users and search 15.8 million
-        CVs in our database.
+      Explore exciting opportunities and connect with top employers looking for talent like yours.
       </p>
       <a href="#" className="theme-btn btn-style-one bg-blue">
-        <span className="btn-title">Start Recruiting Now</span>
+        <span className="btn-title">Start Your Journey Now</span>
       </a>
       <div
         className="image"

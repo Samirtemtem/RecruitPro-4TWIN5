@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { all_routes } from "../../../routing-module/router/all_routes";
-import { Link } from "react-router-dom";
 import ImageWithBasePath from "../../../core/common/imageWithBasePath";
 import { DatePicker } from "antd";
 import CollapseHeader from "../../../core/common/collapse-header/collapse-header";
-import moment from "moment"; // Ensure moment is imported
+import moment from "moment"; 
+import { useNavigate } from 'react-router-dom';
 
 interface JobPost {
     _id: string;
@@ -18,17 +18,28 @@ interface JobPost {
     status: "OPEN" | "CLOSED" | "PENDING";
     publishDate: string;
     deadline: string;
+    typeContrat?: "PERMANENT" | "VACATAIRE"; // Added optional typeContrat
+}
+
+interface Application {
+    _id: string;
+    candidate: string;
+    jobPost: string;
+    status: string;
+    CV: string;
+    compatibilityScore: number;
+    submissionDate: string;
 }
 
 const ProjectDetails = () => {
     const applicants: number = 12; // Define number of applicants
     const maxApplicants: number = 200; // Define maximum applicants
     const progress: number = (applicants / maxApplicants) * 100;
-
     const { id } = useParams<{ id: string }>();
     const [job, setJob] = useState<JobPost | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [applications, setApplications] = useState<Application[]>([]);
     const [formData, setFormData] = useState({
         id: "",
         title: "",
@@ -37,9 +48,12 @@ const ProjectDetails = () => {
         requirements: "",
         publishDate: "",
         deadline: "",
-        experience:"",
-        status: "", // Added status to formData
+        experience: "",
+        status: "",
+        typeContrat: "PERMANENT" // Added typeContrat with default
     });
+    const [showEditForm, setShowEditForm] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     const departmentChoose = [
         { value: "Select", label: "Select" },
@@ -85,12 +99,32 @@ const ProjectDetails = () => {
                 department: job.department,
                 requirements: job.requirements.join(", "),
                 publishDate: job.publishDate,
-                experience:job.experience,
+                experience: job.experience,
                 deadline: job.deadline,
-                status: job.status, // Set initial status
+                status: job.status,
+                typeContrat: job.typeContrat || "PERMANENT" // Set typeContrat with fallback
             });
         }
     }, [job]);
+
+    useEffect(() => {
+        const fetchApplications = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/app/byJobId/${id}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setApplications(data);
+            } catch (error) {
+                console.error("Error fetching applications:", error);
+            }
+        };
+
+        if (id) {
+            fetchApplications();
+        }
+    }, [id]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setFormData({
@@ -111,7 +145,8 @@ const ProjectDetails = () => {
         if (window.confirm("Are you sure you want to delete this project?")) {
             try {
                 await axios.delete(`http://localhost:5000/api/jobs/${id}`);
-                alert("Project deleted successfully!");
+                alert("JobPost deleted successfully!");
+                navigate('/jobgrid');
             } catch (error) {
                 console.error("Error deleting project:", error);
                 alert("Failed to delete project.");
@@ -126,11 +161,12 @@ const ProjectDetails = () => {
             title: formData.title,
             description: formData.description,
             department: formData.department,
-            requirements: formData.requirements.split(",").map(req => req.trim()), // Convert string back to array
+            requirements: formData.requirements.split(",").map(req => req.trim()),
             publishDate: formData.publishDate,
-            experience:formData.experience,
+            experience: formData.experience,
             deadline: formData.deadline,
             status: formData.status,
+            typeContrat: formData.typeContrat // Added typeContrat to update payload
         };
     
         try {
@@ -138,6 +174,7 @@ const ProjectDetails = () => {
             if (response.status === 200) {
                 alert("Job post updated successfully!");
                 setJob(response.data);
+                setShowEditForm(false); // Hide form after successful update
             }
         } catch (error) {
             console.error("Error updating job post:", error);
@@ -145,63 +182,80 @@ const ProjectDetails = () => {
         }
     };
 
-
-
-    console.log("Job object:", job); // Log the job object before rendering
-
     const formatDescription = (description: string | undefined) => {
         console.log("Description to format:", description); // Log the description
-        
+    
         if (!description) {
             return <p>No description available.</p>; // Handle undefined description
         }
     
-        // Split the description into sections based on double new lines
-        const sections = description.split(/\n\s*\n/).filter(section => section.trim() !== ""); // Remove empty sections
+        // Split the description into sections based on new lines
+        const sections = description.split(/\n/).filter(section => section.trim() !== ""); // Remove empty sections
     
         return sections.map((section, index) => {
             // Trim whitespace from the section
             const trimmedSection = section.trim();
     
-            // Check if the section starts with a known header
-            const isHeader = trimmedSection.match(/^(Responsibilities|Requirements|Preferred Skills|Benefits):/);
-            if (isHeader) {
-                const headerText = trimmedSection.split(":")[0]; // Extract header text
-                const contentText = trimmedSection.split(":")[1]?.trim(); // Extract content after the header
+            // Check for a header followed by a colon
+            const headerMatch = trimmedSection.match(/^(.*?):\s*(.*)$/);
+            if (headerMatch) {
+                const headerText = headerMatch[1].trim(); // Extract header text
+                const contentText = headerMatch[2]?.trim(); // Extract content after the header
     
                 return (
-                    <div key={index}>
-                        <h6>{headerText}:</h6>
+                    <div key={index} style={{ marginBottom: '1em' }}>
+                        <strong style={{ fontWeight: 'bold', color: 'black' }}>{headerText}:</strong> {/* Dark title */}
                         {contentText && (
-                            <ul>
-                                {contentText.split("\n") // Split content by new lines
-                                    .filter(item => item.trim()) // Filter out empty lines
-                                    .map((item, idx) => {
-                                        // Add a leading dash to each item in Requirements and Preferred Skills
-                                        const isRequirement = headerText === "Requirements" || headerText === "Preferred Skills";
-                                        return (
-                                            <li key={idx}>
-                                                {isRequirement ? `- ${item.trim().replace(/^- /, '')}` : item.trim()}
-                                            </li>
-                                        );
-                                    })}
-                            </ul>
+                            <span style={{ marginLeft: '10px' }}>{contentText}</span> // No extra line break
                         )}
                     </div>
                 );
             }
     
-            // If not a header, treat as a paragraph
-            return <p key={index}>{trimmedSection}</p>;
+            // Handle bullet points or regular text
+            return (
+                <div key={index} style={{ margin: '0.5em 0' }}>
+                    {trimmedSection.startsWith('-') ? (
+                        <span style={{ display: 'block', marginLeft: '20px' }}>{trimmedSection}</span> // Indent bullet points
+                    ) : (
+                        <span>{trimmedSection}</span>
+                    )}
+                </div>
+            );
         });
     };
+
+    const [applicantData, setApplicantData] = useState<{
+        jobPostApplicationsCount: number;
+        totalApplicationsCount: number;
+        percentage: string;
+    } | null>(null);
+    const { jobPostApplicationsCount, totalApplicationsCount, percentage } = applicantData || {};
+
+    useEffect(() => {
+        const fetchApplicationCounts = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/app/Count/count/${id}`);
+                setApplicantData(response.data);
+            } catch (err) {
+                console.error("Error fetching application counts:", err);
+                setError("Failed to fetch application counts.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) {
+            fetchApplicationCounts();
+        }
+    }, [id]);
+
     if (loading) return <p>Loading job details...</p>;
     if (error) return <p>Error: {error}</p>;
     if (!job) return <p>Job not found</p>;
 
     return (
         <>
-            {/* Page Wrapper */}
             <div className="page-wrapper">
                 <div className="content">
                     <div className="row align-items-center mb-4">
@@ -214,19 +268,14 @@ const ProjectDetails = () => {
                             </h6>
                             <div className="d-flex">
                                 <div className="text-end">
-                                    <Link
-                                        to="#"
+                                    <button
                                         className="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-inert={true}
-                                        data-bs-target="#edit_project"
+                                        onClick={() => setShowEditForm(!showEditForm)}
                                     >
                                         <i className="ti ti-edit me-1" />
-                                        Edit JobPost
-                                    </Link>
+                                        Edit 
+                                    </button>
                                 </div>
-
-                                {/* Delete Button */}
                                 <div className="ms-2">
                                     <button
                                         className="btn btn-danger"
@@ -236,32 +285,29 @@ const ProjectDetails = () => {
                                         Delete
                                     </button>
                                 </div>
-
-
-       <div className="ms-2">
-            <Link to="/candidates-grid" className="btn btn-secondary">
-                <i className="ti ti-user me-1" />
-                Candidates
-            </Link>
-        </div>
-
-
-
-                              
-
+                                <div className="ms-2">
+                                    <Link to={`/candidates-grid-recomand/${id}`} className="btn btn-primary">
+                                        <i className="ti ti-user me-1" />
+                                        Recommended
+                                    </Link>
+                                </div>
+                                <div className="ms-2">
+                                    <Link to={`/applications-kanban/${id}`} className="btn btn-secondary">
+                                        <i className="ti ti-user me-1" />
+                                        Applications
+                                    </Link>
+                                </div>
                                 <div className="head-icons ms-2 text-end">
                                     <CollapseHeader />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {/* Job details sections */}
                     <div className="row">
                         <div className="col-xxl-3 col-xl-4 theiaStickySidebar">
                             <div className="card">
                                 <div className="card-body">
                                     <h5 className="mb-3">JobPost Details</h5>
-                                    {/* Details list */}
                                     <div className="list-group details-list-group mb-4">
                                         <div className="list-group-item">
                                             <span>Title</span>
@@ -298,27 +344,34 @@ const ProjectDetails = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                        <div className="list-group-item">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <span>Type Contrat</span>
+                                                <p className="text-gray-9">{job.typeContrat ? (job.typeContrat === "PERMANENT" ? "Permanent" : "Vacataire") : "No type mentioned"}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                     {/* Applicants progress */}
                                     <div className="bg-light p-2 rounded">
-                                        <span className="d-block mb-1"> Applicants </span>
-                                        <h4 className="mb-2">{applicants} / {maxApplicants}</h4>
-                                        <div className="progress progress-xs mb-2">
-                                            <div
-                                                className="progress-bar bg-primary"
-                                                role="progressbar"
-                                                style={{ width: `${progress}%` }}
-                                                aria-valuenow={progress}
-                                                aria-valuemin={0}
-                                                aria-valuemax={100}
-                                            />
-                                        </div>
-                                        <p>{progress.toFixed(1)} % Of Total</p>
-                                    </div>
+            <span className="d-block mb-1"> Applicants </span>
+            <h4 className="mb-2">{jobPostApplicationsCount} / {totalApplicationsCount}</h4>
+            <div className="progress progress-xs mb-2">
+                <div
+                    className="progress-bar bg-primary"
+                    role="progressbar"
+                    style={{ width: `${progress}%` }}
+                    aria-valuenow={progress}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                />
+            </div>
+            <p>{percentage} Of Total</p>
+        </div>
                                 </div>
+                                
                             </div>
                         </div>
-                        {/* JobPost Main Content */}
+                        
                         <div className="col-xxl-9 col-xl-8">
                             <div className="card">
                                 <div className="card-body">
@@ -352,7 +405,6 @@ const ProjectDetails = () => {
                                                 {job.status}
                                             </span>
                                         </div>
-
                                         <div className="col-sm-3">
                                             <p className="d-flex align-items-center mb-3">
                                                 <i className="ti ti-bookmark me-2" />
@@ -372,24 +424,158 @@ const ProjectDetails = () => {
                                                 ))}
                                             </div>
                                         </div>
-
                                         <div className="col-sm-12">
-    <div className="mb-3">
-        <h6 className="mb-1">Description</h6>
-        {formatDescription(job.description)}
-       
-    </div>
-</div>
+                                            <div className="mb-3">
+                                                <h5 className="mb-1">Description</h5>
+                                                {formatDescription(job.description)}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                                    {/* Edit Job Post Form */}
+                {showEditForm && (
+                    <div className="card mt-4">
+                        <div className="card-body">
+                            <h5 className="mb-3">Edit Job Post</h5>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label className="form-label">Job Title</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="title"
+                                        value={formData.title}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Description</label>
+                                    <textarea
+                                        className="form-control"
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Experience</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="experience"
+                                        value={formData.experience}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Requirements</label>
+                                    <textarea
+                                        className="form-control"
+                                        name="requirements"
+                                        value={formData.requirements}
+                                        onChange={handleChange}
+                                        placeholder="Enter requirements separated by commas"
+                                    />
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Publish Date</label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                name="publishDate"
+                                                value={formData.publishDate ? moment(formData.publishDate).format("YYYY-MM-DD") : ""}
+                                                onChange={(e) => handleDateChange("publishDate", e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Deadline</label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                name="deadline"
+                                                value={formData.deadline ? moment(formData.deadline).format("YYYY-MM-DD") : ""}
+                                                onChange={(e) => handleDateChange("deadline", e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Department</label>
+                                            <select
+                                                className="form-select"
+                                                name="department"
+                                                value={formData.department}
+                                                onChange={handleChange}
+                                            >
+                                                {departmentChoose.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="mb-3">
+                                            <label className="form-label">Status</label>
+                                            <select
+                                                className="form-select"
+                                                name="status"
+                                                value={formData.status}
+                                                onChange={handleChange}
+                                            >
+                                                {statusChoose.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-6 mb-3">
+                                    <label className="form-label">Type Contrat</label>
+                                    <select
+                                        className="form-select"
+                                        name="typeContrat"
+                                        value={formData.typeContrat}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="PERMANENT">Permanent</option>
+                                        <option value="VACATAIRE">Vacataire</option>
+                                    </select>
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary me-1"
+                                        onClick={() => setShowEditForm(false)}
+                                    >
+                                        Close
+                                    </button>
+                                    <button type="submit" className="btn btn-primary">
+                                        Save changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
                         </div>
                     </div>
                 </div>
+
                 <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
                     <p className="mb-0"> 2025 © RecruitPro.</p>
                     <p>
-                        Designed &amp; Developed By{" "}
+                        Designed & Developed By{" "}
                         <Link to="#" className="text-primary">
                             InfiniteLoopers
                         </Link>
@@ -397,139 +583,20 @@ const ProjectDetails = () => {
                 </div>
             </div>
 
-           {/* Edit Job Post Modal */}
-<div className="modal fade" id="edit_project" role="dialog">
-    <div className="modal-dialog modal-dialog-centered modal-lg">
-        <div className="modal-content">
-            <div className="modal-header header-border align-items-center justify-content-between">
-                <h5 className="modal-title">Edit Job Post</h5>
-                <button
-                    type="button"
-                    className="btn-close custom-btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                />
-            </div>
-            <div className="modal-body">
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label className="form-label">Job Title</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Description</label>
-                        <textarea
-                            className="form-control"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Experience</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="experience"
-                            value={formData.experience}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Requirements</label>
-                        <textarea
-                            className="form-control"
-                            name="requirements"
-                            value={formData.requirements}
-                            onChange={handleChange}
-                            placeholder="Enter requirements separated by commas"
-                        />
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label className="form-label">Publish Date</label>
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    name="publishDate"
-                                    value={formData.publishDate ? moment(formData.publishDate).format("YYYY-MM-DD") : ""}
-                                    onChange={(e) => handleDateChange("publishDate", e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label className="form-label">Deadline</label>
-                                <input
-                                    type="date"
-                                    className="form-control"
-                                    name="deadline"
-                                    value={formData.deadline ? moment(formData.deadline).format("YYYY-MM-DD") : ""}
-                                    onChange={(e) => handleDateChange("deadline", e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label className="form-label">Department</label>
-                                <select
-                                    className="form-select"
-                                    name="department"
-                                    value={formData.department}
-                                    onChange={handleChange}
-                                >
-                                    {departmentChoose.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <div className="mb-3">
-                                <label className="form-label">Status</label>
-                                <select
-                                    className="form-select"
-                                    name="status"
-                                    value={formData.status}
-                                    onChange={handleChange}
-                                >
-                                    {statusChoose.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Close
-                        </button>
-                        <button type="submit" className="btn btn-primary">
-                            Save changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+            <style>
+                {`
+                    #btn {
+                        width: 90%;
+                        text-align: center;
+                    }
+                    .text-muted {
+                        font-size: 0.9rem;
+                    }
+                    .mb-4 {
+                        margin-bottom: 1.5rem;
+                    }
+                `}
+            </style>
         </>
     );
 };

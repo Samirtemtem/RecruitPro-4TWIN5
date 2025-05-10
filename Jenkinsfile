@@ -26,16 +26,6 @@ pipeline {
             }
         }
 
-        stage('Setup Python') {
-            steps {
-                script {
-                    // Use Python 3.9 installed via ShiningPanda plugin
-                    withPythonEnv('python3.9') {
-                        sh 'python --version'  // Test if Python is available
-                    }
-                }
-            }
-        }
 
         stage('Install Dependencies') {
             parallel {

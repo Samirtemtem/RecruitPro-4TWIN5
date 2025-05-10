@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'node'
-        python 'python3.9'
+        NodeJS 'node'
+        Python 'python3.9'
     }
 
     environment {

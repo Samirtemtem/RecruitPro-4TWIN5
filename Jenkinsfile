@@ -47,7 +47,7 @@ pipeline {
                 stage('ATS') {
                     steps {
                         dir('Backend/applicant_tracking_system') {
-                            sh 'sudo pip install -r requirements.txt'
+                            sh 'python3 -m pip install -r requirements.txt'
                         }
                     }
                 }

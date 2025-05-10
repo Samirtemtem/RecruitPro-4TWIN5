@@ -125,10 +125,22 @@ pipeline {
         }
 */
         stage('Build Docker Images') {
-            steps {
-                sh 'docker build -t ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ./Backend'
-                sh 'docker build -t ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ./Frontend'
-                sh 'docker build -t ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} ./Backend/applicant_tracking_system'
+            parallel {
+                stage('Build Backend Docker Image') {
+                    steps {
+                        sh 'docker build -t ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ./Backend'
+                    }
+                }
+                stage('Build Frontend Docker Image') {
+                    steps {
+                        sh 'docker build -t ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ./Frontend'
+                    }
+                }
+                stage('Build ATS Docker Image') {
+                    steps {
+                        sh 'docker build -t ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} ./Backend/applicant_tracking_system'
+                    }
+                }
             }
         }
 
@@ -141,12 +153,25 @@ pipeline {
         }
 
         stage('Docker Push') {
-            steps {
-                sh 'docker push ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}'
-                sh 'docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}'
-                sh 'docker push ${DOCKER_IMAGE_ATS}:${DOCKER_TAG}'
+            parallel {
+                stage('Push Backend Image') {
+                    steps {
+                        sh 'docker push ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}'
+                    }
+                }
+                stage('Push Frontend Image') {
+                    steps {
+                        sh 'docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}'
+                    }
+                }
+                stage('Push ATS Image') {
+                    steps {
+                        sh 'docker push ${DOCKER_IMAGE_ATS}:${DOCKER_TAG}'
+                    }
+                }
             }
         }
+
 
         stage('Deploy with Docker Compose') {
             steps {

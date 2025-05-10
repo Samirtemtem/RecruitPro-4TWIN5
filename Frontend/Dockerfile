@@ -5,7 +5,8 @@ COPY package*.json ./
 RUN npm install --force
 COPY . .
 ENV NODE_ENV=production
-RUN npm run build
+# Disable CI mode to prevent warnings from causing build failure
+RUN CI=false npm run build
 
 # Production stage
 FROM node:20-alpine

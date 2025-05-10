@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         nodejs 'node'
+        python 'python3'
     }
 
     environment {
@@ -46,7 +47,7 @@ pipeline {
                 stage('ATS') {
                     steps {
                         dir('Backend/applicant_tracking_system') {
-                            sh 'pip install -r requirements.txt'
+                            sh 'sudo pip install -r requirements.txt'
                         }
                     }
                 }

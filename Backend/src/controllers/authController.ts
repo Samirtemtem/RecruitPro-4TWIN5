@@ -1203,3 +1203,98 @@ export const getAll = async (req: Request, res: Response) => {
   }
 };
 */
+
+
+
+export const FaceRecoglogin = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return errorResponse(
+        res,
+        400,
+        "Email is required",
+        "INVALID_CREDENTIALS"
+      );
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return errorResponse(
+        res,
+        401,
+        "User not found. Please register first.",
+        "USER_NOT_FOUND"
+      );
+    }
+
+    if (!user.isVerified) {
+      const token = generateToken(user.id);
+      user.verificationToken = token;
+      await user.save();
+      sendVerificationEmail(user.email, token);
+      return errorResponse(
+        res,
+        403,
+        "Email not verified. Please verify your email.",
+        "EMAIL_NOT_VERIFIED"
+      );
+    }
+
+    const token = generateToken(user.id);
+    if (user.is2FAEnabled) {
+      sendOTP(user.email);
+      return res.json({
+        token,
+        user: {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          isVerified: user.isVerified,
+          is2FAEnabled: user.is2FAEnabled,
+          image: user.image,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+          createDate: user.createDate,
+          lastLogin: user.lastLogin,
+          department: user.department,
+          team: user.team
+        },
+      });
+    }
+
+    return res.json({
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+        is2FAEnabled: user.is2FAEnabled,
+        image: user.image,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        createDate: user.createDate,
+        lastLogin: user.lastLogin,
+        department: user.department,
+        team: user.team
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    return errorResponse(
+      res,
+      500,
+      "An internal server error occurred",
+      "SERVER_ERROR"
+    );
+  }
+};

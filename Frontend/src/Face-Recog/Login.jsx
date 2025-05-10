@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useRef, useState, useContext } from "react";
 import * as faceapi from "face-api.js";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
@@ -12,7 +11,9 @@ function Login() {
   const [faceApiLoaded, setFaceApiLoaded] = useState(false);
   const [loginResult, setLoginResult] = useState("PENDING");
   const [imageError, setImageError] = useState(false);
+  const [apiError, setApiError] = useState(null);
   const [counter, setCounter] = useState(5);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [labeledFaceDescriptors, setLabeledFaceDescriptors] = useState([]);
   const videoRef = useRef();
   const canvasRef = useRef();
@@ -22,30 +23,7 @@ function Login() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { updateProfileData, setRole, setUserId, setUser } = useContext(AuthContext);
-
-  // Redirect to home if no account state is provided
-  if (!location?.state) {
-    console.log("No account state provided, redirecting to home.");
-    return <Navigate to="/" replace={true} />;
-  }
-
-  // Load face-api.js models
-  const loadModels = async () => {
-    console.log("Loading models...");
-    const uri = "/models";
-    try {
-      await Promise.all([
-        faceapi.nets.ssdMobilenetv1.loadFromUri(uri),
-        faceapi.nets.faceLandmark68Net.loadFromUri(uri),
-        faceapi.nets.faceRecognitionNet.loadFromUri(uri),
-      ]);
-      console.log("Models loaded successfully.");
-    } catch (error) {
-      console.error("Error loading models:", error);
-      setImageError(true);
-    }
-  };
+  const { updateProfileData, setRole, setUserId, setUser, setToken, token } = useContext(AuthContext);
 
   // Set tempAccount from location state
   useEffect(() => {
@@ -101,7 +79,7 @@ function Login() {
     }
   }, [loginResult, localUserStream]);
 
-  // Cleanup video stream and intervals on component unmount
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (localUserStream) {
@@ -111,11 +89,63 @@ function Login() {
         clearInterval(faceApiIntervalRef.current);
       }
     };
-  }, [localUserStream]);
+  }, []);
+
+  // Navigate after AuthContext is updated
+  useEffect(() => {
+  if (token && tempAccount?.role) {
+    console.log("Token and role set, navigating to dashboard...", { role: tempAccount.role });
+    switch (tempAccount.role) {
+      case "ADMIN":
+        navigate(all_routes.adminDashboard, { replace: true });
+        break;
+      case "CANDIDATE":
+        navigate(all_routes.DashboardCandidate, { replace: true });
+        break;
+      case "HR-MANAGER":
+        navigate(all_routes.DashboardRecruiter, { replace: true });
+        break;
+      case "TEAM-LEAD":
+        navigate(all_routes.teamLeadDashboard, { replace: true });
+        break;
+      case "DEPARTMENT-MANAGER":
+        navigate(all_routes.departmentManagerDashboard, { replace: true });
+        break;
+      default:
+        console.warn("Unknown role, redirecting to home:", tempAccount.role);
+        navigate("/", { replace: true });
+        break;
+    }
+  }
+}, [token, tempAccount?.role, navigate]);
+
+  // Load face-api.js models
+  const loadModels = async () => {
+    console.log("Loading models...");
+    const uri = "/models";
+    try {
+      await Promise.all([
+        faceapi.nets.ssdMobilenetv1.loadFromUri(uri),
+        faceapi.nets.faceLandmark68Net.loadFromUri(uri),
+        faceapi.nets.faceRecognitionNet.loadFromUri(uri),
+      ]);
+      console.log("Models loaded successfully.");
+    } catch (error) {
+      console.error("Error loading models:", error);
+      setImageError(true);
+    }
+  };
 
   // Start webcam stream
   const getLocalUserVideo = async () => {
     console.log("Getting local user video...");
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.error("Webcam not supported in this browser.");
+      setLoginResult("FAILED");
+      setApiError("Webcam not supported in this browser.");
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
       console.log("Video stream obtained.");
@@ -126,6 +156,7 @@ function Login() {
     } catch (err) {
       console.error("Error obtaining video stream:", err);
       setLoginResult("FAILED");
+      setApiError("Unable to access webcam. Please check permissions.");
     }
   };
 
@@ -157,7 +188,7 @@ function Login() {
           height: videoHeight,
         });
 
-        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5);
+        const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.45);
         const results = resizedDetections.map((d) => {
           if (d.descriptor) {
             return faceMatcher.findBestMatch(d.descriptor);
@@ -193,7 +224,7 @@ function Login() {
         console.error("Error during face scanning:", error);
         setLoginResult("FAILED");
       }
-    }, 1000 / 10);
+    }, 1000 / 5); // 5 FPS
     faceApiIntervalRef.current = faceApiInterval;
   };
 
@@ -202,6 +233,13 @@ function Login() {
     console.log("Loading labeled images...");
     if (!tempAccount) {
       console.error("No tempAccount provided.");
+      setImageError(true);
+      return [];
+    }
+
+    if (!tempAccount.image) {
+      console.error("No reference image provided for tempAccount.");
+      setImageError(true);
       return [];
     }
 
@@ -217,6 +255,8 @@ function Login() {
           .withFaceDescriptor();
         if (detections) {
           descriptions.push(detections.descriptor);
+        } else {
+          console.warn(`No face detected in image: ${imgPath}`);
         }
       } catch (error) {
         console.error(`Error loading image ${imgPath}:`, error);
@@ -227,6 +267,7 @@ function Login() {
     const label = tempAccount.firstName || tempAccount.lastName || "Unknown User";
     if (typeof label !== "string" || label.trim() === "") {
       console.error("Invalid label: must be a non-empty string.");
+      setImageError(true);
       return [];
     }
 
@@ -236,16 +277,43 @@ function Login() {
       : [];
   }
 
-  // Store user data and redirect without API
+  // Store user data and update AuthContext
   const generateTokenAndSave = async () => {
-    console.log("Saving user data...");
+    console.log("Authenticating user with API...");
+    setIsAuthenticating(true);
     try {
-      // Simulate token and user data from tempAccount
-      const userId = tempAccount._id || `temp-${Date.now()}`; // Fallback ID if _id is missing
-      const userRole = tempAccount.role || "ADMIN"; // Use role from tempAccount or default to ADMIN
-      const token = `mock-token-${userId}`; // Mock token
+      if (!tempAccount || !tempAccount.email) {
+        throw new Error("Please provide a valid email address.");
+      }
 
-      // Create user object from tempAccount
+      if (!tempAccount._id) {
+        console.warn("No user ID provided in tempAccount, generating temporary ID.");
+      }
+
+      const response = await fetch("http://localhost:5000/api/auth/facelogin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: tempAccount.email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `API authentication failed: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("API response:", data);
+
+      const token = data.token || data.accessToken || data.authToken;
+      if (!token) {
+        throw new Error("No token provided in API response.");
+      }
+
+      const userId = tempAccount._id || data.userId || data.user?.id || `temp-${Date.now()}`;
+      const userRole = tempAccount.role || data.role || data.user?.role || "ADMIN";
+
       const userObject = {
         id: userId,
         _id: userId,
@@ -263,20 +331,19 @@ function Login() {
         team: tempAccount.team || "",
       };
 
-      // Store token in localStorage
+      // Store in localStorage
       localStorage.setItem("token", token);
-
-      // Store in AuthContext
-      setRole(userRole);
-      setUserId(userId);
-      setUser(userObject);
-
-      // Persist in localStorage
       localStorage.setItem("userRole", userRole);
       localStorage.setItem("userId", userId);
       localStorage.setItem("user", JSON.stringify(userObject));
 
-      // Mock profile data (simplified, since no API)
+      // Update AuthContext
+      setToken(token); // Explicitly set token
+      setRole(userRole);
+      setUserId(userId);
+      setUser(userObject);
+
+      // Profile data
       const profileData = {
         id: userId,
         _id: userId,
@@ -289,27 +356,21 @@ function Login() {
       localStorage.setItem("profileData", JSON.stringify(profileData));
       updateProfileData(profileData);
       console.log("Profile data stored successfully");
-
-      // Role-based redirection
-      switch (userRole) {
-        case "ADMIN":
-          navigate(all_routes.adminDashboard);
-          break;
-        case "CANDIDATE":
-          navigate(all_routes.DashboardCandidate);
-          break;
-        case "HR-MANAGER":
-          navigate(all_routes.DashboardRecruiter);
-          break;
-        default:
-          navigate("/");
-          break;
-      }
+      console.log("AuthContext updated:", { token, userId, userRole });
     } catch (error) {
-      console.error("Error saving user data:", error);
+      console.error("Error during API authentication:", error.message);
+      setApiError(error.message);
       setLoginResult("FAILED");
+    } finally {
+      setIsAuthenticating(false);
     }
   };
+
+  // Redirect to home if no account state is provided
+  if (!location?.state) {
+    console.log("No account state provided, redirecting to home.");
+    return <Navigate to="/" replace={true} />;
+  }
 
   return (
     <div className="container">
@@ -319,32 +380,42 @@ function Login() {
             <span>Failed to load reference image or models. Please try again or contact support.</span>
           </h2>
         )}
-        {!localUserStream && !modelsLoaded && !imageError && (
+        {apiError && (
+          <h2 className="error">
+            <span>{apiError.includes("email") ? "Please provide a valid email address." : apiError}</span>
+          </h2>
+        )}
+        {isAuthenticating && (
+          <h2 className="loading">
+            <span>Authenticating...</span>
+          </h2>
+        )}
+        {!localUserStream && !modelsLoaded && !imageError && !isAuthenticating && (
           <h2 className="loading">
             <span>Processing your login request...</span>
             <span className="loading-subtext">Preparing facial recognition models...</span>
           </h2>
         )}
-        {!localUserStream && modelsLoaded && !imageError && (
+        {!localUserStream && modelsLoaded && !imageError && !isAuthenticating && (
           <h2 className="prompt">
             <span>Position your face in front of the camera.</span>
           </h2>
         )}
-        {localUserStream && loginResult === "SUCCESS" && (
+        {localUserStream && loginResult === "SUCCESS" && !isAuthenticating && (
           <h2 className="success">
             <span>Your face has been successfully recognized!</span>
             <span>Please hold still for {counter} more seconds...</span>
           </h2>
         )}
-        {localUserStream && loginResult === "FAILED" && (
+        {localUserStream && loginResult === "FAILED" && !apiError && !isAuthenticating && (
           <h2 className="error">
             <span>Unable to recognize your face. Please try again!</span>
           </h2>
         )}
-        {loginResult === "FAILED" && (
+        {loginResult === "FAILED" && !isAuthenticating && (
           <p className="unauthorized">Unauthorized access!</p>
         )}
-        {localUserStream && !faceApiLoaded && loginResult === "PENDING" && (
+        {localUserStream && !faceApiLoaded && loginResult === "PENDING" && !isAuthenticating && (
           <h2 className="scanning">
             <span>Scanning your face...</span>
           </h2>
@@ -418,6 +489,11 @@ function Login() {
               localUserStream?.getTracks().forEach((track) => track.stop());
               clearInterval(faceApiIntervalRef.current);
               localStorage.removeItem("faceAuth");
+              setLocalUserStream(null);
+              setLoginResult("PENDING");
+              setFaceApiLoaded(false);
+              setApiError(null);
+              setCounter(5);
               navigate("/");
             }}
             className="retry-button"

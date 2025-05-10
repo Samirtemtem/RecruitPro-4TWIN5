@@ -11,7 +11,8 @@ import {
   changePassword,
   forgotPassword, 
   resetPassword,
-  update2FASettings
+  update2FASettings,
+  FaceRecoglogin
 } from '../controllers/authController';
 import { generateToken } from '../utils/generateToken';
 import { upload } from '../utils/cloudinary';
@@ -52,6 +53,9 @@ router.post('/register',
 // Local Auth
 router.post('/login', login);
 router.post('/register', register);
+
+
+router.post('/facelogin',FaceRecoglogin);
 
 // Email Verification
 router.get('/verifyEmail', verifyEmail);

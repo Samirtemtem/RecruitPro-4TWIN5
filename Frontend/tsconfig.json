@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es6", // Use ES6 as the target (if possible, for better performance and modern features)
+    "target": "es5", // Mettez à jour ici
     "lib": [
+      "dom",
+      "dom.iterable",
       "esnext"
     ],
     "allowJs": true,
@@ -12,16 +14,13 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "commonjs", // Set module to commonjs for Node.js compatibility
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": false,  // Ensure TypeScript emits compiled JS files
-    "outDir": "./dist", // Set the output directory for compiled files
-    "jsx": "react",  // <-- Make sure this is set to "react"
-    "types": [] // You likely don’t need React types for a backend app
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["react", "react-dom", "react-router-dom"]
   },
-  "include": [
-    "src/**/*" // Ensure all TypeScript files in the src directory are included
-  ]
+  "include": ["src", "src/types"]
 }

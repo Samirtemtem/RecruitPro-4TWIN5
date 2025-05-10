@@ -60,7 +60,7 @@ const ContactMessagesGrid: React.FC = () => {
 
   // Function to handle contact deletion
   const handleDeleteContact = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this message?')) return;
+    if (!(window as Window).confirm('Are you sure you want to delete this message?')) return;
 
     try {
       await axios.delete(`http://localhost:5000/api/contact/contact/${id}`);

@@ -105,7 +105,7 @@ const CandidateDetails2: React.FC = () => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch candidate details');
                 }
-                const data: Candidate = await response.json();
+                const data: any = await response.json();
                 setCandidate(data);
                 console.log(data);
             } catch (error) {

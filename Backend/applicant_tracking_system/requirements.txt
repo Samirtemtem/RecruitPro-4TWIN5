@@ -6,6 +6,7 @@ Flask>=3.0.3
 python-dotenv>=1.0.0
 translate>=3.6.1
 langdetect>=1.0.9
+flask-cors
 
 
 

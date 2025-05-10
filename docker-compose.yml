@@ -1,9 +1,8 @@
-version: '3.8'
 services:
   frontend:
     build: ./Frontend
     ports:
-      - "3000:80"
+      - "3000:3000"
     depends_on:
       - backend
 
@@ -15,12 +14,20 @@ services:
       - ./Backend/.env
     depends_on:
       - mongo
-      - ats
 
   ats:
     build: ./Backend/applicant_tracking_system
     ports:
       - "5001:5001"
+    env_file:
+      - ./Backend/.env
+    depends_on:
+      - mongo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://ats:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   mongo:
     image: mongo

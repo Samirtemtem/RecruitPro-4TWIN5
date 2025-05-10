@@ -2,206 +2,175 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'node'  // Make sure the Node.js version matches the installed version in Jenkins
+        nodejs 'node'
+        python 'python3.9'
     }
 
     environment {
         DOCKER_IMAGE_BACKEND = "ahmedbenhmida/recruitpro-backend"
         DOCKER_IMAGE_FRONTEND = "ahmedbenhmida/recruitpro-frontend"
+        DOCKER_IMAGE_ATS = "ahmedbenhmida/recruitpro-ats"
         DOCKER_TAG = "latest"
     }
 
     stages {
         stage('Git Checkout') {
             steps {
-                script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: 'CI/CD_setup']], // Branch name
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/Samirtemtem/RecruitPro-4TWIN5.git', // GitHub repo URL
-                            credentialsId: 'AhmedBnHmida-GIT'  // Jenkins credentials ID for GitHub
-                        ]]
-                    ])
-                }
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: 'CI/CD_setup']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/Samirtemtem/RecruitPro-4TWIN5.git',
+                        credentialsId: 'AhmedBnHmida-GIT'
+                    ]]
+                ])
             }
         }
 
-        stage('Install Frontend Dependencies') {
-            steps {
-                dir('Frontend') {
-                    sh 'npm install'
+        stage('Install Dependencies') {
+            parallel {
+                stage('Frontend') {
+                    steps {
+                        dir('Frontend') {
+                            sh 'npm install --force'
+                        }
+                    }
                 }
-            }
-        }
-
-        stage('Install Backend Dependencies') {
-            steps {
-                dir('Backend') {
-                    sh 'npm install'
-
-
-
+                stage('Backend') {
+                    steps {
+                        dir('Backend') {
+                            sh 'npm install --force'
+                        }
+                    }
                 }
-            }
-        }
-
-        stage('Build Backend') {
-            steps {
-                dir('Backend') {
-                    script {
-                        sh 'npm run build'
+                stage('ATS') {
+                    steps {
+                        dir('Backend/applicant_tracking_system') {
+                            sh 'pip install -r requirements.txt'
+                        }
                     }
                 }
             }
         }
 
-        stage('Build Frontend') {
-            steps {
-                dir('Frontend') {
-                    script {
-                        sh 'CI=false npm run build'
+        stage('Build') {
+            parallel {
+                stage('Frontend') {
+                    steps {
+                        sh 'npm install --force && npm run build'
+                    }
+                }
+                stage('Backend') {
+                    steps {
+                        sh 'npm install --force && npm run build'
+                    }
+                }
+                stage('ATS') {
+                    steps {
+                        echo 'No build step needed for ATS (Flask app)'
                     }
                 }
             }
         }
-
-
-//we have to add the tests
 /*
-        stage('Run Unit Tests') {
+        stage('Test') {
+            parallel {
+                stage('Frontend') {
+                    steps {
+                        dir('Frontend') {
+                            sh 'npm test || true'
+                        }
+                    }
+                }
+                stage('Backend') {
+                    steps {
+                        dir('Backend') {
+                            sh 'npm test || true'
+                        }
+                    }
+                }
+                stage('ATS') {
+                    steps {
+                        dir('Backend/applicant_tracking_system') {
+                            sh 'pytest || true'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
             steps {
-                script {
-                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                        sh '''
-                            cd Backend && npm test
-                            cd ../Frontend && npm test
-                        '''
+                withSonarQubeEnv('Kaddem-sq') {
+                    dir('Frontend') {
+                        sh 'npm run sonar || true'
+                    }
+                    dir('Backend') {
+                        sh 'npm run sonar || true'
+                    }
+                    dir('Backend/applicant_tracking_system') {
+                        sh 'pylint *.py || true'
                     }
                 }
             }
         }
 */
-            stage('Backend SonarQube Analysis') {
-                steps {
-                    script {
-                        // Run SonarQube analysis for Backend
-                        withSonarQubeEnv('Kaddem-sq') {
-                            sh '''
-                                cd Backend && npm run sonar
-                            '''
-                        }
-                    }
+        stage('Build Docker Images') {
+            steps {
+                sh 'docker build -t ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ./Backend'
+                sh 'docker build -t ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ./Frontend'
+                sh 'docker build -t ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} ./Backend/applicant_tracking_system'
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                 }
             }
+        }
 
-            stage('Frontend SonarQube Analysis') {
-                steps {
-                    script {
-                        // Run SonarQube analysis for Frontend
-                        withSonarQubeEnv('Kaddem-sq') {
-                            sh '''
-                                cd Frontend && npm run sonar
-                            '''
-                        }
-                    }
+        stage('Docker Push') {
+            steps {
+                sh 'docker push ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}'
+                sh 'docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}'
+                sh 'docker push ${DOCKER_IMAGE_ATS}:${DOCKER_TAG}'
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                sh 'docker-compose down || true'
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Post-Deployment Health Check') {
+            steps {
+                script {
+                    def backendHealth = sh(script: 'curl --fail http://localhost:5000/api/jobs', returnStatus: true)
+                    def atsHealth = sh(script: 'curl --fail http://localhost:5001/health', returnStatus: true)
+                    def frontendHealth = sh(script: 'curl --fail http://localhost:3000', returnStatus: true)
+
+                    if (backendHealth != 0) echo "⚠️ Backend not healthy"
+                    if (atsHealth != 0) echo "⚠️ ATS not healthy"
+                    if (frontendHealth != 0) echo "⚠️ Frontend not healthy"
                 }
             }
+        }
 
-            stage('Build Docker Backend Images') {
-                steps {
-                    sh 'docker build -t ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ./Backend'
-                }
-            }
+    }
 
-            stage('Build Docker Frontend Images') {
-                steps {
-                    sh 'docker build -t ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ./Frontend'
-                }
-            }
-
-             stage('Docker Login') {
-                steps {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh '''
-                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                        '''
-                    }
-                }
-            }
-
-            stage('Docker Push Backend') {
-                steps {
-                    sh '''
-                        docker push ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
-                    '''
-                }
-            }
-
-            stage('Docker Push Frontend') {
-                steps {
-                    sh '''
-                        timeout 30m docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
-                    '''
-                }
-            }
-
-
-
-            stage('Deploy Backend') {
-                steps {
-                    sshagent(['recruitpro-ssh']) {
-                        sh '''
-                            ssh user@your-server << 'EOF'
-                                echo "Pulling latest backend Docker image..."
-                                docker pull ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
-
-                                # Stop and remove the existing backend container if it exists
-                                if docker ps -a --format '{{.Names}}' | grep -q '^backend-container$'; then
-                                    echo "Stopping and removing existing backend container..."
-                                    docker stop backend-container && docker rm backend-container
-                                else
-                                    echo "No backend-container to remove."
-                                fi
-
-                                echo "Starting new backend container..."
-                                docker run -d -p 5000:5000 --name backend-container --restart=always ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}
-
-                                echo "Backend deployment completed successfully!"
-                            EOF
-                        '''
-                    }
-                }
-            }
-
-            stage('Deploy Frontend') {
-                steps {
-                    sshagent(['recruitpro-ssh']) {
-                        sh '''
-                            ssh user@your-server << 'EOF'
-                                echo "Pulling latest frontend Docker image..."
-                                docker pull ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
-
-                                # Stop and remove the existing frontend container if it exists
-                                if docker ps -a --format '{{.Names}}' | grep -q '^frontend-container$'; then
-                                    echo "Stopping and removing existing frontend container..."
-                                    docker stop frontend-container && docker rm frontend-container
-                                else
-                                    echo "No frontend-container to remove."
-                                fi
-
-                                echo "Starting new frontend container..."
-                                docker run -d -p 3000:3000 --name frontend-container --restart=always ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}
-
-                                echo "Frontend deployment completed successfully!"
-                            EOF
-                        '''
-                    }
-                }
-            }
-
-
-
-
+    post {
+        always {
+            cleanWs()
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
     }
 }

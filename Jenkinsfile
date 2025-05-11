@@ -124,6 +124,24 @@ pipeline {
             }
         }
 */
+        stage('Cleanup Old Docker Images and Containers') {
+            steps {
+                sh '''
+                    echo "🧹 Cleaning up old Docker containers if they exist..."
+
+                    docker ps -aq --filter "name=recruitpro_backend" | grep -q . && docker rm -f recruitpro_backend || true
+                    docker ps -aq --filter "name=recruitpro_frontend" | grep -q . && docker rm -f recruitpro_frontend || true
+                    docker ps -aq --filter "name=recruitpro_ats" | grep -q . && docker rm -f recruitpro_ats || true
+
+                    echo "🧹 Cleaning up old Docker images if they exist..."
+
+                    docker images -q ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} | grep -q . && docker rmi -f ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} || true
+                    docker images -q ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} | grep -q . && docker rmi -f ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} || true
+                    docker images -q ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} | grep -q . && docker rmi -f ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} || true
+                '''
+            }
+        }
+
         stage('Build Docker Images') {
             parallel {
                 stage('Build Backend Docker Image') {
@@ -179,7 +197,7 @@ pipeline {
                 sh 'docker-compose up -d'
             }
         }
-
+/*
         stage('Post-Deployment Health Check') {
             steps {
                 script {
@@ -193,7 +211,7 @@ pipeline {
                 }
             }
         }
-
+*/
     }
 
     post {

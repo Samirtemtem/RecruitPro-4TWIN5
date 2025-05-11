@@ -1,0 +1,60 @@
+{
+    "data":[
+        {
+          "Questions": "What is an HRMS?",
+          "Answers": "Software system that automates and manages various human resources tasks",
+          "Categories": "General"
+        },
+        {
+          "Questions": "How does an HRMS benefit organizations?",
+          "Answers": "It enhances operational efficiency, reduces manual errors, and centralizes HR tasks",
+          "Categories": "General"
+        },
+        {
+          "Questions": "Is the data stored in an SmartHR secure?",
+          "Answers": "Yes, SmartHR is design with advanced security measures, including data encryption",
+          "Categories": "Feature"
+        },
+        {
+          "Questions": "How do I add a new employee to the HRMS?",
+          "Answers": "Add new employees by  entering their personal details & setting up their profiles.",
+          "Categories": "Employee"
+        },
+        {
+          "Questions": "How do I generate custom reports in the SmartHR?",
+          "Answers": "Custom reports can be generated using the reporting module within the HRMS",
+          "Categories": "Reports"
+        },
+        {
+          "Questions": "How do I schedule training sessions in the HRMS?",
+          "Answers": "Creating training events, setting dates and times, and enrolling employees",
+          "Categories": "Leaves"
+        },
+        {
+          "Questions": "How do I process payroll in the SmartHR?",
+          "Answers": "Reviewing employee hours and deductions and executing payments.",
+          "Categories": "Payroll"
+        },
+        {
+          "Questions": "How do I export reports from the HRMS?",
+          "Answers": "Export reports by selecting the desired report format and using the export function",
+          "Categories": "Reports"
+        },
+        {
+          "Questions": "Can I track employee attendance and absences?",
+          "Answers": "Yes, track attendance and absences by using the attendance management",
+          "Categories": "Employee"
+        },
+        {
+          "Questions": "Can I track employee attendance and absences?",
+          "Answers": "Yes, track attendance and absences by using the attendance management",
+          "Categories": "Employee"
+        },
+        {
+          "Questions": "How can I assign a ticket to a specific team member?",
+          "Answers": "Assign a ticket by selecting the ticket from the queue, choosing the team member",
+          "Categories": "Tickets"
+        }
+       ],
+    "totaldata":11
+}

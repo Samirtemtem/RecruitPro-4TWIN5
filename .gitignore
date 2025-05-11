@@ -39,8 +39,8 @@ backend/node_modules/
 
 
 # sonar scanner
-./frontend/scannerwork/
-./backend/scannerwork/
-./backend/applicant_tracking_system/scannerwork/
+./frontend/.scannerwork/
+./backend/.scannerwork/
+./backend/applicant_tracking_system/.scannerwork/
 
 

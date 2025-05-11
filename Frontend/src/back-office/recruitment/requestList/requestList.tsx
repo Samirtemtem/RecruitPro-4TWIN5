@@ -145,7 +145,7 @@ const RequestList: React.FC = () => {
     {
       title: "Actions",
       dataIndex: "actions",
-      render: (_ : any, record: RequestData) => (
+      render: (_, record: RequestData) => (
         <div className="d-inline-flex">
           <Link to={`/request-Detail/${record._id}`} className="btn btn-primary">
             Details

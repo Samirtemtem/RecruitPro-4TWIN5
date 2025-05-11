@@ -243,7 +243,7 @@ useEffect(() => {
   const fetchJobPostStatistics = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/jobs/job-posts/statistics'); // Replace with your backend API endpoint
-      const data: any = await response.json();
+      const data = await response.json();
       setStats(data); // Store the fetched data in state
     } catch (error) {
       console.error('Error fetching job post statistics:', error);
@@ -292,7 +292,7 @@ useEffect(() => {
   const fetchCandidates = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/user/get/Lastcandidates'); // Adjust the API endpoint
-      const data:any = await response.json();
+      const data = await response.json();
       setCandidates(data);
     } catch (error) {
       console.error('Error fetching candidates:', error);
@@ -337,7 +337,7 @@ useEffect(() => {
         throw new Error('Failed to fetch user data');
       }
 
-      const data :any= await response.json();
+      const data = await response.json();
       console.log('API Response:', data); // Log the API response
       setUserData(data.user); // Accessing the nested user object
     } catch (error) {
@@ -434,7 +434,7 @@ const [statsApp, setStatsApp] = useState<ApplicationStats | null>(null);
         if (!response.ok) {
           throw new Error('Failed to fetch application stats');
         }
-        const data: any = await response.json();
+        const data: ApplicationStats = await response.json();
         setStatsApp(data);
       } catch (err) {
         setError('Error fetching data');

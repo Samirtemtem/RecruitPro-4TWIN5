@@ -36,3 +36,9 @@ backend/node_modules/
 # Ignore any submodules if needed
 #Frontend/
 #Backend/
+
+
+# sonar scanner
+./frontend/scannerwork/
+./backend/scannerwork/
+./backend/applicant_tracking_system/scannerwork/

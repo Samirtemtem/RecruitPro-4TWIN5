@@ -10,6 +10,8 @@ pipeline {
         DOCKER_IMAGE_FRONTEND = "ahmedbenhmida/recruitpro-frontend"
         DOCKER_IMAGE_ATS = "ahmedbenhmida/recruitpro-ats"
         DOCKER_TAG = "latest"
+        VERSION = "1.0.0"  // Change this to the version of your app (can be dynamically generated)
+        NEXUS_URL = "http://localhost:8081/repository/docker-releases"  // Nexus URL
     }
 
     stages {
@@ -107,23 +109,24 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('Kaddem-sq') {
+                withSonarQubeEnv('sq') {
                     dir('Frontend') {
-                        sh 'npm run sonar || true'
+                        sh 'npm run sonar || echo "SonarQube analysis failed for Frontend"'
                     }
                     dir('Backend') {
-                        sh 'npm run sonar || true'
+                        sh 'npm run sonar || echo "SonarQube analysis failed for Backend"'
                     }
                     dir('Backend/applicant_tracking_system') {
-                        sh 'pylint *.py || true'
+                        sh 'pylint *.py || echo "Pylint failed for ATS"'
+                        sh 'sonar-scanner || echo "SonarQube analysis failed for ATS"'
                     }
                 }
             }
         }
-*/
+
         stage('Cleanup Old Docker Images and Containers') {
             steps {
                 sh '''
@@ -139,6 +142,14 @@ pipeline {
                     docker images -q ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} | grep -q . && docker rmi -f ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} || true
                     docker images -q ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} | grep -q . && docker rmi -f ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} || true
                 '''
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                }
             }
         }
 
@@ -162,15 +173,40 @@ pipeline {
             }
         }
 
-        stage('Docker Login') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+
+        stage('Upload to Nexus') {
+            parallel {
+                stage('Push Backend Image to Nexus') {
+                    steps {
+                        script {
+                            // Tag and push Backend Docker image to Nexus with the version tag
+                            sh "docker tag ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ${NEXUS_URL}/${DOCKER_IMAGE_BACKEND}:${VERSION}"
+                            sh "docker push ${NEXUS_URL}/${DOCKER_IMAGE_BACKEND}:${VERSION}"
+                        }
+                    }
+                }
+                stage('Push Frontend Image to Nexus') {
+                    steps {
+                        script {
+                            // Tag and push Frontend Docker image to Nexus with the version tag
+                            sh "docker tag ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ${NEXUS_URL}/${DOCKER_IMAGE_FRONTEND}:${VERSION}"
+                            sh "docker push ${NEXUS_URL}/${DOCKER_IMAGE_FRONTEND}:${VERSION}"
+                        }
+                    }
+                }
+                stage('Push ATS Image to Nexus') {
+                    steps {
+                        script {
+                            // Tag and push ATS Docker image to Nexus with the version tag
+                            sh "docker tag ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} ${NEXUS_URL}/${DOCKER_IMAGE_ATS}:${VERSION}"
+                            sh "docker push ${NEXUS_URL}/${DOCKER_IMAGE_ATS}:${VERSION}"
+                        }
+                    }
                 }
             }
         }
 
-        stage('Docker Push') {
+        stage('Push to DockerHub') {
             parallel {
                 stage('Push Backend Image') {
                     steps {

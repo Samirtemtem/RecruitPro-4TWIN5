@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node dist/bin/www",
     "build": "tsc",
-    "dev": "ts-node src/bin/www"
+    "dev": "ts-node src/bin/www",
+    "sonar": "sonar-scanner"
   },
   "dependencies": {
     "@types/axios": "^0.14.4",

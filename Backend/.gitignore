@@ -19,3 +19,7 @@ npm-debug.log*
 # OS
 .DS_Store
 Thumbs.db 
+
+# sonar scanner
+.scannerwork/
+./applicant_tracking_system/scannerwork

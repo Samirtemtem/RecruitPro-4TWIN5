@@ -63,14 +63,14 @@ pipeline {
                 stage('Frontend') {
                     steps {
                         dir('Frontend') {
-                            sh 'npm install --force && CI=false npm run build'
+                            sh 'CI=false npm run build'
                         }
                     }
                 }
                 stage('Backend') {
                     steps {
                         dir('Backend') {
-                            sh 'npm install --force && npm run build'
+                            sh 'npm run build'
                         }
                     }
                 }

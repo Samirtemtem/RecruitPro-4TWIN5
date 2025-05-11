@@ -171,5 +171,9 @@ Les contributions sont les bienvenues ! Veuillez suivre ces étapes :
 5. Ouvrir une Pull Request
 
 ## Licence
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
+Ce projet est sous licence propriétaire. Tous droits réservés © 2025 RecruitPro.
+
+Ce logiciel est la propriété exclusive de RecruitPro et son utilisation est strictement réservée aux fins autorisées. Toute reproduction, modification ou distribution non autorisée est strictement interdite.
+
+Pour toute demande d'utilisation ou d'information, veuillez contacter : legal@recruitpro.com
 

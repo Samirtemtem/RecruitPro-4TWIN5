@@ -38,6 +38,8 @@ import shortlistedJobRoutes from "./routes/shortlistedJobRoutes";
 import jobAlertRoutes from './routes/jobAlertRoutes';
 import RequestRoutes from './routes/requestRoutes';
 import NeedRoutes from './routes/needRoutes';
+// Import interview routes
+import interviewRoutes from './routes/interviewRoutes';
 
 // Allow requests from your frontend (e.g., localhost:3000)
 const corsOptions = {
@@ -113,6 +115,8 @@ app.use("/api/shortlisted-jobs", shortlistedJobRoutes);
 app.use("/request",RequestRoutes);
 app.use("/need",NeedRoutes);
 
+// Interview Routes
+app.use("/api/interviews", interviewRoutes);
 
 // Error handling
 app.use(errorHandler);

@@ -3,13 +3,17 @@ import { InterviewType, InterviewStatus } from './types';
 
 export interface IInterview extends Document {
   application: Schema.Types.ObjectId;  // Reference to Application
-  interviewer: Schema.Types.ObjectId;  // Reference to User (HR/Admin)
+  departmentManager: Schema.Types.ObjectId;  // Reference to User (Department Manager)
+  teamLeads: Schema.Types.ObjectId[];  // References to Users (Team Leads)
   candidate: Schema.Types.ObjectId;  // Reference to User (Candidate)
   type: InterviewType;
   status: InterviewStatus;
   scheduledDate: Date;
+  scheduledTime: string;  // Time in format HH:MM
   duration: number;  // in minutes
   location: string;  // URL for online or physical address
+  meetUrl: string;   // Video conference URL
+  googleCalendarEventId: string;  // Google Calendar event ID
   notes: string;
   feedback: Schema.Types.ObjectId[];  // References to Feedback
 
@@ -20,13 +24,17 @@ export interface IInterview extends Document {
 
 const interviewSchema = new Schema<IInterview>({
   application: { type: Schema.Types.ObjectId, ref: 'Application', required: true },
-  interviewer: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  departmentManager: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  teamLeads: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
   candidate: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  type: { type: String, enum: Object.values(InterviewType), required: true },
+  type: { type: String, enum: Object.values(InterviewType), default: InterviewType.ONLINE },
   status: { type: String, enum: Object.values(InterviewStatus), default: InterviewStatus.SCHEDULED },
   scheduledDate: { type: Date, required: true },
-  duration: { type: Number, required: true },
-  location: { type: String, required: true },
+  scheduledTime: { type: String, required: true }, // Time in format HH:MM
+  duration: { type: Number, default: 60 },  // Default 60 minutes
+  location: { type: String, default: 'Remote' },
+  meetUrl: { type: String },  // Video conference URL
+  googleCalendarEventId: { type: String },  // Google Calendar event ID
   notes: { type: String },
   feedback: [{ type: Schema.Types.ObjectId, ref: 'Feedback' }]
 }, {

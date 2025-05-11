@@ -25,6 +25,8 @@
     "dotenv": "^16.4.7",
     "express": "~4.16.1",
     "form-data": "^4.0.2",
+    "google-auth-library": "^9.15.1",
+    "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.1",
     "morgan": "~1.9.1",

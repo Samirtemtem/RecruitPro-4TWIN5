@@ -299,6 +299,34 @@ const inputStyles = `
     width: 100% !important;
     padding: 10px 15px !important;
   }
+
+  /* Loading overlay styles */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 `;
 
 const RegisterWizard: React.FC = () => {
@@ -603,11 +631,11 @@ const RegisterWizard: React.FC = () => {
         submitData.append('experience', JSON.stringify(formData.experience));
         submitData.append('skills', JSON.stringify(formData.skills));
       
-      // Filter out social links with empty links before sending
-      const validSocialLinks = formData.socialLinks.filter(link => link.link && link.link.trim() !== '');
-      submitData.append('socialLinks', JSON.stringify(validSocialLinks.map(link => ({
+        // Filter out social links with empty links before sending
+        const validSocialLinks = formData.socialLinks.filter(link => link.link && link.link.trim() !== '');
+        submitData.append('socialLinks', JSON.stringify(validSocialLinks.map(link => ({
           type: link.type,
-        link: link.link.trim()
+          link: link.link.trim()
         }))));
 
         const response = await registerUser(submitData);
@@ -768,7 +796,7 @@ const RegisterWizard: React.FC = () => {
       }
       } finally {
         setIsLoading(false);
-    }
+      }
   };
 
   const getSkillDegreeDescription = (degree: SkillDegree): string => {
@@ -974,6 +1002,11 @@ const RegisterWizard: React.FC = () => {
   return (
     <>
       <style>{inputStyles}</style>
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+        </div>
+      )}
       <DefaulHeader2 />
       <Seo pageTitle="Register" />
       {/* <MobileMenu /> */}
@@ -1009,14 +1042,7 @@ const RegisterWizard: React.FC = () => {
                         <p className="text-muted">Please complete all steps to create your account</p>
                       </div>
 
-                      {/* Loading Overlay */}
-                      {isLoading && (
-                        <div className="position-absolute w-100 h-100 top-0 left-0 d-flex justify-content-center align-items-center" style={{ background: 'rgba(255, 255, 255, 0.8)', zIndex: 1000 }}>
-                          <div className="spinner-border text-primary" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                          </div>
-                        </div>
-                      )}
+                   
 
                       {/* Progress Steps */}
                       <div className="wizard-steps mb-4">

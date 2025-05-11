@@ -1,148 +1,175 @@
-# RecruitPro - Solution Complète de Recrutement
+# RecruitPro - Plateforme de Recrutement Intelligente
 
-RecruitPro est une plateforme de recrutement de bout en bout qui connecte les candidats avec les employeurs et fournit une mise en relation intelligente des emplois grâce à un système intégré de suivi des candidatures.
+## Description
+RecruitPro est une plateforme de recrutement complète qui facilite le processus d'embauche de bout en bout, en connectant les candidats, les recruteurs et les gestionnaires d'équipe dans un écosystème intégré.
 
-## Table des Matières
+## Acteurs du Système
 
-- [Prérequis](#prérequis)
-- [Installation](#installation)
-- [Exécution du Frontend](#exécution-du-frontend)
-- [Exécution du Backend](#exécution-du-backend)
-- [Configuration du Système de Suivi des Candidatures](#configuration-du-système-de-suivi-des-candidatures)
-- [Intégration](#intégration)
+### 1. Candidats
+- Inscription et gestion de profil
+- Téléchargement de CV
+- Postulation aux offres d'emploi
+- Suivi des candidatures
+- Participation aux entretiens en ligne
+- Gestion des offres d'emploi reçues
 
-## Prérequis
+### 2. Gestionnaires RH
+- Création et gestion des offres d'emploi
+- Évaluation des candidatures
+- Planification des entretiens
+- Gestion du processus de recrutement
+- Génération de rapports
 
-- Node.js (v14.x ou ultérieur)
-- npm (v7.x ou ultérieur)
-- MongoDB (v4.4 ou ultérieur)
-- Python (v3.8 ou ultérieur)
-- pip (dernière version)
-- Docker (optionnel, pour déploiement en conteneur)
+### 3. Gestionnaires de Département
+- Création d'offres d'emploi spécifiques au département
+- Évaluation des candidats
+- Participation aux entretiens
+- Gestion des équipes
 
-## Installation
+### 4. Chefs d'Équipe
+- Participation aux entretiens
+- Évaluation technique des candidats
+- Feedback sur les candidatures
 
-### Cloner le Dépôt
+### 5. Administrateur
+- Gestion des utilisateurs
+- Configuration du système
+- Supervision globale
+- Gestion des droits d'accès
 
+## Fonctionnalités Principales
+
+### 1. Gestion des Utilisateurs
+- Inscription avec validation par email
+- Authentification à deux facteurs (2FA)
+- Gestion des profils utilisateurs
+- Intégration avec Google et LinkedIn
+- Reconnaissance faciale pour la connexion
+
+### 2. Gestion des Offres d'Emploi
+- Création et publication d'offres
+- Catégorisation par département
+- Définition des exigences et compétences
+- Gestion des dates de publication et deadline
+- Statuts multiples (OPEN, CLOSED, PENDING)
+
+### 3. Gestion des Candidatures
+- Soumission de candidature avec CV
+- Analyse automatique des CV
+- Scoring de compatibilité
+- Suivi du statut des candidatures
+- Pipeline de recrutement (SUBMITTED → REVIEWED → INTERVIEWED → ACCEPTED/REJECTED)
+
+### 4. Système d'Entretiens
+- Planification automatique des entretiens
+- Intégration avec Google Calendar
+- Génération automatique de liens Google Meet
+- Gestion des participants (managers, chefs d'équipe)
+- Suivi des feedbacks d'entretien
+
+### 5. Analyse et IA
+- Analyse SWOT automatique des candidatures
+- Matching de compétences
+- Évaluation de compatibilité
+- Suggestions de candidats
+- Analyse des tendances de recrutement
+
+### 6. Tableau de Bord et Rapports
+- Vue d'ensemble du processus de recrutement
+- Statistiques en temps réel
+- Rapports de performance
+- Suivi des métriques clés
+- Visualisation des données
+
+## Aspects Techniques
+
+### Frontend
+- React.js avec TypeScript
+- Interface responsive et moderne
+- Composants réutilisables
+- Gestion d'état avec Context API
+- Validation des formulaires avec Yup
+
+### Backend
+- Node.js avec Express
+- MongoDB pour le stockage des données
+- JWT pour l'authentification
+- API RESTful
+- Gestion des fichiers avec Cloudinary
+
+### Sécurité
+- Authentification JWT
+- Validation 2FA
+- Hachage des mots de passe
+- Vérification des emails
+- Gestion des sessions
+
+### Intégrations
+- Google Calendar
+- Google Meet
+- LinkedIn
+- Cloudinary pour le stockage
+- Modele AI d'analyse de CV
+
+## Installation et Configuration
+
+### Prérequis
+- Node.js (v14 ou supérieur)
+- MongoDB
+- npm ou yarn
+- Compte Cloudinary
+- Compte Google Cloud Platform
+
+### Installation
+
+1. Cloner le repository :
 ```bash
-git clone https://github.com/yourusername/RecruitPro.git
+git clone https://github.com/votre-repo/RecruitPro.git
 cd RecruitPro
 ```
 
-### Installer les Dépendances Frontend
-
+2. Installer les dépendances Frontend :
 ```bash
 cd Frontend
 npm install
 ```
 
-### Installer les Dépendances Backend
-
+3. Installer les dépendances Backend :
 ```bash
 cd Backend
 npm install
 ```
 
-## Exécution du Frontend
-
-Depuis la racine du projet:
-
-```bash
-cd Frontend
-npm start
-```
-
-L'application frontend sera disponible à l'adresse `http://localhost:3000`.
-
-## Exécution du Backend
-
-### Configuration de l'Environnement
-
-Créez un fichier `.env` dans le répertoire Backend avec les variables suivantes:
-
+4. Configuration des variables d'environnement :
+Créer un fichier `.env` dans le dossier Backend avec :
 ```
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/recruitpro
-JWT_SECRET=your_jwt_secret_key
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-RECOMMENDATION_SERVICE_URL=http://localhost:5001
+MONGODB_URI=votre_uri_mongodb
+JWT_SECRET=votre_secret_jwt
+CLOUDINARY_CLOUD_NAME=votre_cloud_name
+CLOUDINARY_API_KEY=votre_api_key
+CLOUDINARY_API_SECRET=votre_api_secret
+GOOGLE_CLIENT_ID=votre_google_client_id
+GOOGLE_CLIENT_SECRET=votre_google_client_secret
 ```
 
-### Démarrer le Serveur Backend
-
-Depuis la racine du projet:
-
+5. Lancer l'application :
 ```bash
-cd Backend
+# Dans le dossier Backend
+npm run dev
+
+# Dans le dossier Frontend
 npm start
 ```
 
-Ou pour le développement avec redémarrage automatique:
+## Contribution
+Les contributions sont les bienvenues ! Veuillez suivre ces étapes :
+1. Forker le projet
+2. Créer une branche pour votre fonctionnalité
+3. Commiter vos changements
+4. Pousser vers la branche
+5. Ouvrir une Pull Request
 
-```bash
-npm run dev
-```
-
-L'API backend sera disponible à l'adresse `http://localhost:5000`.
-
-## Configuration du Système de Suivi des Candidatures
-
-Le Système de Suivi des Candidatures (ATS) est un service basé sur Python qui fournit des recommandations d'emploi intelligentes grâce à l'apprentissage automatique.
-
-### Installer les Dépendances Python
-
-```bash
-cd Backend/applicant_tracking_system
-pip install -r requirements.txt
-```
-
-### Exécution du Système de Suivi des Candidatures
-
-L'ATS peut être exécuté de deux façons:
-
-#### Option 1: Exécution Python Directe
-
-```bash
-cd Backend/applicant_tracking_system
-python app.py
-```
-
-Cela démarrera le service de recommandation à l'adresse `http://localhost:5001`.
-
-#### Option 2: Utilisation de Docker (Recommandé pour la Production)
-
-```bash
-cd Backend/applicant_tracking_system
-docker build -t recruit-pro-ats .
-docker run -p 5001:5001 recruit-pro-ats
-```
-
-### Planification des Mises à Jour Régulières des Recommandations
-
-Le système comprend un script pour mettre à jour périodiquement les recommandations:
-
-```bash
-cd Backend/applicant_tracking_system
-chmod +x schedule_recommendations.sh
-./schedule_recommendations.sh
-```
-
-Cela configurera une tâche cron pour exécuter le moteur de recommandation quotidiennement.
-
-## Intégration
-
-L'application principale communique avec le Système de Suivi des Candidatures via l'API du service de recommandation. Assurez-vous que:
-
-1. L'ATS est en cours d'exécution avant d'utiliser les fonctionnalités de recommandation dans l'application principale
-2. Le `RECOMMENDATION_SERVICE_URL` dans le fichier `.env` du backend pointe vers l'adresse correcte où l'ATS est en cours d'exécution
-
-## Flux de Données
-
-1. Les profils d'utilisateurs et les offres d'emploi sont stockés dans MongoDB via le backend principal
-2. L'ATS récupère périodiquement ces données pour mettre à jour ses modèles de recommandation
-3. Lorsqu'un utilisateur demande des recommandations d'emploi, le backend principal transmet la demande à l'ATS
-4. L'ATS calcule des recommandations personnalisées et les renvoie au backend principal
-5. Le backend principal renvoie ces recommandations au frontend
+## Licence
+Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
 

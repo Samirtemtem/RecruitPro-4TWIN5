@@ -1,6 +1,0 @@
-projectKey=recruitpro-frontend
-serverUrl=http://192.168.33.10:9000
-serverVersion=25.5.0.107428
-dashboardUrl=http://192.168.33.10:9000/dashboard?id=recruitpro-frontend
-ceTaskId=3fcce3c9-33b4-4a7a-bba1-b349fdf93383
-ceTaskUrl=http://192.168.33.10:9000/api/ce/task?id=3fcce3c9-33b4-4a7a-bba1-b349fdf93383

@@ -5,6 +5,8 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    networks:
+      - recruitpro
 
   backend:
     build: ./Backend
@@ -12,8 +14,8 @@ services:
       - "5000:5000"
     env_file:
       - ./Backend/.env
-    depends_on:
-      - mongo
+    networks:
+      - recruitpro
 
   ats:
     build: ./Backend/applicant_tracking_system
@@ -21,14 +23,14 @@ services:
       - "5001:5001"
     env_file:
       - ./Backend/.env
-    depends_on:
-      - mongo
     healthcheck:
       test: ["CMD", "curl", "-f", "http://ats:5001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      
+    networks:
+      - recruitpro
+
 networks:
   recruitpro:
     driver: bridge

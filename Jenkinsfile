@@ -109,7 +109,7 @@ pipeline {
                 }
             }
         }
-*/
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sq') {
@@ -126,7 +126,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Cleanup Old Docker Images and Containers') {
             steps {
                 sh '''
@@ -173,7 +173,7 @@ pipeline {
             }
         }
 
-
+/*
         stage('Upload to Nexus') {
             parallel {
                 stage('Push Backend Image to Nexus') {
@@ -205,7 +205,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Push to DockerHub') {
             parallel {
                 stage('Push Backend Image') {

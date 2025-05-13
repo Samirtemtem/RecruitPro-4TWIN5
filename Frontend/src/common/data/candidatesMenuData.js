@@ -39,13 +39,20 @@ module.exports = [
     name: "Shortlisted Jobs",
     icon: "la-bookmark-o",
     routePath: "/candidates-dashboard/shortlisted-jobs",
-    active: "",
+    active: ""
   },
   {
     id: 10,
     name: "Change Password",
     icon: "la-lock",
     routePath: "/candidates-dashboard/change-password",
+    active: "",
+  },
+  {
+    id: 7,
+    name: "Interviews Planning",
+    icon: "la-calendar-check",
+    routePath: "/candidates-dashboard/calendar",
     active: "",
   }
 ];

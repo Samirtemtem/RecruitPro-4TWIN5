@@ -1,8 +1,0 @@
-node_modules
-build
-dist
-.git
-.gitignore
-*.log
-.env
-*.md

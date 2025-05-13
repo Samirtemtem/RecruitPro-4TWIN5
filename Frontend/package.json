@@ -1,7 +1,7 @@
 {
   "name": "smart-hr",
   "version": "0.1.0",
-  "homepage": "http://192.168.33.10:3000",
+  "homepage": "/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",

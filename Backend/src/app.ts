@@ -38,6 +38,10 @@ import shortlistedJobRoutes from "./routes/shortlistedJobRoutes";
 import jobAlertRoutes from './routes/jobAlertRoutes';
 import RequestRoutes from './routes/requestRoutes';
 import NeedRoutes from './routes/needRoutes';
+// Import interview routes
+import interviewRoutes from './routes/interviewRoutes';
+// STAT Candid Dashboard
+import statCand from './routes/statsCandiDashb';
 
 // Allow requests from your frontend (e.g., localhost:3000)
 const corsOptions = {
@@ -113,9 +117,13 @@ app.use("/api/shortlisted-jobs", shortlistedJobRoutes);
 app.use("/request",RequestRoutes);
 app.use("/need",NeedRoutes);
 
+// Interview Routes
+app.use("/api/interviews", interviewRoutes);
+
+app.use("/stat-cand",statCand);
+
 
 // Error handling
 app.use(errorHandler);
 
 module.exports = app;
-export default app;

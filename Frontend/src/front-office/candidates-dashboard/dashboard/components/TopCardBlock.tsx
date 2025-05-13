@@ -24,7 +24,7 @@ const TopCardBlock = () => {
 
     const fetchApplicationCount = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/stat-cand/candidate/${userId}/count`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/stat-cand/candidate/${userId}/count`);
         if (!response.ok) {
           throw new Error('Failed to fetch application count');
         }
@@ -37,7 +37,7 @@ const TopCardBlock = () => {
 
     const fetchJobAlertsCount = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/stat-cand/jobalert/${userId}/count`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/stat-cand/jobalert/${userId}/count`);
         if (!response.ok) {
           throw new Error('Failed to fetch job alerts count');
         }
@@ -50,7 +50,7 @@ const TopCardBlock = () => {
 
     const fetchInterviewsCount = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/stat-cand/interview/${userId}/count`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/stat-cand/interview/${userId}/count`);
         if (!response.ok) {
           throw new Error('Failed to fetch interviews count');
         }
@@ -63,7 +63,7 @@ const TopCardBlock = () => {
 
     const fetchShortlistedJobsCount = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/stat-cand/shortlisted/${userId}/count`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/stat-cand/shortlisted/${userId}/count`);
         if (!response.ok) {
           throw new Error('Failed to fetch shortlisted jobs count');
         }

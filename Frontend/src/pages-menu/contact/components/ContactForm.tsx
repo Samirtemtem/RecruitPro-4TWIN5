@@ -21,7 +21,7 @@ const ContactForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/contact/create`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/contact/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

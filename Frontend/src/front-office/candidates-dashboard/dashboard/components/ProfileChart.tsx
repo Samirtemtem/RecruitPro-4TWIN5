@@ -83,7 +83,7 @@ const ProfileChart = () => {
           return;
         }
 
-        const response = await fetch(`${process.env.BACKEND_URL}/stat-cand/candidate/${userId}/applications-per-year`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/stat-cand/candidate/${userId}/applications-per-year`);
         if (!response.ok) {
           throw new Error('Failed to fetch applications per year');
         }

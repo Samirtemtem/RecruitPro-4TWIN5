@@ -12,7 +12,7 @@ function Protected() {
  
  
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/auth/user/${token}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/user/${token}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`, // Use Bearer authentication

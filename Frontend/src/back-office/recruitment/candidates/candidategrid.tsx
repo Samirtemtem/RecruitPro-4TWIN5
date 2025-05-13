@@ -42,7 +42,7 @@ const CandidateGrid = () => {
         const fetchCandidates = async () => {
             console.log('Fetching candidates from API...');
             try {
-                const response = await fetch(`${process.env.BACKEND_URL}/api/user/get/candidates`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/get/candidates`);
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
                 }

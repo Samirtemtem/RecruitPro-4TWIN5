@@ -17,7 +17,7 @@ const ForgotPassword = () => {
     setError("");
 
     try {
-      const { data } = await axios.post(`${process.env.BACKEND_URL}/api/auth/forgotpassword`, { email });
+      const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/forgotpassword`, { email });
 
       setMessage(data.message);
       //setTimeout(() => navigate(all_routes.LoginUser), 2000); // Redirection après succès

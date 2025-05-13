@@ -33,7 +33,7 @@ const ManagerDetails = () => {
   useEffect(() => {
     const fetchManagerDetails = async () => {
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/user/department-managers/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user/department-managers/${id}`);
         if (response.status === 200) {
           setManager(response.data);
         } else {
@@ -51,7 +51,7 @@ const ManagerDetails = () => {
     const fetchManagerRequests = async () => {
       try {
         const response = await axios.get(
-          `${process.env.BACKEND_URL}/request/requests/manager/${id}`
+          `${process.env.REACT_APP_BACKEND_URL}/request/requests/manager/${id}`
         );
         if (response.status === 200) {
           const fetchedRequests = response.data;
@@ -81,7 +81,7 @@ const ManagerDetails = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this manager?")) {
       try {
-        await axios.delete(`${process.env.BACKEND_URL}/managers/${id}`);
+        await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/managers/${id}`);
         alert("Manager deleted successfully!");
         navigate("/managers");
       } catch (error) {

@@ -128,7 +128,7 @@ const teamLeadDashboard = () => {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/skills/top-skills`); // Adjust the URL if needed
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/skills/top-skills`); // Adjust the URL if needed
         const data = await response.json();
         setSkills(data);
       } catch (error) {
@@ -146,7 +146,7 @@ const [jobPosts, setJobPosts] = useState<JobPost[]>([]); // Array of JobPost obj
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/jobs/latest-five`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/jobs/latest-five`);
         setJobPosts(response.data); // Assuming response contains an array of job posts
       } catch (error) {
         console.error("Error fetching job posts:", error);
@@ -164,7 +164,7 @@ const [jobPosts, setJobPosts] = useState<JobPost[]>([]); // Array of JobPost obj
   useEffect(() => {
     const fetchJobPostCounts = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/skills/count`); // Adjust the URL if needed
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/skills/count`); // Adjust the URL if needed
         const data = await response.json();
         setJobPostCounts(data.countsByDepartment);
         setTotalJobPosts(data.totalJobPosts);
@@ -191,7 +191,7 @@ const [jobPosts, setJobPosts] = useState<JobPost[]>([]); // Array of JobPost obj
   useEffect(() => {
     const fetchJobPostCounts = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/skills/count/status`); // Adjust the URL if needed
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/skills/count/status`); // Adjust the URL if needed
         const data = await response.json();
 
         const totalJobPosts = data.totalJobPosts;
@@ -240,7 +240,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/auth/user/${token}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/user/${token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -282,7 +282,7 @@ const [counts, setCounts] = useState({
   // Fetch data and update chart data
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${process.env.BACKEND_URL}/api/user/count-per-year`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user/count-per-year`);
       console.log(response.data); // Log the response data
   
       const data = response.data; // Access the whole response
@@ -344,7 +344,7 @@ const [counts, setCounts] = useState({
 
   const fetchNeeds = async () => {
     try {
-      const response = await axios.get(`${process.env.BACKEND_URL}/need/`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/need/`);
       const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
   
       const userString = localStorage.getItem('user');

@@ -52,7 +52,7 @@ const NeedDetails = () => {
     const fetchRequestDetails = async () => {
       console.log("Fetching request details for ID:", id);
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/need/${id}`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/need/${id}`);
         
         const data: Request = await response.json();
         console.log("Request details fetched:", data);
@@ -92,7 +92,7 @@ const NeedDetails = () => {
     if (window.confirm("Are you sure you want to delete this request?")) {
       console.log("Deleting request with ID:", id);
       try {
-        await axios.delete(`${process.env.BACKEND_URL}/need/${id}`);
+        await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/need/${id}`);
         alert("Need deleted successfully!");
         navigate("/team-lead-dashboard/needs");
       } catch (error) {

@@ -37,7 +37,7 @@ const RequestList: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/request/`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/request/`);
         const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
         setData(fetchedData);
         setFilteredDataSource(fetchedData); // Initialize filtered data

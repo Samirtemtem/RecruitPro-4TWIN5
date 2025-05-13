@@ -25,7 +25,7 @@ const CandidateDetails: React.FC = () => {
     useEffect(() => {
         const fetchCandidateDetails = async () => {
             try {
-                const response = await fetch(`${process.env.BACKEND_URL}/api/user/candidates/${id}`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/candidates/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch candidate details');
                 }

@@ -14,7 +14,7 @@ function UserSelect() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
 
-  const backendUrl = process.env.BACKEND_URL;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   const handleEmailSearch = async (e) => {
     e.preventDefault();

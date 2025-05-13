@@ -77,7 +77,7 @@ const FilterJobsBox = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/jobs/FrontOffice`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/jobs/FrontOffice`);
         if (!response.ok) {
           throw new Error("Failed to fetch jobs");
         }

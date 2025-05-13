@@ -86,7 +86,7 @@ const NeedsList: React.FC = () => {
         return;
       }
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/auth/user/${token}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/user/${token}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ const NeedsList: React.FC = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get(`${process.env.BACKEND_URL}/need/`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/need/`);
       console.log("API Response (Needs):", response.data);
       const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
       const userString = localStorage.getItem('user');

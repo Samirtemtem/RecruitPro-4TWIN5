@@ -37,7 +37,7 @@ const JobFeatured: React.FC = () => {
       // If job is already shortlisted, remove it
       if (shortlistedJobs[jobId]) {
         await fetch(
-          `${process.env.BACKEND_URL}/api/shortlisted-jobs/${userId}/${jobId}`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/shortlisted-jobs/${userId}/${jobId}`,
           {
             method: "DELETE",
           }
@@ -48,7 +48,7 @@ const JobFeatured: React.FC = () => {
       }
       // Otherwise, add it to shortlist
       else {
-        await fetch(`${process.env.BACKEND_URL}/api/shortlisted-jobs`, {
+        await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/shortlisted-jobs`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -71,7 +71,7 @@ const JobFeatured: React.FC = () => {
     const fetchJobPosts = async () => {
       try {
         const response = await fetch(
-          `${process.env.BACKEND_URL}/api/jobs/FrontOfficelatest`
+          `${process.env.REACT_APP_BACKEND_URL}/api/jobs/FrontOfficelatest`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -96,7 +96,7 @@ const JobFeatured: React.FC = () => {
       for (const job of jobPosts) {
         try {
           const response = await fetch(
-            `${process.env.BACKEND_URL}/api/shortlisted-jobs/check?userId=${userId}&jobId=${job._id}`
+            `${process.env.REACT_APP_BACKEND_URL}/api/shortlisted-jobs/check?userId=${userId}&jobId=${job._id}`
           );
 
           if (response.ok) {

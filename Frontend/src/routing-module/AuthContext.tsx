@@ -222,7 +222,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       }
 
       console.log("📡 AuthContext - Fetching profile data for user ID:", userId);
-      const { data } = await axios.post(`${process.env.BACKEND_URL}/api/profile/me`, {
+      const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/profile/me`, {
         userId
       });
 

@@ -88,7 +88,7 @@ const CandidateCalendar = () => {
         }
 
         const response = await axios.get(
-          `${process.env.BACKEND_URL}/api/interviews/candidate/${userId}`
+          `${process.env.REACT_APP_BACKEND_URL}/api/interviews/candidate/${userId}`
         );
 
         // Check the response structure and handle possible undefined data

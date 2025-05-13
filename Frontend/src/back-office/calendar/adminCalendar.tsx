@@ -74,7 +74,7 @@ const AdminCalendar = () => {
     const fetchInterviews = async () => {
       try {
         const response = await axios.get(
-          `${process.env.BACKEND_URL}/api/interviews/`
+          `${process.env.REACT_APP_BACKEND_URL}/api/interviews/`
         );
 
         // Check the response structure and handle possible undefined data

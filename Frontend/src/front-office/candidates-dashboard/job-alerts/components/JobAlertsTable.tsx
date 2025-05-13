@@ -78,7 +78,7 @@ const JobAlertsTable: React.FC = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/job-alerts/user/${userId}`, {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/job-alerts/user/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -100,7 +100,7 @@ const JobAlertsTable: React.FC = () => {
     if (!token) return;
     
     try {
-      await axios.delete(`${process.env.BACKEND_URL}/api/job-alerts/${alertId}`, {
+      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/job-alerts/${alertId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -118,7 +118,7 @@ const JobAlertsTable: React.FC = () => {
     if (!token) return;
     
     try {
-      await axios.patch(`${process.env.BACKEND_URL}/api/job-alerts/${alertId}/read`, {}, {
+      await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/job-alerts/${alertId}/read`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }

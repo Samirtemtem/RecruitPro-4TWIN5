@@ -39,7 +39,7 @@ const LogoUpload: React.FC<ProfileImageUploadProps> = ({ onImageUpload }) => {
     formData.append('userId', userData.id.toString());
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/profile/image/upload`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/profile/image/upload`, {
         method: 'POST',
         body: formData
       });

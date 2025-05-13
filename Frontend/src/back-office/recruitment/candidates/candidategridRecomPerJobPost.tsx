@@ -27,7 +27,7 @@ const CandidateGridPerJobPost = () => {
     useEffect(() => {
         const fetchCandidates = async () => {
             try {
-                const response = await fetch(`${process.env.BACKEND_URL}/app/applications/jobPost/${id}/candidates`); // Updated URL
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/app/applications/jobPost/${id}/candidates`); // Updated URL
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

@@ -47,7 +47,7 @@ const ManagersList: React.FC = () => {
   // Fetch data from the API
   const fetchManagers = async () => {
     try {
-      const response = await axios.get(`${process.env.BACKEND_URL}/api/user/department-managers`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user/department-managers`);
       const fetchedData: ManagerData[] = Array.isArray(response.data) ? response.data : [];
       setData(fetchedData);
     } catch (error) {
@@ -109,7 +109,7 @@ const handleCreateManager = async (e: React.FormEvent) => {
   }
 
   try {
-    await axios.post(`${process.env.BACKEND_URL}/api/user/department-managers`, newManager);
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/user/department-managers`, newManager);
     toast.success("Manager created successfully!"); // Success toast message
     setShowForm(false);
     window.location.reload(); // Refresh the page
@@ -124,7 +124,7 @@ const handleDeleteManager = async () => {
   if (!deleteManagerId) return;
 
   try {
-    await axios.delete(`${process.env.BACKEND_URL}/api/user/department-managers/${deleteManagerId}`);
+    await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/user/department-managers/${deleteManagerId}`);
     toast.success("Manager deleted successfully");
     setShowDeleteModal(false); // Close the modal
     window.location.reload(); // Refresh the page

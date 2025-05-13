@@ -23,7 +23,7 @@ const JobList = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/jobs`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/jobs`);
         console.log("API Response:", response.data);
         if (response.data && Array.isArray(response.data)) {
           setJobData(response.data); // Set job data correctly
@@ -196,7 +196,7 @@ const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-        const response = await axios.post(`${process.env.BACKEND_URL}/api/jobs`, {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/jobs`, {
             ...formData,
             requirements: formData.requirements.split(","), // Convert string to array
         });

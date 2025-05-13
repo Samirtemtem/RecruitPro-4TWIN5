@@ -111,7 +111,7 @@ const Form: React.FC = () => {
         return;
       }
 
-      const response = await fetch(`${process.env.BACKEND_URL}/api/auth/change-password`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/change-password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

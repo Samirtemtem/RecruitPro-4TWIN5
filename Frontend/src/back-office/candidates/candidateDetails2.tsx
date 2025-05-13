@@ -101,7 +101,7 @@ const CandidateDetails2: React.FC = () => {
     useEffect(() => {
         const fetchCandidateDetails = async () => {
             try {
-                const response = await fetch(`${process.env.BACKEND_URL}/api/user/candidates/${id}`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/candidates/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch candidate details');
                 }
@@ -153,7 +153,7 @@ const CandidateDetails2: React.FC = () => {
             if (nextStatus) {
                 try {
                     console.log(`Updating status to: ${nextStatus} for application ID: ${application._id}`);
-                    const response = await axios.patch(`${process.env.BACKEND_URL}/app/applications/${application._id}/status`, { status: nextStatus });
+                    const response = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/app/applications/${application._id}/status`, { status: nextStatus });
                     const updatedApplication = response.data;
                     console.log('Updated Application:', updatedApplication);
     

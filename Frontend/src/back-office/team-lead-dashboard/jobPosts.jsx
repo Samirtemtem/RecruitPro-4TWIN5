@@ -41,7 +41,7 @@ const JobPosts = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`${process.env.BACKEND_URL}/api/jobs`, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/jobs`, {
                 ...formData,
                 requirements: formData.requirements.split(","), // Convert string to array
             });
@@ -84,7 +84,7 @@ const [loading, setLoading] = useState(true);
   const fetchJobs = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${process.env.BACKEND_URL}/api/jobs`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/jobs`);
       
       // Filter jobs by the department manager's department
       console.log(userDepartment);

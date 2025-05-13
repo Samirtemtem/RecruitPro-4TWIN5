@@ -18,7 +18,7 @@ const EmployeeList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/user/usersList`);
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/usersList`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -54,7 +54,7 @@ const EmployeeList = () => {
   const handleDeleteConfirm = async (employeeId: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/user/delete/${employeeId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/delete/${employeeId}`, {
         method: 'DELETE',
       });
 
@@ -81,7 +81,7 @@ const EmployeeList = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/user/update/${editingEmployee.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/update/${editingEmployee.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

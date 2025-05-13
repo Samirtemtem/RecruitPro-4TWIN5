@@ -81,7 +81,7 @@ const ResultsPage = () => {
     const fetchJobs = async () => {
       if (!searchTerm) return; // Don't fetch if no search term
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/jobs/search?search=${searchTerm}`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/jobs/search?search=${searchTerm}`);
         if (response.status === 200) {
           setJobs(response.data);
         } else {

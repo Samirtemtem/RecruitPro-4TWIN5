@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL =  `${process.env.BACKEND_URL}/api`;
+const API_URL =  `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export const register = async (formData: FormData) => {
   try {

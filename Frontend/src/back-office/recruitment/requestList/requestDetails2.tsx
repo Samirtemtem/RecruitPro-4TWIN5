@@ -51,7 +51,7 @@ const RequestDetails = () => {
         const fetchRequestDetails = async () => {
             console.log("Fetching request details for ID:", id);
             try {
-                const response = await fetch(`${process.env.BACKEND_URL}/request/${id}`);
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/request/${id}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch request details: ${response.status}`);
                 }
@@ -94,7 +94,7 @@ const RequestDetails = () => {
         if (window.confirm("Are you sure you want to delete this request?")) {
             console.log("Deleting request with ID:", id);
             try {
-                await axios.delete(`${process.env.BACKEND_URL}/api/requests/${id}`);
+                await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/requests/${id}`);
                 alert("Request deleted successfully!");
             } catch (error) {
                 console.error("Error deleting request:", error);
@@ -109,11 +109,11 @@ const RequestDetails = () => {
         
         try {
             // Create job post
-            const response = await axios.post(`${process.env.BACKEND_URL}/api/jobs`, formData);
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/jobs`, formData);
             alert("Job post created successfully!");
     
             // Launch the specified API
-            const jobPostCreatedResponse = await axios.patch(`${process.env.BACKEND_URL}/request/requests/${id}/jobPostCreated`);
+            const jobPostCreatedResponse = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/request/requests/${id}/jobPostCreated`);
             console.log("Job post created response:", jobPostCreatedResponse.data);
      // Redirect to jobgrid
      navigate('/jobgrid');

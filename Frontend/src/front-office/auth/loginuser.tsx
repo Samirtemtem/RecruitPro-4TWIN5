@@ -66,7 +66,7 @@ const LoginUser = () => {
         const fetchSocialLoginProfile = async () => {
           try {
             // Make POST request to /api/profile/me with userId
-            const profileResponse = await axios.post(`${process.env.BACKEND_URL}/api/profile/me`, {
+            const profileResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/profile/me`, {
               userId
             });
             
@@ -126,7 +126,7 @@ const LoginUser = () => {
     setError("");
   
     try {
-      const response = await axios.post(`${process.env.BACKEND_URL}/api/auth/login`, { email, password });
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, { email, password });
   
       if (!response.data.user.isVerified) {
         setError("Please verify your email before logging in.");
@@ -199,7 +199,7 @@ const LoginUser = () => {
         console.log("Directly fetching profile data after login");
         
         // Make POST request to /api/profile/me with userId
-        const profileResponse = await axios.post(`${process.env.BACKEND_URL}/api/profile/me`, {
+        const profileResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/profile/me`, {
           userId: userId
         });
         
@@ -267,13 +267,13 @@ const LoginUser = () => {
   
   // Social Login Handlers
   const handleGoogleLogin = () => {
-    window.location.href = `${process.env.BACKEND_URL}/api/auth/google`;
+    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/google`;
   };
   const handleLinkedInLogin = () => {
-    window.location.href = `${process.env.BACKEND_URL}/api/auth/linkedin`;
+    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/linkedin`;
   };
   const handleGitHubLogin = () => {
-    window.location.href = `${process.env.BACKEND_URL}/api/auth/github`;
+    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/github`;
   };
   const togglePasswordVisibility = (field: "password") => {
     setPasswordVisibility((prevState) => ({

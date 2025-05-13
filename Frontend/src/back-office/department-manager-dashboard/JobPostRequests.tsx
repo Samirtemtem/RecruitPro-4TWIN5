@@ -85,7 +85,7 @@ const JobPostRequests: React.FC = () => {
       }
 
       try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/auth/user/${token}`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/user/${token}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const JobPostRequests: React.FC = () => {
   const fetchRequests = async () => {
     try {
       // Fetch data from the API
-      const response = await axios.get(`${process.env.BACKEND_URL}/request/`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/request/`);
       const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
 
       // Retrieve user information from local storage
@@ -162,7 +162,7 @@ const JobPostRequests: React.FC = () => {
   // Delete request handler
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`${process.env.BACKEND_URL}/request/${id}`);
+      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/request/${id}`);
       toast.success("Request deleted successfully");
       fetchRequests();
     } catch (error) {
@@ -182,7 +182,7 @@ const JobPostRequests: React.FC = () => {
   // Update request status handler
   const handleStatusUpdate = async (id: string, status: string) => {
     try {
-      await axios.put(`${process.env.BACKEND_URL}/request/${id}`, { status });
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/request/${id}`, { status });
       toast.success("Status updated successfully");
       fetchRequests();
     } catch (error) {
@@ -242,7 +242,7 @@ const JobPostRequests: React.FC = () => {
       };
       
       console.log("Creating request with data:", requestData);
-      await axios.post(`${process.env.BACKEND_URL}/request/create`, requestData);
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/request/create`, requestData);
       toast.success("Request created successfully");
       setFormData(createEmptyRequest(userId, profileData?.department || user?.department));
       fetchRequests();
@@ -261,7 +261,7 @@ const JobPostRequests: React.FC = () => {
         department_Manager: userId
       };
       
-      await axios.put(`${process.env.BACKEND_URL}/request/${currentRequestId}`, requestData);
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/request/${currentRequestId}`, requestData);
       toast.success("Request updated successfully");
       setFormData(createEmptyRequest(userId, profileData?.department || user?.department));
       fetchRequests();

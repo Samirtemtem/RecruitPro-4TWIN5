@@ -39,7 +39,7 @@ const TeamLeaderDetails = () => {
   useEffect(() => {
     const fetchTeamLeaderDetails = async () => {
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/user/team-leads/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user/team-leads/${id}`);
         if (response.status === 200) {
           setTeamLeader(response.data);
         } else {
@@ -56,7 +56,7 @@ const TeamLeaderDetails = () => {
 
     const fetchNeeds = async () => {
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/need/needs/teamLead/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/need/needs/teamLead/${id}`);
         if (response.status === 200) {
           setNeeds(response.data);
         } else {
@@ -76,7 +76,7 @@ const TeamLeaderDetails = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this team leader?")) {
       try {
-        await axios.delete(`${process.env.BACKEND_URL}/api/user/team-leads/${id}`);
+        await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/user/team-leads/${id}`);
         alert("Team leader deleted successfully!");
         navigate("/team-leads");
       } catch (error) {

@@ -53,11 +53,11 @@ const JobAlert = () => {
       
       if (userId) {
         // Fetch jobs with matching percentage if user is logged in
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/jobs/matching/${userId}`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/jobs/matching/${userId}`);
         jobsData = response.data;
       } else {
         // Fallback to regular job fetch if no user ID available
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/jobs/FrontOfficelatestTen`);
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/jobs/FrontOfficelatestTen`);
         
         // Simulate match percentages for development
         jobsData = response.data.map((job: JobItem) => {

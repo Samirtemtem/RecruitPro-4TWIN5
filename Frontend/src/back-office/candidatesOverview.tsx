@@ -23,7 +23,7 @@ const CandidatesOverview: React.FC = () => {
     setError(null); // Reset error message
 
     try {
-      const url = `${process.env.BACKEND_URL}/api/user/count-per-year`; // Fetch all data
+      const url = `${process.env.REACT_APP_BACKEND_URL}/api/user/count-per-year`; // Fetch all data
       const response = await axios.get(url);
       
       console.log('API Response:', response.data); // Log the full response

@@ -26,7 +26,7 @@ const OrgChart: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/user/usersList`, {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user/usersList`, {
           params: { fields: 'email,role,image' }
         });
         const users: User[] = response.data;

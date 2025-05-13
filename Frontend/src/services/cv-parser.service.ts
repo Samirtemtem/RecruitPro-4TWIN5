@@ -37,7 +37,7 @@ export const parseCV = async (file: File): Promise<ParsedCVData> => {
     // Send to backend for parsing
     const formData = new FormData();
     formData.append('file', file);
-    const response = await axios.post(`${process.env.BACKEND_URL}/api/cv/parse`, formData);
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/cv/parse`, formData);
     console.log(response);
     // Validate and clean parsed data
     const parsedData = response.data;

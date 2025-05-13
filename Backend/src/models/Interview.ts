@@ -2,6 +2,8 @@ import mongoose, { Document, Schema, Model } from 'mongoose';
 import { InterviewType, InterviewStatus } from './types';
 
 export interface IInterview extends Document {
+  updatedAt: any;
+  createdAt: any;
   application: Schema.Types.ObjectId;  // Reference to Application
   departmentManager: Schema.Types.ObjectId;  // Reference to User (Department Manager)
   teamLeads: Schema.Types.ObjectId[];  // References to Users (Team Leads)

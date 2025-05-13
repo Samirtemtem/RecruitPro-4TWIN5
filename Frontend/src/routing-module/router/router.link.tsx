@@ -100,6 +100,7 @@ import HRDashboard from "../../back-office/hr-manager-dashboard/employee-dashboa
 import OrgChart from "../../back-office/Organigram";
 import EmployeesList from "../../back-office/employeesList";
 import Profilesettings from "../../settings/Profilesettings";
+import Calendars from "../../back-office/CalendarTeamLeader/Calendar";
 
 const routes = all_routes;
 
@@ -591,6 +592,10 @@ export const authRoutes = [
     route: Route,
   },
   
-
+{
+    path: "/team-leader/calendar",
+    element: <Calendars />,
+    route: Route,
+  },
 
 ];

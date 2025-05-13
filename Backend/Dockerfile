@@ -2,18 +2,17 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package.json and package-lock.json for npm install
+# Install production dependencies only
 COPY package*.json ./
-RUN npm install --force
+RUN npm install --only=production --force
 
-# Copy all files into the container
-COPY . .
+# Copy prebuilt dist from Jenkins
+COPY dist ./dist
 
-# Build the project
-RUN npm run build
+# Optionally copy other required files like configs
+COPY .env . 
+# if needed
 
-# Expose port 5000
 EXPOSE 5000
 
-# Command to start the app (ensure this points to dist/app.js)
 CMD ["node", "dist/app.js"]

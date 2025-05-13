@@ -146,5 +146,63 @@ router.get('/teamLeader/:teamLeaderId', async (req, res) : Promise<void> => {
 
 
 
+router.get('/departmentManager/:departmentManagerId', async (req, res): Promise<void> => {
+  try {
+    const { departmentManagerId } = req.params;
+
+    // Validate departmentManagerId format (assuming it's a MongoDB ObjectId)
+    if (!departmentManagerId.match(/^[0-9a-fA-F]{24}$/)) {
+      res.status(400).json({ message: 'Invalid department manager ID format' });
+      return;
+    }
+
+    // Fetch interviews where departmentManagerId matches the departmentManager field
+    const interviews: IInterview[] = await Interview.find({ departmentManager: departmentManagerId })
+      .populate('application', 'jobTitle company') // Populate relevant application fields
+      .populate('departmentManager', 'name email') // Populate manager details
+      .populate('teamLeads', 'name email') // Populate team leads details
+      .populate('candidate', 'name email') // Populate candidate details
+      .select('-__v') // Exclude version key
+      .lean(); // Convert to plain JavaScript objects
+
+    if (!interviews.length) {
+      res.status(404).json({ message: 'No interviews found for this department manager' });
+      return;
+    }
+
+    // Format response
+    const formattedInterviews = interviews.map(interview => ({
+      id: interview._id,
+      application: interview.application,
+      departmentManager: interview.departmentManager,
+      teamLeads: interview.teamLeads,
+      candidate: interview.candidate,
+      type: interview.type,
+      status: interview.status,
+      scheduledDate: interview.scheduledDate,
+      scheduledTime: interview.scheduledTime,
+      duration: interview.duration,
+      location: interview.location,
+      meetUrl: interview.meetUrl,
+      googleCalendarEventId: interview.googleCalendarEventId,
+      notes: interview.notes,
+      feedback: interview.feedback,
+      createdAt: interview.createdAt,
+      updatedAt: interview.updatedAt
+    }));
+
+    res.status(200).json({
+      message: 'Interviews retrieved successfully',
+      data: formattedInterviews,
+      count: formattedInterviews.length
+    });
+  } catch (error) {
+    console.error('Error fetching interviews:', error);
+    res.status(500).json({ message: 'Server error while fetching interviews' });
+  }
+});
+
+
+
 
 export default router; 

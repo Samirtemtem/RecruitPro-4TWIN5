@@ -103,6 +103,7 @@ import Profilesettings from "../../settings/Profilesettings";
 import Calendars from "../../back-office/CalendarTeamLeader/Calendar";
 //import CandidateCalendar from "../../front-office/candidates-dashboard/calendar/CandidateCalendar";
 import CandidateCalendar from "../../front-office/candidates-dashboard/calendar/CandidateCalendar";
+import AdminCalendar from "../../back-office/calendar/adminCalendar";
 const routes = all_routes;
 
 export const publicRoutes = [
@@ -391,7 +392,11 @@ export const authRoutes = [
     element: <Navigate to="/index" />,
     route: Route,
   },
-
+  {
+    path: "/admin/calendar",
+    element: <AdminCalendar />,
+    route: Route,
+  },
   {
     path: routes.profilesettings,
     element: <Profilesettings />,

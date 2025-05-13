@@ -92,6 +92,16 @@ const useSidebarData = () => {
                 submenuItems: [],
               },
               {
+                label: 'Calendar',
+                link: '/admin/calendar',
+                submenu: false,
+                showSubRoute: false,
+                icon: 'calendar',
+                base: 'calendar',
+                materialicons: 'date_range',
+                submenuItems: [],
+              },
+              {
                 label: 'Users',
                 link: routes.usersList,
                 submenu: false,

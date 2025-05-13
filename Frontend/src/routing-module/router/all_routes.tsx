@@ -122,6 +122,7 @@ teamLeadDashboard:"/team-lead-dashboard",
   superAdminPurchaseTransaction: "/super-admin/purchase-transaction",
 
   calendar: "/calendar",
+  adminCalendar: "/admin/calendar",
   dataTables: "/data-tables",
   tablesBasic: "/tables-basic",
   notes: "/notes",

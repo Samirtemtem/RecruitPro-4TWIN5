@@ -13,7 +13,7 @@ import Modal from "react-bootstrap/Modal";
 import CollapseHeader from "../../core/common/collapse-header/collapse-header";
 import ImageWithBasePath from "../../core/common/imageWithBasePath";
 import axios from "axios";
-
+import  "./calendar.css";
 // Define interface for FullCalendar event
 interface CalendarEvent {
   id: string;

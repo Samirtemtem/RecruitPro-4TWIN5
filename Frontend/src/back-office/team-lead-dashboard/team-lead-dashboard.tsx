@@ -452,226 +452,7 @@ const [counts, setCounts] = useState({
 
 
 
-            <div className="col-xl-4 d-flex">
-            <div className="card flex-fill">
-      <div className="card-header">
-        <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-2">
-          <h5>Needs</h5>
-          <div className="dropdown">
-            <Link
-              to="#"
-              className="btn btn-white border btn-sm d-inline-flex align-items-center"
-              data-bs-toggle="dropdown"
-            >
-              <i className="ti ti-calendar me-1" />
-              2024
-            </Link>
-            <ul className="dropdown-menu dropdown-menu-end p-3">
-              <li>
-                <Link to="#" className="dropdown-item rounded-1">2024</Link>
-              </li>
-              <li>
-                <Link to="#" className="dropdown-item rounded-1">2023</Link>
-              </li>
-              <li>
-                <Link to="#" className="dropdown-item rounded-1">2022</Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div className="card-body">
-        <div className="row align-items-center">
-          <div className="col-md-6">
-            <div className="mb-4">
-              <div className="mb-3">
-               
-                <p className="d-flex align-items-center">
-                  <i className="ti ti-circle-filled fs-8 text-dark me-1" />
-                  <h4 className="text-gray-9 text-xl fw-semibold me-1">{jobPostCounts2.total}</h4>
-                  Total
-                </p>
-              </div>
-              <div className="mb-3">
-                <p className="d-flex align-items-center">
-                  <i className="ti ti-circle-filled fs-8 text-success me-1" />
-                  <h4 className="text-gray-9 fw-semibold me-1">{jobPostCounts2.published}</h4>
-                  Published
-                </p>
-              </div>
-              <div className="mb-3">
-                <p className="d-flex align-items-center">
-                  <i className="ti ti-circle-filled fs-8 text-primary me-1" />
-                  <h4 className="text-gray-9 fw-semibold me-1">{jobPostCounts2.closed}</h4>
-                  Closed
-                </p>
-              </div>
-              <div className="mb-3">
-                <p className="d-flex align-items-center">
-                  <i className="ti ti-circle-filled fs-8 text-warning me-1" />
-                  <h4 className="text-gray-9 fw-semibold me-1">{jobPostCounts2.pending}</h4>
-                  Pending
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="mb-4 d-flex justify-content-md-end">
-              <ReactApexChart
-                id="leaves_chart"
-                options={leavesChart}
-                series={leavesChart.series}
-                type="donut"
-                height={195}
-              />
-            </div>
-          </div>
-          <div className="col-md-12">
-            
-          </div>
-        </div>
-      </div>
-    </div>
-            </div>
-
-
-            <div className="col-xl-4 d-flex">
-  <div className="row flex-fill">
-    {jobPostCounts.map((jobPost, index) => (
-      <div className="col-xl-6 col-md-6" key={jobPost._id}>
-        <div className="card">
-          <div className="card-body">
-            <div className="border-bottom mb-3 pb-2">
-              <span className="avatar avatar-sm bg-primary mb-2">
-                <i className="ti ti-clock-stop" />
-              </span>
-              <h2 className="mb-2">
-                {jobPost.total} / <span className="fs-20 text-gray-5">{totalJobPosts}</span>
-              </h2>
-              <p className="fw-medium text-truncate">{jobPost._id}</p>
-            </div>
-            <div>
-              <p className="d-flex align-items-center fs-13">
-                <span className="avatar avatar-xs rounded-circle bg-success flex-shrink-0 me-2">
-                  <i className="ti ti-arrow-up fs-12" />
-                </span>
-                <span>{/* Add percentage change or any other metric here */}5% This Week</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    ))}
-    <div className="col-xl-6 col-md-6">
-      <div className="card">
-        <div className="card-body">
-          <div className="border-bottom mb-3 pb-2">
-            <span className="avatar avatar-sm bg-primary mb-2">
-              <i className="ti ti-clock-stop" />
-            </span>
-            <h2 className="mb-2">
-              Total: <span className="fs-20 text-gray-5">{totalJobPosts}</span>
-            </h2>
-            <br />
-          </div>
-          <div>
-            <p className="d-flex align-items-center fs-13">
-              <span className="avatar avatar-xs rounded-circle bg-success flex-shrink-0 me-2">
-                <i className="ti ti-arrow-up fs-12" />
-              </span>
-              <span>{/* Add percentage change or any other metric here */}5% This Week</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-          </div>
-
-
-
-          <div className="row">
-          <div className="col-xl-4 d-flex">
-              <div className="card flex-fill">
-                <div className="card-header">
-                  <div className="d-flex align-items-center justify-content-between flex-wrap row-gap-2">
-                    <h5>My Skills</h5>
-                    <div className="dropdown">
-                      <Link
-                        to="#"
-                        className="btn btn-white border btn-sm d-inline-flex align-items-center"
-                        data-bs-toggle="dropdown"
-                      >
-                        <i className="ti ti-calendar me-1" />
-                        2024
-                      </Link>
-                      <ul className="dropdown-menu  dropdown-menu-end p-3">
-                        <li>
-                          <Link
-                            to="#"
-                            className="dropdown-item rounded-1"
-                          >
-                            2024
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="#"
-                            className="dropdown-item rounded-1"
-                          >
-                            2023
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="#"
-                            className="dropdown-item rounded-1"
-                          >
-                            2022
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-body">
-      <div>
-        {skills.map((skill, index) => (
-          <div key={index} className="border border-dashed bg-transparent-light rounded p-2 mb-2">
-            <div className="d-flex align-items-center justify-content-between">
-              <div className="d-flex align-items-center">
-                <span className="d-block border border-2 h-12 border-primary rounded-5 me-2" />
-                <div>
-                  <h6 className="fw-medium mb-1">{skill.name}</h6>
-                  <p>Updated: {new Date().toLocaleDateString()}</p> {/* You can replace this with actual update date if available */}
-                </div>
-              </div>
-              <CircleProgressSmall value={parseFloat(skill.percentage)} />
-            </div>
-          </div>
-          
-        ))}
-        
-      </div>
-      
-    </div>
-              </div>
-            </div>
-
-
-
-
-
-
-
-
-
-
-
-            <div className="col-xl-8 d-flex">
+                    <div className="col-xl-8 d-flex">
       <div className="card flex-fill">
         <div className="card-header pb-2 d-flex align-items-center justify-content-between flex-wrap">
           <h5 className="mb-2">Needs</h5>
@@ -747,6 +528,27 @@ const [counts, setCounts] = useState({
       </div>
     </div>
 
+
+
+
+          </div>
+
+
+
+          <div className="row">
+          
+
+
+
+
+
+
+
+
+
+
+
+   
 
 
 

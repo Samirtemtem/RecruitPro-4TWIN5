@@ -1,11 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { Calendar } from "primereact/calendar";
+import { Link } from "react-router-dom";
+import { all_routes } from "../../routing-module/router/all_routes";
+import { DatePicker, TimePicker } from "antd";
+import { Nullable } from "primereact/ts-helpers";
+import PredefinedDateRanges from "../../core/common/datePicker";
 import Modal from "react-bootstrap/Modal";
-import './calendar.css'; // Import custom CSS for the calendar
+import CollapseHeader from "../../core/common/collapse-header/collapse-header";
+import ImageWithBasePath from "../../core/common/imageWithBasePath";
+import axios from "axios";
+import  "./calendar.css";
 
 // Define interface for FullCalendar event
 interface CalendarEvent {
@@ -16,24 +24,12 @@ interface CalendarEvent {
   className: string;
   backgroundColor: string;
   textColor: string;
-  borderColor: string;
   extendedProps: {
-    candidateName: string;
     candidateEmail: string;
     type: string;
     location: string;
     meetUrl: string;
     notes: string;
-    departmentManager?: {
-      firstName: string;
-      lastName: string;
-      email: string;
-    };
-    teamLeads?: {
-      firstName: string;
-      lastName: string;
-      email: string;
-    }[];
   };
 }
 
@@ -42,288 +38,386 @@ interface EventDetails {
   title?: string;
   start?: Date;
   end?: Date;
-  candidateName?: string;
   candidateEmail?: string;
   type?: string;
   location?: string;
   meetUrl?: string;
   notes?: string;
-  departmentManager?: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  };
-  teamLeads?: {
-    firstName: string;
-    lastName: string;
-    email: string;
-  }[];
 }
 
-const HRManagerCalendar: React.FC = () => {
-  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([]);
+// Define interface for API response data
+interface Interview {
+  id: string;
+  candidate: {
+    email: string;
+  };
+  type: string;
+  status: string;
+  scheduledDate: string;
+  scheduledTime: string;
+  duration: number;
+  location: string;
+  meetUrl: string;
+  notes: string;
+}
+
+const Calendars = () => {
+  const routes = all_routes;
+  const [showAddEventModal, setShowAddEventModal] = useState(false);
   const [showEventDetailsModal, setShowEventDetailsModal] = useState(false);
   const [eventDetails, setEventDetails] = useState<EventDetails>({});
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const calendarRef = useRef<FullCalendar>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [date, setDate] = useState<Nullable<Date>>(null);
 
-  // Fetch interview data for the calendar
+  // Fetch interviews from the API
   useEffect(() => {
-    const fetchInterviewsForCalendar = async () => {
-      setIsLoading(true);
-      setError(null);
+    const fetchInterviews = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/interviews/hrmanager");
-        
-        if (response.data && response.data.data) {
-          const interviews = response.data.data;
-          const formattedEvents: CalendarEvent[] = interviews.map((interview: any) => {
-            // Parse the scheduled date and time
-            const scheduledDateTime = new Date(`${new Date(interview.scheduledDate).toISOString().split('T')[0]}T${interview.scheduledTime}:00`);
-            const endDateTime = new Date(scheduledDateTime.getTime() + (interview.duration * 60 * 1000));
-            
-            // Get candidate name
-            const candidateName = interview.candidate ? 
-              `${interview.candidate.firstName || ''} ${interview.candidate.lastName || ''}`.trim() : 
-              'Unknown Candidate';
-            
-            // Determine color based on interview status
-            let backgroundColor = "#4796ff";
-            let textColor = "#ffffff";
-            let borderColor = "#3a87ad";
-            
-            if (interview.status === "COMPLETED") {
-              backgroundColor = "#28a745";
-              textColor = "#ffffff";
-              borderColor = "#1e7e34";
-            } else if (interview.status === "CANCELLED") {
-              backgroundColor = "#dc3545";
-              textColor = "#ffffff";
-              borderColor = "#bd2130";
-            } else if (interview.status === "PENDING") {
-              backgroundColor = "#ffc107";
-              textColor = "#212529";
-              borderColor = "#d39e00";
-            }
-            
-            return {
-              id: interview.id,
-              title: `Interview: ${candidateName}`,
-              start: scheduledDateTime,
-              end: endDateTime,
-              className: "interview-event",
-              backgroundColor: backgroundColor,
-              textColor: textColor,
-              borderColor: borderColor,
-              extendedProps: {
-                candidateName: candidateName,
-                candidateEmail: interview.candidate?.email || 'No email provided',
-                type: interview.type || 'N/A',
-                location: interview.location || 'Remote',
-                meetUrl: interview.meetUrl || '',
-                notes: interview.notes || 'No notes',
-                departmentManager: interview.departmentManager,
-                teamLeads: interview.teamLeads
-              }
-            };
-          });
-          
-          setCalendarEvents(formattedEvents);
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          console.error("No userId found in localStorage");
+          return;
         }
+
+        const response = await axios.get<{ data: Interview[] }>(
+          `http://localhost:5000/api/interviews/hrmanager`
+        );
+
+        const interviews = response.data.data;
+        const calendarEvents: CalendarEvent[] = interviews.map((interview) => ({
+          id: interview.id,
+          title: `Interview with ${interview.candidate.email}`,
+          start: new Date(`${interview.scheduledDate.split("T")[0]}T${interview.scheduledTime}:00`),
+          end: new Date(
+            new Date(`${interview.scheduledDate.split("T")[0]}T${interview.scheduledTime}:00`).getTime() +
+              interview.duration * 60 * 1000
+          ),
+          className: "badge badge-primary-transparent",
+          backgroundColor: "#E6F3FA",
+          textColor: "#0A6EB4",
+          extendedProps: {
+            candidateEmail: interview.candidate.email,
+            type: interview.type,
+            location: interview.location,
+            meetUrl: interview.meetUrl,
+            notes: interview.notes,
+          },
+        }));
+
+        setEvents(calendarEvents);
       } catch (error) {
-        console.error('Error fetching interviews for calendar:', error);
-        setError("Failed to load interviews. Please try again later.");
-      } finally {
-        setIsLoading(false);
+        console.error("Error fetching interviews:", error);
       }
     };
-    
-    fetchInterviewsForCalendar();
+
+    fetchInterviews();
   }, []);
 
-  // Handle event click
+  const getModalContainer = () => {
+    const modalElement = document.getElementById("modal-datepicker");
+    return modalElement ? modalElement : document.body;
+  };
+
+  const getModalContainer2 = () => {
+    const modalElement = document.getElementById("modal_datepicker");
+    return modalElement ? modalElement : document.body;
+  };
+
+  const handleDateClick = () => {
+    setShowAddEventModal(true);
+  };
+
   const handleEventClick = (info: any) => {
     setEventDetails({
       title: info.event.title,
       start: info.event.start,
       end: info.event.end,
-      candidateName: info.event.extendedProps.candidateName,
       candidateEmail: info.event.extendedProps.candidateEmail,
       type: info.event.extendedProps.type,
       location: info.event.extendedProps.location,
       meetUrl: info.event.extendedProps.meetUrl,
       notes: info.event.extendedProps.notes,
-      departmentManager: info.event.extendedProps.departmentManager,
-      teamLeads: info.event.extendedProps.teamLeads
     });
     setShowEventDetailsModal(true);
   };
 
+  const handleAddEventClose = () => setShowAddEventModal(false);
   const handleEventDetailsClose = () => setShowEventDetailsModal(false);
 
   return (
     <>
-      <div className="card">
-        <div className="card-header">
-          <h4 className="card-title">Interviews Calendar</h4>
+      <div className="page-wrapper">
+        <div className="content">
+          <div className="d-md-flex d-block align-items-center justify-content-between page-breadcrumb mb-3">
+            <div className="my-auto mb-2">
+              <h2 className="mb-1">Calendar</h2>
+              <nav>
+                <ol className="breadcrumb mb-0">
+                  <li className="breadcrumb-item">
+                    <Link to={routes.adminDashboard}>
+                      <i className="ti ti-smart-home" />
+                    </Link>
+                  </li>
+                  <li className="breadcrumb-item">Application</li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Calendar
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            
+          </div>
+          <div className="row">
+            <div className="col-xxl-3 col-xl-4 theiaStickySidebar">
+              <div className="stickybar">
+                <div className="card">
+                  <div className="card-body p-3">
+                    <div className="border-bottom pb-2 mb-4">
+                      <Calendar
+                        className="datepickers mb-4"
+                        value={date}
+                        onChange={(e) => setDate(e.value)} // Extract value property
+                        inline={true}
+                      />
+                    </div>
+               
+                    <div className="border-bottom pb-2 mb-4">
+                      <h5 className="mb-2">
+                        Upcoming Event
+                        <span className="badge badge-success rounded-pill ms-2">
+                          {events.length}
+                        </span>
+                      </h5>
+                      {events.slice(0, 3).map((event) => (
+                        <div
+                          key={event.id}
+                          className="border-start border-primary border-3 mb-3"
+                        >
+                          <div className="ps-3">
+                            <h6 className="fw-medium mb-1">{event.title}</h6>
+                            <p className="fs-12">
+                              <i className="ti ti-calendar-check text-info me-2" />
+                              {event.start.toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-xxl-9 col-xl-8 theiaStickySidebar">
+              <div className="stickybar">
+                <div className="card border-0">
+                  <div className="card-body">
+                    <FullCalendar
+                      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                      initialView="dayGridMonth"
+                      events={events}
+                      headerToolbar={{
+                        start: "today,prev,next",
+                        center: "title",
+                        end: "dayGridMonth,dayGridWeek,dayGridDay",
+                      }}
+                      eventClick={handleEventClick}
+                      ref={calendarRef}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="card-body">
-          {isLoading ? (
-            <div className="text-center p-4">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-              <p className="mt-2">Loading interviews...</p>
-            </div>
-          ) : error ? (
-            <div className="alert alert-danger" role="alert">
-              {error}
-            </div>
-          ) : (
-            <div className="row">
-              <div className="col-xl-12">
-                <FullCalendar
-                  ref={calendarRef}
-                  plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                  initialView="dayGridMonth"
-                  headerToolbar={{
-                    left: "prev,next today",
-                    center: "title",
-                    right: "dayGridMonth,timeGridWeek,timeGridDay",
-                  }}
-                  events={calendarEvents}
-                  eventClick={handleEventClick}
-                  height="auto"
-                  eventTimeFormat={{
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    meridiem: false
-                  }}
-                  eventDisplay="block"
-                  eventBackgroundColor="#4796ff"
-                  eventBorderColor="#3a87ad"
-                  eventTextColor="#ffffff"
-                />
-              </div>
-            </div>
-          )}
+        <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
+          <p className="mb-0">2025 © RecruitPro.</p>
+          <p>
+            Designed & Developed By{" "}
+            <Link to="#" className="text-primary">
+              InfiniteLoopers
+            </Link>
+          </p>
         </div>
       </div>
 
-      {/* Event Details Modal */}
-      <Modal show={showEventDetailsModal} onHide={handleEventDetailsClose} centered size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>{eventDetails.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="card mb-0">
-            <div className="card-body">
-              {eventDetails.start && eventDetails.end && (
-                <div className="mb-3">
-                  <h5>Schedule</h5>
-                  <p>
-                    <i className="ti ti-calendar-event me-2 text-primary"></i>
-                    {eventDetails.start.toLocaleDateString()} at{" "}
-                    {eventDetails.start.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    {" - "}
-                    {eventDetails.end.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-              )}
-
-              <div className="mb-3">
-                <h5>Candidate</h5>
-                <p>
-                  <i className="ti ti-user me-2 text-primary"></i>
-                  {eventDetails.candidateName}
-                  {eventDetails.candidateEmail && (
-                    <span> ({eventDetails.candidateEmail})</span>
-                  )}
-                </p>
-              </div>
-
-              {eventDetails.departmentManager && (
-                <div className="mb-3">
-                  <h5>Department Manager</h5>
-                  <p>
-                    <i className="ti ti-user-circle me-2 text-primary"></i>
-                    {eventDetails.departmentManager.firstName} {eventDetails.departmentManager.lastName} ({eventDetails.departmentManager.email})
-                  </p>
-                </div>
-              )}
-
-              {eventDetails.teamLeads && eventDetails.teamLeads.length > 0 && (
-                <div className="mb-3">
-                  <h5>Team Leads</h5>
-                  <ul className="list-unstyled">
-                    {eventDetails.teamLeads.map((lead, index) => (
-                      <li key={index}>
-                        <i className="ti ti-user-plus me-2 text-primary"></i>
-                        {lead.firstName} {lead.lastName} ({lead.email})
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <div className="mb-3">
-                <h5>Interview Type</h5>
-                <p>
-                  <i className="ti ti-category me-2 text-primary"></i>
-                  {eventDetails.type}
-                </p>
-              </div>
-
-              <div className="mb-3">
-                <h5>Location</h5>
-                <p>
-                  <i className="ti ti-map-pin me-2 text-primary"></i>
-                  {eventDetails.location}
-                </p>
-              </div>
-
-              {eventDetails.meetUrl && (
-                <div className="mb-3">
-                  <h5>Meeting URL</h5>
-                  <p>
-                    <i className="ti ti-video me-2 text-primary"></i>
-                    <a href={eventDetails.meetUrl} target="_blank" rel="noopener noreferrer">
-                      {eventDetails.meetUrl}
-                    </a>
-                  </p>
-                </div>
-              )}
-
-              {eventDetails.notes && (
-                <div className="mb-3">
-                  <h5>Notes</h5>
-                  <p>
-                    <i className="ti ti-notes me-2 text-primary"></i>
-                    {eventDetails.notes}
-                  </p>
-                </div>
-              )}
-            </div>
+      <Modal show={showEventDetailsModal} onHide={handleEventDetailsClose}>
+        <div className="modal-header bg-dark modal-bg">
+          <div className="modal-title text-white">
+            <span id="eventTitle">{eventDetails.title}</span>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
           <button
-            className="btn btn-secondary"
+            type="button"
+            className="btn-close custom-btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
             onClick={handleEventDetailsClose}
           >
-            Close
+            <i className="ti ti-x" />
           </button>
-        </Modal.Footer>
+        </div>
+        <div className="modal-body">
+          <p className="d-flex align-items-center fw-medium text-black mb-3">
+            <i className="ti ti-calendar-check text-default me-2" />
+            {eventDetails.start?.toLocaleDateString()} -{" "}
+            {eventDetails.end?.toLocaleDateString()}
+          </p>
+          <p className="d-flex align-items-center fw-medium text-black mb-3">
+            <i className="ti ti-clock text-default me-2" />
+            {eventDetails.start?.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}{" "}
+            -{" "}
+            {eventDetails.end?.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <p className="d-flex align-items-center fw-medium text-black mb-3">
+            <i className="ti ti-mail text-default me-2" />
+            {eventDetails.candidateEmail}
+          </p>
+          <p className="d-flex align-items-center fw-medium text-black mb-3">
+            <i className="ti ti-video text-default me-2" />
+            {eventDetails.type}
+          </p>
+          <p className="d-flex align-items-center fw-medium text-black mb-3">
+            <i className="ti ti-map-pin text-default me-2" />
+            {eventDetails.location}
+          </p>
+          {eventDetails.meetUrl && (
+            <p className="d-flex align-items-center fw-medium text-black mb-3">
+              <i className="ti ti-link text-default me-2" />
+              <a
+                href={eventDetails.meetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Join Meeting
+              </a>
+            </p>
+          )}
+          {eventDetails.notes && (
+            <p className="d-flex align-items-center fw-medium text-black mb-0">
+              <i className="ti ti-notes text-default me-2" />
+              {eventDetails.notes}
+            </p>
+          )}
+        </div>
       </Modal>
+
+      <div className="modal fade" id="add_event">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title">Add New Event</h4>
+              <button
+                type="button"
+                className="btn-close custom-btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              >
+                <i className="ti ti-x" />
+              </button>
+            </div>
+            <form action="calendar.html">
+              <div className="modal-body">
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <label className="form-label">Event Name</label>
+                      <input type="text" className="form-control" />
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <label className="form-label">Event Date</label>
+                      <div className="input-icon-end position-relative">
+                        <DatePicker
+                          className="form-control datetimepicker"
+                          format={{
+                            format: "DD-MM-YYYY",
+                            type: "mask",
+                          }}
+                          getPopupContainer={getModalContainer}
+                          placeholder="DD-MM-YYYY"
+                        />
+                        <span className="input-icon-addon">
+                          <i className="ti ti-calendar text-gray-7" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Start Time</label>
+                      <div className="input-icon-end position-relative">
+                        <TimePicker
+                          getPopupContainer={getModalContainer2}
+                          use12Hours
+                          placeholder="Choose"
+                          format="h:mm A"
+                          className="form-control timepicker"
+                        />
+                        <span className="input-icon-addon">
+                          <i className="ti ti-clock text-gray-7" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">End Time</label>
+                      <div className="input-icon-end position-relative">
+                        <TimePicker
+                          getPopupContainer={getModalContainer2}
+                          use12Hours
+                          placeholder="Choose"
+                          format="h:mm A"
+                          className="form-control timepicker"
+                        />
+                        <span className="input-icon-addon">
+                          <i className="ti ti-clock text-gray-7" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <label className="form-label">Event Location</label>
+                      <input type="text" className="form-control" />
+                    </div>
+                    <div className="mb-0">
+                      <label className="form-label">Descriptions</label>
+                      <textarea
+                        className="form-control"
+                        rows={3}
+                        defaultValue={""}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-light me-2"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Add Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
 
-export default HRManagerCalendar; 
+export default Calendars;

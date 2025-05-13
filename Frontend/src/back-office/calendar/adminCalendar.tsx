@@ -188,57 +188,7 @@ const AdminCalendar = () => {
                 </ol>
               </nav>
             </div>
-            <div className="d-flex my-xl-auto right-content align-items-center flex-wrap">
-              <div className="me-2 mb-2">
-                <div className="input-icon-end position-relative">
-                  <PredefinedDateRanges />
-                  <span className="input-icon-addon">
-                    <i className="ti ti-chevron-down" />
-                  </span>
-                </div>
-              </div>
-              <div className="me-2 mb-2">
-                <div className="dropdown">
-                  <Link
-                    to="#"
-                    className="dropdown-toggle btn btn-white d-inline-flex align-items-center"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i className="ti ti-file-export me-1" />
-                    Export
-                  </Link>
-                  <ul className="dropdown-menu dropdown-menu-end p-3">
-                    <li>
-                      <Link to="#" className="dropdown-item rounded-1">
-                        <i className="ti ti-file-type-pdf me-1" />
-                        Export as PDF
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#" className="dropdown-item rounded-1">
-                        <i className="ti ti-file-type-xls me-1" />
-                        Export as Excel
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="mb-2">
-                <Link
-                  to="#"
-                  data-bs-toggle="modal"
-                  data-inert={true}
-                  data-bs-target="#add_event"
-                  className="btn btn-primary d-flex align-items-center"
-                >
-                  <i className="ti ti-circle-plus me-2" />
-                  Create
-                </Link>
-              </div>
-              <div className="ms-2 head-icons">
-                <CollapseHeader />
-              </div>
-            </div>
+          
           </div>
           <div className="row">
             <div className="col-xxl-3 col-xl-4 theiaStickySidebar">

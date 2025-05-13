@@ -1,0 +1,87 @@
+/* Calendar styling */
+.fc-daygrid-event {
+  border-radius: 4px !important;
+  padding: 2px 4px !important;
+  margin-bottom: 2px !important;
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+.fc .fc-daygrid-day-events {
+  margin-bottom: 0 !important;
+}
+
+.fc-event {
+  border-width: 1px !important;
+  border-style: solid !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.fc-event:hover {
+  opacity: 0.9 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.interview-event {
+  min-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+}
+
+/* Fix for transparent backgrounds */
+.fc-daygrid-event-harness {
+  margin-top: 1px !important;
+}
+
+.fc-event-title {
+  font-weight: bold !important;
+}
+
+.fc-daygrid-event.fc-daygrid-block-event .fc-event-time {
+  font-weight: bold !important;
+}
+
+/* Calendar header styling */
+.fc .fc-toolbar-title {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+/* Day cell styling */
+.fc-daygrid-day-frame {
+  min-height: 100px !important;
+}
+
+/* Today highlight */
+.fc .fc-day-today {
+  background-color: rgba(71, 150, 255, 0.1) !important;
+}
+
+/* Button styling */
+.fc-button-primary {
+  background-color: #0a6eb4 !important;
+  border-color: #0a6eb4 !important;
+}
+
+.fc-button-primary:hover {
+  background-color: #085a94 !important;
+  border-color: #085a94 !important;
+}
+
+/* Time grid specific styling */
+.fc-timegrid-event {
+  border-radius: 4px !important;
+  padding: 2px 4px !important;
+  opacity: 1 !important;
+}
+
+/* Make sure month view events are not transparent */
+.fc-daygrid-dot-event,
+.fc-daygrid-block-event {
+  opacity: 1 !important;
+  background-color: var(--fc-event-bg-color, #4796ff) !important;
+  color: var(--fc-event-text-color, white) !important;
+} 

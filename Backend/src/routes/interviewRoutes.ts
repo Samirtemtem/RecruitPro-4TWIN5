@@ -70,6 +70,52 @@ router.get('/candidate/:candidateId', async (req, res) => {
   }
 });
 
+// Get all interviews for HR manager
+router.get('/hrmanager', async (req, res) => {
+  try {
+    // HR Managers need to see all interviews across the organization
+    const interviews = await Interview.find({})
+      .populate('application', 'jobTitle company')
+      .populate('departmentManager', 'firstName lastName email department')
+      .populate('teamLeads', 'firstName lastName email team')
+      .populate('candidate', 'firstName lastName email')
+      .sort({ scheduledDate: -1 });
+    
+    // Format response
+    const formattedInterviews = interviews.map(interview => ({
+      id: interview._id,
+      application: interview.application,
+      departmentManager: interview.departmentManager,
+      teamLeads: interview.teamLeads,
+      candidate: interview.candidate,
+      type: interview.type,
+      status: interview.status,
+      scheduledDate: interview.scheduledDate,
+      scheduledTime: interview.scheduledTime,
+      duration: interview.duration,
+      location: interview.location,
+      meetUrl: interview.meetUrl,
+      googleCalendarEventId: interview.googleCalendarEventId,
+      notes: interview.notes,
+      feedback: interview.feedback,
+      createdAt: interview.createdAt,
+      updatedAt: interview.updatedAt
+    }));
+
+    res.status(200).json({
+      message: 'Interviews retrieved successfully for HR manager',
+      data: formattedInterviews,
+      count: formattedInterviews.length
+    });
+  } catch (error) {
+    console.error('Error fetching interviews for HR manager:', error);
+    res.status(500).json({ 
+      message: 'Server error while fetching interviews', 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
+  }
+});
+
 // Update interview details
 router.patch('/:id', updateInterview);
 
@@ -81,8 +127,6 @@ router.get('/:id', getInterviewById);
 
 // Get all interviews
 router.get('/', getInterviews);
-
-
 
 
 router.get('/teamLeader/:teamLeaderId', async (req, res) : Promise<void> => {
@@ -141,10 +185,5 @@ router.get('/teamLeader/:teamLeaderId', async (req, res) : Promise<void> => {
     res.status(500).json({ message: 'Server error while fetching interviews' });
   }
 });
-
-
-
-
-
 
 export default router; 

@@ -233,7 +233,16 @@ const useSidebarData = () => {
                 materialicons: 'confirmation_number',
                 submenuItems: [],
               },
-          
+              {
+                label: 'Calendar',
+                link: "/hr-manager-dashboard/calendar",
+                submenu: false,
+                showSubRoute: false,
+                icon: 'calendar',
+                base: 'calendar',
+                materialicons: 'event',
+                submenuItems: [],
+              },
             ],
           },
         ] : []),
@@ -302,9 +311,9 @@ const useSidebarData = () => {
                 materialicons: 'work',
                 submenuItems: [],
               },
-              {
+                {
                 label: 'Calendar',
-                link: "/department-manager-dashboard",
+                link: "/dep-manager/calendar",
                 submenu: false,
                 showSubRoute: false,
                 icon: 'calendar',

@@ -80,7 +80,7 @@ const Calendars = () => {
         }
 
         const response = await axios.get<{ data: Interview[] }>(
-          `http://localhost:5000/api/interviews/teamLeader/${userId}`
+          `http://localhost:5000/api/interviews/departmentManager/${userId}`
         );
 
         const interviews = response.data.data;
@@ -231,14 +231,14 @@ const Calendars = () => {
           </div>
         </div>
         <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
-          <p className="mb-0">2025 © RecruitPro.</p>
-          <p>
-            Designed & Developed By{" "}
-            <Link to="#" className="text-primary">
-              InfiniteLoopers
-            </Link>
-          </p>
-        </div>
+                  <p className="mb-0">2025 © RecruitPro.</p>
+                  <p>
+                    Designed & Developed By{" "}
+                    <Link to="#" className="text-primary">
+                      InfiniteLoopers
+                    </Link>
+                  </p>
+                </div>
       </div>
 
       <Modal show={showEventDetailsModal} onHide={handleEventDetailsClose}>

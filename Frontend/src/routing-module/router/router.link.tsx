@@ -102,6 +102,8 @@ import EmployeesList from "../../back-office/employeesList";
 import Profilesettings from "../../settings/Profilesettings";
 import Calendars from "../../back-office/CalendarTeamLeader/Calendar";
 import HRManagerCalendar from "../../back-office/hr-manager-dashboard/HRManagerCalendar";
+import CalendarsDep from "../../back-office/CalendarDepManager/Calendar";
+
 
 const routes = all_routes;
 
@@ -598,10 +600,17 @@ export const authRoutes = [
     element: <Calendars />,
     route: Route,
   },
-  
+ 
 {
   path: "/hr-manager-dashboard/calendar",
   element: <HRManagerCalendar />,
   route: Route,
 },
+{
+    path: "/dep-manager/calendar",
+    element: <CalendarsDep />,
+    route: Route,
+  },
+
+ 
 ];

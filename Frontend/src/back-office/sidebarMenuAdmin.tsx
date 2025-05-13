@@ -301,9 +301,9 @@ const useSidebarData = () => {
                 materialicons: 'work',
                 submenuItems: [],
               },
-              {
+                {
                 label: 'Calendar',
-                link: "/department-manager-dashboard",
+                link: "/dep-manager/calendar",
                 submenu: false,
                 showSubRoute: false,
                 icon: 'calendar',

@@ -6,17 +6,15 @@ pipeline {
     }
 
     environment {
-        DOCKER_TAG = "latest"
-        VERSION = "1.0.0"
-        NEXUS_URL = "http://localhost:8081/repository/raw-releases"
         DOCKER_IMAGE_BACKEND = "ahmedbenhmida/recruitpro-backend"
         DOCKER_IMAGE_FRONTEND = "ahmedbenhmida/recruitpro-frontend"
         DOCKER_IMAGE_ATS = "ahmedbenhmida/recruitpro-ats"
-        BUILD_ARCHIVE = "recruitpro_build_${VERSION}.tar.gz"
+        DOCKER_TAG = "latest"
+        VERSION = "1.0.0"  // Change this to the version of your app (can be dynamically generated)
+        NEXUS_URL = "http://localhost:8081/repository/docker-releases"  // Nexus URL
     }
 
     stages {
-
         stage('Git Checkout') {
             steps {
                 checkout([
@@ -29,6 +27,7 @@ pipeline {
                 ])
             }
         }
+
 
         stage('Install Dependencies') {
             parallel {
@@ -50,7 +49,7 @@ pipeline {
                     steps {
                         dir('Backend/applicant_tracking_system') {
                             sh '''
-                                python3 -m venv venv
+                                /usr/bin/python3 -m venv venv
                                 . venv/bin/activate
                                 pip install --upgrade pip
                                 pip install -r requirements.txt
@@ -79,13 +78,13 @@ pipeline {
                 }
                 stage('ATS') {
                     steps {
-                        echo 'No build needed for Python Flask app'
+                        echo 'No build step needed for ATS (Flask app)'
                     }
                 }
             }
         }
 /*
-        stage('Unit Tests') {
+        stage('Test') {
             parallel {
                 stage('Frontend') {
                     steps {
@@ -104,7 +103,7 @@ pipeline {
                 stage('ATS') {
                     steps {
                         dir('Backend/applicant_tracking_system') {
-                            sh '. venv/bin/activate && pytest || true'
+                            sh 'pytest || true'
                         }
                     }
                 }
@@ -115,38 +114,34 @@ pipeline {
             steps {
                 withSonarQubeEnv('sq') {
                     dir('Frontend') {
-                        sh 'npm run sonar || true'
+                        sh 'npm run sonar || echo "SonarQube analysis failed for Frontend"'
                     }
                     dir('Backend') {
-                        sh 'npm run sonar || true'
+                        sh 'npm run sonar || echo "SonarQube analysis failed for Backend"'
                     }
                     dir('Backend/applicant_tracking_system') {
-                        sh '. venv/bin/activate && pylint *.py || true'
-                        sh 'sonar-scanner || true'
+                        sh 'pylint *.py || echo "Pylint failed for ATS"'
+                        sh 'sonar-scanner || echo "SonarQube analysis failed for ATS"'
                     }
                 }
             }
         }
 
-        stage('Archive Build and Upload to Nexus') {
+        stage('Cleanup Old Docker Images and Containers') {
             steps {
-                script {
-                    sh '''
-                        tar -czf ${BUILD_ARCHIVE} Frontend Backend
-                        curl -v --user admin:nexus --upload-file ${BUILD_ARCHIVE} ${NEXUS_URL}/${BUILD_ARCHIVE}
-                    '''
-                }
-            }
-        }
+                sh '''
+                    echo "🧹 Cleaning up old Docker containers if they exist..."
 
-        stage('Download Build from Nexus') {
-            steps {
-                script {
-                    sh '''
-                        curl -O -u admin:nexus ${NEXUS_URL}/${BUILD_ARCHIVE}
-                        tar -xzf ${BUILD_ARCHIVE}
-                    '''
-                }
+                    docker ps -aq --filter "name=recruitpro_backend" | grep -q . && docker rm -f recruitpro_backend || true
+                    docker ps -aq --filter "name=recruitpro_frontend" | grep -q . && docker rm -f recruitpro_frontend || true
+                    docker ps -aq --filter "name=recruitpro_ats" | grep -q . && docker rm -f recruitpro_ats || true
+
+                    echo "🧹 Cleaning up old Docker images if they exist..."
+
+                    docker images -q ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} | grep -q . && docker rmi -f ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} || true
+                    docker images -q ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} | grep -q . && docker rmi -f ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} || true
+                    docker images -q ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} | grep -q . && docker rmi -f ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} || true
+                '''
             }
         }
 
@@ -160,17 +155,17 @@ pipeline {
 
         stage('Build Docker Images') {
             parallel {
-                stage('Backend Image') {
+                stage('Build Backend Docker Image') {
                     steps {
                         sh 'docker build -t ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ./Backend'
                     }
                 }
-                stage('Frontend Image') {
+                stage('Build Frontend Docker Image') {
                     steps {
                         sh 'docker build -t ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ./Frontend'
                     }
                 }
-                stage('ATS Image') {
+                stage('Build ATS Docker Image') {
                     steps {
                         sh 'docker build -t ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} ./Backend/applicant_tracking_system'
                     }
@@ -178,19 +173,52 @@ pipeline {
             }
         }
 
+
+        stage('Upload to Nexus') {
+            parallel {
+                stage('Push Backend Image to Nexus') {
+                    steps {
+                        script {
+                            // Tag and push Backend Docker image to Nexus with the version tag
+                            sh "docker tag ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG} ${NEXUS_URL}/${DOCKER_IMAGE_BACKEND}:${VERSION}"
+                            sh "docker push ${NEXUS_URL}/${DOCKER_IMAGE_BACKEND}:${VERSION}"
+                        }
+                    }
+                }
+                stage('Push Frontend Image to Nexus') {
+                    steps {
+                        script {
+                            // Tag and push Frontend Docker image to Nexus with the version tag
+                            sh "docker tag ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG} ${NEXUS_URL}/${DOCKER_IMAGE_FRONTEND}:${VERSION}"
+                            sh "docker push ${NEXUS_URL}/${DOCKER_IMAGE_FRONTEND}:${VERSION}"
+                        }
+                    }
+                }
+                stage('Push ATS Image to Nexus') {
+                    steps {
+                        script {
+                            // Tag and push ATS Docker image to Nexus with the version tag
+                            sh "docker tag ${DOCKER_IMAGE_ATS}:${DOCKER_TAG} ${NEXUS_URL}/${DOCKER_IMAGE_ATS}:${VERSION}"
+                            sh "docker push ${NEXUS_URL}/${DOCKER_IMAGE_ATS}:${VERSION}"
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Push to DockerHub') {
             parallel {
-                stage('Push Backend') {
+                stage('Push Backend Image') {
                     steps {
                         sh 'docker push ${DOCKER_IMAGE_BACKEND}:${DOCKER_TAG}'
                     }
                 }
-                stage('Push Frontend') {
+                stage('Push Frontend Image') {
                     steps {
                         sh 'docker push ${DOCKER_IMAGE_FRONTEND}:${DOCKER_TAG}'
                     }
                 }
-                stage('Push ATS') {
+                stage('Push ATS Image') {
                     steps {
                         sh 'docker push ${DOCKER_IMAGE_ATS}:${DOCKER_TAG}'
                     }
@@ -198,23 +226,38 @@ pipeline {
             }
         }
 
+
         stage('Deploy with Docker Compose') {
             steps {
                 sh 'docker-compose down || true'
                 sh 'docker-compose up -d'
             }
         }
+/*
+        stage('Post-Deployment Health Check') {
+            steps {
+                script {
+                    def backendHealth = sh(script: 'curl --fail http://localhost:5000/api/jobs', returnStatus: true)
+                    def atsHealth = sh(script: 'curl --fail http://localhost:5001/health', returnStatus: true)
+                    def frontendHealth = sh(script: 'curl --fail http://localhost:3000', returnStatus: true)
+
+                    if (backendHealth != 0) echo "⚠️ Backend not healthy"
+                    if (atsHealth != 0) echo "⚠️ ATS not healthy"
+                    if (frontendHealth != 0) echo "⚠️ Frontend not healthy"
+                }
+            }
+        }
+*/
     }
 
     post {
         always {
             cleanWs()
         }
-        success {
-            echo "✅ CI/CD pipeline executed successfully!"
-        }
         failure {
-            echo "❌ CI/CD pipeline failed!"
+            echo 'Pipeline failed!'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
         }
     }
-}

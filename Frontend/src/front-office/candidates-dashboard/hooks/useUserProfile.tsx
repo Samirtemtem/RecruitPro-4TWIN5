@@ -136,7 +136,7 @@ export const useUserProfile = () => {
         throw new Error('User ID not found');
       }
       
-      const response = await fetch(`http://localhost:5000/api/profile/education/${educationId}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/profile/education/${educationId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ export const useUserProfile = () => {
         throw new Error('User ID not found');
       }
       
-      const response = await fetch(`http://localhost:5000/api/profile/experience/${experienceId}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/profile/experience/${experienceId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ export const useUserProfile = () => {
         throw new Error('User ID not found');
       }
       
-      const response = await fetch(`http://localhost:5000/api/profile/skills/${skillId}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/profile/skills/${skillId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -252,7 +252,7 @@ export const useUserProfile = () => {
         throw new Error('User ID not found');
       }
       
-      const response = await fetch(`http://localhost:5000/api/profile/${endpoint}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/profile/${endpoint}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

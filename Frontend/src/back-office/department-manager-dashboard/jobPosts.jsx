@@ -23,8 +23,8 @@ const JobPosts = () => {
 
       // Build the URL dynamically based on the user's department
       const apiUrl = userDepartment
-        ? `http://localhost:5000/api/jobs/jobs/filterJobs?department=${userDepartment}`
-        : "http://localhost:5000/api/jobs/jobs/filterJobs";
+        ? `${process.env.BACKEND_URL}/api/jobs/jobs/filterJobs?department=${userDepartment}`
+        : `${process.env.BACKEND_URL}/api/jobs/jobs/filterJobs`;
 
       const response = await axios.get(apiUrl);
 

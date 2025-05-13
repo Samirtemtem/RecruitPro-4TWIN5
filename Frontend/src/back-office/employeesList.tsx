@@ -67,7 +67,7 @@ const EmployeesList: React.FC = () => {
 
   const fetchEmployees = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/user/usersList');
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/user/usersList`);
       const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
       setData(fetchedData);
     } catch (error) {
@@ -82,7 +82,7 @@ const EmployeesList: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/user/delete/${id}`);
+      await axios.delete(`${process.env.BACKEND_URL}/api/user/delete/${id}`);
       toast.success("Employee deleted successfully");
       fetchEmployees();
       window.location.reload(); // Force reload from server (bypassing cache)
@@ -126,7 +126,7 @@ const EmployeesList: React.FC = () => {
     
     try {
       console.log("Submitting edit form data:", JSON.stringify(formData, null, 2));
-      await axios.put(`http://localhost:5000/api/user/update/${currentEmployeeId}`, formData);
+      await axios.put(`${process.env.BACKEND_URL}/api/user/update/${currentEmployeeId}`, formData);
       toast.success("Employee updated successfully");
       setFormData(createEmptyEmployee(profileData?.department || user?.department));
       fetchEmployees();

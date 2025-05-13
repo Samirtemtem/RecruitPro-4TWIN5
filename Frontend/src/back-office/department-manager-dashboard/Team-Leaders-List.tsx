@@ -50,7 +50,7 @@ const TeamLeadersList: React.FC = () => {
         return;
       }
 
-      const response = await axios.get("http://localhost:5000/api/user/team-leads");
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/user/team-leads`);
       const fetchedData: TeamLeaderData[] = Array.isArray(response.data)
         ? response.data.filter((leader: TeamLeaderData) => leader.department === userDepartment)
         : [];
@@ -118,7 +118,7 @@ const TeamLeadersList: React.FC = () => {
     if (!validate()) return;
 
     try {
-      await axios.post("http://localhost:5000/api/user/team-leads", newTeamLeader);
+      await axios.post(`${process.env.BACKEND_URL}/api/user/team-leads`, newTeamLeader);
       toast.success("Team leader created successfully");
       setShowForm(false);
       setNewTeamLeader({
@@ -143,7 +143,7 @@ const TeamLeadersList: React.FC = () => {
     if (!teamLeaderIdToDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/user/team-leads/${teamLeaderIdToDelete}`);
+      await axios.delete(`${process.env.BACKEND_URL}/api/user/team-leads/${teamLeaderIdToDelete}`);
       toast.success("Team leader deleted successfully");
       setShowDeleteModal(false);
       fetchTeamLeads(); // Refresh list after deletion

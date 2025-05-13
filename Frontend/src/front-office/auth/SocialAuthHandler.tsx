@@ -43,7 +43,7 @@ const SocialAuthHandler = () => {
         if (!userIdToUse) {
           // Fetch user details using the token to get the user ID
           console.log("Fetching user details to get ID");
-          const userResponse = await axios.get(`http://localhost:5000/api/auth/user/${token}`);
+          const userResponse = await axios.get(`${process.env.BACKEND_URL}/api/auth/user/${token}`);
           userIdToUse = userResponse.data.user.id || userResponse.data.user._id;
           console.log("Retrieved user ID:", userIdToUse);
           
@@ -74,7 +74,7 @@ const SocialAuthHandler = () => {
         } else {
           // If userId is provided but we don't have user details,
           // fetch them to get the complete user object
-          const userResponse = await axios.get(`http://localhost:5000/api/auth/user/${token}`);
+          const userResponse = await axios.get(`${process.env.BACKEND_URL}/api/auth/user/${token}`);
           const userData = userResponse.data.user;
           
           const userObject = {
@@ -109,7 +109,7 @@ const SocialAuthHandler = () => {
 
         // Fetch profile data
         console.log("Fetching profile data for social login user");
-        const profileResponse = await axios.post('http://localhost:5000/api/profile/me', {
+        const profileResponse = await axios.post(`${process.env.BACKEND_URL}/api/profile/me`, {
           userId: userIdToUse
         });
 

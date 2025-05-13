@@ -44,7 +44,7 @@ const CandidateGridPerJobPost = () => {
         const fetchCandidates = async () => {
             console.log('Fetching candidates for jobPostId:', id);
             try {
-                const response = await fetch(`http://localhost:5000/app/jobposts/${id}/candidates`);
+                const response = await fetch(`${process.env.BACKEND_URL}/app/jobposts/${id}/candidates`);
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
                 }

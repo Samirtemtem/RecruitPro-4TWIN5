@@ -36,7 +36,7 @@ const JobFavouriteTable: React.FC = () => {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/shortlisted-jobs/user/${userId}`
+        `${process.env.BACKEND_URL}/api/shortlisted-jobs/user/${userId}`
       );
 
       if (!response.ok) {
@@ -89,7 +89,7 @@ const JobFavouriteTable: React.FC = () => {
       if (!userId) return;
 
       const response = await fetch(
-        `http://localhost:5000/api/shortlisted-jobs/${userId}/${jobId}`,
+        `${process.env.BACKEND_URL}/api/shortlisted-jobs/${userId}/${jobId}`,
         {
           method: "DELETE",
         }

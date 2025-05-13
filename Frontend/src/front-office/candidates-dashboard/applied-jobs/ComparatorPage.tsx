@@ -51,7 +51,7 @@ const ComparatorPage: React.FC = () => {
 
     const fetchAppliedJobs = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/app/candidates/${userId}/applications`);
+        const response = await fetch(`${process.env.BACKEND_URL}/app/candidates/${userId}/applications`);
         if (!response.ok) {
           throw new Error('Failed to fetch applied jobs');
         }

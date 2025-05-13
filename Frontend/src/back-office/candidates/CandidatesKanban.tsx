@@ -37,7 +37,7 @@ const CandidateKanban: React.FC = () => {
     const fetchGroupedCandidates = async () => {
       console.log('Fetching grouped candidates from API...');
       try {
-        const response = await axios.get<GroupedCandidates>('http://localhost:5000/app/grouped');
+        const response = await axios.get<GroupedCandidates>(`${process.env.BACKEND_URL}/app/grouped`);
         console.log('API Response:', response.data);
         setGroupedCandidates(response.data);
       } catch (error) {

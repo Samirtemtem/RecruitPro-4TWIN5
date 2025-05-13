@@ -27,7 +27,7 @@ const ContactMessagesGrid: React.FC = () => {
     const fetchContacts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/contact/contacts');
+        const response = await axios.get(`${process.env.BACKEND_URL}/api/contact/contacts`);
         console.log('API Response:', response.data); // Log the full API response
         setContacts(response.data);
         setError(null);
@@ -63,7 +63,7 @@ const ContactMessagesGrid: React.FC = () => {
     if (!window.confirm('Are you sure you want to delete this message?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/contact/contact/${id}`);
+      await axios.delete(`${process.env.BACKEND_URL}/api/contact/contact/${id}`);
       setContacts(prevContacts => prevContacts.filter(contact => contact._id !== id));
 
       if (selectedContact && selectedContact._id === id) {

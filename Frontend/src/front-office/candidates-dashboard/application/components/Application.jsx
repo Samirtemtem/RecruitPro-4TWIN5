@@ -108,7 +108,7 @@ export default function DynamicProgressBar() {
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/app/applications/${id}`);
+        const response = await fetch(`${process.env.BACKEND_URL}/app/applications/${id}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

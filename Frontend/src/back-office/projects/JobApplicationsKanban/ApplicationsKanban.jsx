@@ -13,7 +13,7 @@ const ApplicationsKanban = () => {
     useEffect(() => {
         const fetchGroupedCandidates = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/jobs/grouped/${jobPostId}`);
+                const response = await axios.get(`${process.env.BACKEND_URL}/api/jobs/grouped/${jobPostId}`);
                 console.log('API Response:', response.data);
                 setGroupedCandidates(response.data);
             } catch (error) {

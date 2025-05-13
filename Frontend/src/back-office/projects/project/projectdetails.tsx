@@ -72,7 +72,7 @@ const ProjectDetails = () => {
     useEffect(() => {
         const fetchJobDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/jobs/${id}`);
+                const response = await fetch(`${process.env.BACKEND_URL}/api/jobs/${id}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch job details: ${response.status}`);
                 }
@@ -110,7 +110,7 @@ const ProjectDetails = () => {
     useEffect(() => {
         const fetchApplications = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/app/byJobId/${id}`);
+                const response = await fetch(`${process.env.BACKEND_URL}/app/byJobId/${id}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -144,7 +144,7 @@ const ProjectDetails = () => {
     const handleDelete = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this project?")) {
             try {
-                await axios.delete(`http://localhost:5000/api/jobs/${id}`);
+                await axios.delete(`${process.env.BACKEND_URL}/api/jobs/${id}`);
                 alert("JobPost deleted successfully!");
                 navigate('/jobgrid');
             } catch (error) {
@@ -170,7 +170,7 @@ const ProjectDetails = () => {
         };
     
         try {
-            const response = await axios.put(`http://localhost:5000/api/jobs/${formData.id}`, updatedJobPost);
+            const response = await axios.put(`${process.env.BACKEND_URL}/api/jobs/${formData.id}`, updatedJobPost);
             if (response.status === 200) {
                 alert("Job post updated successfully!");
                 setJob(response.data);
@@ -235,7 +235,7 @@ const ProjectDetails = () => {
     useEffect(() => {
         const fetchApplicationCounts = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/app/Count/count/${id}`);
+                const response = await axios.get(`${process.env.BACKEND_URL}/app/Count/count/${id}`);
                 setApplicantData(response.data);
             } catch (err) {
                 console.error("Error fetching application counts:", err);

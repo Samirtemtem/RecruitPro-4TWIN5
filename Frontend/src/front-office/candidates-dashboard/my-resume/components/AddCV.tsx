@@ -104,7 +104,7 @@ export const AddCV: React.FC<AddCVProps> = ({
       }
 
       // Call the new endpoint to update profile with parsed CV data
-      const response = await fetch('http://localhost:5000/api/profile/cv/parsed', {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/profile/cv/parsed`, {
         method: 'POST',
         body: formData // Send as FormData instead of JSON
       });

@@ -51,7 +51,7 @@ const RequestDetails = () => {
         const fetchRequestDetails = async () => {
             console.log("Fetching request details for ID:", id);
             try {
-                const response = await fetch(`http://localhost:5000/request/${id}`);
+                const response = await fetch(`${process.env.BACKEND_URL}/request/${id}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch request details: ${response.status}`);
                 }
@@ -94,7 +94,7 @@ const RequestDetails = () => {
         if (window.confirm("Are you sure you want to delete this request?")) {
             console.log("Deleting request with ID:", id);
             try {
-                await axios.delete(`http://localhost:5000/request/${id}`);
+                await axios.delete(`${process.env.BACKEND_URL}/request/${id}`);
                 alert("Request deleted successfully!");
                 navigate('/team-lead-dashboard/needs');
             } catch (error) {

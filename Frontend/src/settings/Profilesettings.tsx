@@ -21,7 +21,7 @@ interface User {
 
 const Profilesettings = () => {
   const routes = all_routes;
-  const API_BASE_URL = "http://localhost:5000/api/user";
+  const API_BASE_URL = `${process.env.BACKEND_URL}/api/user`;
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

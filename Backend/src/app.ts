@@ -45,7 +45,7 @@ import statCand from './routes/statsCandiDashb';
 
 // Allow requests from your frontend (e.g., localhost:3000)
 const corsOptions = {
-  origin: "http://localhost:3000", // Allow only the frontend origin (you can use '*' to allow all origins)
+  origin: process.env.APP_URL || "http://localhost:3000", // Allow only the frontend origin (you can use '*' to allow all origins)
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allow all common methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers (or '*' to allow all headers)
   credentials: true, // Allow cookies or authorization headers

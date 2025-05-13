@@ -52,7 +52,7 @@ const SocialNetworkBox: React.FC = () => {
 
       const updatedLinks = [...socialLinks, { type: newSocialType, link: newSocialLink }];
 
-      await fetch('http://localhost:5000/api/profile/social', {
+      await fetch(`${process.env.BACKEND_URL}/api/profile/social`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ const SocialNetworkBox: React.FC = () => {
       const linkToDelete = socialLinks[index];
       if (!linkToDelete.id) return;
 
-      await fetch(`http://localhost:5000/api/profile/social/${linkToDelete.id}`, {
+      await fetch(`${process.env.BACKEND_URL}/api/profile/social/${linkToDelete.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ const SocialNetworkBox: React.FC = () => {
       // Filter out empty links
       const validLinks = socialLinks.filter(link => link.link?.trim() !== '');
 
-      await fetch('http://localhost:5000/api/profile/social', {
+      await fetch(`${process.env.BACKEND_URL}/api/profile/social`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

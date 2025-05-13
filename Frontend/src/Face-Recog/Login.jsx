@@ -290,7 +290,7 @@ function Login() {
         console.warn("No user ID provided in tempAccount, generating temporary ID.");
       }
 
-      const response = await fetch("http://localhost:5000/api/auth/facelogin", {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/auth/facelogin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

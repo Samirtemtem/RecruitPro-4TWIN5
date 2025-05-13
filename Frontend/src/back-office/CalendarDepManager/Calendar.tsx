@@ -80,7 +80,7 @@ const Calendars = () => {
         }
 
         const response = await axios.get<{ data: Interview[] }>(
-          `http://localhost:5000/api/interviews/departmentManager/${userId}`
+          `${process.env.BACKEND_URL}/api/interviews/departmentManager/${userId}`
         );
 
         const interviews = response.data.data;

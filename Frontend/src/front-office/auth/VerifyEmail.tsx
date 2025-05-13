@@ -31,7 +31,7 @@ const VerifyEmail = () => {
         }
 
         // Call backend API to verify email
-        const response = await axios.get(`http://localhost:5000/api/auth/verifyEmail?token=${token}`);
+        const response = await axios.get(`${process.env.BACKEND_URL}/api/auth/verifyEmail?token=${token}`);
         console.log("after call verify from frontend");
         console.log(response.data); // Log the full response to inspect its structure
         console.log(response.data.message);

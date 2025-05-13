@@ -142,7 +142,7 @@ const ProjectModals = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/api/user/users", {
+        const response = await fetch(`${process.env.BACKEND_URL}/api/user/users`, {
           method: "POST",
           headers: {
             "Accept": "application/json",

@@ -35,7 +35,7 @@ const CvManagerPage: React.FC = () => {
     formData.append('userId', userData.id.toString());
 
     try {
-      const response = await fetch('http://localhost:5000/api/profile/cv/upload', {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/profile/cv/upload`, {
         method: 'POST',
         body: formData
       });
@@ -60,7 +60,7 @@ const CvManagerPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/profile/cv/${cvId}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/profile/cv/${cvId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

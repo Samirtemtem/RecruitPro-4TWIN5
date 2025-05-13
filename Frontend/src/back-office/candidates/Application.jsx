@@ -30,7 +30,7 @@ const CandidateDetails = () => {
         const fetchApplicationDetails = async () => {
             try {
                 console.log('Fetching application details for ID:', id);
-                const response = await axios.get(`http://localhost:5000/app/applications/${id}`);
+                const response = await axios.get(`${process.env.BACKEND_URL}/app/applications/${id}`);
                 const app = response.data;
                 console.log('Application data received:', app);
                 
@@ -78,7 +78,7 @@ const CandidateDetails = () => {
         setLoadingInterviews(true);
         try {
             console.log(`Fetching interviews for application: ${applicationId}`);
-            const response = await axios.get(`http://localhost:5000/api/interviews/application/${applicationId}`);
+            const response = await axios.get(`${process.env.BACKEND_URL}/api/interviews/application/${applicationId}`);
             console.log('Interviews data:', response.data);
             setInterviews(response.data);
         } catch (error) {
@@ -95,7 +95,7 @@ const CandidateDetails = () => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/getUsers');
+            const response = await axios.get(`${process.env.BACKEND_URL}/getUsers`);
             const users = response.data;
             
             // Filter users by role
@@ -220,7 +220,7 @@ const CandidateDetails = () => {
             const nextStatus = getNextStatus(application.status);
             if (nextStatus) {
                 try {
-                    const response = await axios.patch(`http://localhost:5000/app/applications/${application._id}/status`, { status: nextStatus });
+                    const response = await axios.patch(`${process.env.BACKEND_URL}/app/applications/${application._id}/status`, { status: nextStatus });
                     const updatedApplication = response.data;
                     setApplication(updatedApplication);
                     localStorage.setItem('selectedApplication', JSON.stringify(updatedApplication));
@@ -298,9 +298,9 @@ const CandidateDetails = () => {
             console.log('Creating interview with data:', interviewData);
 
             // Create the interview with additional request logging
-            console.log('Sending POST request to http://localhost:5000/api/interviews');
+            //console.log('Sending POST request to http://localhost:5000/api/interviews');
             console.log('Request payload:', JSON.stringify(interviewData));
-            const interviewResponse = await axios.post('http://localhost:5000/api/interviews', interviewData, {
+            const interviewResponse = await axios.post(`${process.env.BACKEND_URL}/api/interviews`, interviewData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -316,7 +316,7 @@ const CandidateDetails = () => {
             fetchInterviews(appId);
 
             // Get the updated application data with the interview reference
-            const updatedAppResponse = await axios.get(`http://localhost:5000/app/applications/${appId}`);
+            const updatedAppResponse = await axios.get(`${process.env.BACKEND_URL}/app/applications/${appId}`);
             if (updatedAppResponse.data) {
                 setApplication(updatedAppResponse.data);
                 localStorage.setItem('selectedApplication', JSON.stringify(updatedAppResponse.data));
@@ -376,7 +376,7 @@ const CandidateDetails = () => {
 
     const handleReject = async () => {
         try {
-            await axios.patch(`http://localhost:5000/app/applications/${application.id}/reject`);
+            await axios.patch(`${process.env.BACKEND_URL}/app/applications/${application.id}/reject`);
             setApplication((prev) => ({ ...prev, status: 'REJECTED' }));
             localStorage.setItem('selectedApplication', JSON.stringify({ ...application, status: 'REJECTED' }));
             toast.success('Application has been rejected');

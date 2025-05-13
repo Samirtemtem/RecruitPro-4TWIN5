@@ -40,12 +40,12 @@ const Funfact = () => {
     const fetchCounts = async () => {
       try {
         // Fetch open job count
-        const jobResponse = await fetch("http://localhost:5000/api/jobs/job-posts/count/open");
+        const jobResponse = await fetch(`${process.env.BACKEND_URL}/api/jobs/job-posts/count/open`);
         const jobData = await jobResponse.json();
         setOpenJobCount(jobData.count);
 
         // Fetch user and candidates count
-        const userResponse = await fetch("http://localhost:5000/api/user/countUsers");
+        const userResponse = await fetch(`${process.env.BACKEND_URL}/api/user/countUsers`);
         const userData = await userResponse.json();
         if (userData.success) {
           setUserCount(userData.data.userCount);

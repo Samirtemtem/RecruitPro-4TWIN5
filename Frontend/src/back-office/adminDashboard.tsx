@@ -219,7 +219,7 @@ const [jobPosts, setJobPosts] = useState<JobPost[]>([]); // Array of JobPost obj
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/jobs/latest-Five");
+        const response = await axios.get(`${process.env.BACKEND_URL}/api/jobs/latest-Five`);
         setJobPosts(response.data); // Assuming response contains an array of job posts
       } catch (error) {
         console.error("Error fetching job posts:", error);
@@ -242,7 +242,7 @@ useEffect(() => {
   // Fetch job post statistics from the backend
   const fetchJobPostStatistics = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/jobs/job-posts/statistics'); // Replace with your backend API endpoint
+      const response = await fetch(`${process.env.BACKEND_URL}/api/jobs/job-posts/statistics`); // Replace with your backend API endpoint
       const data = await response.json();
       setStats(data); // Store the fetched data in state
     } catch (error) {
@@ -269,7 +269,7 @@ const { totalJobPosts, openJobPosts, percentageChange } = stats;
 // Employees List
 const fetchUsers = async () => {
   try {
-    const response = await axios.get('http://localhost:5000/api/user/usersListLatest');
+    const response = await axios.get(`${process.env.BACKEND_URL}/api/user/usersListLatest`);
     console.log('Fetched users:', response.data); // Log the data to verify
     setUsers(response.data); // Store the data
   } catch (error) {
@@ -291,7 +291,7 @@ const [candidates, setCandidates] = useState<any[]>([]); // Adjust the type as p
 useEffect(() => {
   const fetchCandidates = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/user/get/Lastcandidates'); // Adjust the API endpoint
+      const response = await fetch(`${process.env.BACKEND_URL}/api/user/get/Lastcandidates`); // Adjust the API endpoint
       const data = await response.json();
       setCandidates(data);
     } catch (error) {
@@ -326,7 +326,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/user/${token}`, {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/auth/user/${token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -392,7 +392,7 @@ const [totalEmployees, setTotalEmployees] = useState<number>(0); // New state fo
 useEffect(() => {
   const fetchEmployeeData = async () => {
       try {
-          const response = await axios.get('http://localhost:5000/api/user/count-employees-by-department');
+          const response = await axios.get(`${process.env.BACKEND_URL}/api/user/count-employees-by-department`);
           console.log(response);
           const { totalEmployees: total, percentageChange: change, departmentCounts }: { totalEmployees: number; percentageChange: number; departmentCounts: DepartmentCount[] } = response.data;
 
@@ -430,7 +430,7 @@ const [statsApp, setStatsApp] = useState<ApplicationStats | null>(null);
   useEffect(() => {
     const fetchApplicationStats = async () => {
       try {
-        const response = await fetch('http://localhost:5000/app/count-applications');
+        const response = await fetch(`${process.env.BACKEND_URL}/app/count-applications`);
         if (!response.ok) {
           throw new Error('Failed to fetch application stats');
         }

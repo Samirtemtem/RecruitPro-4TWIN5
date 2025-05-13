@@ -109,7 +109,7 @@ const FormInfoBox: React.FC = () => {
         throw new Error('User ID not found');
       }
 
-      const response = await fetch('http://localhost:5000/api/profile', {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ const FormInfoBox: React.FC = () => {
       // Update 2FA status via API with proper Authorization header
       // Note the correct endpoint URL - make sure the base URL is correct
       const response = await axios.post(
-        `http://localhost:5000/api/auth/update2fa`, // Make sure this matches your backend route
+        `${process.env.BACKEND_URL}/api/auth/update2fa`, // Make sure this matches your backend route
         { enabled: newValue },
         { 
           headers: {

@@ -28,7 +28,7 @@ const JobSingleDynamicV1 = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/shortlisted-jobs/check?userId=${userId}&jobId=${jobId}`
+        `${process.env.BACKEND_URL}/api/shortlisted-jobs/check?userId=${userId}&jobId=${jobId}`
       );
 
       if (response.ok) {
@@ -54,7 +54,7 @@ const toggleShortlist = async () => {
     // If job is already shortlisted, remove it
     if (isShortlisted) {
       await fetch(
-        `http://localhost:5000/api/shortlisted-jobs/${userId}/${jobId}`,
+        `${process.env.BACKEND_URL}/api/shortlisted-jobs/${userId}/${jobId}`,
         {
           method: "DELETE",
         }
@@ -66,7 +66,7 @@ const toggleShortlist = async () => {
     }
     // Otherwise, add it to shortlist
     else {
-      await fetch("http://localhost:5000/api/shortlisted-jobs", {
+      await fetch(`${process.env.BACKEND_URL}/api/shortlisted-jobs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ const toggleShortlist = async () => {
     const fetchJob = async () => {
       try {
         console.log("Fetching job data for ID:", jobId);
-        const response = await fetch(`http://localhost:5000/api/jobs/${jobId}`);
+        const response = await fetch(`${process.env.BACKEND_URL}/api/jobs/${jobId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -133,7 +133,7 @@ const toggleShortlist = async () => {
       console.log("Fetching matching data from recommendation service...");
       
       // Make a request to get recommendations specific to this job
-      const response = await fetch(`http://localhost:5000/api/recommendations/jobs?candidateId=${userId}&jobId=${jobId}`);
+      const response = await fetch(`${process.env.BACKEND_URL}/api/recommendations/jobs?candidateId=${userId}&jobId=${jobId}`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch matching data');
@@ -157,7 +157,7 @@ const toggleShortlist = async () => {
     if (!userId || !jobId) return;
     
     try {
-      const response = await fetch('http://localhost:5000/api/recommendations/interaction', {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/recommendations/interaction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -197,7 +197,7 @@ const toggleShortlist = async () => {
     };
   
     try {
-      const response = await fetch("http://localhost:5000/app/api/applications", {
+      const response = await fetch(`${process.env.BACKEND_URL}/app/api/applications`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

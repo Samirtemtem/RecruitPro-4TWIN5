@@ -72,7 +72,7 @@ const Needs: React.FC = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/need/');
+      const response = await axios.get(`${process.env.BACKEND_URL}/need/`);
       const fetchedData = Array.isArray(response.data) ? response.data : [response.data];
       const userRequests = fetchedData.filter(request => 
         request.teamLead?.id === userId
@@ -90,7 +90,7 @@ const Needs: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/need/${id}`);
+      await axios.delete(`${process.env.BACKEND_URL}/need/${id}`);
       toast.success("Request deleted successfully");
       window.location.reload();
     } catch (error) {
@@ -157,7 +157,7 @@ const Needs: React.FC = () => {
         ...formData,
         teamLead: userId
       };
-      await axios.post('http://localhost:5000/need/create', requestData);
+      await axios.post(`${process.env.BACKEND_URL}/need/create`, requestData);
       toast.success("Request created successfully");
       setFormData(createEmptyRequest(userId, profileData?.department || user?.department));
       fetchRequests();
@@ -175,7 +175,7 @@ const Needs: React.FC = () => {
         ...formData,
         department_Manager: userId
       };
-      await axios.put(`http://localhost:5000/need/${currentRequestId}`, requestData);
+      await axios.put(`${process.env.BACKEND_URL}/need/${currentRequestId}`, requestData);
       toast.success("Request updated successfully");
       setFormData(createEmptyRequest(userId, profileData?.department || user?.department));
       fetchRequests();

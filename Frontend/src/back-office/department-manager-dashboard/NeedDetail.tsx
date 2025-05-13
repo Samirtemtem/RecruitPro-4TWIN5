@@ -45,7 +45,7 @@ const NeedDetailsDep = () => {
     useEffect(() => {
         const fetchRequestDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/need/${id}`);
+                const response = await fetch(`${process.env.BACKEND_URL}/need/${id}`);
                 if (!response.ok) throw new Error(`Failed to fetch request details: ${response.status}`);
                 
                 const data: Request = await response.json();
@@ -64,7 +64,7 @@ const NeedDetailsDep = () => {
     const handleDelete = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this request?")) {
             try {
-                await axios.delete(`http://localhost:5000/need/${id}`);
+                await axios.delete(`${process.env.BACKEND_URL}/need/${id}`);
                 alert("Need deleted successfully!");
                 navigate('/team-lead-dashboard/needs');
             } catch (error) {
@@ -84,7 +84,7 @@ const NeedDetailsDep = () => {
         try {
             const { _id, ...requestData } = formData; // Destructure to omit _id
             requestData.department_Manager = userId; // Add department manager
-            const response = await axios.post('http://localhost:5000/request/create', requestData);
+            const response = await axios.post(`${process.env.BACKEND_URL}/request/create`, requestData);
             alert("Request created successfully");
             navigate('/department-manager-dashboard/requests');
             // Reset form data
@@ -103,7 +103,7 @@ const NeedDetailsDep = () => {
             });
     
             // Fetch updated request details
-            const fetchResponse = await fetch(`http://localhost:5000/need/${id}`);
+            const fetchResponse = await fetch(`${process.env.BACKEND_URL}/need/${id}`);
             if (!fetchResponse.ok) throw new Error(`Failed to fetch request details: ${fetchResponse.status}`);
             
             const data: Request = await fetchResponse.json();

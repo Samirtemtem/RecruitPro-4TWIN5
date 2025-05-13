@@ -101,10 +101,14 @@ import OrgChart from "../../back-office/Organigram";
 import EmployeesList from "../../back-office/employeesList";
 import Profilesettings from "../../settings/Profilesettings";
 import Calendars from "../../back-office/CalendarTeamLeader/Calendar";
+//import CandidateCalendar from "../../front-office/candidates-dashboard/calendar/CandidateCalendar";
+import CandidateCalendar from "../../front-office/candidates-dashboard/calendar/CandidateCalendar";
+
 import HRManagerCalendar from "../../back-office/hr-manager-dashboard/HRManagerCalendar";
 import CalendarsDep from "../../back-office/CalendarDepManager/Calendar";
 
 
+  
 const routes = all_routes;
 
 export const publicRoutes = [
@@ -328,6 +332,11 @@ export const authRoutesfront = [
     route: Route,
   },
   {
+    path: "/candidates-dashboard/calendar",
+    name: "Calendar",
+    element: <CandidateCalendar />,
+  },
+  {
     path: "/candidates-dashboard/application/:id",
     name: "Applied Jobs",
     element: <ApplicationPage />,
@@ -389,103 +398,83 @@ export const authRoutes = [
     route: Route,
   },
 
-
-  
   {
-    path:routes.profilesettings,
+    path: routes.profilesettings,
     element: <Profilesettings />,
     route: Route,
   },
 
- // HR Mnagaer Dashboard routes
- {
-  path:"/Managers-List",
-  element: <ManagersList />,
-  route: Route,
-},
-{
-  path:"/manager-detail/:id",
-  element: <ManagerDetails />,
-  route: Route,
-},
-
- 
-
-
+  // HR Mnagaer Dashboard routes
+  {
+    path: "/Managers-List",
+    element: <ManagersList />,
+    route: Route,
+  },
+  {
+    path: "/manager-detail/:id",
+    element: <ManagerDetails />,
+    route: Route,
+  },
 
   // Department Manager Dashboard routes
   {
-    path:"/department-manager-dashboard",
+    path: "/department-manager-dashboard",
     element: <DepartmentManagerDashboard />,
     route: Route,
   },
 
   {
-    path:"/department-manager-dashboard/needs",
+    path: "/department-manager-dashboard/needs",
     element: <NeedsList />,
     route: Route,
   },
   {
-    path:"/department-manager-dashboard/requests",
+    path: "/department-manager-dashboard/requests",
     element: <JobPostRequests />,
     route: Route,
   },
   {
-    path:"/department-manager-dashboard/jobposts",
+    path: "/department-manager-dashboard/jobposts",
     element: <JobPosts />,
     route: Route,
   },
 
   {
-    path:"/need-Detail-dep/:id",
+    path: "/need-Detail-dep/:id",
     element: <NeedDetailsDep />,
     route: Route,
   },
 
-
   {
-    path:"/department-manager-dashboard/team-leaders-list",
+    path: "/department-manager-dashboard/team-leaders-list",
     element: <TeamLeadersList />,
     route: Route,
   },
   {
-    path:"/department-manager-dashboard/team-leader-detail/:id",
+    path: "/department-manager-dashboard/team-leader-detail/:id",
     element: <TeamLeaderDetails />,
     route: Route,
   },
-  
 
+  // Team Lead Routes
 
-// Team Lead Routes
+  {
+    path: "/team-lead-dashboard",
+    element: <TeamLeadDashboard />,
+    route: Route,
+  },
 
+  {
+    path: "/team-lead-dashboard/needs",
+    element: <Needs />,
+    route: Route,
+  },
 
-{
-  path:"/team-lead-dashboard",
-  element: <TeamLeadDashboard />,
-  route: Route,
-},
-
-
-{
-  path:"/team-lead-dashboard/needs",
-  element: <Needs />,
-  route: Route,
-},
-
-
-{
-  path:"/need-Detail/:id",
-  element: <NeedDetails />,
-  route: Route,
-},
-
-
-
-
-
-
-
-
+  {
+    path: "/need-Detail/:id",
+    element: <NeedDetails />,
+    route: Route,
+  },
 
   // Admin Routes
   {
@@ -515,7 +504,7 @@ export const authRoutes = [
     route: Route,
   },
   {
-    path:"/candidates-grid-recomand/:id",
+    path: "/candidates-grid-recomand/:id",
     element: <CandidateGridPerJobPostRecom />,
     route: Route,
   },
@@ -562,44 +551,45 @@ export const authRoutes = [
     route: Route,
   },
   {
-    path:"/application/:id",
+    path: "/application/:id",
     element: <Application />,
     route: Route,
   },
   {
-    path:"/requests",
+    path: "/requests",
     element: <RequestList />,
     route: Route,
   },
   {
-    path:"/request-Detail/:id",
+    path: "/request-Detail/:id",
     element: <RequestDetails />,
     route: Route,
   },
 
   {
-    path:"/request-Detail-dep/:id",
+    path: "/request-Detail-dep/:id",
     element: <RequestDetails2 />,
     route: Route,
   },
-  
+
   {
     path: "/applications-kanban/:jobPostId",
     element: <ApplicationsKanban />,
     route: Route,
   },
-  
+
   {
     path: "/organigram",
     element: <OrgChart />,
     route: Route,
   },
-  
-{
+
+  {
     path: "/team-leader/calendar",
     element: <Calendars />,
     route: Route,
   },
+
  
 {
   path: "/hr-manager-dashboard/calendar",

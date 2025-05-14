@@ -45,7 +45,7 @@ import statCand from './routes/statsCandiDashb';
 
 // Allow requests from your frontend 
 const corsOptions = {
-  origin: process.env.APP_URL, // Allow only the frontend origin (you can use '*' to allow all origins)
+  origin: process.env.APP_URL || 'https://recruitpro-frontend.onrender.com' , // Allow only the frontend origin (you can use '*' to allow all origins)
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allow all common methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers (or '*' to allow all headers)
   credentials: true, // Allow cookies or authorization headers

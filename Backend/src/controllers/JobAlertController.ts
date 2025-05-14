@@ -7,7 +7,7 @@ import axios from 'axios';
 import { NotificationType } from '../models/types';
 
 // Environment variables for the recommendation service
-const RECOMMENDATION_SERVICE_URL = process.env.RECOMMENDATION_SERVICE_URL || 'http://localhost:5001';
+const RECOMMENDATION_SERVICE_URL = process.env.RECOMMENDATION_SERVICE_URL;
 
 /**
  * Create a new job alert for a user based on recommendations

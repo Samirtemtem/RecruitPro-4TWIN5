@@ -141,7 +141,7 @@ ${cv}`;
             headers: {
               "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY || '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'}`,
               "Content-Type": "application/json",
-              "HTTP-Referer": process.env.APP_URL || "http://localhost:3000"
+              "HTTP-Referer": process.env.APP_URL
             }
           }
         );
@@ -441,7 +441,7 @@ ${cv}`;
         headers: {
           "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY || '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'}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": process.env.APP_URL || "http://localhost:3000"
+          "HTTP-Referer": process.env.APP_URL
         }
       }
     );

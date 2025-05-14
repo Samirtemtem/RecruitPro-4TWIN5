@@ -8,7 +8,7 @@ dotenv.config();
 
 const CLIENT_ID = '1083974565116-7c8t7igidnvur8j9guc76nvv3ag3tllr.apps.googleusercontent.com';
 const CLIENT_SECRET = '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';
-const REDIRECT_URI = 'http://localhost:5000/api/auth/google/callback';
+const REDIRECT_URI = `${process.env.BACKEND_URL}/api/auth/google/callback`;
 const REFRESH_TOKEN = "1//09fdteRBD_xaiCgYIARAAGAkSNwF-L9IrTe3tMurkNMtUS6o7HW8dIOuu1pcGNahWlz5emO_QfPjapwbVTUaH2wGrbe0cwj4bDpI";
 
 // OAuth2 setup

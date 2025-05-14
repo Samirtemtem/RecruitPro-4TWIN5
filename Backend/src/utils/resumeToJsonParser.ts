@@ -197,7 +197,7 @@ export const resumeToJsonParser = async (text: string) => {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": process.env.APP_URL || "http://localhost:3000", // Required for OpenRouter
+          "HTTP-Referer": process.env.APP_URL , // Required for OpenRouter
           "X-Title": "Resume Parser" // Optional but recommended
         },
       }

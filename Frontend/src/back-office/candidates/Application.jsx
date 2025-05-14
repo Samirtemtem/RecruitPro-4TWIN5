@@ -374,15 +374,13 @@ const CandidateDetails = () => {
         setSelectedDeptManager('');
     };
 
-    const handleReject = async () => {
+     const handleReject = async () => {
         try {
-            await axios.patch(`http://localhost:5000/app/applications/${application.id}/reject`);
+            await axios.patch(`http://localhost:5000/app/applications/${application._id}/reject`);
             setApplication((prev) => ({ ...prev, status: 'REJECTED' }));
             localStorage.setItem('selectedApplication', JSON.stringify({ ...application, status: 'REJECTED' }));
-            toast.success('Application has been rejected');
         } catch (error) {
             console.error('Error rejecting application:', error);
-            toast.error('Failed to reject application. Please try again.');
         }
     };
 

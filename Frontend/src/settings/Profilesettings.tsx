@@ -233,12 +233,7 @@ const Profilesettings = () => {
                     <i className="ti ti-arrow-badge-right me-2" />
                     Profile Settings
                   </Link>
-                  <Link
-                    to={routes.notificationssettings}
-                    className="d-inline-flex align-items-center rounded py-2 px-3"
-                  >
-                    Notifications
-                  </Link>
+                  
                   <Link
                     to="#"
                     className={`d-inline-flex align-items-center rounded py-2 px-3 ${view === "password" ? "active" : ""}`}

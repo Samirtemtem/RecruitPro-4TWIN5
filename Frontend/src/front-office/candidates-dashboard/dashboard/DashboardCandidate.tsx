@@ -61,22 +61,8 @@ const DashboardCandidate = () => {
             {/* End .col */}
 
          
-            {/* End .col */}
+  
 
-            <div className="col-lg-12">
-              {/* <!-- applicants Widget --> */}
-              <div className="applicants-widget ls-widget">
-                <div className="widget-title">
-                <h4>New Job Notifications</h4>                </div>
-                <div className="widget-content">
-                  <div className="row">
-                    {/* <!-- Candidate block three --> */}
-
-                    <JobAlert />
-                                      </div>
-                </div>
-              </div>
-            </div>
             {/* End .col */}
           </div>
           {/* End .row profile and notificatins */}

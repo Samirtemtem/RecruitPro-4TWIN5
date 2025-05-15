@@ -281,15 +281,7 @@ const CandidateCalendar = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="footer d-sm-flex align-items-center justify-content-between border-top bg-white p-3">
-                    <p className="mb-0">2014 - 2025 © SmartHR.</p>
-                    <p>
-                      Designed & Developed By{" "}
-                      <Link to="#" className="text-primary">
-                        Dreams
-                      </Link>
-                    </p>
-                  </div>
+                
                 </div>
 
                 <Modal show={showEventDetailsModal} onHide={handleEventDetailsClose}>

@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import CallToActions from "../../common/CallToActions";
 import Categories from "./components/Categories";
 import DatePosted from "./components/DatePosted";
 import DestinationRangeSlider from "./components/DestinationRangeSlider";
-
 import JobType from "./components/JobType";
 import LocationBox from "./components/LocationBox";
 import SalaryRangeSlider from "./components/SalaryRangeSlider";
@@ -12,6 +12,8 @@ import Tag from "./components/Tag";
 
 // No props are passed, so no interface is needed yet
 const FilterSidebar: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="inner-column">
       <div className="filters-outer">
@@ -24,40 +26,26 @@ const FilterSidebar: React.FC = () => {
         {/* End .close filter */}
 
         <div className="filter-block">
-          <h4>Search by Keywords</h4>
+          <h4>{t("FilterSidebar.Search by Keywords")}</h4>
           <div className="form-group">
             <SearchBox />
           </div>
         </div>
         {/* <!-- Filter Block --> */}
 
-        {/* <!-- Filter Block --> */}
-
         <div className="filter-block">
-          <h4>Category</h4>
+          <h4>{t("FilterSidebar.Category")}</h4>
           <div className="form-group">
             <Categories />
           </div>
         </div>
         {/* <!-- Filter Block --> */}
 
-        
-        {/* <!-- Switchbox Outer --> */}
-
         <div className="checkbox-outer">
-          <h4>Date Posted</h4>
+          <h4>{t("FilterSidebar.Date Posted")}</h4>
           <DatePosted />
         </div>
         {/* <!-- Checkboxes Outer --> */}
-
-        
-        {/* <!-- Checkboxes Outer --> */}
-
-     
-        {/* <!-- Filter Block --> */}
-
-        
-        {/* <!-- Filter Block --> */}
       </div>
       {/* Filter Outer */}
 

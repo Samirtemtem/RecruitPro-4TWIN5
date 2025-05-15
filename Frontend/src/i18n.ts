@@ -477,7 +477,7 @@ const resources = {
           IncorrectPassword: "Le mot de passe saisi est incorrect.",
           UserPasswordEmail:
             "Vous n'avez pas encore défini de mot de passe. Veuillez vérifier votre e-mail. Un nouveau mot de passe vous sera envoyé.",
-          UnexpectedError: "Une erreur inattendue s'est produite. Veuillez réessayer.",
+          UnexpectedError: "Une erreur inattendue s'est produite. Veuillez réessayer..",
         },
       },
     },

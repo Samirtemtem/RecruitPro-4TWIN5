@@ -24,11 +24,10 @@ interface RequestData {
   description: string;
   requirements: string[];
   experience: number;
-  jobPostCreated: boolean;
+  requestCreated: boolean;
   status: string;
   teamLead: {
-    team?: string; // Nested team field under teamLead
-    // Include other teamLead fields as needed (e.g., firstName, lastName, etc.)
+    team?: string;
   };
   typeContrat: string;
   createdAt: string;
@@ -45,9 +44,9 @@ const createEmptyRequest = (userId: string | null, department?: string): Omit<Re
   description: "",
   requirements: [],
   experience: 0,
-  jobPostCreated: false,
+  requestCreated: false,
   status: "PENDING",
-  teamLead: { team: "" }, // Initialize nested team
+  teamLead: { team: "" },
   typeContrat: ""
 });
 
@@ -113,7 +112,6 @@ const NeedsList: React.FC = () => {
       const userString = localStorage.getItem('user');
       const user = userString ? JSON.parse(userString) : null;
       
-      // Log team field specifically from teamLead
       console.log("Team Fields in Fetched Data:", fetchedData.map(request => request.teamLead?.team));
       
       console.log("User ID:", userId);
@@ -123,10 +121,9 @@ const NeedsList: React.FC = () => {
       const filteredData = user ? fetchedData.filter(request => request.department === user.department) : [];
       console.log("Filtered Data:", filteredData);
       
-      // Map the response to match RequestData structure
       const mappedData = filteredData.map(item => ({
         ...item,
-        teamLead: item.teamLead || { team: "" } // Ensure teamLead exists with default team
+        teamLead: item.teamLead || { team: "" }
       }));
       setData(mappedData);
     } catch (error) {
@@ -210,7 +207,6 @@ const NeedsList: React.FC = () => {
       render: (text: string) => <h6 className="fw-medium">{text}</h6>,
       sorter: (a: RequestData, b: RequestData) => a.position.localeCompare(b.position),
     },
-    
     {
       title: "Importance",
       dataIndex: "importance",
@@ -222,7 +218,16 @@ const NeedsList: React.FC = () => {
       ),
       sorter: (a: RequestData, b: RequestData) => a.importance.localeCompare(b.importance),
     },
-
+    {
+      title: "Request Created",
+      dataIndex: "requestCreated",
+      render: (text: boolean) => (
+        <span className={`badge badge-soft-${text ? 'success' : 'warning'}`}>
+          {text ? 'Yes' : 'No'}
+        </span>
+      ),
+      sorter: (a: RequestData, b: RequestData) => Number(a.requestCreated) - Number(b.requestCreated),
+    },
     {
       title: "Created At",
       dataIndex: "createdAt",
@@ -271,12 +276,9 @@ const NeedsList: React.FC = () => {
               </ol>
             </nav>
           </div>
-         
         </div>
 
         <div className="card">
-        
-
           <div className="card-body p-0 py-3">
             {data.length > 0 ? (
               <Datatable 

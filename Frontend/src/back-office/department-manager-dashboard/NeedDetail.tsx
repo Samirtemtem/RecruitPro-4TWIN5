@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import CollapseHeader from "../../core/common/collapse-header/collapse-header";
-import { useNavigate } from 'react-router-dom';
 
 interface Request {
     _id: string;
@@ -15,8 +14,9 @@ interface Request {
     createdAt: string;
     quantity: number;
     importance: string;
-    department_Manager?: string; // Optional field for department manager
-    typeContrat: "PERMANENT" | "VACATAIRE"; // Restrict typeContrat to specific values
+    department_Manager?: string;
+    typeContrat: "PERMANENT" | "VACATAIRE";
+    requestCreated: boolean;
 }
 
 const NeedDetailsDep = () => {
@@ -36,11 +36,12 @@ const NeedDetailsDep = () => {
         quantity: 0,
         importance: "",
         status: "OPEN",
-        typeContrat: "PERMANENT", // Default to PERMANENT
+        typeContrat: "PERMANENT",
+        requestCreated: false,
     });
 
     const navigate = useNavigate();
-    const userId = localStorage.getItem("userId") || ""; // Replace with your actual key for userId
+    const userId = localStorage.getItem("userId") || "";
 
     useEffect(() => {
         const fetchRequestDetails = async () => {
@@ -82,14 +83,18 @@ const NeedDetailsDep = () => {
         }
         
         try {
-            const { _id, ...requestData } = formData; // Destructure to omit _id
-            requestData.department_Manager = userId; // Add department manager
+            const { _id, ...requestData } = formData;
+            requestData.department_Manager = userId;
             const response = await axios.post('http://localhost:5000/request/create', requestData);
             alert("Request created successfully");
-            navigate('/department-manager-dashboard/requests');
+
+            // Make API call to the request-created endpoint
+            await axios.patch(`http://localhost:5000/need/needs/${id}/request-created`, requestData);
+            alert("Request creation confirmation sent successfully");
+
             // Reset form data
             setFormData({
-                _id: "", // Keep _id empty
+                _id: "",
                 createdAt: new Date().toISOString(),
                 position: "",
                 description: "",
@@ -99,17 +104,14 @@ const NeedDetailsDep = () => {
                 quantity: 0,
                 importance: "",
                 status: "OPEN",
-                typeContrat: "PERMANENT", // Reset to default
+                typeContrat: "PERMANENT",
+                requestCreated: false,
             });
-    
-            // Fetch updated request details
-            const fetchResponse = await fetch(`http://localhost:5000/need/${id}`);
-            if (!fetchResponse.ok) throw new Error(`Failed to fetch request details: ${fetchResponse.status}`);
-            
-            const data: Request = await fetchResponse.json();
-            setRequest(data);
+
+            // Navigate back to the needs dashboard
+            navigate('/department-manager-dashboard/requests');
         } catch (error) {
-            alert("Failed to create request");
+            alert("Failed to create request or send confirmation");
         }
     };
 
@@ -170,6 +172,7 @@ const NeedDetailsDep = () => {
                                 <button
                                     className="btn btn-secondary ms-2"
                                     onClick={() => setShowForm(!showForm)}
+                                    disabled={request.requestCreated}
                                 >
                                     <i className="ti ti-user me-1" />
                                     Create Request
@@ -212,6 +215,12 @@ const NeedDetailsDep = () => {
                                             <div className="d-flex align-items-center justify-content-between">
                                                 <span>Type Contrat</span>
                                                 <p className="text-gray-9 mb-0">{request.typeContrat || "N/A"}</p>
+                                            </div>
+                                        </div>
+                                        <div className="list-group-item">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <span>Request Created</span>
+                                                <p className="text-gray-9 mb-0">{request.requestCreated ? "Yes" : "No"}</p>
                                             </div>
                                         </div>
                                     </div>

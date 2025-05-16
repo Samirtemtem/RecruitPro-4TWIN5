@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-interface IJobPost extends Document {
+export interface IJobPost extends Document {
   title: string;
   description: string;
   requirements: string[];
@@ -13,7 +13,7 @@ interface IJobPost extends Document {
   applications: Schema.Types.ObjectId[];  // References to Applications
   interviews: Schema.Types.ObjectId[];  // References to Interviews
   employmentOffers: Schema.Types.ObjectId[];  // References to EmploymentOffers
-  typeContrat?: 'PERMANENT' | 'VACATAIRE'; // Added optional typeContrat
+  typeContrat?: 'PERMANENT' | 'VACATAIRE' | 'NOTSPECIFIED'; // Updated interface
 }
 
 const JobPostSchema: Schema<IJobPost> = new Schema({
@@ -26,7 +26,7 @@ const JobPostSchema: Schema<IJobPost> = new Schema({
     deadline: { type: Date, required: true },
     experience: { type: Number, required: true },
     image: { type: String, default: 'images/logo.png' },
-    typeContrat: { type: String, enum: ['PERMANENT', 'VACATAIRE'], default: 'NOTSPECIFIED' } // Added typeContrat with default
+    typeContrat: { type: String, enum: ['PERMANENT', 'VACATAIRE', 'NOTSPECIFIED'], default: 'NOTSPECIFIED' } // Added NOTSPECIFIED to enum
 }, { timestamps: true });
 
 const JobPost = mongoose.model<IJobPost>('JobPost', JobPostSchema);

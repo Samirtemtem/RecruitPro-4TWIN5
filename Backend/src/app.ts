@@ -15,6 +15,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
+import notificationRoutes from "./routes/notificationRoutes";
 
 // Load environment variables from .env file
 dotenv.config({ path: "./.env" });
@@ -90,6 +91,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Routes
 app.use("/", indexRouter);
 app.use('/api/job-alerts', jobAlertRoutes); 
+app.use('/api/notifications', notificationRoutes);
 
 app.use("/users", usersRouter);
 app.use("/api/auth", authRoutes);

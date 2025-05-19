@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // Import useTranslation hook
 
 const Footer = ({ footerStyle = "" }) => {
+    const { t } = useTranslation(); // Initialize translation hook
+    
   const socialContent = [
     { id: 1, icon: "fa-facebook-f", link: "https://www.facebook.com/" },
     { id: 2, icon: "fa-twitter", link: "https://www.twitter.com/" },
@@ -31,8 +34,36 @@ const Footer = ({ footerStyle = "" }) => {
 
   return (
     <footer className={`main-footer ${footerStyle}`} style={{ background: 'linear-gradient(to right, #D50000, #A00000)' }}>
-       
-      
+      {/* Footer Content (Commented Out) */}
+      {/*
+      <div className="widgets-section">
+        <div className="auto-container">
+          <div className="row">
+            {footerContent.map((item) => (
+              <div className="footer-column col-lg-3 col-md-6 col-sm-12" key={item.id}>
+                <div className="footer-widget">
+                  <h4 style={{ color: '#FFFFFF' }}>{t(item.title)}</h4>
+                  <ul className="list-style-two">
+                    {item.menuList.map((menu, index) => (
+                      <li key={index}>
+                        <Link
+                          to={menu.route}
+                          style={{ color: '#FFFFFF', transition: 'color 0.3s' }}
+                          onMouseOver={(e) => e.currentTarget.style.color = '#FFD700'}
+                          onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}
+                        >
+                          {t(menu.name)}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      */}
       
 
       {/* Footer Bottom */}
@@ -40,13 +71,13 @@ const Footer = ({ footerStyle = "" }) => {
         <div className="auto-container">
           <div className="outer-box">
             <div className="copyright-text" style={{ color: '#FFFFFF' }}>
-              © {new Date().getFullYear()} RECRUITPRO by{" "}
-              <span
-            
-              >
-                Infinite Loopers
+              © {new Date().getFullYear()} {t("RECRUITPRO")} by{" "}
+              <span>
+                {t("Infinite Loopers")}
+
+
               </span>
-              . All Rights Reserved.
+              . {t("All Rights Reserved")}
             </div>
             <div className="social-links">
               {socialContent.map((item) => (
@@ -58,6 +89,7 @@ const Footer = ({ footerStyle = "" }) => {
                   style={{ color: '#FFFFFF', transition: 'color 0.3s' }}
                   onMouseOver={(e) => e.currentTarget.style.color = '#FFD700'}
                   onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}
+                  aria-label={t(`Social ${item.icon.replace("fa-", "")}`)}
                 >
                   <i className={`fab ${item.icon}`}></i>
                 </a>

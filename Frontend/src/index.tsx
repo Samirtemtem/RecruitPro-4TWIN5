@@ -5,8 +5,9 @@ import { base_path } from "./environment";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../src/style/css/feather.css";
 import "../src/index.scss";
-
-// replaced store with the store of the frontoffice
+import "./i18n"; // Import i18next configuration
+import { I18nextProvider } from "react-i18next"; // Import I18nextProvider
+import i18n from "./i18n"; // Import i18n instance
 import store from "./core/data/redux/store";
 
 import { Provider } from "react-redux";
@@ -28,10 +29,12 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   //<React.StrictMode>
+  <I18nextProvider i18n={i18n}>
     <Provider store={store}>
       <BrowserRouter basename={base_path}>
         <ALLRoutes />
       </BrowserRouter>
     </Provider>
+  </I18nextProvider>
   //</React.StrictMode>
 );

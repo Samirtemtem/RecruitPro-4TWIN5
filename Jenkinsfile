@@ -35,14 +35,16 @@ pipeline {
                 stage('Frontend') {
                     steps {
                         dir('Frontend') {
-                            sh 'npm install --force'
+                            //sh 'npm install --force'
+                            sh 'npm install --legacy-peer-deps'
                         }
                     }
                 }
                 stage('Backend') {
                     steps {
                         dir('Backend') {
-                            sh 'npm install --force'
+                            //sh 'npm install --force'
+                            sh 'npm install --legacy-peer-deps'
                         }
                     }
                 }

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node dist/bin/www",
-    "build": "npx tsc",
+    "build": "tsc",
     "dev": "ts-node src/bin/www",
     "sonar": "sonar-scanner"
   },

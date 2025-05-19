@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node dist/bin/www",
-    "build": "tsc",
+    "build": "npx tsc",
     "dev": "ts-node src/bin/www",
     "sonar": "sonar-scanner"
   },
@@ -17,7 +17,6 @@
     "@types/passport-linkedin-oauth2": "^1.5.6",
     "@types/pdf-parse": "^1.1.4",
     "argon2": "^0.41.1",
-    "backend": "file:",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.21.0",

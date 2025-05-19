@@ -15,7 +15,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-      callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback`
+      callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback` || 'https://recruitpro-backend-djx3.onrender.com/api/auth/google/callback',
     },
     async (accessToken: string, refreshToken: string, profile: any, done: GoogleVerifyCallback) => {
       try {

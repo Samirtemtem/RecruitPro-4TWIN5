@@ -26,7 +26,7 @@ const ImgBox = () => {
             {item.block.map((itemImg, i) => (
               <figure className="image" key={i}>
                 <img
-                  src={`/about/${itemImg.img}.jpg`} // Updated to .png and correct filenames
+                  src={`/About/${itemImg.img}.jpg`} // Updated to .png and correct filenames
                   alt="about image"
                   width={300}
                   height={200}

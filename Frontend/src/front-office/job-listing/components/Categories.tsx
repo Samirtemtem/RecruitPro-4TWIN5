@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addCategory } from "../utils/filterSlice"; // Renamed from addDepartment
+import { useTranslation } from "react-i18next";
+import { addCategory } from "../utils/filterSlice";
 
 // Define the expected shape of the filter state
 interface FilterState {
   jobList: {
-    department: string; // Change category to department
+    department: string;
     keyword?: string;
     location?: string;
     destination?: { min: number; max: number };
@@ -20,6 +21,7 @@ interface FilterState {
 }
 
 const Categories = () => {
+  const { t } = useTranslation();
   const { jobList } = useSelector((state: { filter: FilterState }) => state.filter);
   const [selectedDepartment, setSelectedDepartment] = useState(jobList.department || "");
 
@@ -47,10 +49,10 @@ const Categories = () => {
         value={selectedDepartment}
         onChange={departmentHandler}
       >
-        <option value="">Choose a department</option>
-        <option value="TIC">TIC</option>
-        <option value="ELECTROMECANIQUE">ELECTROMECANIQUE</option>
-        <option value="GENIE-CIVIL">GENIE-CIVIL</option>
+        <option value="">{t("Categories.Choose a department")}</option>
+        <option value="TIC">{t("Categories.TIC")}</option>
+        <option value="ELECTROMECANIQUE">{t("Categories.ELECTROMECANIQUE")}</option>
+        <option value="GENIE-CIVIL">{t("Categories.GENIE-CIVIL")}</option>
       </select>
       <span className="icon flaticon-briefcase"></span>
     </>

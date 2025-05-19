@@ -1,26 +1,29 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Use react-router-dom's Link
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const CallToAction2 = () => {
+   const { t } = useTranslation();
+
   return (
     <section
       className="call-to-action-two"
-      style={{ backgroundImage: "url(/images/background/1.jpg)" }} // Make sure the image path is correct in your React project
+      style={{ backgroundImage: "url(/images/background/1.jpg)" }}
     >
       <div className="auto-container" data-aos="fade-up">
         <div className="sec-title light text-center">
-          <h2>Your Dream Jobs Are Waiting</h2>
+          <h2>{t("CallToAction2.Your Dream Jobs Are Waiting")}</h2>
           <div className="text">
-            Over 1 million interactions, 50,000 success stories Make yours now.
+             {t("CallToAction2.Over 1 million interactions")}
           </div>
         </div>
 
         <div className="btn-box">
           <Link to="/JobListFront" className="theme-btn btn-style-three">
-            Search Job
+            {t("CallToAction2.Search Job")}
           </Link>
           <Link to="/register" className="theme-btn btn-style-two">
-            Apply Job Now
+            {t("CallToAction2.Apply Job Now")}
           </Link>
         </div>
       </div>

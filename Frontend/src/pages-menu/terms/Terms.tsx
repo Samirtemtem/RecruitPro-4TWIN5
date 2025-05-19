@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 //import LoginPopup from "../../common/form/login/LoginPopup";
 import FooterDefault from "../../common/Footer";
 import DefaulHeader from "../../common/Header";
@@ -8,7 +9,9 @@ import Breadcrumb from "../../common/Breadcrumb";
 
 import TermsText from "./TermsText";
 
-const index = () => {
+const Terms = () => {
+  const { t } = useTranslation(); 
+
   return (
     <>
       {/* <!-- Header Span --> */}
@@ -24,16 +27,14 @@ const index = () => {
       {/* End MobileMenu */}
 
       <br></br>
-   <MenuToggler />
-      <Breadcrumb title="Terms and Conditions" meta="Terms" />
+      <MenuToggler />
+      <Breadcrumb 
+        title={t("TermsPage.Title")} 
+        meta={t("TermsPage.Meta")} 
+      />
       {/* <!--End Page Title--> */}
       <section className="tnc-section">
         <div className="auto-container">
-         {/* <div className="sec-title text-center">
-            <h2>Terms and Conditions</h2>
-            <div className="text">Home / Terms and Conditions</div>
-          </div>
-           End sec-title */}
           <TermsText />
         </div>
       </section>
@@ -45,4 +46,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Terms;

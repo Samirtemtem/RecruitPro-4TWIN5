@@ -1,16 +1,13 @@
-//import LoginPopup from "../../common/form/login/LoginPopup";
-
+import { useTranslation } from "react-i18next";
 import FooterDefault from "../../common/Footer";
 import DefaulHeader from "../../common/Header";
 import MobileMenu from "../../common/MobileMenu";
-
-
-
 import Address from "./components/Address";
 import ContactForm from "./components/ContactForm";
 import MapBox from "./components/MapBox";
 
 const Contact = () => {
+   const { t } = useTranslation();
   return (
     <>
       {/* <!-- Header Span --> */}
@@ -44,7 +41,7 @@ const Contact = () => {
 
           {/* <!-- Contact Form --> */}
           <div className="contact-form default-form">
-            <h3>Leave A Message</h3>
+            <h3>{t("ContactPage.LeaveAMessage")}</h3>
             <ContactForm />
             {/* <!--Contact Form--> */}
           </div>

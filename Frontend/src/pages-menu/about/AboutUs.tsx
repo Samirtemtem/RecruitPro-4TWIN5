@@ -1,26 +1,23 @@
-//import LoginPopup from "../../common/form/login/LoginPopup";
-
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import Funfact from "../../common/Funfact";
 import FooterDefault from "../../common/Footer";
 import MobileMenu from "../../common/MobileMenu";
 import Header from "../../common/Header";
 import CallToAction2 from "../../common/CallToAction2";
 import Testimonial2 from "../../common/Testimonial";
-
 import MenuToggler from "../../common/MenuToggler";
 import Breadcrumb from "../../common/Breadcrumb";
-
 import IntroDescriptions from "./components/IntroDescriptions";
 import ImgBox from "./components/ImgBox";
 import Block1 from "./components/Block";
-import Partner from "./components/Partner";
-import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import ScrollToTop from "../../common/ScrollTop";
 import PartnerSlider from "../../index/components/PartnerSlider";
 
 const AboutUs = () => {
+  const { t } = useTranslation();
   useEffect(() => {
       AOS.init({
         duration: 1200, // Animation duration
@@ -32,8 +29,6 @@ const AboutUs = () => {
       {/* <!-- Header Span --> */}
       <span className="header-span"></span>
 
-      {/*<LoginPopup />
-       End Login Popup Modal */}
 
       <Header />
       {/* <!--End Main Header --> */}
@@ -41,9 +36,9 @@ const AboutUs = () => {
       <MobileMenu />
       {/* End MobileMenu */}
 
-<br></br>
-   <MenuToggler />
-      <Breadcrumb title="About Us" meta="About Us" />
+      <br />
+      <MenuToggler />
+      <Breadcrumb title={t("About Us")} meta={t("About Us")} />
       {/* <!--End Page Title--> */}
 
       <section className="about-section-three">
@@ -74,18 +69,13 @@ const AboutUs = () => {
           {/* End left img group */}
 
           <div className="testimonial-right">
-            <img
-              src="/images/resource/testimonial-right.png"
-              alt="testimonial"
-            />
+            <img src="/images/resource/testimonial-right.png" alt="testimonial" />
           </div>
           {/* End right img group */}
 
           <div className="sec-title text-center">
-            <h2>Testimonials From Our Customers</h2>
-            <div className="text">
-              Lorem ipsum dolor sit amet elit, sed do eiusmod tempor
-            </div>
+            <h2>{t("Testimonials From Our Customers")}</h2>
+            <div className="text">{t("Lorem ipsum dolor sit amet elit")}</div>
           </div>
           {/* <!-- Sec Title --> */}
 
@@ -102,8 +92,8 @@ const AboutUs = () => {
       <section className="work-section style-two">
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2>How It Works?</h2>
-            <div className="text">Job for anyone, anywhere</div>
+            <h2>{t("AboutUs.How It Works")}</h2>
+            <div className="text">{t("AboutUs.Job for anyone, anywhere")}</div>
           </div>
           {/* End sec-title */}
 

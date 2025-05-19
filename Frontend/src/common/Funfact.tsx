@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import CountUp from "react-countup";
 import { InView } from "react-intersection-observer";
 
 const Funfact = () => {
+  const { t } = useTranslation();
   const [focus, setFocus] = useState(false);
   const [openJobCount, setOpenJobCount] = useState(0); // State for open job posts count
   const [userCount, setUserCount] = useState(0); // State for user count
@@ -14,7 +16,7 @@ const Funfact = () => {
       startCount: "0", // string
       endCount: userCount.toString(), // Use fetched user count
       endPointText: "",
-      meta: "Daily active users", // Updated text
+      meta: t("Funfact.Daily active users"), // Translated text
       animationDelay: "0",
     },
     {
@@ -22,7 +24,7 @@ const Funfact = () => {
       startCount: "0", // string
       endCount: openJobCount.toString(), // Use fetched open job count
       endPointText: "",
-      meta: "Open job positions", // Existing text
+      meta: t("Funfact.Open job positions"), // Translated text
       animationDelay: "100",
     },
     {
@@ -30,7 +32,7 @@ const Funfact = () => {
       startCount: "0", // string
       endCount: candidatesCount.toString(), // Use fetched candidates count
       endPointText: "",
-      meta: "Candidates registered", // Updated text
+      meta: t("Funfact.Candidates registered"), // Translated text
       animationDelay: "200",
     },
   ];

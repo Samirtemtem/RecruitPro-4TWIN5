@@ -1,21 +1,20 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Address = () => {
+  const { t } = useTranslation();
+
   const addressContent = [
     {
       id: 1,
       iconName: "placeholder",
-      title: "Address",
-      text: (
-        <>
-          1, 2 rue André Ampère - 2083 - <br />Pôle Technologique - El Ghazala.
-        </>
-      ),
+      titleKey: "Address.Title",
+      textKey: "Address.Text",
     },
     {
       id: 2,
       iconName: "smartphone",
-      title: "Call Us",
+      titleKey: "Address.CallUs",
       text: (
         <>
           <a href="tel:+216702500000" className="phone">
@@ -27,7 +26,7 @@ const Address = () => {
     {
       id: 3,
       iconName: "letter",
-      title: "Email",
+      titleKey: "Address.Email",
       text: (
         <>
           <a href="#">contact@esprit.tn</a>
@@ -98,10 +97,10 @@ const Address = () => {
           <div className="contact-block" key={item.id}>
             <div className="inner-box">
               <span className="icon">
-                <img src={`/images/icons/${item.iconName}.svg`} alt="icon" />
+                <img src={`/images/icons/${item.iconName}.svg`} alt={t(item.titleKey)} />
               </span>
-              <h4>{item.title}</h4>
-              <p>{item.text}</p>
+              <h4>{t(item.titleKey)}</h4>
+              <p>{item.textKey ? t(item.textKey) : item.text}</p>
             </div>
           </div>
         ))}

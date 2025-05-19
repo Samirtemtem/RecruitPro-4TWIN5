@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import CallToActions from "../../common/CallToActions";
 import Categories from "./components/Categories";
 import DatePosted from "./components/DatePosted";
@@ -12,6 +13,8 @@ import Tag from "./components/Tag";
 
 // No props are passed, so no interface is needed yet
 const FilterSidebar: React.FC = () => {
+   const { t } = useTranslation();
+
   return (
     <div className="inner-column">
       <div className="filters-outer">
@@ -24,7 +27,7 @@ const FilterSidebar: React.FC = () => {
         {/* End .close filter */}
 
         <div className="filter-block">
-          <h4>Search by Keywords</h4>
+          <h4>{t("FilterSidebar.Search by Keywords")}</h4>
           <div className="form-group">
             <SearchBox />
           </div>
@@ -34,7 +37,7 @@ const FilterSidebar: React.FC = () => {
         {/* <!-- Filter Block --> */}
 
         <div className="filter-block">
-          <h4>Category</h4>
+          <h4>{t("FilterSidebar.Category")}</h4>
           <div className="form-group">
             <Categories />
           </div>
@@ -45,7 +48,7 @@ const FilterSidebar: React.FC = () => {
         {/* <!-- Switchbox Outer --> */}
 
         <div className="checkbox-outer">
-          <h4>Date Posted</h4>
+          <h4>{t("FilterSidebar.Date Posted")}</h4> 
           <DatePosted />
         </div>
         {/* <!-- Checkboxes Outer --> */}

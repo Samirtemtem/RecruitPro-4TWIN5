@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ContactForm: React.FC = () => {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -31,15 +34,15 @@ const ContactForm: React.FC = () => {
 
       if (response.ok) {
         const result = await response.json();
-        setResponseMessage(result.message);
+        setResponseMessage(t('ContactForm.SuccessMessage', { message: result.message }));
         setIsError(false); // Reset error state
         setFormData({ username: '', email: '', subject: '', message: '' }); // Reset form
       } else {
         throw new Error('Failed to send message');
       }
     } catch (error) {
-      const errorMessage = (error as Error).message || 'An unknown error occurred';
-      setResponseMessage('Error: ' + errorMessage);
+      const errorMessage = (error as Error).message || t('ContactForm.UnknownError');
+      setResponseMessage(t('ContactForm.ErrorMessage', { error: errorMessage }));
       setIsError(true); // Set error state
     }
   };
@@ -65,12 +68,12 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div className="col-lg-6 col-md-12 col-sm-12 form-group">
-          <label>Your Name</label>
+          <label>{t('ContactForm.YourName.Label')}</label>
           <input
             type="text"
             name="username"
             className="username"
-            placeholder="Your Name*"
+            placeholder={t('ContactForm.YourName.Placeholder')}
             value={formData.username}
             onChange={handleChange}
             required
@@ -78,12 +81,12 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div className="col-lg-6 col-md-12 col-sm-12 form-group">
-          <label>Your Email</label>
+          <label>{t('ContactForm.YourEmail.Label')}</label>
           <input
             type="email"
             name="email"
             className="email"
-            placeholder="Your Email*"
+            placeholder={t('ContactForm.YourEmail.Placeholder')}
             value={formData.email}
             onChange={handleChange}
             required
@@ -91,12 +94,12 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
-          <label>Subject</label>
+          <label>{t('ContactForm.Subject.Label')}</label>
           <input
             type="text"
             name="subject"
             className="subject"
-            placeholder="Subject *"
+            placeholder={t('ContactForm.Subject.Placeholder')}
             value={formData.subject}
             onChange={handleChange}
             required
@@ -104,10 +107,10 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div className="col-lg-12 col-md-12 col-sm-12 form-group">
-          <label>Your Message</label>
+          <label>{t('ContactForm.YourMessage.Label')}</label>
           <textarea
             name="message"
-            placeholder="Write your message..."
+            placeholder={t('ContactForm.YourMessage.Placeholder')}
             value={formData.message}
             onChange={handleChange}
             required
@@ -121,7 +124,7 @@ const ContactForm: React.FC = () => {
             id="submit"
             name="submit-form"
           >
-            Send Message
+            {t('ContactForm.SendMessage')}
           </button>
         </div>
       </div>

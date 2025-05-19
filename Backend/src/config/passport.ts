@@ -64,7 +64,7 @@ passport.use(
     {
       clientID: process.env.LINKEDIN_CLIENT_ID || '',
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET || '',
-      callbackURL: `${process.env.BACKEND_URL}/api/auth/linkedin/callback`,
+      callbackURL: `${process.env.BACKEND_URL}/api/auth/linkedin/callback`|| 'https://recruitpro-backend-djx3.onrender.com/api/auth/linkedin/callback',
       scope: ['openid', 'profile', 'email'], // OpenID Connect scopes
     },
     async (accessToken: string, refreshToken: string, profile: any, done: Function) => {
@@ -111,7 +111,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID || '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
-      callbackURL: `${process.env.BACKEND_URL}/api/auth/github/callback`,
+      callbackURL: `${process.env.BACKEND_URL}/api/auth/github/callback`|| 'https://recruitpro-backend-djx3.onrender.com/api/auth/github/callback',
       scope: ['user:email']
     },
     async (accessToken: string, refreshToken: string, profile: any, done: Function) => {

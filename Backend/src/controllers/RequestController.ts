@@ -1,10 +1,46 @@
 import { Request, Response } from 'express';
 import RequestModel from '../models/Request';
+import { User } from '../models/User';
+import { createRequestNotification } from './NotificationController';
+import mongoose from 'mongoose';
+
 
 export const createRequest = async (req: Request, res: Response): Promise<void> => {
     try {
         const newRequest = new RequestModel(req.body);
         const savedRequest = await newRequest.save();
+
+
+        // After saving, fetch the request with its ID to avoid typing issues
+        const requestWithId = await RequestModel.findById(savedRequest._id);
+        
+        if (requestWithId && req.body.department_Manager) {
+            try {
+                // Get department manager information
+                const departmentManager = await User.findById(req.body.department_Manager);
+                
+                if (departmentManager) {
+                    const managerName = `${departmentManager.firstName} ${departmentManager.lastName}`;
+                    
+                    // Send notifications to HR managers
+                    // Use a type assertion to resolve the TypeScript error
+                    const requestId = (requestWithId as unknown as { _id: mongoose.Types.ObjectId })._id.toString();
+                    await createRequestNotification(
+                        requestId,
+                        managerName,
+                        req.body.position,
+                        req.body.department || 'Unknown',
+                        req.body.importance || 'MEDIUM',
+                        `/request-Detail/${requestId}`
+                    );
+                }
+            } catch (notifError) {
+                console.error('Error creating HR notification:', notifError);
+                // Continue even if notification creation fails
+            }
+        }
+
+
         res.status(201).json(savedRequest);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -58,11 +94,6 @@ export const deleteRequest = async (req: Request, res: Response): Promise<void> 
         res.status(500).json({ message: error.message });
     }
 };
-
-
-
-
-
 export const updateJobPostCreated = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -82,10 +113,6 @@ export const updateJobPostCreated = async (req: Request, res: Response): Promise
         res.status(500).json({ message: error.message });
     }
 };
-
-
-
-
 // Controller to fetch requests based on department manager ID
 export const getRequestsByDepartmentManager = async (req: Request, res: Response): Promise<void> => {
     const { departmentManagerId } = req.params;
@@ -107,11 +134,6 @@ export const getRequestsByDepartmentManager = async (req: Request, res: Response
         res.status(500).json({ message: "An error occurred while fetching requests.", error });
     }
 };
-
-
-
-
-
 export const getRequestStats = async (req: Request, res: Response) => {
     try {
         // Count by department

@@ -1,12 +1,43 @@
 import { Request, Response } from 'express';
 import NeedModel from '../models/Need'; // Updated import to match the new model name
+import { createNeedNotification } from './NotificationController';
+import { User } from '../models/User';
+import mongoose from 'mongoose';
+
 
 export const createNeed = async (req: Request, res: Response): Promise<void> => {
     try {
         const newNeed = new NeedModel(req.body);
         const savedNeed = await newNeed.save();
+
+        // Get team lead name for notification
+        const teamLead = await User.findById(req.body.teamLead);
+        const teamLeadName = teamLead ? `${teamLead.firstName} ${teamLead.lastName}` : 'Team Lead';
+
+        const needId = (savedNeed as any)._id.toString();
+        console.log('Creating need notification for department:', req.body.department);
+        console.log('Team lead name:', teamLeadName);
+        console.log('Need ID:', needId);
+
+        // Create notification for department managers
+        if (req.body.department) {
+            try {
+                const notification = await createNeedNotification(
+                    req.body.department,
+                    needId,
+                    teamLeadName
+                );
+                console.log('Notification created:', notification);
+            } catch (notifError) {
+                console.error('Error creating notification:', notifError);
+            }
+        } else {
+            console.log('No department specified, skipping notification');
+        }
+        
         res.status(201).json(savedNeed);
     } catch (error: any) {
+        console.error('Error in createNeed:', error);
         res.status(500).json({ message: error.message });
     }
 };

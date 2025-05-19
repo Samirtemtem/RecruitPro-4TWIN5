@@ -18,7 +18,10 @@ import { swaggerSpec } from "./config/swagger";
 import notificationRoutes from "./routes/notificationRoutes";
 
 // Load environment variables from .env file
-dotenv.config({ path: "./.env" });
+//dotenv.config({ path: "./.env" });
+dotenv.config({
+  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env'
+});
 
 var router = express.Router();
 var path = require("path");

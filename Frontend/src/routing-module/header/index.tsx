@@ -308,7 +308,7 @@ const Header = () => {
   // Mark notification as read
   const handleNotificationClick = async (notificationId: string, link: string) => {
     try {
-      await axios.patch(`http://localhost:5000/api/notifications/${notificationId}/read`);
+      await axios.patch(`${process.env.BACKEND_URL}/api/notifications/${notificationId}/read`);
       
       // Update notifications list
       setNotifications(prevNotifications => 
@@ -334,8 +334,8 @@ const Header = () => {
     const currentUserId = getUserId();
     if (currentUserId) {
       try {
-        await axios.patch(`http://localhost:5000/api/notifications/user/${currentUserId}/read-all`);
-        
+        await axios.patch(`${process.env.BACKEND_URL}/api/notifications/user/${currentUserId}/read-all`);
+
         // Update all notifications to read
         setNotifications(prevNotifications => 
           prevNotifications.map(notif => ({ ...notif, isRead: true }))

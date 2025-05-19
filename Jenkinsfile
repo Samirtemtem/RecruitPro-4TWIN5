@@ -12,6 +12,7 @@ pipeline {
         DOCKER_TAG = "latest"
         VERSION = "1.0.0"  // Change this to the version of your app (can be dynamically generated)
         NEXUS_URL = "http://localhost:8081/repository/docker-releases"  // Nexus URL
+        NODE_ENV = 'production'
     }
 
     stages {

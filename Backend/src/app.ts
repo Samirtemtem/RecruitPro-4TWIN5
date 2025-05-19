@@ -42,7 +42,7 @@ import NeedRoutes from './routes/needRoutes';
 import interviewRoutes from './routes/interviewRoutes';
 // STAT Candid Dashboard
 import statCand from './routes/statsCandiDashb';
-
+import { initCronJobs } from './routes/cronJobPostRoutes';
 // Allow requests from your frontend 
 const corsOptions = {
   origin: process.env.APP_URL || 'https://recruitpro-frontend.onrender.com' , // Allow only the frontend origin (you can use '*' to allow all origins)
@@ -64,7 +64,11 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI!)
-  .then(() => console.log("Database connected successfully"))
+   .then(async () => {
+    console.log("Database connected successfully");
+    // Initialize cron jobs after MongoDB connection
+    await initCronJobs();
+  })
   .catch((err) => console.error("Database connection error:", err));
 
 // Apply CORS middleware

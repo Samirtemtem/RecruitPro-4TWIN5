@@ -24,11 +24,10 @@ interface RequestData {
   description: string;
   requirements: string[];
   experience: number;
-  jobPostCreated: boolean;
+  requestCreated: boolean;
   status: string;
   teamLead: {
-    team?: string; // Nested team field under teamLead
-    // Include other teamLead fields as needed (e.g., firstName, lastName, etc.)
+    team?: string;
   };
   typeContrat: string;
   createdAt: string;
@@ -45,9 +44,9 @@ const createEmptyRequest = (userId: string | null, department?: string): Omit<Re
   description: "",
   requirements: [],
   experience: 0,
-  jobPostCreated: false,
+  requestCreated: false,
   status: "PENDING",
-  teamLead: { team: "" }, // Initialize nested team
+  teamLead: { team: "" },
   typeContrat: ""
 });
 
@@ -126,7 +125,7 @@ const NeedsList: React.FC = () => {
       // Map the response to match RequestData structure
       const mappedData = filteredData.map(item => ({
         ...item,
-        teamLead: item.teamLead || { team: "" } // Ensure teamLead exists with default team
+        teamLead: item.teamLead || { team: "" }
       }));
       setData(mappedData);
     } catch (error) {
@@ -221,6 +220,16 @@ const NeedsList: React.FC = () => {
         </span>
       ),
       sorter: (a: RequestData, b: RequestData) => a.importance.localeCompare(b.importance),
+    },
+    {
+      title: "Request Created",
+      dataIndex: "requestCreated",
+      render: (text: boolean) => (
+        <span className={`badge badge-soft-${text ? 'success' : 'warning'}`}>
+          {text ? 'Yes' : 'No'}
+        </span>
+      ),
+      sorter: (a: RequestData, b: RequestData) => Number(a.requestCreated) - Number(b.requestCreated),
     },
 
     {
